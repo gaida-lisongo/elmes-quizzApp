@@ -13,7 +13,7 @@ export default async function AboutPage() {
 
     const landing = await LandingPage.findOne().lean();
 
-    const promesses = landing?.promises || [];
+    const promesses = JSON.parse(JSON.stringify(landing?.promises || []));
     const valeurs = landing?.values || [];
     const equipe = landing?.team || [];
     const aboutElmes = landing?.aboutElmes || {};

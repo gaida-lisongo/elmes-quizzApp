@@ -22,8 +22,8 @@ const LandingPageSchema = new Schema({
     bio: String
   }],
   aboutElmes: {
-    title: { type: String, required: true },
-    description: { type: String, required: true },
+    title: { type: String, default: '' },
+    description: { type: String, default: '' },
     history: String,
     vision: String
   }
