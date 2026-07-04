@@ -6,12 +6,12 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "cdn.sanity.io",
+        hostname: "**",
         port: "",
       },
       {
         protocol: "http",
-        hostname: "localhost",
+        hostname: "**",
         port: "",
       },
     ],

@@ -2,6 +2,8 @@ import { Inter } from "next/font/google";
 import "../globals.css";
 import type { Metadata } from "next";
 import Proivder from "./Provider";
+import { getSession } from "../../lib/utils/auth";
+import { getCurrentUserDetailed } from "../../actions/auth.actions";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,11 +15,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+
+  const session = await getSession();
+
+  console.log("Session in RootLayout:", session);
+  const user = await getCurrentUserDetailed();
+  console.log("User in RootLayout:", user);
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`dark:bg-black ${inter.className}`}>
