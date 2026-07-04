@@ -13,7 +13,7 @@ const LandingPageSchema = new Schema({
   values: [{
     title: { type: String, required: true },
     description: { type: String, required: true },
-    icon: { type: String, default: 'Heart' }
+    imageUrl: { type: String, default: '' }
   }],
   team: [{
     name: { type: String, required: true },

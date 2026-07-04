@@ -141,3 +141,118 @@ export async function deletePromesse(index: number) {
     return { success: false, error: error.message };
   }
 }
+
+/* ================================================================
+   VALEURS – CRUD
+   ================================================================ */
+
+/**
+ * Récupère toutes les valeurs
+ */
+export async function getValeurs() {
+  try {
+    await connectToDb();
+    const landing = await LandingPage.findOne().lean();
+    return { success: true, valeurs: landing?.values || [] };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Ajoute une nouvelle valeur
+ */
+export async function addValeur(data: {
+  title: string;
+  description: string;
+  imageUrl: string;
+}) {
+  try {
+    await connectToDb();
+
+    let landing = await LandingPage.findOne();
+    if (!landing) {
+      landing = new LandingPage({ promises: [], values: [], team: [], aboutElmes: { title: "", description: "" } });
+    }
+
+    landing.values.push({
+      title: data.title,
+      description: data.description,
+      imageUrl: data.imageUrl,
+    });
+
+    await landing.save();
+
+    const valeurs = JSON.parse(JSON.stringify(landing.toObject().values));
+
+    return { success: true, valeurs };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Modifie une valeur existante
+ */
+export async function updateValeur(
+  index: number,
+  data: {
+    title: string;
+    description: string;
+    imageUrl: string;
+  }
+) {
+  try {
+    await connectToDb();
+
+    const landing = await LandingPage.findOne();
+    if (!landing) {
+      return { success: false, error: "Page d'accueil non trouvée" };
+    }
+
+    if (index < 0 || index >= landing.values.length) {
+      return { success: false, error: "Index de valeur invalide" };
+    }
+
+    landing.values[index] = {
+      title: data.title,
+      description: data.description,
+      imageUrl: data.imageUrl,
+    };
+
+    await landing.save();
+
+    const valeurs = JSON.parse(JSON.stringify(landing.toObject().values));
+
+    return { success: true, valeurs };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Supprime une valeur
+ */
+export async function deleteValeur(index: number) {
+  try {
+    await connectToDb();
+
+    const landing = await LandingPage.findOne();
+    if (!landing) {
+      return { success: false, error: "Page d'accueil non trouvée" };
+    }
+
+    if (index < 0 || index >= landing.values.length) {
+      return { success: false, error: "Index de valeur invalide" };
+    }
+
+    landing.values.splice(index, 1);
+    await landing.save();
+
+    const valeurs = JSON.parse(JSON.stringify(landing.toObject().values));
+
+    return { success: true, valeurs };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
