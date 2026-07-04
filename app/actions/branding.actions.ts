@@ -256,3 +256,122 @@ export async function deleteValeur(index: number) {
     return { success: false, error: error.message };
   }
 }
+
+/* ================================================================
+   ÉQUIPE (TEAM) – CRUD
+   ================================================================ */
+
+/**
+ * Récupère tous les membres de l'équipe
+ */
+export async function getTeam() {
+  try {
+    await connectToDb();
+    const landing = await LandingPage.findOne().lean();
+    return { success: true, team: landing?.team || [] };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Ajoute un membre à l'équipe
+ */
+export async function addTeamMember(data: {
+  name: string;
+  role: string;
+  imageUrl: string;
+  bio: string;
+}) {
+  try {
+    await connectToDb();
+
+    let landing = await LandingPage.findOne();
+    if (!landing) {
+      landing = new LandingPage({ promises: [], values: [], team: [], aboutElmes: { title: "", description: "" } });
+    }
+
+    landing.team.push({
+      name: data.name,
+      role: data.role,
+      imageUrl: data.imageUrl,
+      bio: data.bio,
+    });
+
+    await landing.save();
+
+    const team = JSON.parse(JSON.stringify(landing.toObject().team));
+
+    return { success: true, team };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Modifie un membre de l'équipe
+ */
+export async function updateTeamMember(
+  index: number,
+  data: {
+    name: string;
+    role: string;
+    imageUrl: string;
+    bio: string;
+  }
+) {
+  try {
+    await connectToDb();
+
+    const landing = await LandingPage.findOne();
+    if (!landing) {
+      return { success: false, error: "Page d'accueil non trouvée" };
+    }
+
+    if (index < 0 || index >= landing.team.length) {
+      return { success: false, error: "Index de membre invalide" };
+    }
+
+    landing.team[index] = {
+      name: data.name,
+      role: data.role,
+      imageUrl: data.imageUrl,
+      bio: data.bio,
+    };
+
+    await landing.save();
+
+    const team = JSON.parse(JSON.stringify(landing.toObject().team));
+
+    return { success: true, team };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Supprime un membre de l'équipe
+ */
+export async function deleteTeamMember(index: number) {
+  try {
+    await connectToDb();
+
+    const landing = await LandingPage.findOne();
+    if (!landing) {
+      return { success: false, error: "Page d'accueil non trouvée" };
+    }
+
+    if (index < 0 || index >= landing.team.length) {
+      return { success: false, error: "Index de membre invalide" };
+    }
+
+    landing.team.splice(index, 1);
+    await landing.save();
+
+    const team = JSON.parse(JSON.stringify(landing.toObject().team));
+
+    return { success: true, team };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
