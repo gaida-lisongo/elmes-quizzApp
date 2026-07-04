@@ -1,6 +1,7 @@
 import AboutLeft from "@/components/About/AboutLeft";
 import AboutRight from "@/components/About/AboutRight";
 import FeaturesTab from "@/components/FeaturesTab";
+import Testimonial from "@/components/Testimonial";
 import { LandingPage } from "@/lib/models/Landing";
 import { getSession } from "@/lib/utils/auth";
 import connectToDb from "@/lib/utils/db";
@@ -23,7 +24,7 @@ export default async function AboutPage() {
         <section className="overflow-hidden pb-20 pt-35 md:pt-40 xl:pb-25 xl:pt-46">
             <AboutRight isAdmin={isAdmin} promesses={promesses} />
             <FeaturesTab isAdmin={isAdmin} valeurs={valeurs} />
-            <AboutLeft />
+            <Testimonial />
         </section>
     )
 }
