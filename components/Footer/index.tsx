@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import Image from "next/image";
+import Logo from "@/components/Common/Logo";
 
 const Footer = () => {
   return (
@@ -28,26 +28,7 @@ const Footer = () => {
                 viewport={{ once: true }}
                 className="animate_top w-1/2 lg:w-1/4"
               >
-                <a href="/" className="relative">
-                  <Image
-                    width={110}
-                    height={80}
-                    src="/images/logo/logo-light.svg"
-                    alt="Logo"
-                    className="dark:hidden"
-                  />
-                  <Image
-                    width={110}
-                    height={80}
-                    src="/images/logo/logo-dark.svg"
-                    alt="Logo"
-                    className="hidden dark:block"
-                  />
-                </a>
-
-                <p className="mb-10 mt-5">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                </p>
+                <Logo text="Première ligue numérique des intellectuels et de culture générale en RDC." />
 
                 <p className="mb-1.5 text-sectiontitle uppercase tracking-[5px]">
                   contact
@@ -56,7 +37,7 @@ const Footer = () => {
                   href="#"
                   className="text-itemtitle font-medium text-black dark:text-white"
                 >
-                  hello@solid.com
+                  contact@elmes-quiz.cd
                 </a>
               </motion.div>
 

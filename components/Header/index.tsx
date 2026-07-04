@@ -6,13 +6,25 @@ import { useEffect, useState } from "react";
 
 import ThemeToggler from "./ThemeToggler";
 import menuData from "./menuData";
+import Logo from "@/components/Common/Logo";
 
 const Header = () => {
   const [navigationOpen, setNavigationOpen] = useState(false);
   const [dropdownToggler, setDropdownToggler] = useState(false);
   const [stickyMenu, setStickyMenu] = useState(false);
+  const [hasSession, setHasSession] = useState(false);
 
   const pathUrl = usePathname();
+
+  // Vérifier la présence du cookie de session côté client
+  useEffect(() => {
+    const checkSession = () => {
+      const cookies = document.cookie.split(";").map((c) => c.trim());
+      const sessionCookie = cookies.find((c) => c.startsWith("genie_session="));
+      setHasSession(!!sessionCookie);
+    };
+    checkSession();
+  }, []);
 
   // Sticky menu
   const handleStickyMenu = () => {
@@ -37,22 +49,7 @@ const Header = () => {
     >
       <div className="relative mx-auto max-w-c-1390 items-center justify-between px-4 md:px-8 xl:flex 2xl:px-0">
         <div className="flex w-full items-center justify-between xl:w-1/4">
-          <a href="/">
-            <Image
-              src="/images/logo/logo-dark.svg"
-              alt="logo"
-              width={119.03}
-              height={30}
-              className="hidden w-full dark:block"
-            />
-            <Image
-              src="/images/logo/logo-light.svg"
-              alt="logo"
-              width={119.03}
-              height={30}
-              className="w-full dark:hidden"
-            />
-          </a>
+          <Logo />
 
           {/* <!-- Hamburger Toggle BTN --> */}
           <button
@@ -155,17 +152,10 @@ const Header = () => {
             <ThemeToggler />
 
             <Link
-              href="https://github.com/NextJSTemplates/solid-nextjs"
-              className="text-regular font-medium text-waterloo hover:text-primary"
-            >
-              GitHub Repo 🌟
-            </Link>
-
-            <Link
-              href="https://nextjstemplates.com/templates/solid"
+              href={hasSession ? "/dashboard" : "/auth/signin"}
               className="flex items-center justify-center rounded-full bg-primary px-7.5 py-2.5 text-regular text-white duration-300 ease-in-out hover:bg-primaryho"
             >
-              Get Pro 🔥
+              Mon Espace
             </Link>
           </div>
         </div>
