@@ -3,12 +3,42 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { loginUser } from "@/app/actions/auth.actions";
+import toast from "react-hot-toast";
 
 const Signin = () => {
+  const router = useRouter();
   const [data, setData] = useState({
-    email: "",
+    telephone: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("telephone", data.telephone);
+      formData.append("password", data.password);
+
+      const result = await loginUser(formData);
+
+      if (!result.success) {
+        toast.error(result.error || "Identifiants incorrects");
+        return;
+      }
+
+      toast.success("Connexion réussie !");
+      router.push("/dashboard");
+    } catch (err: any) {
+      toast.error("Erreur lors de la connexion");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -50,7 +80,7 @@ const Signin = () => {
             className="animate_top rounded-lg bg-white px-7.5 pt-7.5 shadow-solid-8 dark:border dark:border-strokedark dark:bg-black xl:px-15 xl:pt-15"
           >
             <h2 className="mb-15 text-center text-3xl font-semibold text-black dark:text-white xl:text-sectiontitle2">
-              Login to Your Account
+              Connexion à votre compte
             </h2>
             <div className="flex flex-col">
               <div className="flex items-center gap-8">
@@ -113,33 +143,34 @@ const Signin = () => {
                 </button>
               </div>
             </div>
+
             <div className="mb-10 flex items-center justify-center">
-              <span className="dark:bg-stroke-dark hidden h-[1px] w-full max-w-[200px] bg-stroke dark:bg-strokedark sm:block"></span>
               <p className="text-body-color dark:text-body-color-dark w-full px-5 text-center text-base">
-                Or, login with your email
+                Connectez-vous avec votre numéro de téléphone
               </p>
-              <span className="dark:bg-stroke-dark hidden h-[1px] w-full max-w-[200px] bg-stroke dark:bg-strokedark sm:block"></span>
             </div>
 
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="mb-7.5 flex flex-col gap-7.5 lg:mb-12.5 lg:flex-row lg:justify-between lg:gap-14">
                 <input
                   type="text"
-                  placeholder="Email"
-                  name="email"
-                  value={data.email}
-                  onChange={(e) => setData({ ...data, email: e.target.value })}
+                  placeholder="Téléphone"
+                  name="telephone"
+                  value={data.telephone}
+                  onChange={(e) => setData({ ...data, telephone: e.target.value })}
+                  required
                   className="w-full border-b border-stroke bg-white! pb-3.5 focus:border-waterloo focus:placeholder:text-black focus-visible:outline-hidden dark:border-strokedark dark:bg-black! dark:focus:border-manatee dark:focus:placeholder:text-white lg:w-1/2"
                 />
 
                 <input
                   type="password"
-                  placeholder="Password"
+                  placeholder="Mot de passe"
                   name="password"
                   value={data.password}
                   onChange={(e) =>
                     setData({ ...data, password: e.target.value })
                   }
+                  required
                   className="w-full border-b border-stroke bg-white! pb-3.5 focus:border-waterloo focus:placeholder:text-black focus-visible:outline-hidden dark:border-strokedark dark:bg-black! dark:focus:border-manatee dark:focus:placeholder:text-white lg:w-1/2"
                 />
               </div>
@@ -173,20 +204,22 @@ const Signin = () => {
                       htmlFor="default-checkbox"
                       className="flex max-w-[425px] cursor-pointer select-none pl-3"
                     >
-                      Keep me signed in
+                      Rester connecté
                     </label>
                   </div>
 
                   <a href="#" className="hover:text-primary">
-                    Forgot Password?
+                    Mot de passe oublié ?
                   </a>
                 </div>
 
                 <button
-                  aria-label="login with email and password"
-                  className="inline-flex items-center gap-2.5 rounded-full bg-black px-6 py-3 font-medium text-white duration-300 ease-in-out hover:bg-blackho dark:bg-btndark dark:hover:bg-blackho"
+                  type="submit"
+                  disabled={loading}
+                  aria-label="login"
+                  className="inline-flex items-center gap-2.5 rounded-full bg-black px-6 py-3 font-medium text-white duration-300 ease-in-out hover:bg-blackho dark:bg-btndark dark:hover:bg-blackho disabled:opacity-50"
                 >
-                  Log in
+                  {loading ? "Connexion..." : "Se connecter"}
                   <svg
                     className="fill-white"
                     width="14"

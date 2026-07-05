@@ -14,7 +14,7 @@ export interface ITicketRef {
 
 export interface IAgent extends Document {
   userId: mongoose.Types.ObjectId;
-  permissions: string[]; // Ex: ['SUPPORT_CHAT', 'VALIDATE_PAYMENT_LEVEL_1']
+  permissions: string[]; // Ex: ['ADMIN', 'MODERATEUR']
   retraits: IRetrait[];  // Historique des retraits de commissions/fonds
   tickets: ITicketRef[]; // Liste des tickets de support assignés ou gérés
   createdAt: Date;

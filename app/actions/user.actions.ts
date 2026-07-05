@@ -1,8 +1,8 @@
 'use server';
 
-import Agent from "../lib/models/Agent";
-import User from "../lib/models/User";
-import connectToDb from "../lib/utils/db";
+import Agent from "../../lib/models/Agent";
+import User from "../../lib/models/User";
+import connectToDb from "../../lib/utils/db";
 import crypto from 'crypto';
 
 interface CreateAgentParams {

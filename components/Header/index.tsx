@@ -23,21 +23,30 @@ const Header = () => {
       const sessionCookie = cookies.find((c) => c.startsWith("genie_session="));
       setHasSession(!!sessionCookie);
     };
+
     checkSession();
+
+    // Re-vérifier la session quand la page redevient visible (après redirect login)
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") checkSession();
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", onVisibilityChange);
   }, []);
 
   // Sticky menu
-  const handleStickyMenu = () => {
-    if (window.scrollY >= 80) {
-      setStickyMenu(true);
-    } else {
-      setStickyMenu(false);
-    }
-  };
-
   useEffect(() => {
+    const handleStickyMenu = () => {
+      if (window.scrollY >= 80) {
+        setStickyMenu(true);
+      } else {
+        setStickyMenu(false);
+      }
+    };
+
     window.addEventListener("scroll", handleStickyMenu);
-  });
+    return () => window.removeEventListener("scroll", handleStickyMenu);
+  }, []);
 
   return (
     <header

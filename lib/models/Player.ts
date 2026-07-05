@@ -26,6 +26,7 @@ export interface IPlayer extends Document {
   userId: mongoose.Types.ObjectId;
   referedBy: mongoose.Types.ObjectId;
   code: string;
+  type: 'STANDALONE' | 'ADVANCED' | 'VIP'
   level: 0 | 1 | 2 | 3;
   school: string;
   parties: number;
@@ -41,6 +42,7 @@ const PlayerSchema: Schema<IPlayer> = new Schema(
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
     referedBy: { type: Schema.Types.ObjectId, ref: 'Player'},
     level: { type: Number, enum: [0, 1, 2, 3], default: 0 },
+    type: { type: String, enum: ['STANDALONE', 'ADVANCED', 'VIP'], default: 'STANDALONE' },
     school: { type: String, required: true },
     parties: { type: Number, default: 0},
     code: { type: String, default: ""},
