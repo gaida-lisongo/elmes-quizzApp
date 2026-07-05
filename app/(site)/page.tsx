@@ -35,15 +35,15 @@ export default async function Home() {
       <ParcoursSection isAdmin={isAdmin} />
       <PassesSection />
       <CompetitionsSection isAdmin={isAdmin} />
-      <Feature />
+      {/* <Feature /> */}
       {/* <Brands /> */}
-      <About />
+      {/* <About />
       <Integration />
       <CTA />
       <FAQ />
       <Testimonial />
       <Contact />
-      <Blog />
+      <Blog /> */}
     </main>
   );
 }

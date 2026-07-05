@@ -20,6 +20,7 @@ export type MailSendInput = {
   subject: string;
   html: string;
   from?: string;
+  replyTo?: string;
   attachments?: MailAttachment[];
 };
 
@@ -138,7 +139,7 @@ export class Mail {
     });
   }
 
-  async send({ to, subject, html, from, attachments }: MailSendInput) {
+  async send({ to, subject, html, from, replyTo, attachments }: MailSendInput) {
     const recipients = Array.isArray(to) ? to : [to];
 
     if (recipients.length === 0) {
@@ -153,6 +154,7 @@ export class Mail {
       to: recipients.join(", "),
       subject,
       html,
+      replyTo: replyTo,
       attachments:
         attachments?.map((attachment) => ({
           filename: attachment.name,

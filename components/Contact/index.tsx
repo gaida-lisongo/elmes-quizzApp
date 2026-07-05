@@ -1,7 +1,8 @@
 "use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import React from "react";
+import React, { useState, FormEvent } from "react";
+import toast from "react-hot-toast";
 
 const Contact = () => {
   /**
@@ -15,6 +16,64 @@ const Contact = () => {
   if (!hasMounted) {
     return null;
   }
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    phone: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    if (!formData.name || !formData.email || !formData.message) {
+      toast.error("Veuillez remplir tous les champs obligatoires.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    const loadingToast = toast.loading("Envoi en cours...");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Une erreur est survenue.");
+      }
+
+      toast.dismiss(loadingToast);
+      toast.success("Message envoyé avec succès ! Nous vous répondrons bientôt.");
+      setFormData({ name: "", email: "", subject: "", phone: "", message: "" });
+    } catch (error: any) {
+      toast.dismiss(loadingToast);
+      toast.error(error.message || "Échec de l'envoi. Veuillez réessayer.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const coordonnees = {
+    adresse:
+      "1538 Avenue de la Douane, Rond Point FORESCOM, Gombe, Kinshasa, République Démocratique du Congo",
+    email: "contact@elmes-solution.site",
+    telephone: "+243 85 310 24 26",
+  };
 
   return (
     <>
@@ -57,23 +116,28 @@ const Contact = () => {
               className="animate_top w-full rounded-lg bg-white p-7.5 shadow-solid-8 dark:border dark:border-strokedark dark:bg-black md:w-3/5 lg:w-3/4 xl:p-15"
             >
               <h2 className="mb-15 text-3xl font-semibold text-black dark:text-white xl:text-sectiontitle2">
-                Send a message
+                Envoyez-nous un message
               </h2>
 
-              <form
-                action="https://formbold.com/s/unique_form_id"
-                method="POST"
-              >
+              <form onSubmit={handleSubmit}>
                 <div className="mb-7.5 flex flex-col gap-7.5 lg:flex-row lg:justify-between lg:gap-14">
                   <input
                     type="text"
-                    placeholder="Full name"
+                    name="name"
+                    placeholder="Nom complet *"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
                     className="w-full border-b border-stroke bg-transparent pb-3.5 focus:border-waterloo focus:placeholder:text-black focus-visible:outline-hidden dark:border-strokedark dark:focus:border-manatee dark:focus:placeholder:text-white lg:w-1/2"
                   />
 
                   <input
                     type="email"
-                    placeholder="Email address"
+                    name="email"
+                    placeholder="Adresse email *"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
                     className="w-full border-b border-stroke bg-transparent pb-3.5 focus:border-waterloo focus:placeholder:text-black focus-visible:outline-hidden dark:border-strokedark dark:focus:border-manatee dark:focus:placeholder:text-white lg:w-1/2"
                   />
                 </div>
@@ -81,21 +145,31 @@ const Contact = () => {
                 <div className="mb-12.5 flex flex-col gap-7.5 lg:flex-row lg:justify-between lg:gap-14">
                   <input
                     type="text"
-                    placeholder="Subject"
+                    name="subject"
+                    placeholder="Sujet"
+                    value={formData.subject}
+                    onChange={handleChange}
                     className="w-full border-b border-stroke bg-transparent pb-3.5 focus:border-waterloo focus:placeholder:text-black focus-visible:outline-hidden dark:border-strokedark dark:focus:border-manatee dark:focus:placeholder:text-white lg:w-1/2"
                   />
 
                   <input
                     type="text"
-                    placeholder="Phone number"
+                    name="phone"
+                    placeholder="Numéro de téléphone"
+                    value={formData.phone}
+                    onChange={handleChange}
                     className="w-full border-b border-stroke bg-transparent pb-3.5 focus:border-waterloo focus:placeholder:text-black focus-visible:outline-hidden dark:border-strokedark dark:focus:border-manatee dark:focus:placeholder:text-white lg:w-1/2"
                   />
                 </div>
 
                 <div className="mb-11.5 flex">
                   <textarea
-                    placeholder="Message"
+                    name="message"
+                    placeholder="Votre message *"
                     rows={4}
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
                     className="w-full border-b border-stroke bg-transparent focus:border-waterloo focus:placeholder:text-black focus-visible:outline-hidden dark:border-strokedark dark:focus:border-manatee dark:focus:placeholder:text-white"
                   ></textarea>
                 </div>
@@ -106,6 +180,7 @@ const Contact = () => {
                       id="default-checkbox"
                       type="checkbox"
                       className="peer sr-only"
+                      required
                     />
                     <span className="border-gray-300 bg-gray-100 text-blue-600 dark:border-gray-600 dark:bg-gray-700 group mt-2 flex h-5 min-w-[20px] items-center justify-center rounded-sm peer-checked:bg-primary">
                       <svg
@@ -128,16 +203,18 @@ const Contact = () => {
                       htmlFor="default-checkbox"
                       className="flex max-w-[425px] cursor-pointer select-none pl-5"
                     >
-                      By clicking Checkbox, you agree to use our “Form” terms
-                      And consent cookie usage in browser.
+                      En cochant, vous acceptez notre politique de confidentialité
+                      et le traitement de vos données.
                     </label>
                   </div>
 
                   <button
+                    type="submit"
+                    disabled={isSubmitting}
                     aria-label="send message"
-                    className="inline-flex items-center gap-2.5 rounded-full bg-black px-6 py-3 font-medium text-white duration-300 ease-in-out hover:bg-blackho dark:bg-btndark"
+                    className="inline-flex items-center gap-2.5 rounded-full bg-black px-6 py-3 font-medium text-white duration-300 ease-in-out hover:bg-blackho dark:bg-btndark disabled:opacity-50"
                   >
-                    Send Message
+                    {isSubmitting ? "Envoi..." : "Envoyer le message"}
                     <svg
                       className="fill-white"
                       width="14"
@@ -175,29 +252,29 @@ const Contact = () => {
               className="animate_top w-full md:w-2/5 md:p-7.5 lg:w-[26%] xl:pt-15"
             >
               <h2 className="mb-12.5 text-3xl font-semibold text-black dark:text-white xl:text-sectiontitle2">
-                Find us
+                Nos coordonnées
               </h2>
 
               <div className="5 mb-7">
                 <h3 className="mb-4 text-metatitle3 font-medium text-black dark:text-white">
-                  Our Loaction
+                  Adresse
                 </h3>
-                <p>290 Maryam Springs 260, Courbevoie, Paris, France</p>
+                <p>{coordonnees.adresse}</p>
               </div>
               <div className="5 mb-7">
                 <h3 className="mb-4 text-metatitle3 font-medium text-black dark:text-white">
-                  Email Address
+                  Email
                 </h3>
                 <p>
-                  <a href="#">yourmail@domainname.com</a>
+                  <a href={`mailto:${coordonnees.email}`}>{coordonnees.email}</a>
                 </p>
               </div>
               <div>
                 <h4 className="mb-4 text-metatitle3 font-medium text-black dark:text-white">
-                  Phone Number
+                  Téléphone
                 </h4>
                 <p>
-                  <a href="#">+009 42334 6343 843</a>
+                  <a href={`tel:${coordonnees.telephone}`}>{coordonnees.telephone}</a>
                 </p>
               </div>
             </motion.div>
