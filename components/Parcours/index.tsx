@@ -39,7 +39,7 @@ const ParcoursSection = ({ isAdmin = false }: { isAdmin?: boolean }) => {
 
   return (
     <>
-      <section id="parcours" className="py-20 lg:py-25 xl:py-30">
+      <section id="parcours" className="px-4 py-20 md:px-8 lg:py-22.5 2xl:px-0 py-20 lg:py-25 xl:py-30">
         <div className="mx-auto max-w-c-1315 px-4 md:px-8 xl:px-0">
           <SectionHeader
             headerInfo={{

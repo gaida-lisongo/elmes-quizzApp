@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import ThemeToggler from "./ThemeToggler";
 import menuData from "./menuData";
 import Logo from "@/components/Common/Logo";
+import { useLoading } from "@/context/LoadingContext";
 
 const Header = () => {
   const [navigationOpen, setNavigationOpen] = useState(false);
@@ -14,11 +15,13 @@ const Header = () => {
   const [stickyMenu, setStickyMenu] = useState(false);
   const [hasSession, setHasSession] = useState(false);
   const [dashboardUrl, setDashboardUrl] = useState("/auth/signin");
+  const { startLoading, stopLoading } = useLoading();
 
   const pathUrl = usePathname();
 
-  // Vérifier la session et le type de joueur via les cookies
+  // Vérifier la session et le type de joueur via les cookies (avec loader global)
   useEffect(() => {
+    startLoading("Vérification de votre session…");
     const checkSession = () => {
       const allCookies = document.cookie.split(";").map((c) => c.trim());
 
@@ -62,14 +65,21 @@ const Header = () => {
     };
 
     checkSession();
+    stopLoading();
 
     // Re-vérifier quand la page redevient visible
     const onVisibilityChange = () => {
-      if (document.visibilityState === "visible") checkSession();
+      if (document.visibilityState === "visible") {
+        startLoading("Mise à jour…");
+        checkSession();
+        stopLoading();
+      }
     };
     document.addEventListener("visibilitychange", onVisibilityChange);
-    return () =>
+    return () => {
       document.removeEventListener("visibilitychange", onVisibilityChange);
+      stopLoading();
+    };
   }, []);
 
   // Sticky menu

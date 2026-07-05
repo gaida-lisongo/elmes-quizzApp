@@ -12,34 +12,35 @@ import {
   Lock,
   Eye,
   EyeOff,
-  ArrowRight,
-  Loader2,
   LogIn,
   Sparkles,
   Brain,
   Shield,
 } from "lucide-react";
 import Logo from "@/components/Common/Logo";
+import { useLoading } from "@/context/LoadingContext";
 
 const Signin = () => {
   const router = useRouter();
+  const { withLoading } = useLoading();
   const [data, setData] = useState({
     telephone: "",
     password: "",
   });
-  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
     try {
       const formData = new FormData();
       formData.append("telephone", data.telephone);
       formData.append("password", data.password);
 
-      const result = await loginUser(formData);
+      const result = await withLoading(
+        () => loginUser(formData),
+        "Connexion en cours…"
+      );
 
       if (!result.success) {
         toast.error(result.error || "Identifiants incorrects");
@@ -50,8 +51,6 @@ const Signin = () => {
       router.push(result.redirectTo || "/dashboard");
     } catch {
       toast.error("Erreur lors de la connexion");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -243,20 +242,10 @@ const Signin = () => {
                 {/* Bouton */}
                 <button
                   type="submit"
-                  disabled={loading}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 font-medium text-white transition-all duration-200 hover:bg-primaryho disabled:cursor-not-allowed disabled:opacity-60"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 font-medium text-white transition-all duration-200 hover:bg-primaryho"
                 >
-                  {loading ? (
-                    <>
-                      <Loader2 className="h-5 w-5 animate-spin" />
-                      Connexion en cours...
-                    </>
-                  ) : (
-                    <>
-                      <LogIn className="h-5 w-5" />
-                      Se connecter
-                    </>
-                  )}
+                  <LogIn className="h-5 w-5" />
+                  Se connecter
                 </button>
 
                 {/* Séparateur */}

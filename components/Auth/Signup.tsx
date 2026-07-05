@@ -23,12 +23,11 @@ import {
   Zap,
   Eye,
   EyeOff,
-  Loader2,
   Link as LinkIcon,
 } from "lucide-react";
 import Logo from "@/components/Common/Logo";
-import Loader from "@/components/Common/Loader";
 import { createPlayerStep1, createPlayerStep2 } from "@/actions/signup.actions";
+import { useLoading } from "@/context/LoadingContext";
 import type { PlayerType } from "@/actions/signup.actions";
 
 interface SignupProps {
@@ -84,9 +83,9 @@ const PLAYER_TYPES: {
 
 const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
   const router = useRouter();
+  const { withLoading } = useLoading();
   const [step, setStep] = useState(1);
   const [selectedType, setSelectedType] = useState<PlayerType>(initialType);
-  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   // Step 1 data
@@ -147,15 +146,18 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
       return;
     }
 
-    setLoading(true);
     try {
-      const result = await createPlayerStep1({
-        pseudo: pseudo.trim(),
-        telephone: telephone.trim(),
-        school: school.trim(),
-        playerType: selectedType,
-        referralCode: referralCode || undefined,
-      });
+      const result = await withLoading(
+        () =>
+          createPlayerStep1({
+            pseudo: pseudo.trim(),
+            telephone: telephone.trim(),
+            school: school.trim(),
+            playerType: selectedType,
+            referralCode: referralCode || undefined,
+          }),
+        "Vérification de vos informations…"
+      );
 
       if (!result.success) {
         toast.error(result.error || "Erreur lors de la validation.");
@@ -166,8 +168,6 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
       setStep(2);
     } catch {
       toast.error("Une erreur est survenue.");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -186,12 +186,15 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
       return;
     }
 
-    setLoading(true);
     try {
-      const result = await createPlayerStep2({
-        password,
-        photo: step2Data.photo || undefined,
-      });
+      const result = await withLoading(
+        () =>
+          createPlayerStep2({
+            password,
+            photo: step2Data.photo || undefined,
+          }),
+        "Création de votre compte…"
+      );
 
       if (!result.success) {
         toast.error(result.error || "Erreur lors de la création du compte.");
@@ -202,8 +205,6 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
       router.push(result.redirectTo || "/dashboard/standalone");
     } catch {
       toast.error("Une erreur est survenue.");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -532,17 +533,10 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
 
                     <button
                       type="submit"
-                      disabled={loading}
-                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 font-medium text-white transition-all duration-200 hover:bg-primaryho disabled:cursor-not-allowed disabled:opacity-60"
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 font-medium text-white transition-all duration-200 hover:bg-primaryho"
                     >
-                      {loading ? (
-                        <Loader2 className="h-5 w-5 animate-spin" />
-                      ) : (
-                        <>
-                          Continuer
-                          <ArrowRight className="h-5 w-5" />
-                        </>
-                      )}
+                      Continuer
+                      <ArrowRight className="h-5 w-5" />
                     </button>
 
                     <p className="mt-4 text-center text-sm text-waterloo">
@@ -721,7 +715,6 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
                       <button
                         type="button"
                         onClick={() => setStep(1)}
-                        disabled={loading}
                         className="flex items-center justify-center gap-2 rounded-xl border border-stroke px-6 py-3.5 font-medium text-black transition-all duration-200 hover:bg-stroke dark:border-strokedark dark:text-white dark:hover:bg-strokedark"
                       >
                         <ArrowLeft className="h-5 w-5" />
@@ -729,17 +722,10 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
                       </button>
                       <button
                         type="submit"
-                        disabled={loading}
-                        className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 font-medium text-white transition-all duration-200 hover:bg-primaryho disabled:cursor-not-allowed disabled:opacity-60"
+                        className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 font-medium text-white transition-all duration-200 hover:bg-primaryho"
                       >
-                        {loading ? (
-                          <Loader2 className="h-5 w-5 animate-spin" />
-                        ) : (
-                          <>
-                            Créer mon compte
-                            <Check className="h-5 w-5" />
-                          </>
-                        )}
+                        Créer mon compte
+                        <Check className="h-5 w-5" />
                       </button>
                     </div>
                   </motion.form>

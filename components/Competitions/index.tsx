@@ -41,7 +41,7 @@ const CompetitionsSection = ({ isAdmin = false }: { isAdmin?: boolean }) => {
 
   return (
     <>
-      <section id="competitions" className="py-20 lg:py-25 xl:py-30">
+      <section id="competitions" className="px-4 py-20 md:px-8 lg:py-22.5 2xl:px-0 py-20 lg:py-25 xl:py-30">
         <div className="mx-auto max-w-c-1315 px-4 md:px-8 xl:px-0">
           <div className="animate_top mx-auto mb-12.5 text-center md:w-4/5 md:px-0 lg:mb-17.5 lg:w-2/3 xl:w-1/2">
             <SectionHeader

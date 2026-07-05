@@ -6,6 +6,7 @@ import Lines from "@/components/Lines";
 import ScrollToTop from "@/components/ScrollToTop";
 import { ThemeProvider } from "next-themes";
 import ToasterContext from "../context/ToastContext";
+import { LoadingProvider } from "@/context/LoadingContext";
 import type { FooterParcours, FooterCompetition } from "@/actions/footer.actions";
 
 export default function ClientLayout({
@@ -23,15 +24,17 @@ export default function ClientLayout({
       attribute="class"
       defaultTheme="light"
     >
-      <Lines />
-      <Header />
-      <ToasterContext />
-      {children}
-      <Footer
-        parcours={footerParcours}
-        competitions={footerCompetitions}
-      />
-      <ScrollToTop />
+      <LoadingProvider>
+        <Lines />
+        <Header />
+        <ToasterContext />
+        {children}
+        <Footer
+          parcours={footerParcours}
+          competitions={footerCompetitions}
+        />
+        <ScrollToTop />
+      </LoadingProvider>
     </ThemeProvider>
   );
 }

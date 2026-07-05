@@ -101,7 +101,7 @@ const FunFact = () => {
             <h2 className="mb-4 text-3xl font-bold text-black dark:text-white xl:text-sectiontitle3">
               ELMES-QUIZ en chiffres
             </h2>
-            <p className="mx-auto lg:w-11/12">
+            <p className="mx-auto lg:w-11/12 hidden md:block text-lg text-black dark:text-white">
               Découvrez nos statistiques impressionnantes et rejoignez la communauté des passionnés de quiz !
             </p>
           </motion.div>
