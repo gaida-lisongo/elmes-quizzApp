@@ -51,7 +51,7 @@ function SearchUserInput({ onSelect }: { onSelect: (user: SearchUserResult) => v
   const [results, setResults] = useState<SearchUserResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
