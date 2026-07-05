@@ -28,7 +28,7 @@ const Footer = () => {
                 viewport={{ once: true }}
                 className="animate_top w-1/2 lg:w-1/4"
               >
-                <Logo text="Première ligue numérique des intellectuels et de culture générale en RDC." />
+                <Logo text="Première ligue numérique des intellectuels et de la culture générale en République Démocratique du Congo, ELMES-QUIZ est une plateforme de quiz en ligne qui met à l'épreuve vos connaissances et votre rapidité. " />
 
                 <p className="mb-1.5 text-sectiontitle uppercase tracking-[5px]">
                   contact

@@ -102,7 +102,7 @@ const FunFact = () => {
               ELMES-QUIZ en chiffres
             </h2>
             <p className="mx-auto lg:w-11/12">
-              Première ligue numérique des intellectuels et de la culture générale en République Démocratique du Congo, ELMES-QUIZ est une plateforme de quiz en ligne qui met à l'épreuve vos connaissances et votre rapidité. Découvrez nos statistiques impressionnantes et rejoignez la communauté des passionnés de quiz !
+              Découvrez nos statistiques impressionnantes et rejoignez la communauté des passionnés de quiz !
             </p>
           </motion.div>
 
