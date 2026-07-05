@@ -75,12 +75,13 @@ export async function registerPlayer(formData: FormData) {
     await Player.create({
       userId: newUser._id,
       referedBy,
+      type: 'STANDALONE',
       level: 0,
       school: school.trim(),
       parties: 10,
       code: referralCode,
       recharges: [],
-      metrics: { totalScore: 0, partiesJouees: 0, MeilleurScore: 0 }
+      metrics: { totalScore: 0, partiesJouees: 0, partiesGagnees: 0 }
     });
 
     // Génération et injection du cookie de session (7 jours)
@@ -143,8 +144,27 @@ export async function loginUser(formData: FormData) {
       path: '/',
     });
 
+    // Déterminer la redirection selon le rôle
+    let redirectTo = '/dashboard';
+
+    if (user.role === 'PLAYER') {
+      // Récupérer le type de joueur
+      try {
+        const player = await Player.findOne({ userId: user._id }).select('type').lean();
+        const playerType = player?.type || 'STANDALONE';
+        const routes: Record<string, string> = {
+          STANDALONE: '/dashboard/standalone',
+          ADVANCED: '/dashboard/advanced',
+          VIP: '/dashboard/vip',
+        };
+        redirectTo = routes[playerType] || '/dashboard/standalone';
+      } catch {
+        redirectTo = '/dashboard/standalone';
+      }
+    }
+
     console.log('Login successful, token set');
-    return { success: true, role: user.role };
+    return { success: true, role: user.role, redirectTo };
   } catch (error: any) {
     console.error('Login error:', error);
     return { success: false, error: error.message || 'Erreur lors de la connexion.' };

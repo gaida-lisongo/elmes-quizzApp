@@ -1,17 +1,18 @@
-import Signup from "@/components/Auth/Signup";
+import SignupPage from "./SignupPage";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Sign Up Page - Solid SaaS Boilerplate",
-
-  // other metadata
-  description: "This is Sign Up page for Startup Pro"
+  title: "Inscription - ELMES-QUIZ | Rejoignez la première ligue numérique",
+  description:
+    "Créez votre compte ELMES-QUIZ et participez à la première ligue numérique des intellectuels et de la culture générale en RDC.",
 };
 
-export default function Register() {
-  return (
-    <>
-      <Signup />
-    </>
-  );
+interface Props {
+  searchParams: Promise<{ code?: string }>;
+}
+
+export default async function Register({ searchParams }: Props) {
+  const { code } = await searchParams;
+
+  return <SignupPage referralCode={code || null} />;
 }

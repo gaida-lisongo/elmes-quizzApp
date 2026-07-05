@@ -32,7 +32,7 @@ const Signin = () => {
       }
 
       toast.success("Connexion réussie !");
-      router.push("/dashboard");
+      router.push(result.redirectTo || "/dashboard");
     } catch (err: any) {
       toast.error("Erreur lors de la connexion");
     } finally {

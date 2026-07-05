@@ -169,7 +169,7 @@ const Footer = ({
                     Partie
                   </h4>
                   <p className="mb-4 w-[90%]">
-                    Saisissez votre numéro de ticket pour démarrer une partie
+                    Démarrer une partie
                   </p>
 
                   <form onSubmit={handleTicketSubmit}>

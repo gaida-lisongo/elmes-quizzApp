@@ -19,7 +19,7 @@ export interface IRetrait {
 export interface IMetrics {
   totalScore: number;
   partiesJouees: number;
-  MeilleurScore: number;
+  partiesGagnees: number;
 }
 
 export interface IPlayer extends Document {
@@ -67,7 +67,7 @@ const PlayerSchema: Schema<IPlayer> = new Schema(
     metrics: {
       totalScore: { type: Number, default: 0 },
       partiesJouees: { type: Number, default: 0 },
-      MeilleurScore: { type: Number, default: 0 }
+      partiesGagnees: { type: Number, default: 0 }
     }
   },
   { timestamps: true }
