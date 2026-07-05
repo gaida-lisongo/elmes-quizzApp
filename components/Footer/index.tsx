@@ -1,8 +1,25 @@
 "use client";
 import { motion } from "framer-motion";
 import Logo from "@/components/Common/Logo";
+import Link from "next/link";
+import { useState, FormEvent } from "react";
+import type { FooterParcours, FooterCompetition } from "@/actions/footer.actions";
 
-const Footer = () => {
+const Footer = ({
+  parcours,
+  competitions,
+}: {
+  parcours: FooterParcours[];
+  competitions: FooterCompetition[];
+}) => {
+  const [ticketCode, setTicketCode] = useState("");
+
+  const handleTicketSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    console.log("Numéro de ticket saisi :", ticketCode);
+    setTicketCode("");
+  };
+
   return (
     <>
       <footer className="border-t border-stroke bg-white dark:border-strokedark dark:bg-blacksection">
@@ -34,10 +51,10 @@ const Footer = () => {
                   contact
                 </p>
                 <a
-                  href="#"
+                  href="mailto:contact@elmes-solution.site"
                   className="text-itemtitle font-medium text-black dark:text-white"
                 >
-                  contact@elmes-quiz.cd
+                  contact@elmes-solution.site
                 </a>
               </motion.div>
 
@@ -61,42 +78,28 @@ const Footer = () => {
                   className="animate_top"
                 >
                   <h4 className="mb-9 text-itemtitle2 font-medium text-black dark:text-white">
-                    Quick Links
+                    Parcours
                   </h4>
 
                   <ul>
-                    <li>
-                      <a
-                        href="#"
-                        className="mb-3 inline-block hover:text-primary"
-                      >
-                        Home
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="mb-3 inline-block hover:text-primary"
-                      >
-                        Product
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="mb-3 inline-block hover:text-primary"
-                      >
-                        Careers
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="mb-3 inline-block hover:text-primary"
-                      >
-                        Pricing
-                      </a>
-                    </li>
+                    {parcours.length > 0 ? (
+                      parcours.map((p) => (
+                        <li key={p._id}>
+                          <Link
+                            href={`/parcours/${p.slug}`}
+                            className="mb-3 inline-block hover:text-primary"
+                          >
+                            {p.designation}
+                          </Link>
+                        </li>
+                      ))
+                    ) : (
+                      <li>
+                        <span className="mb-3 inline-block text-gray-500">
+                          Aucun parcours pour le moment
+                        </span>
+                      </li>
+                    )}
                   </ul>
                 </motion.div>
 
@@ -119,42 +122,28 @@ const Footer = () => {
                   className="animate_top"
                 >
                   <h4 className="mb-9 text-itemtitle2 font-medium text-black dark:text-white">
-                    Support
+                    Compétitions
                   </h4>
 
                   <ul>
-                    <li>
-                      <a
-                        href="#"
-                        className="mb-3 inline-block hover:text-primary"
-                      >
-                        Company
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="mb-3 inline-block hover:text-primary"
-                      >
-                        Press media
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="mb-3 inline-block hover:text-primary"
-                      >
-                        Our Blog
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="mb-3 inline-block hover:text-primary"
-                      >
-                        Contact Us
-                      </a>
-                    </li>
+                    {competitions.length > 0 ? (
+                      competitions.map((c) => (
+                        <li key={c._id}>
+                          <Link
+                            href={`/competition/${c.slug}`}
+                            className="mb-3 inline-block hover:text-primary"
+                          >
+                            {c.designation}
+                          </Link>
+                        </li>
+                      ))
+                    ) : (
+                      <li>
+                        <span className="mb-3 inline-block text-gray-500">
+                          Aucune compétition pour le moment
+                        </span>
+                      </li>
+                    )}
                   </ul>
                 </motion.div>
 
@@ -177,22 +166,25 @@ const Footer = () => {
                   className="animate_top"
                 >
                   <h4 className="mb-9 text-itemtitle2 font-medium text-black dark:text-white">
-                    Newsletter
+                    Partie
                   </h4>
                   <p className="mb-4 w-[90%]">
-                    Subscribe to receive future updates
+                    Saisissez votre numéro de ticket pour démarrer une partie
                   </p>
 
-                  <form action="#">
+                  <form onSubmit={handleTicketSubmit}>
                     <div className="relative">
                       <input
                         type="text"
-                        placeholder="Email address"
+                        placeholder="Numéro de ticket"
+                        value={ticketCode}
+                        onChange={(e) => setTicketCode(e.target.value)}
                         className="w-full rounded-full border border-stroke px-6 py-3 shadow-solid-11 focus:border-primary focus:outline-hidden dark:border-strokedark dark:bg-black dark:shadow-none dark:focus:border-primary"
                       />
 
                       <button
-                        aria-label="signup to newsletter"
+                        type="submit"
+                        aria-label="lancer la partie"
                         className="absolute right-0 p-4"
                       >
                         <svg
@@ -256,9 +248,9 @@ const Footer = () => {
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-primary">
+                  <Link href="/support" className="hover:text-primary">
                     Support
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </motion.div>
@@ -282,7 +274,8 @@ const Footer = () => {
               className="animate_top"
             >
               <p>
-                &copy; {new Date().getFullYear()} Solid. All rights reserved
+                &copy; {new Date().getFullYear()} ELMES-QUIZ. All rights
+                reserved
               </p>
             </motion.div>
 

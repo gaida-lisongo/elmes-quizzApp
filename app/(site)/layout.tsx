@@ -2,8 +2,11 @@ import { Inter } from "next/font/google";
 import "../globals.css";
 import type { Metadata } from "next";
 import Proivder from "./Provider";
-import { getSession } from "../../lib/utils/auth";
-import { getCurrentUserDetailed } from "@/actions/auth.actions";
+
+import {
+  getFooterParcours,
+  getFooterCompetitions,
+} from "@/actions/footer.actions";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,17 +23,18 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
-  const session = await getSession();
-
-  console.log("Session in RootLayout:", session);
-  const user = await getCurrentUserDetailed();
-  console.log("User in RootLayout:", user);
+  // Données pour le footer (fetch serveur)
+  const [parcours, competitions] = await Promise.all([
+    getFooterParcours(),
+    getFooterCompetitions(),
+  ]);
 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`dark:bg-black ${inter.className}`}>
-        <Proivder>{children}</Proivder>
+        <Proivder footerParcours={parcours} footerCompetitions={competitions}>
+          {children}
+        </Proivder>
       </body>
     </html>
   );
