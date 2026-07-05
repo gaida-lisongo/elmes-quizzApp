@@ -7,7 +7,7 @@ import {
   getFooterParcours,
   getFooterCompetitions,
 } from "@/actions/footer.actions";
-import { getSession } from "@/lib/utils/auth";
+import { getCurrentUserDetailed } from "@/actions/auth.actions";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +25,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   // Session côté serveur (instantanée, pas de flickering)
-  const session = await getSession();
+  const userData = await getCurrentUserDetailed();
+
+  console.log("User data in RootLayout:", userData);
 
   // Données pour le footer
   const [parcours, competitions] = await Promise.all([
@@ -39,7 +41,7 @@ export default async function RootLayout({
         <Proivder
           footerParcours={parcours}
           footerCompetitions={competitions}
-          session={session ? { userId: session.userId, role: session.role } : null}
+          session={userData ? { userId: userData._id, role: userData?.playerType ?? userData?.role } : null}
         >
           {children}
         </Proivder>

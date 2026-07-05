@@ -9,11 +9,13 @@ import menuData from "./menuData";
 import Logo from "@/components/Common/Logo";
 import { useSession } from "@/context/SessionContext";
 
-const Header = () => {
+const Header = ({ session } : { session: { userId: string; role: string } | null }) => {
   const [navigationOpen, setNavigationOpen] = useState(false);
   const [dropdownToggler, setDropdownToggler] = useState(false);
   const [stickyMenu, setStickyMenu] = useState(false);
   const { dashboardUrl, isAuthenticated } = useSession();
+
+  console.log("Header session prop:", session);
 
   const pathUrl = usePathname();
 
@@ -144,7 +146,7 @@ const Header = () => {
             <ThemeToggler />
 
             <Link
-              href={dashboardUrl}
+              href={session?.role ? '/dashboard' : '/auth/signin'}
               className="flex items-center justify-center rounded-full bg-primary px-7.5 py-2.5 text-regular text-white duration-300 ease-in-out hover:bg-primaryho"
             >
               Mon Espace

@@ -35,7 +35,7 @@ export default function ClientLayout({
       <SessionProvider serverSession={session}>
         <LoadingProvider>
           <Lines />
-          <Header />
+          <Header session={session} />
           <ToasterContext />
           {children}
           <Footer

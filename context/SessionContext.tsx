@@ -32,19 +32,7 @@ export function useSession(): SessionContextType {
 
 function computeDashboardUrl(playerType: string | null, hasSession: boolean): string {
   if (!hasSession) return "/auth/signin";
-  switch (playerType) {
-    case "ADMIN":
-    case "MOD":
-      return "/dashboard";
-    case "STANDALONE":
-      return "/dashboard/standalone";
-    case "ADVANCED":
-      return "/dashboard/advanced";
-    case "VIP":
-      return "/dashboard/vip";
-    default:
-      return "/dashboard";
-  }
+  return "/dashboard";
 }
 
 function readPlayerTypeFromCookie(): string | null {
