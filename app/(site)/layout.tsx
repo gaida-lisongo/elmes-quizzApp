@@ -7,6 +7,7 @@ import {
   getFooterParcours,
   getFooterCompetitions,
 } from "@/actions/footer.actions";
+import { getSession } from "@/lib/utils/auth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +24,10 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Données pour le footer (fetch serveur)
+  // Session côté serveur (instantanée, pas de flickering)
+  const session = await getSession();
+
+  // Données pour le footer
   const [parcours, competitions] = await Promise.all([
     getFooterParcours(),
     getFooterCompetitions(),
@@ -32,7 +36,11 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`dark:bg-black ${inter.className}`}>
-        <Proivder footerParcours={parcours} footerCompetitions={competitions}>
+        <Proivder
+          footerParcours={parcours}
+          footerCompetitions={competitions}
+          session={session ? { userId: session.userId, role: session.role } : null}
+        >
           {children}
         </Proivder>
       </body>

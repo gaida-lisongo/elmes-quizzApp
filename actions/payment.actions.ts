@@ -43,6 +43,53 @@ const PACK_NAMES: Record<number, string> = {
 // ═══════════════════════════════════════════════════════════════════
 
 /**
+ * Recherche des utilisateurs par pseudo, téléphone ou email (autocomplete)
+ */
+export async function searchUsers(query: string) {
+  try {
+    await connectToDb();
+
+    if (!query || query.trim().length < 2) {
+      return { success: true, users: [] };
+    }
+
+    const searchRegex = new RegExp(query.trim(), 'i');
+
+    const users = await User.find({
+      $or: [
+        { pseudo: searchRegex },
+        { telephone: searchRegex },
+        { email: searchRegex },
+      ],
+    })
+      .limit(10)
+      .select('pseudo telephone email photo role')
+      .lean();
+
+    const enriched = await Promise.all(
+      users.map(async (u) => {
+        const player = await Player.findOne({ userId: u._id }).select('type level parties').lean();
+        return {
+          _id: u._id.toString(),
+          pseudo: u.pseudo,
+          telephone: u.telephone,
+          email: u.email,
+          photo: u.photo,
+          role: u.role,
+          playerType: player?.type || null,
+          level: player?.level ?? null,
+          parties: player?.parties ?? null,
+        };
+      })
+    );
+
+    return { success: true, users: enriched };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'Erreur serveur.' };
+  }
+}
+
+/**
  * Étape 1 — Trouver le joueur par téléphone ou email
  */
 export async function findPlayerByContact(phone: string, email?: string) {

@@ -7,80 +7,15 @@ import { useEffect, useState } from "react";
 import ThemeToggler from "./ThemeToggler";
 import menuData from "./menuData";
 import Logo from "@/components/Common/Logo";
-import { useLoading } from "@/context/LoadingContext";
+import { useSession } from "@/context/SessionContext";
 
 const Header = () => {
   const [navigationOpen, setNavigationOpen] = useState(false);
   const [dropdownToggler, setDropdownToggler] = useState(false);
   const [stickyMenu, setStickyMenu] = useState(false);
-  const [hasSession, setHasSession] = useState(false);
-  const [dashboardUrl, setDashboardUrl] = useState("/auth/signin");
-  const { startLoading, stopLoading } = useLoading();
+  const { dashboardUrl, isAuthenticated } = useSession();
 
   const pathUrl = usePathname();
-
-  // Vérifier la session et le type de joueur via les cookies (avec loader global)
-  useEffect(() => {
-    startLoading("Vérification de votre session…");
-    const checkSession = () => {
-      const allCookies = document.cookie.split(";").map((c) => c.trim());
-
-      // Vérifier si la session existe
-      const sessionCookie = allCookies.find((c) =>
-        c.startsWith("genie_session=")
-      );
-      const hasActiveSession = !!sessionCookie;
-      setHasSession(hasActiveSession);
-
-      if (hasActiveSession) {
-        // Lire le type depuis le cookie player_type
-        const typeCookie = allCookies.find((c) =>
-          c.startsWith("player_type=")
-        );
-        const playerType = typeCookie
-          ? typeCookie.split("=")[1]
-          : null;
-
-        // Construire l'URL du dashboard en fonction du type
-        switch (playerType) {
-          case "ADMIN":
-          case "MOD":
-            setDashboardUrl("/dashboard");
-            break;
-          case "STANDALONE":
-            setDashboardUrl("/dashboard/standalone");
-            break;
-          case "ADVANCED":
-            setDashboardUrl("/dashboard/advanced");
-            break;
-          case "VIP":
-            setDashboardUrl("/dashboard/vip");
-            break;
-          default:
-            setDashboardUrl("/dashboard");
-        }
-      } else {
-        setDashboardUrl("/auth/signin");
-      }
-    };
-
-    checkSession();
-    stopLoading();
-
-    // Re-vérifier quand la page redevient visible
-    const onVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        startLoading("Mise à jour…");
-        checkSession();
-        stopLoading();
-      }
-    };
-    document.addEventListener("visibilitychange", onVisibilityChange);
-    return () => {
-      document.removeEventListener("visibilitychange", onVisibilityChange);
-      stopLoading();
-    };
-  }, []);
 
   // Sticky menu
   useEffect(() => {
