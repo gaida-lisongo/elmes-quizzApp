@@ -7,7 +7,7 @@ import {
   addValeur,
   updateValeur,
   deleteValeur,
-} from "@/app/actions/branding.actions";
+} from "@/actions/branding.actions";
 
 /* ================================================================
    Types

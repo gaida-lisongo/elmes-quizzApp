@@ -8,7 +8,7 @@ import {
   updateAgentPermissions,
   deleteAgentAndUser,
   updateUser,
-} from "@/app/actions/user.actions";
+} from "@/actions/user.actions";
 
 /* ================================================================
    Types

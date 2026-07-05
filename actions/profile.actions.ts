@@ -1,9 +1,9 @@
 "use server";
 
 import { getSession } from "@/lib/utils/auth";
-import connectToDb from "@/app/lib/utils/db";
-import User from "@/app/lib/models/User";
-import Player from "@/app/lib/models/Player";
+import connectToDb from "@/lib/utils/db";
+import User from "@/lib/models/User";
+import Player from "@/lib/models/Player";
 import { hashPassword } from "./user.actions";
 
 /**

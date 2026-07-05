@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { loginUser } from "@/app/actions/auth.actions";
+import { loginUser } from "@/actions/auth.actions";
 import toast from "react-hot-toast";
 
 const Signin = () => {

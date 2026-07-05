@@ -8,7 +8,7 @@ import {
   addPromesse,
   updatePromesse,
   deletePromesse,
-} from "@/app/actions/branding.actions";
+} from "@/actions/branding.actions";
 
 /* ================================================================
    Types

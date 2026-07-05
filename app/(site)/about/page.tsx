@@ -10,7 +10,7 @@ import connectToDb from "@/lib/utils/db";
 export default async function AboutPage() {
     const session = await getSession();
     
-    const isAdmin = session?.role === "ADMIN" || true;
+    const isAdmin = session?.role === "ADMIN" || session?.role === "MOD";
 
     await connectToDb();
 

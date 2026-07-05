@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { uploadToCloudinary } from "@/app/actions/cloudinary.actions";
+import { uploadToCloudinary } from "@/actions/cloudinary.actions";
 
 interface ImageUploaderProps {
   onUploadComplete: (url: string) => void;

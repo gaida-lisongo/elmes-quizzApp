@@ -3,7 +3,7 @@ import "../globals.css";
 import type { Metadata } from "next";
 import Proivder from "./Provider";
 import { getSession } from "../../lib/utils/auth";
-import { getCurrentUserDetailed } from "../../actions/auth.actions";
+import { getCurrentUserDetailed } from "@/actions/auth.actions";
 
 const inter = Inter({ subsets: ["latin"] });
 

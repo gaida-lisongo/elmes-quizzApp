@@ -17,7 +17,7 @@ import {
   addTeamMember,
   updateTeamMember,
   deleteTeamMember,
-} from "@/app/actions/branding.actions";
+} from "@/actions/branding.actions";
 
 /* ================================================================
    Types

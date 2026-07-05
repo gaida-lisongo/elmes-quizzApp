@@ -1,10 +1,31 @@
-export default function EquipesPage() {
-  return (
-    <section className="overflow-hidden pb-20 pt-35 md:pt-40 xl:pb-25 xl:pt-46">
-      <div className="mx-auto max-w-c-1390 px-4 md:px-8 2xl:px-0">
-        <h1 className="text-3xl font-bold text-black dark:text-white">Équipes</h1>
-        <p className="mt-4 text-waterloo">Page des équipes à venir...</p>
-      </div>
-    </section>
-  );
+import { Metadata } from "next";
+import { getSession } from "@/lib/utils/auth";
+import GamingPage from "@/components/Gaming";
+
+export const metadata: Metadata = {
+  title: "ELMES-QUIZ | Le savoir devient un pouvoir",
+
+  // other metadata
+  description: "Plateforme de quiz et compétition intellectuelle"
+};
+
+export default async function EquipesPage() {
+  try{
+    const session = await getSession();
+    const isAdmin = session?.role === "ADMIN" || session?.role === "MOD";
+
+    return (
+      <main>
+        <GamingPage />
+      </main>
+    );
+
+  } catch (error) {
+    console.error("Error in EquipesPage:", error);
+    return (
+      <main>
+        <p>Une erreur est survenue lors du chargement de la page. Veuillez réessayer plus tard.</p>
+      </main>
+    );
+  }
 }
