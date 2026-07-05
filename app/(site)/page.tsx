@@ -12,27 +12,36 @@ import Pricing from "@/components/Pricing";
 import Contact from "@/components/Contact";
 import Blog from "@/components/Blog";
 import Testimonial from "@/components/Testimonial";
+import ParcoursSection from "@/components/Parcours";
+import CompetitionsSection from "@/components/Competitions";
+import PassesSection from "@/components/Passes";
+import { getSession } from "@/lib/utils/auth";
 
 export const metadata: Metadata = {
-  title: "Next.js Starter Template for SaaS Startups - Solid SaaS Boilerplate",
+  title: "ELMES-QUIZ | Le savoir devient un pouvoir",
 
   // other metadata
-  description: "This is Home for Solid Pro"
+  description: "Plateforme de quiz et compétition intellectuelle"
 };
 
-export default function Home() {
+export default async function Home() {
+  const session = await getSession();
+  const isAdmin = session?.role === "ADMIN" || session?.role === "MOD";
+
   return (
     <main>
       <Hero />
-      <Brands />
-      <Feature />
-      <About />
       <FunFact />
+      <ParcoursSection isAdmin={isAdmin} />
+      <PassesSection />
+      <CompetitionsSection isAdmin={isAdmin} />
+      <Feature />
+      {/* <Brands /> */}
+      <About />
       <Integration />
       <CTA />
       <FAQ />
       <Testimonial />
-      <Pricing />
       <Contact />
       <Blog />
     </main>

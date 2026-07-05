@@ -1,15 +1,15 @@
 "use server";
 
-import connectToDb from "@/app/lib/utils/db";
-import Player, { IRetrait } from "@/app/lib/models/Player";
-import Agent from "@/app/lib/models/Agent";
-import User from "@/app/lib/models/User";
+import connectToDb from "@/lib/utils/db";
+import Player, { IRetrait } from "@/lib/models/Player";
+import Agent from "@/lib/models/Agent";
+import User from "@/lib/models/User";
 import { getSession } from "@/lib/utils/auth";
 import {
   initiateCollection,
   initiatePayout,
   checkStatus,
-} from "@/services/payment.service";
+} from "@/lib/utils/payment.service";
 import type { PipelineStage } from "mongoose";
 
 // ── Recharge Joueur ────────────────────────────────────────────────

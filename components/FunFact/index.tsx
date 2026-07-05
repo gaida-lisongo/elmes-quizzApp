@@ -1,9 +1,52 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { getMetricsCounts } from "@/actions/metrics.actions";
+
+const metrics = [
+  { key: "categories" as const, label: "Catégories", suffix: "+" },
+  { key: "quizzes" as const, label: "Questions", suffix: "+" },
+  { key: "parties" as const, label: "Parties jouées", suffix: "" },
+];
+
+function AnimatedCounter({ target, suffix }: { target: number; suffix: string }) {
+  const [count, setCount] = useState(0);
+  const animated = useRef(false);
+
+  useEffect(() => {
+    if (animated.current) return;
+    animated.current = true;
+
+    const duration = 2000;
+    const steps = 30;
+    const increment = target / steps;
+    let step = 0;
+
+    const timer = setInterval(() => {
+      step++;
+      setCount(Math.min(Math.round(increment * step), target));
+      if (step >= steps) clearInterval(timer);
+    }, duration / steps);
+
+    return () => clearInterval(timer);
+  }, [target]);
+
+  return (
+    <>
+      {count}
+      <span className="text-primary">{suffix}</span>
+    </>
+  );
+}
 
 const FunFact = () => {
+  const [counts, setCounts] = useState({ categories: 0, quizzes: 0, parties: 0 });
+
+  useEffect(() => {
+    getMetricsCounts().then(setCounts).catch(console.error);
+  }, []);
+
   return (
     <>
       {/* <!-- ===== Funfact Start ===== --> */}
@@ -56,85 +99,33 @@ const FunFact = () => {
             className="animate_top mx-auto mb-12.5 px-4 text-center md:w-4/5 md:px-0 lg:mb-17.5 lg:w-2/3 xl:w-1/2"
           >
             <h2 className="mb-4 text-3xl font-bold text-black dark:text-white xl:text-sectiontitle3">
-              Trusted by Global Companies.
+              ELMES-QUIZ en chiffres
             </h2>
             <p className="mx-auto lg:w-11/12">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. In
-              convallis tortor eros. Donec vitae tortor lacus. Phasellus aliquam
-              ante in maximus.
+              Première ligue numérique des intellectuels et de la culture générale en République Démocratique du Congo, ELMES-QUIZ est une plateforme de quiz en ligne qui met à l'épreuve vos connaissances et votre rapidité. Découvrez nos statistiques impressionnantes et rejoignez la communauté des passionnés de quiz !
             </p>
           </motion.div>
 
           <div className="flex flex-wrap justify-center gap-8 lg:gap-42.5">
-            <motion.div
-              variants={{
-                hidden: {
-                  opacity: 0,
-                  y: -20,
-                },
-
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                },
-              }}
-              initial="hidden"
-              whileInView="visible"
-              transition={{ duration: 1, delay: 0.5 }}
-              viewport={{ once: true }}
-              className="animate_top text-center"
-            >
-              <h3 className="mb-2.5 text-3xl font-bold text-black dark:text-white xl:text-sectiontitle3">
-                500K
-              </h3>
-              <p className="text-lg lg:text-para2">World Wide Clients</p>
-            </motion.div>
-            <motion.div
-              variants={{
-                hidden: {
-                  opacity: 0,
-                  y: -20,
-                },
-
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                },
-              }}
-              initial="hidden"
-              whileInView="visible"
-              transition={{ duration: 1, delay: 0.7 }}
-              viewport={{ once: true }}
-              className="animate_top text-center"
-            >
-              <h3 className="mb-2.5 text-3xl font-bold text-black dark:text-white xl:text-sectiontitle3">
-                1M+
-              </h3>
-              <p className="text-lg lg:text-para2">Downloads</p>
-            </motion.div>
-            <motion.div
-              variants={{
-                hidden: {
-                  opacity: 0,
-                  y: -20,
-                },
-
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                },
-              }}
-              initial="hidden"
-              whileInView="visible"
-              transition={{ duration: 1, delay: 0.8 }}
-              viewport={{ once: true }}
-              className="animate_top text-center"
-            >
-              <h3 className="mb-2.5 text-3xl font-bold text-black dark:text-white xl:text-sectiontitle3">
-                865
-              </h3>
-              <p className="text-lg lg:text-para2">Winning Award</p>
-            </motion.div>
+            {metrics.map((m, i) => (
+              <motion.div
+                key={m.key}
+                variants={{
+                  hidden: { opacity: 0, y: -20 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+                initial="hidden"
+                whileInView="visible"
+                transition={{ duration: 1, delay: 0.3 + i * 0.2 }}
+                viewport={{ once: true }}
+                className="animate_top text-center"
+              >
+                <h3 className="mb-2.5 text-3xl font-bold text-black dark:text-white xl:text-sectiontitle3">
+                  <AnimatedCounter target={counts[m.key]} suffix={m.suffix} />
+                </h3>
+                <p className="text-lg lg:text-para2">{m.label}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
