@@ -13,25 +13,63 @@ const Header = () => {
   const [dropdownToggler, setDropdownToggler] = useState(false);
   const [stickyMenu, setStickyMenu] = useState(false);
   const [hasSession, setHasSession] = useState(false);
+  const [dashboardUrl, setDashboardUrl] = useState("/auth/signin");
 
   const pathUrl = usePathname();
 
-  // Vérifier la présence du cookie de session côté client
+  // Vérifier la session et le type de joueur via les cookies
   useEffect(() => {
     const checkSession = () => {
-      const cookies = document.cookie.split(";").map((c) => c.trim());
-      const sessionCookie = cookies.find((c) => c.startsWith("genie_session="));
-      setHasSession(!!sessionCookie);
+      const allCookies = document.cookie.split(";").map((c) => c.trim());
+
+      // Vérifier si la session existe
+      const sessionCookie = allCookies.find((c) =>
+        c.startsWith("genie_session=")
+      );
+      const hasActiveSession = !!sessionCookie;
+      setHasSession(hasActiveSession);
+
+      if (hasActiveSession) {
+        // Lire le type depuis le cookie player_type
+        const typeCookie = allCookies.find((c) =>
+          c.startsWith("player_type=")
+        );
+        const playerType = typeCookie
+          ? typeCookie.split("=")[1]
+          : null;
+
+        // Construire l'URL du dashboard en fonction du type
+        switch (playerType) {
+          case "ADMIN":
+          case "MOD":
+            setDashboardUrl("/dashboard");
+            break;
+          case "STANDALONE":
+            setDashboardUrl("/dashboard/standalone");
+            break;
+          case "ADVANCED":
+            setDashboardUrl("/dashboard/advanced");
+            break;
+          case "VIP":
+            setDashboardUrl("/dashboard/vip");
+            break;
+          default:
+            setDashboardUrl("/dashboard");
+        }
+      } else {
+        setDashboardUrl("/auth/signin");
+      }
     };
 
     checkSession();
 
-    // Re-vérifier la session quand la page redevient visible (après redirect login)
+    // Re-vérifier quand la page redevient visible
     const onVisibilityChange = () => {
       if (document.visibilityState === "visible") checkSession();
     };
     document.addEventListener("visibilitychange", onVisibilityChange);
-    return () => document.removeEventListener("visibilitychange", onVisibilityChange);
+    return () =>
+      document.removeEventListener("visibilitychange", onVisibilityChange);
   }, []);
 
   // Sticky menu
@@ -161,7 +199,7 @@ const Header = () => {
             <ThemeToggler />
 
             <Link
-              href={hasSession ? "/dashboard" : "/auth/signin"}
+              href={dashboardUrl}
               className="flex items-center justify-center rounded-full bg-primary px-7.5 py-2.5 text-regular text-white duration-300 ease-in-out hover:bg-primaryho"
             >
               Mon Espace

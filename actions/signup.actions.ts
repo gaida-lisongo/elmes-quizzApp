@@ -238,6 +238,15 @@ export async function createPlayerStep2(data: SignupStep2Data) {
       path: '/',
     });
 
+    // Cookie non-httpOnly pour que le Header lise le type côté client
+    (await cookies()).set('player_type', playerType, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60,
+      path: '/',
+    });
+
     // Déterminer la redirection selon le type de joueur
     const dashboardRoutes: Record<string, string> = {
       STANDALONE: '/dashboard/standalone',

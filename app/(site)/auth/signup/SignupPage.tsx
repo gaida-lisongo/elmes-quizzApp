@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Signup from "@/components/Auth/Signup";
+import Loader from "@/components/Common/Loader";
 import type { PlayerType } from "@/actions/signup.actions";
 
 const TYPE_MAP: Record<string, PlayerType> = {
@@ -41,11 +42,7 @@ export default function SignupPage({
   }, []);
 
   if (!ready) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-      </div>
-    );
+    return <Loader message="Préparation de l'inscription..." size="sm" />;
   }
 
   return <Signup playerType={playerType} referralCode={resolvedCode} />;

@@ -95,6 +95,15 @@ export async function registerPlayer(formData: FormData) {
       path: '/',
     });
 
+    // Cookie non-httpOnly pour le Header côté client
+    (await cookies()).set('player_type', 'STANDALONE', {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60,
+      path: '/',
+    });
+
     return { success: true };
   } catch (error: any) {
     return { success: false, error: error.message || "Erreur lors de l'inscription." };
@@ -146,21 +155,43 @@ export async function loginUser(formData: FormData) {
 
     // Déterminer la redirection selon le rôle
     let redirectTo = '/dashboard';
+    let playerTypeForCookie = '';
 
     if (user.role === 'PLAYER') {
       // Récupérer le type de joueur
       try {
         const player = await Player.findOne({ userId: user._id }).select('type').lean();
-        const playerType = player?.type || 'STANDALONE';
+        const pType = player?.type || 'STANDALONE';
+        playerTypeForCookie = pType;
         const routes: Record<string, string> = {
           STANDALONE: '/dashboard/standalone',
           ADVANCED: '/dashboard/advanced',
           VIP: '/dashboard/vip',
         };
-        redirectTo = routes[playerType] || '/dashboard/standalone';
+        redirectTo = routes[pType] || '/dashboard/standalone';
       } catch {
         redirectTo = '/dashboard/standalone';
       }
+    }
+
+    // Stocker le type de joueur dans un cookie léger (accessible côté client)
+    if (playerTypeForCookie) {
+      (await cookies()).set('player_type', playerTypeForCookie, {
+        httpOnly: false,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60,
+        path: '/',
+      });
+    } else {
+      // Agent/Admin → stocker le rôle
+      (await cookies()).set('player_type', user.role, {
+        httpOnly: false,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60,
+        path: '/',
+      });
     }
 
     console.log('Login successful, token set');
@@ -175,6 +206,9 @@ export async function loginUser(formData: FormData) {
 export async function logoutUser() {
   (await cookies()).set(COOKIE_NAME, '', {
     httpOnly: true, expires: new Date(0), path: '/',
+  });
+  (await cookies()).set('player_type', '', {
+    httpOnly: false, expires: new Date(0), path: '/',
   });
   return { success: true };
 }
@@ -199,12 +233,14 @@ export async function getCurrentUserDetailed() {
       photo: user.photo || null,
       solde: user.solde,
       role: user.role,
+      playerType: null as string | null,
     };
 
     // Si PLAYER → récupérer le profil Player
     if (user.role === 'PLAYER') {
       const player = await Player.findOne({ userId: user._id }).lean();
       if (!player) return { ...base, profile: null };
+      base.playerType = player.type || 'STANDALONE';
       return {
         ...base,
         profile: {

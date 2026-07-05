@@ -27,6 +27,7 @@ import {
   Link as LinkIcon,
 } from "lucide-react";
 import Logo from "@/components/Common/Logo";
+import Loader from "@/components/Common/Loader";
 import { createPlayerStep1, createPlayerStep2 } from "@/actions/signup.actions";
 import type { PlayerType } from "@/actions/signup.actions";
 
@@ -43,6 +44,7 @@ const PLAYER_TYPES: {
   color: string;
   bgColor: string;
   borderColor: string;
+  description: string;
   features: string[];
 }[] = [
   {
@@ -53,7 +55,8 @@ const PLAYER_TYPES: {
     color: "text-emerald-500",
     bgColor: "bg-emerald-50 dark:bg-emerald-500/10",
     borderColor: "border-emerald-400",
-    features: ["Quiz en solo", "10 parties offertes", "Gagne des tickets"],
+    description: "Jouez des parties gratuites offertes chaque semaine et accumulez des tickets.",
+    features: ["Parties gratuites chaque semaine", "Quiz en solo", "Gagne des tickets"],
   },
   {
     type: "ADVANCED",
@@ -63,7 +66,8 @@ const PLAYER_TYPES: {
     color: "text-purple-500",
     bgColor: "bg-purple-50 dark:bg-purple-500/10",
     borderColor: "border-purple-400",
-    features: ["Parcours complets", "Quiz chronométrés", "Classements"],
+    description: "Parties offertes + inscriptions aux parcours pour tenter de remporter le prix mensuel.",
+    features: ["Parties gratuites chaque semaine", "Parcours & classements", "Prix mensuel à gagner"],
   },
   {
     type: "VIP",
@@ -73,7 +77,8 @@ const PLAYER_TYPES: {
     color: "text-amber-500",
     bgColor: "bg-amber-50 dark:bg-amber-500/10",
     borderColor: "border-amber-400",
-    features: ["Compétitions live", "Matchs en direct", "Gros lots"],
+    description: "Inscrivez votre équipe aux compétitions et remportez les gros lots chaque week-end.",
+    features: ["Compétitions chaque week-end", "Matchs en direct", "Gros lots à gagner"],
   },
 ];
 
@@ -132,10 +137,13 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
       return;
     }
 
-    // Validation téléphone congolais (09xxxxxxxx ou 08xxxxxxxx)
-    const phoneRegex = /^0[89]\d{8}$/;
-    if (!phoneRegex.test(telephone.trim())) {
-      toast.error("Numéro de téléphone invalide. Format: 09xxxxxxxx ou 08xxxxxxxx");
+// Validation téléphone: 0XX (max 10 chiffres) ou +243XXX (max 14 caractères)
+    const phone = telephone.trim();
+    const isValid =
+      /^0\d{2,9}$/.test(phone) || // 0XX → max 10 chiffres au total
+      /^\+243\d{6,11}$/.test(phone); // +243XXX → max 14 caractères (indicatif + 11 chiffres max)
+    if (!isValid) {
+      toast.error("Numéro de téléphone invalide. Formats acceptés: 0XX (10 chiffres max) ou +243XXX (14 car. max)");
       return;
     }
 
@@ -427,6 +435,9 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
                           {currentTypeInfo.label}
                         </span>
                       </div>
+                      <p className="mb-3 text-xs text-waterloo leading-relaxed">
+                        {currentTypeInfo.description}
+                      </p>
                       <ul className="space-y-1">
                         {currentTypeInfo.features.map((f, i) => (
                           <li
