@@ -1,5 +1,6 @@
 import { getCompetitionBySlug } from "@/actions/competitions.actions";
 import GamingPage from "@/components/Gaming";
+import Testimonial from "@/components/Testimonial";
 import { notFound } from "next/navigation";
 
 export default async function CompetitionDetailPage({
@@ -16,48 +17,55 @@ export default async function CompetitionDetailPage({
 
   const competition = res.competition;
 
+  const aboutData = {
+    left: {
+      image: '/images/hero/rules.png',
+      title: 'Règles de la compétition',
+      description: "Découvrez les règles de la compétition pour maximiser votre expérience et viser la première place.",
+      rules : [
+        {title: 'Équipe', description: 'Chaque équipe est composée de 5 joueurs, dont un chef qui gère les inscriptions.'},
+        {title: 'Points', description: 'Chaque bonne réponse rapporte des points à votre équipe. Plus vous répondez vite, plus vous gagnez de points.'},
+        {title: 'Partie', description: `Une partie se compose de ${competition.questions || 0} questions.`},
+        {title: 'Cagnotte', description: `Une cagnotte de ${new Intl.NumberFormat().format(competition.cagnotte || 0)} F est à partager entre les meilleures équipes.`},
+      ]
+    },
+    right: {
+      image: '/images/hero/child.png',
+      title: 'Compétition',
+      subtitle: competition.designation || "Compétition",
+      description: competition.description || "Rejoignez cette compétition et montrez votre niveau.",
+    }
+  }
+
+  const faqData = {
+    url: competition?.ressources || '',
+    categories: competition?.categories?.map((cat: any) => ({id: cat?.slug, quest: cat?.designation, ans: cat?.description})) || []
+  }
+
+  const ctaData = {
+    title: competition?.status == 'ACTIVE' ? 
+      "Inscrivez votre équipe à cette compétition et tentez de remporter la cagnotte" 
+      : (competition?.status == 'INACTIVE' ? "Cette compétition est actuellement indisponible" : "Les inscriptions sont closes"),
+    content: `Frais d'inscription : ${new Intl.NumberFormat().format(competition.amount || 0)} F · Cagnotte : ${new Intl.NumberFormat().format(competition.cagnotte || 0)} F`,
+    action: {title: competition?.status == 'ACTIVE' ? "Inscrire mon équipe" : 'Voir le classement', url: competition?.status == 'ACTIVE' ? 'subscripe' : 'classement'},
+    classement: []
+  }
+
   return (
     <GamingPage
-      badge="Compétition"
-      title={competition.designation}
-      description={competition.description || "Rejoignez cette compétition et montrez votre niveau."}
-      ctaLabel="Rejoindre la compétition"
-      ctaHref="/auth/signup#vip"
-      stats={[
-        { label: "Questions", value: String(competition.questions || 0) },
-        { label: "Cagnotte", value: `${new Intl.NumberFormat().format(competition.cagnotte || 0)} F` },
-        { label: "Inscription", value: `${new Intl.NumberFormat().format(competition.amount || 0)} F` },
-      ]}
-      highlights={(competition.categories || []).map((cat: any) => cat.designation)}
+      about={aboutData}
+      faq={faqData}
+      cta={ctaData}
+      targetType="competition"
+      targetId={competition._id}
+      targetName={competition.designation}
     >
-      <div className="rounded-[32px] border border-stroke bg-white p-8 shadow-solid-8 dark:border-strokedark dark:bg-blacksection">
-        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-          <div>
-            <h2 className="text-2xl font-semibold text-black dark:text-white">Présentation</h2>
-            <p className="mt-4 text-lg leading-8 text-waterloo">{competition.description}</p>
-          </div>
-          <div className="rounded-3xl border border-stroke bg-alabaster p-6 dark:border-strokedark dark:bg-strokedark">
-            <h3 className="text-lg font-semibold text-black dark:text-white">Catégories</h3>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {(competition.categories || []).map((cat: any) => (
-                <span key={cat._id} className="rounded-full bg-primary/10 px-3 py-2 text-sm text-primary">
-                  {cat.designation}
-                </span>
-              ))}
-            </div>
-            <div className="mt-6 space-y-3 text-sm text-waterloo">
-              <div className="flex items-center justify-between rounded-2xl border border-stroke bg-white px-4 py-3 dark:border-strokedark dark:bg-black">
-                <span>Cagnotte</span>
-                <span className="font-semibold text-black dark:text-white">{new Intl.NumberFormat().format(competition.cagnotte || 0)} F</span>
-              </div>
-              <div className="flex items-center justify-between rounded-2xl border border-stroke bg-white px-4 py-3 dark:border-strokedark dark:bg-black">
-                <span>Frais d’inscription</span>
-                <span className="font-semibold text-black dark:text-white">{new Intl.NumberFormat().format(competition.amount || 0)} F</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Testimonial
+        title={"Classement des meilleures équipes"}
+        subtitle={"Découvrez les meilleures équipes en compétition"}
+        description={"Les équipes les plus performantes sont mises en avant pour inspirer et motiver les autres participants."}
+        data={[]}
+      />
     </GamingPage>
   );
 }

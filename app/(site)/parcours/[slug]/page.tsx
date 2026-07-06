@@ -46,27 +46,19 @@ export default async function ParcoursDetailPage({
       "Vous pouvez vous inscire à ce parcours et tenter de remporter la couronne du mois" 
       : (parcours?.status == 'INACTIVE' ? "Se parcours est actullement indisponible"  : "Les inscriptions ne sont plus disponible" ),
     content: "À la fin de chaque parcours, les meilleurs profils sont couronnés selon leurs résultats, leur régularité et leur performance sous chrono.",
-    action: {title: parcours?.status == 'ACTIVE' ? "S'inscrire" : 'Voir le classement' , url: parcours?.status == 'ACTIVE' ? 'subscripe' : 'pending' },
+    action: {title: parcours?.status == 'ACTIVE' ? "S'inscrire" : 'Voir le classement' , url: parcours?.status == 'ACTIVE' ? 'subscripe' : 'classement' },
     classement: []
   }
   const testimonialsData = []
-  const blogData = {}
 
   return (
     <GamingPage
-      badge="Parcours"
-      title={parcours.designation}
-      description={parcours.description || "Un parcours d’entraînement pensé pour progresser pas à pas."}
-      ctaLabel="Commencer l’entraînement"
-      ctaHref="/auth/signup#advanced"
-      stats={[
-        { label: "Questions", value: String(parcours.questions || 0) },
-        { label: "Catégories", value: String((parcours.categories || []).length) },
-      ]}
-      highlights={(parcours.categories || []).map((cat: any) => cat.designation)}
       about={aboutData}
       faq={faqData}
       cta={ctaData}
+      targetType="parcours"
+      targetId={parcours._id}
+      targetName={parcours.designation}
     >
       <Testimonial
         title={"Classement des meilleurs joueurs"}

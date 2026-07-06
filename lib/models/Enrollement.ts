@@ -19,9 +19,11 @@ export interface ISession extends Document {
 }
 
 export interface IEnrollement extends Document {
-  equipeId: mongoose.Types.ObjectId;
-  competitionId: mongoose.Types.ObjectId;
-  sessionId: mongoose.Types.ObjectId;
+  equipeId?: mongoose.Types.ObjectId;
+  playerId?: mongoose.Types.ObjectId;
+  competitionId?: mongoose.Types.ObjectId;
+  parcoursId?: mongoose.Types.ObjectId;
+  sessionId?: mongoose.Types.ObjectId;
   code: string; // Code unique pour l'enrôlement;
   orderNumber: string;
   status: 'PENDING' | 'CONFIRMED' | 'CANCELLED';
@@ -43,9 +45,11 @@ const SessionSchema: Schema<ISession> = new Schema(
 
 const EnrollementSchema: Schema<IEnrollement> = new Schema(
   {
-    equipeId: { type: Schema.Types.ObjectId, ref: 'Equipe', required: true },
-    competitionId: { type: Schema.Types.ObjectId, ref: 'Competition', required: true },
-    sessionId: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
+    equipeId: { type: Schema.Types.ObjectId, ref: 'Equipe' },
+    playerId: { type: Schema.Types.ObjectId, ref: 'Player' },
+    competitionId: { type: Schema.Types.ObjectId, ref: 'Competition' },
+    parcoursId: { type: Schema.Types.ObjectId, ref: 'Parcours' },
+    sessionId: { type: Schema.Types.ObjectId, ref: 'Session' },
     code: { type: String, required: true, unique: true },
     orderNumber: { type: String, required: true, unique: true },
     status: { 

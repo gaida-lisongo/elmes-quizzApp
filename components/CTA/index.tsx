@@ -3,13 +3,17 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-const CTA = ({ title, content, action, classement }: {title: string, content: string, action: {
+const CTA = ({ title, content, action, classement, onActionClick }: {title: string, content: string, action: {
   title: string, url: string
-}, classement: any[]}) => {
+}, classement: any[], onActionClick?: (action: {title: string, url: string}) => void}) => {
   const [modal, setModal] = useState(false);
 
   const handleClick = (route: string) => {
-    console.log('Route Action : ', route)
+    if (onActionClick) {
+      onActionClick({ title: action?.title, url: route });
+    } else {
+      window.location.href = route;
+    }
   }
   return (
     <>
