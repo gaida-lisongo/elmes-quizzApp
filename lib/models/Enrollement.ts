@@ -14,6 +14,10 @@ export interface ISession extends Document {
   designation: string;
   startDate: Date;
   endDate: Date;
+  ressources: {
+    type: 'parcours' | 'competition';
+    refId: mongoose.Types.ObjectId;
+  }[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -39,6 +43,10 @@ const SessionSchema: Schema<ISession> = new Schema(
     designation: { type: String, required: true, trim: true },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
+    ressources: [{
+      type: { type: String, enum: ['parcours', 'competition'], required: true },
+      refId: { type: Schema.Types.ObjectId, required: true, refPath: 'ressources.type' },
+    }],
   },
   { timestamps: true }
 );

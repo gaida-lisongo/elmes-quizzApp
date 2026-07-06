@@ -8,6 +8,7 @@ import ProfileUser from "@/components/Admin/ProfileUser";
 import MetriqueLayout from "@/components/Admin/MetriqueLayout";
 import MetricsAgent from "@/components/Admin/MetricsAgent";
 import Enrollements from "@/components/Admin/Enrollements";
+import QuestionsAdmin from "@/components/Admin/QuestionsAdmin";
 
 export type UserRole = "ADMIN" | "MOD" | "PLAYER";
 export type PlayerType = "STANDALONE" | "ADVANCED" | "VIP";
@@ -196,9 +197,7 @@ export default function AdminLayoutClient({
           {currentTab === "agents" && children}
           {currentTab === "enrollements" && (enrollements || <Enrollements />)}
           {currentTab === "questions" && (
-            <div className="text-center italic text-waterloo">
-              Module Questions à venir...
-            </div>
+            <QuestionsAdmin />
           )}
           {currentTab === "parties" && (
             <div className="text-center italic text-waterloo">

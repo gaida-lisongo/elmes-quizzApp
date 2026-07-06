@@ -239,6 +239,7 @@ export async function getAllSessionsAction() {
     }
     await connectToDb();
     const sessions = await Session.find()
+      .populate('ressources.refId')
       .sort({ startDate: -1 })
       .lean();
     return { success: true, sessions: JSON.parse(JSON.stringify(sessions)) };
@@ -248,7 +249,7 @@ export async function getAllSessionsAction() {
 }
 
 /**
- * Crée une session
+ * Crée une session (étape 1: déclaration)
  */
 export async function createSessionAction(data: {
   designation: string;
@@ -272,6 +273,7 @@ export async function createSessionAction(data: {
       designation: data.designation,
       startDate: new Date(data.startDate),
       endDate: new Date(data.endDate),
+      ressources: [],
     });
 
     return { success: true, session: JSON.parse(JSON.stringify(session)) };
@@ -281,11 +283,11 @@ export async function createSessionAction(data: {
 }
 
 /**
- * Modifie une session
+ * Met à jour les ressources d'une session
  */
-export async function updateSessionAction(
-  id: string,
-  data: { designation?: string; startDate?: string; endDate?: string }
+export async function updateSessionRessourcesAction(
+  sessionId: string,
+  ressources: { type: 'parcours' | 'competition'; refId: string }[],
 ) {
   try {
     const userSession = await getSession();
@@ -294,12 +296,12 @@ export async function updateSessionAction(
     }
     await connectToDb();
 
-    const updateData: any = {};
-    if (data.designation) updateData.designation = data.designation;
-    if (data.startDate) updateData.startDate = new Date(data.startDate);
-    if (data.endDate) updateData.endDate = new Date(data.endDate);
+    const session = await Session.findByIdAndUpdate(
+      sessionId,
+      { $set: { ressources: ressources.map(r => ({ type: r.type, refId: r.refId })) } },
+      { new: true },
+    ).populate('ressources.refId').lean();
 
-    const session = await Session.findByIdAndUpdate(id, { $set: updateData }, { new: true }).lean();
     if (!session) return { success: false, error: 'Session introuvable' };
 
     return { success: true, session: JSON.parse(JSON.stringify(session)) };
@@ -321,6 +323,69 @@ export async function deleteSessionAction(id: string) {
 
     await Session.findByIdAndDelete(id);
     return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+// ── RESSOURCES LIÉES À UNE SESSION ─────────────────────────────────
+
+/**
+ * Récupère les parcours et compétitions disponibles
+ */
+export async function getAvailableRessourcesAction() {
+  try {
+    await connectToDb();
+    const [parcours, competitions] = await Promise.all([
+      import('@/lib/models/Competition').then(m => m.Parcours.find({ status: 'ACTIVE' }).select('_id designation slug').lean()),
+      import('@/lib/models/Competition').then(m => m.Competition.find({ status: 'ACTIVE' }).select('_id designation slug amount cagnotte').lean()),
+    ]);
+    return {
+      success: true,
+      ressources: {
+        parcours: JSON.parse(JSON.stringify(parcours)),
+        competitions: JSON.parse(JSON.stringify(competitions)),
+      },
+    };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Récupère les enrollements pour une ressource (parcours ou compétition)
+ */
+export async function getEnrollementsByRessourceAction(
+  type: 'parcours' | 'competition',
+  refId: string,
+  sessionId: string,
+) {
+  try {
+    await connectToDb();
+
+    const filter: any = { sessionId, status: 'CONFIRMED' };
+    if (type === 'parcours') {
+      filter.parcoursId = refId;
+    } else {
+      filter.competitionId = refId;
+    }
+
+    const enrollements = await Enrollement.find(filter)
+      .populate({
+        path: 'playerId',
+        populate: { path: 'userId', select: 'pseudo telephone photo' },
+      })
+      .populate({
+        path: 'equipeId',
+        select: 'designation',
+      })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    return {
+      success: true,
+      enrollements: JSON.parse(JSON.stringify(enrollements)),
+    };
   } catch (error: any) {
     return { success: false, error: error.message };
   }
