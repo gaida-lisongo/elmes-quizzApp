@@ -23,7 +23,7 @@ interface SessionItem {
   designation: string;
   startDate: string;
   endDate: string;
-  ressources?: { type: "parcours" | "competition"; refId: any }[];
+  ressources?: { type: "Parcours" | "Competition"; refId: any }[];
 }
 
 interface RessourceItem {
@@ -68,7 +68,7 @@ const SessionModal = ({
   });
   const [availableParcours, setAvailableParcours] = useState<RessourceItem[]>([]);
   const [availableCompetitions, setAvailableCompetitions] = useState<RessourceItem[]>([]);
-  const [selectedRessources, setSelectedRessources] = useState<{ type: "parcours" | "competition"; refId: string }[]>(
+  const [selectedRessources, setSelectedRessources] = useState<{ type: "Parcours" | "Competition"; refId: string }[]>(
     session?.ressources?.map((r: any) => ({ type: r.type, refId: r.refId?._id || r.refId })) || []
   );
   const [createdId, setCreatedId] = useState<string | null>(session?._id || null);
@@ -92,7 +92,7 @@ const SessionModal = ({
   const isRessourceSelected = (type: string, id: string) =>
     selectedRessources.some(r => r.type === type && r.refId === id);
 
-  const toggleRessource = (type: "parcours" | "competition", refId: string) => {
+  const toggleRessource = (type: "Parcours" | "Competition", refId: string) => {
     setSelectedRessources(prev =>
       prev.some(r => r.type === type && r.refId === refId)
         ? prev.filter(r => !(r.type === type && r.refId === refId))
@@ -209,9 +209,9 @@ const SessionModal = ({
                   <h5 className="mb-2 text-xs font-semibold uppercase text-waterloo">Parcours</h5>
                   <div className="space-y-1.5 max-h-48 overflow-y-auto">
                     {availableParcours.map(p => (
-                      <button key={p._id} onClick={() => toggleRessource("parcours", p._id)}
+                      <button key={p._id} onClick={() => toggleRessource("Parcours", p._id)}
                         className={`w-full rounded-lg border px-3 py-2 text-left text-xs transition ${
-                          isRessourceSelected("parcours", p._id)
+                          isRessourceSelected("Parcours", p._id)
                             ? "border-primary bg-primary/10 text-primary"
                             : "border-stroke text-waterloo hover:border-primary dark:border-strokedark"
                         }`}>{p.designation}</button>
@@ -224,9 +224,9 @@ const SessionModal = ({
                   <h5 className="mb-2 text-xs font-semibold uppercase text-waterloo">Compétitions</h5>
                   <div className="space-y-1.5 max-h-48 overflow-y-auto">
                     {availableCompetitions.map(c => (
-                      <button key={c._id} onClick={() => toggleRessource("competition", c._id)}
+                      <button key={c._id} onClick={() => toggleRessource("Competition", c._id)}
                         className={`w-full rounded-lg border px-3 py-2 text-left text-xs transition ${
-                          isRessourceSelected("competition", c._id)
+                          isRessourceSelected("Competition", c._id)
                             ? "border-primary bg-primary/10 text-primary"
                             : "border-stroke text-waterloo hover:border-primary dark:border-strokedark"
                         }`}>{c.designation}</button>
@@ -243,7 +243,7 @@ const SessionModal = ({
                 <p className="text-xs font-medium text-black dark:text-white">{selectedRessources.length} ressource(s) sélectionnée(s)</p>
                 {selectedRessources.map(r => (
                   <p key={r.refId} className="mt-1 text-[10px] text-waterloo">
-                    {r.type === "parcours" ? "📘" : "🏆"} {availableParcours.find(p => p._id === r.refId)?.designation || availableCompetitions.find(c => c._id === r.refId)?.designation || r.refId}
+                    {r.type === "Parcours" ? "📘" : "🏆"} {availableParcours.find(p => p._id === r.refId)?.designation || availableCompetitions.find(c => c._id === r.refId)?.designation || r.refId}
                   </p>
                 ))}
               </div>
@@ -280,13 +280,13 @@ export default function Enrollements() {
   const [loading, setLoading] = useState(true);
   const [step, setStep] = useState<Step>("sessions");
   const [selectedSession, setSelectedSession] = useState<SessionItem | null>(null);
-  const [selectedRessource, setSelectedRessource] = useState<{ type: "parcours" | "competition"; name: string; refId: string } | null>(null);
+  const [selectedRessource, setSelectedRessource] = useState<{ type: "Parcours" | "Competition"; name: string; refId: string } | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [editSession, setEditSession] = useState<SessionItem | null>(null);
   const [search, setSearch] = useState("");
 
   // Real data states
-  const [ressources, setRessources] = useState<{ type: "parcours" | "competition"; refId: string; name: string }[]>([]);
+  const [ressources, setRessources] = useState<{ type: "Parcours" | "Competition"; refId: string; name: string }[]>([]);
   const [enrolledList, setEnrolledList] = useState<EnrolledItem[]>([]);
   const [ressourcesLoading, setRessourcesLoading] = useState(false);
   const [enrolledLoading, setEnrolledLoading] = useState(false);
@@ -314,15 +314,15 @@ export default function Enrollements() {
     setStep("resources");
     setRessourcesLoading(true);
     const sessionRessources = (session.ressources || []).map((r: any) => ({
-      type: r.type as "parcours" | "competition",
+      type: r.type as "Parcours" | "Competition",
       refId: r.refId?._id || r.refId,
-      name: r.refId?.designation || (r.type === "parcours" ? "Parcours" : "Compétition"),
+      name: r.refId?.designation || (r.type === "Parcours" ? "Parcours" : "Compétition"),
     }));
     setRessources(sessionRessources);
     setRessourcesLoading(false);
   };
 
-  const handleSelectRessource = async (type: "parcours" | "competition", refId: string, name: string) => {
+  const handleSelectRessource = async (type: "Parcours" | "Competition", refId: string, name: string) => {
     if (!selectedSession) return;
     setSelectedRessource({ type, name, refId });
     setStep("enrolled");
@@ -464,7 +464,7 @@ export default function Enrollements() {
                   </div>
                   <div className="flex-1">
                     <p className="font-semibold text-black dark:text-white">{res.name}</p>
-                    <p className="text-xs text-waterloo">{res.type === "parcours" ? "Parcours" : "Compétition"}</p>
+                    <p className="text-xs text-waterloo">{res.type === "Parcours" ? "Parcours" : "Compétition"}</p>
                   </div>
                   <ChevronRight className="h-5 w-5 text-waterloo" />
                 </motion.button>

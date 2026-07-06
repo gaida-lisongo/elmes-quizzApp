@@ -31,7 +31,7 @@ type Step = "config" | "loading" | "summary";
 
 export default function CsvWrapper({ categorieId, onClose, onComplete }: CsvWrapperProps) {
   const [step, setStep] = useState<Step>("config");
-  const [separator, setSeparator] = useState(",");
+  const [separator, setSeparator] = useState(";");
   const [hasHeader, setHasHeader] = useState(true);
   const [headers, setHeaders] = useState<string[]>([]);
   const [rows, setRows] = useState<CsvRow[]>([]);
@@ -242,11 +242,26 @@ export default function CsvWrapper({ categorieId, onClose, onComplete }: CsvWrap
                   <code className="mt-1 block text-xs text-waterloo/60">
                     énoncé{separator}prop1|prop2|...{separator}réponse{separator}niveau{separator}type
                   </code>
+                  <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-center">
+                    <button onClick={() => inputRef.current?.click()}
+                      className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm text-white transition hover:bg-primaryho">
+                      <Upload className="h-4 w-4" /> Charger un fichier
+                    </button>
+                    <button onClick={() => {
+                      const header = `énoncé${separator}propositions${separator}réponse${separator}niveau${separator}type`;
+                      const sample = `Quelle est la capitale de la France ?;Paris|Londres|Berlin|Madrid;Paris;0;QCM\nLe Soleil est une étoile.;Vrai|Faux;Vrai;1;VRAI_FAUX`;
+                      const bom = "\uFEFF";
+                      const blob = new Blob([bom + header + "\n" + sample], { type: "text/csv;charset=utf-8" });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement("a");
+                      a.href = url; a.download = "template_questions.csv"; a.click();
+                      URL.revokeObjectURL(url);
+                    }}
+                      className="inline-flex items-center justify-center gap-2 rounded-lg border border-stroke px-4 py-2 text-sm text-waterloo transition hover:bg-stroke dark:border-strokedark dark:hover:bg-strokedark">
+                      <FileText className="h-4 w-4" /> Télécharger le template
+                    </button>
+                  </div>
                   <input ref={inputRef} type="file" accept=".csv,.txt" onChange={handleFileLoad} className="hidden" />
-                  <button onClick={() => inputRef.current?.click()}
-                    className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm text-white transition hover:bg-primaryho">
-                    <Upload className="h-4 w-4" /> Charger un fichier
-                  </button>
                 </div>
 
                 {error && <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600"><AlertCircle className="h-4 w-4 shrink-0" />{error}</div>}

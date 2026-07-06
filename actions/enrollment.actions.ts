@@ -287,7 +287,7 @@ export async function createSessionAction(data: {
  */
 export async function updateSessionRessourcesAction(
   sessionId: string,
-  ressources: { type: 'parcours' | 'competition'; refId: string }[],
+  ressources: { type: 'Parcours' | 'Competition'; refId: string }[],
 ) {
   try {
     const userSession = await getSession();
@@ -356,7 +356,7 @@ export async function getAvailableRessourcesAction() {
  * Récupère les enrollements pour une ressource (parcours ou compétition)
  */
 export async function getEnrollementsByRessourceAction(
-  type: 'parcours' | 'competition',
+  type: 'Parcours' | 'Competition',
   refId: string,
   sessionId: string,
 ) {
@@ -364,7 +364,7 @@ export async function getEnrollementsByRessourceAction(
     await connectToDb();
 
     const filter: any = { sessionId, status: 'CONFIRMED' };
-    if (type === 'parcours') {
+    if (type === 'Parcours') {
       filter.parcoursId = refId;
     } else {
       filter.competitionId = refId;
