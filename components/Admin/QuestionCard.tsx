@@ -81,9 +81,9 @@ const QuestionEditor = ({
 
       let res;
       if (mode === "create") {
-        res = await createQuizAction({ categorieId, enonce: enonce.trim(), assertions: cleanAssertions, reponse: reponse.trim(), level, type });
+        res = await createQuizAction({ categorieId, enonce: enonce.trim(), assertions: cleanAssertions, reponse: reponse.trim(), level: level as 0 | 1 | 2 | 3, type });
       } else if (quiz) {
-        res = await updateQuizAction(quiz._id, { enonce: enonce.trim(), assertions: cleanAssertions, reponse: reponse.trim(), level, type });
+        res = await updateQuizAction(quiz._id, { enonce: enonce.trim(), assertions: cleanAssertions, reponse: reponse.trim(), level: level as 0 | 1 | 2 | 3, type });
       }
       if (!res?.success) throw new Error(res?.error || "Erreur");
       onSaved();
