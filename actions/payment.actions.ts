@@ -79,6 +79,7 @@ export async function searchUsers(query: string) {
           playerType: player?.type || null,
           level: player?.level ?? null,
           parties: player?.parties ?? null,
+          playerId: player?._id?.toString() || null,
         };
       })
     );

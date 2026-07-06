@@ -1,17 +1,17 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  X, Search, User, Phone, DollarSign, CreditCard, Loader2,
+  X, User, Phone, DollarSign, CreditCard, Loader2,
   AlertCircle, CheckCircle, ChevronRight, ArrowLeft, Wallet,
   Users,
 } from "lucide-react";
 import {
-  searchUsers,
   initiatePaymentAction,
   checkPaymentStatusAction,
 } from "@/actions/payment.actions";
+import SearchUserInput, { type SearchUserResult } from "@/components/Common/SearchUserInput";
 
 export type ProductInfo = {
   id: string;
@@ -33,85 +33,6 @@ interface PaymentDrawerProps {
 const TAUX = Number(process.env.NEXT_PUBLIC_TAUX) || 2850;
 
 // ─── SearchUser sub-component ───────────────────────────────────────
-
-interface SearchUserResult {
-  _id: string;
-  pseudo: string;
-  telephone: string;
-  email?: string;
-  photo?: string;
-  role: string;
-  playerType: string | null;
-  level: number | null;
-  parties: number | null;
-}
-
-function SearchUserInput({ onSelect }: { onSelect: (user: SearchUserResult) => void }) {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<SearchUserResult[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    if (query.trim().length < 2) { setResults([]); setOpen(false); return; }
-    debounceRef.current = setTimeout(async () => {
-      setLoading(true);
-      const res = await searchUsers(query);
-      if (res.success && res.users) { setResults(res.users); setOpen(res.users.length > 0); }
-      setLoading(false);
-    }, 300);
-    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
-  }, [query]);
-
-  const handleSelect = (user: SearchUserResult) => {
-    setOpen(false);
-    setQuery(user.pseudo);
-    onSelect(user);
-  };
-
-  return (
-    <div className="relative">
-      <label className="mb-2 block text-sm font-medium text-black dark:text-white">Rechercher un joueur</label>
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-waterloo" />
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Pseudo, téléphone ou email…"
-          className="w-full rounded-xl border border-stroke bg-transparent py-3 pl-10 pr-4 text-sm text-black outline-hidden transition focus:border-primary focus:shadow-[0_0_0_3px_rgba(0,107,255,0.1)] dark:border-strokedark dark:text-white"
-        />
-        {loading && <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-waterloo" />}
-      </div>
-      <AnimatePresence>
-        {open && results.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-            className="absolute z-20 mt-1 w-full rounded-xl border border-stroke bg-white shadow-lg dark:border-strokedark dark:bg-blacksection"
-          >
-            {results.map((user) => (
-              <button key={user._id} type="button" onClick={() => handleSelect(user)}
-                className="flex w-full items-center gap-3 border-b border-stroke px-4 py-3 text-left last:border-0 hover:bg-primary/5 dark:border-strokedark"
-              >
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary"><User className="h-4 w-4" /></div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-black dark:text-white truncate">{user.pseudo}</p>
-                  <p className="text-xs text-waterloo truncate">{user.telephone}{user.email && ` · ${user.email}`}</p>
-                </div>
-                <div className="shrink-0 text-right">
-                  <span className="inline-block rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
-                    {user.playerType || user.role}
-                  </span>
-                </div>
-              </button>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
 
 // ─── Main PaymentDrawer ─────────────────────────────────────────────
 
@@ -234,7 +155,7 @@ const PaymentDrawer = ({ product, onClose, onSuccess }: PaymentDrawerProps) => {
                     <Users className="h-4 w-4" />
                     <h4 className="font-medium text-black dark:text-white">Qui est le joueur ?</h4>
                   </div>
-                  <SearchUserInput onSelect={handleUserSelect} />
+                  <SearchUserInput onSelect={handleUserSelect} label="Rechercher un joueur" />
                   {selectedUser && (
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
                       className="rounded-xl border border-primary/30 bg-primary/5 p-4"

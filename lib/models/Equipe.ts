@@ -11,11 +11,10 @@ export interface IEquipe extends Document {
   designation: string;
   description: string[];
   logo: string;
-  actualites: {
-    title: string;
-    subTitle: string;
-    image: string;
-    content: string[]
+  payment: {
+    orderNumber: string;
+    status: string;
+    providerText: string;
   }[];
   membres: {player: mongoose.Types.ObjectId, status: boolean, isSecretary: boolean}[];
   metriques: IEquipeMetrics;
@@ -29,12 +28,11 @@ const EquipeSchema: Schema<IEquipe> = new Schema(
     designation: { type: String, required: true, trim: true },
     description: [{ type: String, required: true, trim: true }],
     logo: { type: String, default: '' },
-    actualites: [
+    payment: [
       {
-        title: { type: String, required: true },
-        subTitle: { type: String, default: '' },
-        image: { type: String, default: '' },
-        content: [{ type: String }],
+        orderNumber: { type: String, required: true },
+        status: { type: String, required: true },
+        providerText: { type: String, required: true },
       },
     ],
     membres: [

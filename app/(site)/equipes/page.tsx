@@ -1,25 +1,17 @@
+import { getEquipesAction } from "@/actions/equipe.actions";
+import EquipesPageClient from "@/components/Equipes/EquipePage";
 import { Metadata } from "next";
-import { getSession } from "@/lib/utils/auth";
-import GamingPage from "@/components/Gaming";
 
 export const metadata: Metadata = {
-  title: "ELMES-QUIZ | Le savoir devient un pouvoir",
-
-  // other metadata
-  description: "Plateforme de quiz et compétition intellectuelle"
+  title: "ELMES-QUIZ | Équipes",
+  description: "Découvrez et créez des équipes de compétition sur la plateforme ELMES-QUIZ.",
 };
 
 export default async function EquipesPage() {
-  try{
-    const session = await getSession();
-    const isAdmin = session?.role === "ADMIN" || session?.role === "MOD";
+  try {
+    const result = await getEquipesAction();
 
-    return (
-      <main>
-        <GamingPage />
-      </main>
-    );
-
+    return <EquipesPageClient equipes={result.success ? result.equipes || [] : []} />;
   } catch (error) {
     console.error("Error in EquipesPage:", error);
     return (
