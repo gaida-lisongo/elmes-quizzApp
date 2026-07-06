@@ -62,7 +62,7 @@ export default async function EquipeDetailPage({ params }: { params: Promise<{ i
                     {equipe.metriques?.competitions || 0} compétitions
                   </div>
                   <h1 className="mt-3 text-3xl font-semibold text-black dark:text-white">{equipe.designation}</h1>
-                  <p className="mt-2 text-sm text-waterloo">Capitaine : {equipe.chefId?.userId?.pseudo || "À définir"}</p>
+                  <p className="mt-2 text-sm text-waterloo">Capitaine : {(equipe.chefId as any)?.userId?.pseudo || "À définir"}</p>
                 </div>
               </div>
               <div className="rounded-2xl border border-stroke bg-alabaster px-4 py-3 text-sm text-waterloo dark:border-strokedark dark:bg-strokedark">
