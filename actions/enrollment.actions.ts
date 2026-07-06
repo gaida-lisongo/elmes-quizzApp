@@ -6,6 +6,7 @@ import { getSession } from "@/lib/utils/auth";
 import EnrollementModule from "@/lib/models/Enrollement";
 import Partie from "@/lib/models/Partie";
 import Player from "@/lib/models/Player";
+import Equipe from "@/lib/models/Equipe";
 
 const { Enrollement, Session } = EnrollementModule;
 
@@ -117,8 +118,7 @@ export async function enrollToCompetitionAction(
     }
 
     // Trouver l'équipe dont ce joueur est le chef
-    const EquipeModel = mongoose.model('Equipe');
-    const equipe = await EquipeModel.findOne({ chefId: player._id }).lean();
+    const equipe = await Equipe.findOne({ chefId: player._id }).lean();
     if (!equipe) {
       return { success: false, error: 'Vous devez être chef d\'une équipe pour l\'inscrire à une compétition' };
     }
