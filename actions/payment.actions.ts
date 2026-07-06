@@ -8,6 +8,7 @@ import { initiateCollection, initiatePayout, checkStatus } from "@/lib/utils/pay
 import { getSession } from "@/lib/utils/auth";
 import type { PipelineStage } from "mongoose";
 import type { IRetrait } from "@/lib/models/Player";
+import { sendMail } from "@/lib/utils/mail";
 
 export type ProductPayload = {
   id: string;
@@ -36,6 +37,59 @@ const PACK_NAMES: Record<number, string> = {
   1: "ELEMBO",
   2: "MOTUYA",
   3: "ELONGA",
+};
+
+const buildVerificationUrl = (orderNumber: string) => {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || "https://elmes-quiz.com";
+  return `${baseUrl.replace(/\/$/, "")}/dashboard?orderNumber=${encodeURIComponent(orderNumber)}`;
+};
+
+const notifyPaymentByEmail = async ({
+  email,
+  orderNumber,
+  amount,
+  currency,
+  productName,
+  status,
+}: {
+  email?: string;
+  orderNumber: string;
+  amount: number;
+  currency: "CDF" | "USD";
+  productName: string;
+  status: "initiated" | "confirmed" | "pending" | "failed";
+}) => {
+  if (!email?.trim()) return;
+
+  try {
+    const verificationUrl = buildVerificationUrl(orderNumber);
+    const statusLabel =
+      status === "confirmed"
+        ? "confirmée"
+        : status === "pending"
+          ? "en attente"
+          : status === "failed"
+            ? "échouée"
+            : "initiée";
+
+    await sendMail({
+      to: email,
+      subject: `ELMES-QUIZ • Paiement ${statusLabel}`,
+      html: `
+        <div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;background:#f7f9fc;border-radius:16px;">
+          <h2 style="margin:0 0 12px;color:#0f172a;">Paiement ${statusLabel}</h2>
+          <p style="margin:0 0 12px;color:#334155;">Bonjour,</p>
+          <p style="margin:0 0 12px;color:#334155;">Votre transaction pour <strong>${productName}</strong> a été traitée avec succès.</p>
+          <p style="margin:0 0 12px;color:#334155;"><strong>Commande :</strong> ${orderNumber}</p>
+          <p style="margin:0 0 12px;color:#334155;"><strong>Montant :</strong> ${amount.toLocaleString()} ${currency}</p>
+          <p style="margin:0 0 16px;color:#334155;">Vous pouvez vérifier le statut de la transaction ici :</p>
+          <a href="${verificationUrl}" style="display:inline-block;padding:10px 16px;background:#2563eb;color:#fff;text-decoration:none;border-radius:8px;">Vérifier la transaction</a>
+        </div>
+      `,
+    });
+  } catch (error) {
+    console.error("Erreur envoi email paiement:", error);
+  }
 };
 
 // ═══════════════════════════════════════════════════════════════════
@@ -138,14 +192,17 @@ export async function initiatePaymentAction(
   amount: number,
   currency: 'CDF' | 'USD',
   product: ProductPayload,
+  email?: string,
 ) {
   try {
+    console.log("Initiating payment for playerId:", playerId, "phone:", phone, "amount:", amount, "currency:", currency, "product:", product);
     await connectToDb();
 
-    const player = await Player.findById(playerId);
+    const player = await Player.findById(playerId).populate('userId', 'email pseudo');
     if (!player) return { success: false, error: 'Joueur introuvable.' };
 
     const reference = `PAY-${product.type}-${product.id}-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+    console.log("Initiating payment with reference:", reference);
 
     const collection = await initiateCollection({
       phone,
@@ -153,6 +210,8 @@ export async function initiatePaymentAction(
       reference,
       currency,
     });
+
+    console.log("Payment initiation response:", collection);
 
     if (!collection.success || !collection.orderNumber) {
       return {
@@ -176,6 +235,19 @@ export async function initiatePaymentAction(
 
     await player.save();
 
+    const populatedUser = player.userId as { email?: string } | null | undefined;
+    const recipientEmail = email?.trim() || populatedUser?.email || '';
+    if (recipientEmail) {
+      await notifyPaymentByEmail({
+        email: recipientEmail,
+        orderNumber,
+        amount,
+        currency,
+        productName: product.name,
+        status: 'initiated',
+      });
+    }
+
     return { success: true, orderNumber, message: 'Paiement initié. En attente de confirmation.' };
   } catch (error: any) {
     return { success: false, error: error.message || 'Erreur serveur.' };
@@ -185,12 +257,24 @@ export async function initiatePaymentAction(
 /**
  * Vérifier le statut d'une transaction
  */
-export async function checkPaymentStatusAction(orderNumber: string) {
+export async function checkPaymentStatusAction(orderNumber: string, email?: string, productName?: string) {
   try {
     const statusCheck = await checkStatus(orderNumber);
     if (!statusCheck.success) {
       return { success: false, error: statusCheck.error || 'Impossible de vérifier le statut.' };
     }
+    const recipientEmail = email?.trim();
+    if (recipientEmail) {
+      await notifyPaymentByEmail({
+        email: recipientEmail,
+        orderNumber,
+        amount: 0,
+        currency: 'CDF',
+        productName: productName || 'Paiement',
+        status: statusCheck.status === 'SUCCES' ? 'confirmed' : statusCheck.status === 'ECHEC' ? 'failed' : 'pending',
+      });
+    }
+
     return {
       success: true,
       status: statusCheck.status,

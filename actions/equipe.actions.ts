@@ -29,6 +29,49 @@ export type EquipeSummary = {
   createdAt: string;
 };
 
+const serializeEquipe = (equipe: any) => {
+  const toPlainString = (value: unknown) => {
+    if (typeof value === "string") return value;
+    if (value && typeof value === "object" && "toString" in value) {
+      const candidate = value.toString();
+      return candidate && candidate !== "[object Object]" ? candidate : "";
+    }
+    return value ? String(value) : "";
+  };
+
+  return {
+    _id: equipe._id.toString(),
+    designation: equipe.designation,
+    description: Array.isArray(equipe.description) ? equipe.description : [],
+    logo: equipe.logo || "",
+    chefId: equipe.chefId
+      ? {
+          _id: equipe.chefId._id.toString(),
+          userId: equipe.chefId.userId
+            ? {
+                _id: equipe.chefId.userId._id.toString(),
+                pseudo: equipe.chefId.userId.pseudo,
+                telephone: equipe.chefId.userId.telephone,
+                photo: typeof equipe.chefId.userId.photo === "string" ? equipe.chefId.userId.photo : "",
+              }
+            : undefined,
+        }
+      : undefined,
+    membres: (equipe.membres || []).map((membre: any) => ({
+      player: toPlainString(membre.player),
+      status: Boolean(membre.status),
+      isSecretary: Boolean(membre.isSecretary),
+    })),
+    metriques: equipe.metriques || { competitions: 0, soldeUsd: 0, matchsWin: 0 },
+    payment: (equipe.payment || []).map((item: any) => ({
+      orderNumber: item.orderNumber,
+      status: item.status,
+      providerText: item.providerText,
+    })),
+    createdAt: equipe.createdAt?.toISOString?.() || "",
+  };
+};
+
 export async function getEquipesAction() {
   try {
     await connectToDb();
@@ -43,29 +86,7 @@ export async function getEquipesAction() {
 
     return {
       success: true,
-      equipes: equipes.map((equipe: any) => ({
-        _id: equipe._id.toString(),
-        designation: equipe.designation,
-        description: equipe.description || [],
-        logo: equipe.logo || "",
-        chefId: equipe.chefId
-          ? {
-              _id: equipe.chefId._id.toString(),
-              userId: equipe.chefId.userId
-                ? {
-                    _id: equipe.chefId.userId._id.toString(),
-                    pseudo: equipe.chefId.userId.pseudo,
-                    telephone: equipe.chefId.userId.telephone,
-                    photo: equipe.chefId.userId.photo,
-                  }
-                : undefined,
-            }
-          : undefined,
-        membres: equipe.membres || [],
-        metriques: equipe.metriques || { competitions: 0, soldeUsd: 0, matchsWin: 0 },
-        payment: equipe.payment || [],
-        createdAt: equipe.createdAt?.toISOString?.() || "",
-      })),
+      equipes: equipes.map((equipe: any) => serializeEquipe(equipe)),
     };
   } catch (error: any) {
     return { success: false, error: error.message || "Impossible de charger les équipes." };
@@ -77,7 +98,8 @@ export async function initiateEquipeCreationAction(
   designation: string,
   description: string,
   logo: string,
-  phone: string
+  phone: string,
+  email?: string
 ) {
   try {
     await connectToDb();
@@ -85,6 +107,10 @@ export async function initiateEquipeCreationAction(
     const captain = await Player.findById(captainId);
     if (!captain) {
       return { success: false, error: "Le capitaine n'existe pas." };
+    }
+
+    if (captain.type !== "VIP") {
+      return { success: false, error: "Seuls les joueurs de type VIP peuvent créer une équipe." };
     }
 
     const cleanDesignation = designation.trim();
@@ -112,8 +138,11 @@ export async function initiateEquipeCreationAction(
           description: cleanDescription,
           logo: cleanLogo,
         },
-      }
+      },
+      email?.trim()
     );
+
+    console.log("Payment initiation result:", payment);
 
     if (!payment.success || !payment.orderNumber) {
       return { success: false, error: payment.error || "Échec de l'initiation du paiement." };
@@ -135,11 +164,12 @@ export async function confirmEquipeCreationAction(payload: {
   description: string;
   logo: string;
   orderNumber: string;
+  email?: string;
 }): Promise<{ success: true; equipe: EquipeSummary } | { success: false; error: string }> {
   try {
     await connectToDb();
 
-    const status = await checkPaymentStatusAction(payload.orderNumber);
+    const status = await checkPaymentStatusAction(payload.orderNumber, payload.email, "Création d'équipe");
     if (!status.success || status.status !== "SUCCES") {
       return {
         success: false,
@@ -150,6 +180,10 @@ export async function confirmEquipeCreationAction(payload: {
     const captain = await Player.findById(payload.captainId);
     if (!captain) {
       return { success: false, error: "Le capitaine n'existe pas." };
+    }
+
+    if (captain.type !== "VIP") {
+      return { success: false, error: "Seuls les joueurs de type VIP peuvent créer une équipe." };
     }
 
     const existingEquipe = await Equipe.findOne({

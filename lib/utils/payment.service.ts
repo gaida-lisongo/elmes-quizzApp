@@ -79,6 +79,9 @@ export async function initiateCollection(
   payload: CollectionPayload,
 ): Promise<PaymentResponse> {
   try {
+
+    console.log("Payload for initiateCollection:", payload);
+    
     const { data, status } = await request<any>('POST', '/collect', {
       channel: 'MOBILE_MONEY',
       amount: payload.amount,

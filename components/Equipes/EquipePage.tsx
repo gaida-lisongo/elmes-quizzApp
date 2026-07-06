@@ -16,6 +16,7 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
   const [step, setStep] = useState(1);
   const [captain, setCaptain] = useState<SearchUserResult | null>(null);
   const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [design, setDesign] = useState("");
   const [description, setDescription] = useState("");
   const [logo, setLogo] = useState("");
@@ -56,7 +57,8 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
       design,
       description,
       logo || FALLBACK_LOGO,
-      phone
+      phone,
+      email
     );
 
     if (!result.success) {
@@ -84,6 +86,7 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
       description,
       logo: logo || FALLBACK_LOGO,
       orderNumber,
+      email,
     });
 
     if (!result.success) {
@@ -99,6 +102,7 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
     setStep(1);
     setCaptain(null);
     setPhone("");
+    setEmail("");
     setDesign("");
     setDescription("");
     setLogo("");
@@ -309,6 +313,18 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
                       value={phone}
                       onChange={(event) => setPhone(event.target.value)}
                       placeholder="243XXXXXXXXX"
+                      className="w-full rounded-xl border border-stroke bg-transparent px-4 py-3 text-sm text-black outline-none focus:border-primary dark:border-strokedark dark:text-white"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-black dark:text-white">Email de réception</label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(event) => setEmail(event.target.value)}
+                      placeholder="prenom.nom@email.com"
                       className="w-full rounded-xl border border-stroke bg-transparent px-4 py-3 text-sm text-black outline-none focus:border-primary dark:border-strokedark dark:text-white"
                       required
                     />

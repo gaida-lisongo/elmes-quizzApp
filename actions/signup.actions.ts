@@ -17,6 +17,7 @@ export type PlayerType = 'STANDALONE' | 'ADVANCED' | 'VIP';
 export interface SignupStep1Data {
   pseudo: string;
   telephone: string;
+  email: string;
   school: string;
   playerType: PlayerType;
   referralCode?: string;
@@ -92,17 +93,19 @@ export async function validateReferralCode(code: string) {
 export async function createPlayerStep1(data: SignupStep1Data) {
   await connectToDb();
 
-  const { pseudo, telephone, school, playerType, referralCode } = data;
+  const { pseudo, telephone, email, school, playerType, referralCode } = data;
 
-  if (!pseudo?.trim() || !telephone?.trim() || !school?.trim()) {
+  if (!pseudo?.trim() || !telephone?.trim() || !email?.trim() || !school?.trim()) {
     return { success: false, error: 'Tous les champs sont obligatoires.' };
   }
 
   try {
-    // Vérifier si le téléphone existe déjà
-    const existingUser = await User.findOne({ telephone: telephone.trim() });
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // Vérifier si le téléphone ou l'email existe déjà
+    const existingUser = await User.findOne({ $or: [{ telephone: telephone.trim() }, { email: normalizedEmail }] });
     if (existingUser) {
-      return { success: false, error: 'Ce numéro de téléphone est déjà utilisé.' };
+      return { success: false, error: existingUser.telephone === telephone.trim() ? 'Ce numéro de téléphone est déjà utilisé.' : 'Cette adresse email est déjà utilisée.' };
     }
 
     // Résoudre le parrain (code d'affiliation)
@@ -119,6 +122,7 @@ export async function createPlayerStep1(data: SignupStep1Data) {
     const tempPayload = JSON.stringify({
       pseudo: pseudo.trim(),
       telephone: telephone.trim(),
+      email: normalizedEmail,
       school: school.trim(),
       playerType,
       referedBy: referedBy?.toString() || null,
@@ -189,10 +193,10 @@ export async function createPlayerStep2(data: SignupStep2Data) {
       return { success: false, error: 'Session expirée. Veuillez recommencer l\'inscription.' };
     }
 
-    const { pseudo, telephone, school, playerType, referedBy } = tempData;
+    const { pseudo, telephone, email, school, playerType, referedBy } = tempData;
 
     // Vérifier que l'utilisateur n'a pas été créé entre-temps
-    const existingUser = await User.findOne({ telephone });
+    const existingUser = await User.findOne({ $or: [{ telephone }, { email }] });
     if (existingUser) {
       return { success: false, error: 'Ce numéro de téléphone est déjà utilisé.' };
     }
@@ -203,6 +207,7 @@ export async function createPlayerStep2(data: SignupStep2Data) {
     const newUser = await User.create({
       pseudo,
       telephone,
+      email,
       solde: 0,
       role: 'PLAYER',
       secure: hashedPassword,

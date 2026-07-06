@@ -10,6 +10,7 @@ import {
   User,
   Phone,
   School,
+  Mail,
   Lock,
   Image as ImageIcon,
   Upload,
@@ -92,6 +93,7 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
   const [step1Data, setStep1Data] = useState({
     pseudo: "",
     telephone: "",
+    email: "",
     school: "",
   });
 
@@ -129,10 +131,16 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
   const handleStep1Submit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const { pseudo, telephone, school } = step1Data;
+    const { pseudo, telephone, email, school } = step1Data;
 
-    if (!pseudo.trim() || !telephone.trim() || !school.trim()) {
+    if (!pseudo.trim() || !telephone.trim() || !email.trim() || !school.trim()) {
       toast.error("Tous les champs sont obligatoires.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      toast.error("Veuillez saisir une adresse email valide.");
       return;
     }
 
@@ -152,6 +160,7 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
           createPlayerStep1({
             pseudo: pseudo.trim(),
             telephone: telephone.trim(),
+            email: email.trim().toLowerCase(),
             school: school.trim(),
             playerType: selectedType,
             referralCode: referralCode || undefined,
