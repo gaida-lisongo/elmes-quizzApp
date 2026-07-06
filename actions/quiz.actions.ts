@@ -135,7 +135,7 @@ export async function createQuizAction(data: {
       enonce: data.enonce,
       assertions: data.assertions,
       reponse: data.reponse,
-      level: data.level,
+      level: data.level as 0 | 1 | 2 | 3,
       type: data.type,
       assets: data.assets || '',
       status: true,
@@ -162,6 +162,7 @@ export async function createQuizzesBulkAction(quizzes: Array<{
     await connectToDb();
     const docs = quizzes.map(q => ({
       ...q,
+      level: q.level as 0 | 1 | 2 | 3,
       status: true,
       assets: '',
     }));
@@ -176,7 +177,7 @@ export async function updateQuizAction(id: string, data: {
   enonce?: string;
   assertions?: string[];
   reponse?: string;
-  level?: number;
+  level?: 0 | 1 | 2 | 3;
   type?: 'QCM' | 'VRAI_FAUX';
   assets?: string;
   status?: boolean;
