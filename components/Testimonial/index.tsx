@@ -11,7 +11,7 @@ import { motion } from "framer-motion";
 import SingleTestimonial from "./SingleTestimonial";
 import { testimonialData } from "./testimonialData";
 
-const Testimonial = () => {
+const Testimonial = ({title, subtitle, description, data}: {title: string, subtitle: string, description: string, data: any[]}) => {
   return (
     <>
       <section>
@@ -20,9 +20,9 @@ const Testimonial = () => {
           <div className="animate_top mx-auto text-center">
             <SectionHeader
               headerInfo={{
-                title: `TESTIMONIALS`,
-                subtitle: `Client’s Testimonials`,
-                description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. In convallis tortor eros. Donec vitae tortor lacus. Phasellus aliquam ante in maximus.`,
+                title: title || `TESTIMONIALS`,
+                subtitle: subtitle || `Client’s Testimonials`,
+                description: description || `Lorem ipsum dolor sit amet, consectetur adipiscing elit. In convallis tortor eros. Donec vitae tortor lacus. Phasellus aliquam ante in maximus.`,
               }}
             />
           </div>
@@ -72,7 +72,7 @@ const Testimonial = () => {
                 },
               }}
             >
-              {testimonialData.map((review) => (
+              {(data?.length > 0 ? data : testimonialData).map((review) => (
                 <SwiperSlide key={review?.id}>
                   <SingleTestimonial review={review} />
                 </SwiperSlide>

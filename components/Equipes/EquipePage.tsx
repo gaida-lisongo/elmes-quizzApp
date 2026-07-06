@@ -5,6 +5,7 @@ import SearchUserInput, { type SearchUserResult } from "@/components/Common/Sear
 import { motion } from "framer-motion";
 import { BadgeCheck, CreditCard, Search, Sparkles, Users } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
 const HERO_IMAGE = "/images/team/team.png";
@@ -174,15 +175,16 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
                     transition={{ duration: 0.4, delay: index * 0.05 }}
                     className="rounded-2xl border border-stroke bg-white p-4 shadow-solid-8 dark:border-strokedark dark:bg-blacksection"
                   >
-                    <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-alabaster dark:bg-strokedark">
-                      {equipe.logo ? (
-                        <img src={equipe.logo} alt={equipe.designation} className="h-full w-full object-cover" />
-                      ) : (
-                        <div className="flex h-full items-center justify-center text-waterloo">Aucune image</div>
-                      )}
-                    </div>
+                    <Link href={`/equipes/${equipe._id}`} className="block">
+                      <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-alabaster dark:bg-strokedark">
+                        {equipe.logo ? (
+                          <img src={equipe.logo} alt={equipe.designation} className="h-full w-full object-cover" />
+                        ) : (
+                          <div className="flex h-full items-center justify-center text-waterloo">Aucune image</div>
+                        )}
+                      </div>
 
-                    <div className="mt-5 space-y-3">
+                      <div className="mt-5 space-y-3">
                       <div className="flex items-start justify-between gap-2">
                         <h3 className="text-lg font-semibold text-black dark:text-white">{equipe.designation}</h3>
                         <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
@@ -190,8 +192,8 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
                         </span>
                       </div>
 
-                      <p className="line-clamp-3 text-sm text-waterloo">
-                        {equipe.description?.[0] || "Cette équipe n’a pas encore de description détaillée."}
+                      <p className="line-clamp-3 text-sm text-waterloo whitespace-pre-line">
+                        {equipe.description?.[0]?.slice(0, 10) + (equipe.description?.[0]?.length > 100 ? "..." : "") || "Cette équipe n’a pas encore de description détaillée."}
                       </p>
 
                       <div className="flex flex-wrap gap-2">
@@ -203,14 +205,15 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
                         </span>
                       </div>
 
-                      <div className="flex items-center justify-between border-t border-stroke pt-3 text-sm text-waterloo dark:border-strokedark">
-                        <span className="flex items-center gap-2">
-                          <Users className="h-4 w-4 text-primary" />
-                          {equipe.payment?.[0]?.status === "CONFIRMED" ? "Inscription confirmée" : "En attente de validation"}
-                        </span>
-                        <span className="font-medium text-black dark:text-white">{equipe.metriques?.matchsWin || 0} victoires</span>
+                        <div className="flex items-center justify-between border-t border-stroke pt-3 text-sm text-waterloo dark:border-strokedark">
+                          <span className="flex items-center gap-2">
+                            <Users className="h-4 w-4 text-primary" />
+                            {equipe.payment?.[0]?.status === "CONFIRMED" ? "Inscription confirmée" : "En attente de validation"}
+                          </span>
+                          <span className="font-medium text-black dark:text-white">{equipe.metriques?.matchsWin || 0} victoires</span>
+                        </div>
                       </div>
-                    </div>
+                    </Link>
                   </motion.article>
                 ))}
               </div>

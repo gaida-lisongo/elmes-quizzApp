@@ -5,7 +5,7 @@ import { useState } from "react";
 import FAQItem from "./FAQItem";
 import faqData from "./faqData";
 
-const FAQ = () => {
+const FAQ = ({ data = null} : {data?: any}) => {
   const [activeFaq, setActiveFaq] = useState(1);
 
   const handleFaqToggle = (id: number) => {
@@ -51,20 +51,21 @@ const FAQ = () => {
               className="animate_left md:w-2/5 lg:w-1/2"
             >
               <span className="font-medium uppercase text-black dark:text-white">
-                OUR FAQS
+                Comment reussir dans ce parcours ?
               </span>
               <h2 className="relative mb-6 text-3xl font-bold text-black dark:text-white xl:text-hero">
-                Frequently Asked
+                Pour augmente vos chances de reussir, il faut approfondir vos connaissances sur les {" "}
                 <span className="relative inline-block before:absolute before:bottom-2.5 before:left-0 before:-z-1 before:h-3 before:w-full before:bg-titlebg2 dark:before:bg-titlebgdark">
-                  Questions
+                  thématiques suivantes
                 </span>
               </h2>
 
               <a
-                href="#"
+                href={data?.url || '#'}
+                target="_"
                 className="group mt-7.5 inline-flex items-center gap-2.5 text-black hover:text-primary dark:text-white dark:hover:text-primary"
               >
-                <span className="duration-300 group-hover:pr-2">Know More</span>
+                <span className="duration-300 group-hover:pr-2">Voir les ressources</span>
                 <svg
                   width="14"
                   height="14"
@@ -98,7 +99,7 @@ const FAQ = () => {
               className="animate_right md:w-3/5 lg:w-1/2"
             >
               <div className="rounded-lg bg-white shadow-solid-8 dark:border dark:border-strokedark dark:bg-blacksection">
-                {faqData.map((faq, key) => (
+                {(data?.categories.length ? data.categories : []).map((faq, key) => (
                   <FAQItem
                     key={key}
                     faqData={{ ...faq, activeFaq, handleFaqToggle }}

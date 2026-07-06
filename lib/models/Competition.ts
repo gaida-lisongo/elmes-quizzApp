@@ -3,6 +3,7 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 export interface IParcours extends Document {
   designation: string;
   description?: string;
+  ressources?: string
   categories: mongoose.Types.ObjectId[];
   questions: number; // Nombre total de parties disponibles pour cette compétition
   status: 'ACTIVE' | 'INACTIVE' | 'COMPLETED';
@@ -38,6 +39,7 @@ const CompetitionSchema: Schema<ICompetition> = new Schema(
   {
     designation: { type: String, required: true, trim: true },
     description: { type: String, default: '' },
+    ressources: { type: String, default: ''},
     cagnotte: { type: Number, required: true, default: 0 },
     amount: { type: Number, required: true, default: 0 },
     categories: [{ type: Schema.Types.ObjectId, ref: 'Categorie', required: true }],
