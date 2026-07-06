@@ -225,3 +225,103 @@ export async function getClassementAction() {
     return { success: false, error: error.message };
   }
 }
+
+// ── CRUD SESSIONS ──────────────────────────────────────────────────
+
+/**
+ * Récupère toutes les sessions (admin)
+ */
+export async function getAllSessionsAction() {
+  try {
+    const userSession = await getSession();
+    if (!userSession || !['ADMIN', 'MOD'].includes(userSession.role)) {
+      return { success: false, error: 'Non autorisé' };
+    }
+    await connectToDb();
+    const sessions = await Session.find()
+      .sort({ startDate: -1 })
+      .lean();
+    return { success: true, sessions: JSON.parse(JSON.stringify(sessions)) };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Crée une session
+ */
+export async function createSessionAction(data: {
+  designation: string;
+  startDate: string;
+  endDate: string;
+}) {
+  try {
+    const userSession = await getSession();
+    if (!userSession || !['ADMIN', 'MOD'].includes(userSession.role)) {
+      return { success: false, error: 'Non autorisé' };
+    }
+    await connectToDb();
+
+    const slug = data.designation
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '') + '-' + Date.now();
+
+    const session = await Session.create({
+      slug,
+      designation: data.designation,
+      startDate: new Date(data.startDate),
+      endDate: new Date(data.endDate),
+    });
+
+    return { success: true, session: JSON.parse(JSON.stringify(session)) };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Modifie une session
+ */
+export async function updateSessionAction(
+  id: string,
+  data: { designation?: string; startDate?: string; endDate?: string }
+) {
+  try {
+    const userSession = await getSession();
+    if (!userSession || !['ADMIN', 'MOD'].includes(userSession.role)) {
+      return { success: false, error: 'Non autorisé' };
+    }
+    await connectToDb();
+
+    const updateData: any = {};
+    if (data.designation) updateData.designation = data.designation;
+    if (data.startDate) updateData.startDate = new Date(data.startDate);
+    if (data.endDate) updateData.endDate = new Date(data.endDate);
+
+    const session = await Session.findByIdAndUpdate(id, { $set: updateData }, { new: true }).lean();
+    if (!session) return { success: false, error: 'Session introuvable' };
+
+    return { success: true, session: JSON.parse(JSON.stringify(session)) };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Supprime une session
+ */
+export async function deleteSessionAction(id: string) {
+  try {
+    const userSession = await getSession();
+    if (!userSession || !['ADMIN', 'MOD'].includes(userSession.role)) {
+      return { success: false, error: 'Non autorisé' };
+    }
+    await connectToDb();
+
+    await Session.findByIdAndDelete(id);
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
