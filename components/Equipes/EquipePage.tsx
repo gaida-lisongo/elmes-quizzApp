@@ -92,7 +92,9 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
       return;
     }
 
-    setItems((prev) => [result.equipe as EquipeSummary, ...prev]);
+    if (result.success) {
+      setItems((prev) => [result.equipe, ...prev]);
+    }
     setMessage("Équipe créée avec succès. Elle est maintenant visible dans la liste.");
     setStep(1);
     setCaptain(null);

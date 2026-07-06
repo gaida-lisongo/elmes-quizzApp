@@ -135,7 +135,7 @@ export async function confirmEquipeCreationAction(payload: {
   description: string;
   logo: string;
   orderNumber: string;
-}) {
+}): Promise<{ success: true; equipe: EquipeSummary } | { success: false; error: string }> {
   try {
     await connectToDb();
 
@@ -197,9 +197,17 @@ export async function confirmEquipeCreationAction(payload: {
           _id: equipe.chefId.toString(),
           userId: undefined,
         },
-        membres: equipe.membres || [],
+        membres: (equipe.membres || []).map((membre: any) => ({
+          player: membre.player?.toString?.() || "",
+          status: membre.status,
+          isSecretary: membre.isSecretary,
+        })),
         metriques: equipe.metriques || { competitions: 0, soldeUsd: 0, matchsWin: 0 },
-        payment: equipe.payment || [],
+        payment: (equipe.payment || []).map((item: any) => ({
+          orderNumber: item.orderNumber,
+          status: item.status,
+          providerText: item.providerText,
+        })),
         createdAt: equipe.createdAt?.toISOString?.() || "",
       },
     };
