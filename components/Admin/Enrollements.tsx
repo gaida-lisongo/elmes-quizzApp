@@ -80,7 +80,7 @@ const SessionModal = ({
     if (etape === 2) {
       setLoadingRessources(true);
       getAvailableRessourcesAction().then((res) => {
-        if (res.success) {
+        if (res.success && res.ressources) {
           setAvailableParcours(res.ressources.parcours);
           setAvailableCompetitions(res.ressources.competitions);
         }
