@@ -12,6 +12,7 @@ interface CritereDisplay {
   _id: string;
   designation: string;
   description: string;
+  status?: boolean;
   first: any[];
   second: any[];
   third: any[];
