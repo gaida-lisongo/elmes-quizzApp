@@ -232,14 +232,11 @@ export async function checkCriteresClassementAction(critereId: string) {
 
     if (isComplete) {
       await Critere.findByIdAndUpdate(critereId, { status: false });
-      // Marquer la ressource comme INACTIVE
-      const ressourceModel = critere.ressource === 'Competition' ? Competition : Parcours;
-      await (ressourceModel as any).findByIdAndUpdate(critere.ressourceId, { status: 'INACTIVE' });
     }
 
     return {
       success: true,
-      data: JSON.parse(JSON.stringify(await Critere.findById(critereId).populate('ressourceId', 'designation').lean())),
+      data: JSON.parse(JSON.stringify(await Critere.findById(critereId).populate('sessionId', 'designation').lean())),
     };
   } catch (error: any) {
     return { success: false, error: error.message };
