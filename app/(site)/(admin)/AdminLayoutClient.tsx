@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Users, Activity, Target, Award } from "lucide-react";
 import { getCurrentUserDetailed } from "@/actions/auth.actions";
 import ProfileUser from "@/components/Admin/ProfileUser";
-import MetriqueLayout from "@/components/Admin/MetriqueLayout";
 import MetricsAgent from "@/components/Admin/MetricsAgent";
 import Enrollements from "@/components/Admin/Enrollements";
 import QuestionsAdmin from "@/components/Admin/QuestionsAdmin";
+import StandaloneDashboard from "./dashboard/standalone/StandaloneDashboard";
+import AdvancedDashboard from "./dashboard/advanced/AdvancedDashboard";
+import VipDashboard from "./dashboard/vip/VipDashboard";
 
 export type UserRole = "ADMIN" | "MOD" | "PLAYER";
 export type PlayerType = "STANDALONE" | "ADVANCED" | "VIP";
@@ -126,20 +127,6 @@ export default function AdminLayoutClient({
     USER_MENU.find((u) => u.account === menuKey)?.menu || USER_MENU[1].menu;
   const TABS = activeMenu;
 
-  // Données mock pour le fallback PLAYER
-  const mockMetricsData = {
-    moyennesCards: [
-      { label: "Joueurs total", count: 1284, total: 1284, percent: 100, icon: <Users className="h-5 w-5" />, color: "text-blue-600 bg-blue-100 dark:bg-blue-900/30" },
-      { label: "Parties jouées", count: 8432, total: 10000, percent: 84, icon: <Activity className="h-5 w-5" />, color: "text-green-600 bg-green-100 dark:bg-green-900/30" },
-      { label: "Score moyen", count: 72, total: 100, percent: 72, icon: <Target className="h-5 w-5" />, color: "text-purple-600 bg-purple-100 dark:bg-purple-900/30" },
-      { label: "Taux complétion", count: 68, total: 100, percent: 68, icon: <Award className="h-5 w-5" />, color: "text-orange-600 bg-orange-100 dark:bg-orange-900/30" },
-    ],
-    chart: [],
-    topEnrollements: [],
-    players: [],
-    totalPlayers: 0,
-  };
-
   return (
     <div className="overflow-hidden pb-20 pt-35 md:pt-40 xl:pb-25 xl:pt-46">
       <div className="mx-auto max-w-c-1390 px-4 md:px-8 2xl:px-0">
@@ -192,7 +179,11 @@ export default function AdminLayoutClient({
           {currentTab === "metriques" && (
             menuKey === "ADMIN" || menuKey === "MOD"
               ? <MetricsAgent role={menuKey as "ADMIN" | "MOD"} />
-              : (metriques || <MetriqueLayout data={mockMetricsData} role="PLAYER" />)
+              : menuKey === "ADVANCED"
+                ? <AdvancedDashboard />
+                : menuKey === "VIP"
+                  ? <VipDashboard />
+                  : <StandaloneDashboard />
           )}
           {currentTab === "agents" && children}
           {currentTab === "enrollements" && (enrollements || <Enrollements />)}
