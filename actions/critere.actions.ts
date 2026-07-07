@@ -281,7 +281,7 @@ export async function applyBonusPartiesAction(playerId: string, increment: numbe
     player.parties = (player.parties || 0) + increment;
     await player.save();
 
-    return { success: true, message: `${increment} partie(s) ajoutée(s) à ${player.pseudo || 'joueur'}` };
+    return { success: true, message: `${increment} partie(s) ajoutée(s)` };
   } catch (error: any) {
     return { success: false, error: error.message };
   }

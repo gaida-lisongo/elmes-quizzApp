@@ -21,6 +21,7 @@ export interface ICompetition extends IParcours {
 export interface ICritere extends Document {
   ressource: string;
   ressourceId: mongoose.Types.ObjectId;
+  sessionId?: mongoose.Types.ObjectId;
   designation: string;
   slug: string;
   description: string;
@@ -73,6 +74,7 @@ const CritereSchema: Schema<ICritere> = new Schema(
   {
     ressource: { type: String, enum: ['Parcours', 'Competition'], required: true },
     ressourceId: { type: Schema.Types.ObjectId, required: true, refPath: 'ressource' },
+    sessionId: { type: Schema.Types.ObjectId, ref: 'Session' },
     designation: { type: String, required: true, trim: true },
     slug: { type: String, required: true, unique: true },
     description: { type: String, default: '' },
