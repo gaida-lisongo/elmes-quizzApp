@@ -144,7 +144,7 @@ export async function getPlayerMetricsAction(): Promise<{ success: boolean; data
             const memberPlayer = await Player.findById(member.player).populate('userId', 'pseudo photo telephone').lean();
             return {
               _id: memberPlayer?._id?.toString() || member.player?.toString(),
-              pseudo: memberPlayer?.userId?.pseudo || 'Membre',
+              pseudo: (memberPlayer?.userId as any)?.pseudo || 'Membre',
               isSecretary: Boolean(member.isSecretary),
               status: Boolean(member.status),
               isCurrentUser: member.player?.toString() === player._id.toString(),

@@ -10,10 +10,10 @@ import QuestionsAdmin from "@/components/Admin/QuestionsAdmin";
 import StandaloneDashboard from "./dashboard/standalone/StandaloneDashboard";
 import AdvancedDashboard from "./dashboard/advanced/AdvancedDashboard";
 import VipDashboard from "./dashboard/vip/VipDashboard";
-import StandaloneTable from "./_components/Standalone";
-import AdvancedRechargesTable from "./_components/Advanced";
-import VipMembresTable from "./_components/Vip";
 import RetraitsTable from "./_components/Retraits"
+import PartiesStandalone from "./_components/PartiesStandalone";
+import ParcoursAdvanced from "./_components/ParcoursAdvanced";
+import MatchsVip from "./_components/MatchsVip";
 
 export type UserRole = "ADMIN" | "MOD" | "PLAYER";
 export type PlayerType = "STANDALONE" | "ADVANCED" | "VIP";
@@ -195,16 +195,16 @@ export default function AdminLayoutClient({
             <QuestionsAdmin />
           )}
           {currentTab === "parties" && (
-            <StandaloneTable />
+            <PartiesStandalone />
           )}
           {currentTab === "retraits" && (
             <RetraitsTable />
           )}
           {currentTab === "parcours" && (
-            <AdvancedRechargesTable />
+            <ParcoursAdvanced />
           )}
           {currentTab === "matchs" && (
-            <VipMembresTable />
+            <MatchsVip />
           )}
         </section>
       </div>
