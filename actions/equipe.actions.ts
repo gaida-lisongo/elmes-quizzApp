@@ -351,7 +351,7 @@ export async function getMyEquipeDetailAction(playerId: string) {
         logo: equipe.logo || '',
         isCaptain,
         isSecretary: membres.some((m) => m.isCurrentUser && m.isSecretary),
-        chefPseudo: equipe.chefId?.userId?.pseudo || 'Capitaine',
+        chefPseudo: (equipe.chefId as any)?.userId?.pseudo || 'Capitaine',
         membres,
       },
     };

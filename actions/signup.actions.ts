@@ -217,10 +217,15 @@ export async function createPlayerStep2(data: SignupStep2Data) {
     // Générer un code de parrainage
     const referralCode = generateReferralCode(pseudo);
 
+    // Convertir referedBy en ObjectId si c'est une string (vient du cookie)
+    const referedByObjectId = referedBy && referedBy !== 'null'
+      ? new mongoose.Types.ObjectId(referedBy)
+      : undefined;
+
     // Création du profil Player
     await Player.create({
       userId: newUser._id,
-      referedBy: referedBy || undefined,
+      referedBy: referedByObjectId,
       level: 0,
       type: playerType,
       school,

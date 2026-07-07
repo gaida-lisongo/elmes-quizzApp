@@ -21,7 +21,7 @@ export default function SignupPage({
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    // Parser le hash de l'URL côté client
+    // Parser l'URL actuelle : hash ET searchParams
     const hash = window.location.hash.replace(/^#/, "");
     const [typePart, queryString] = hash.split("?");
 
@@ -29,17 +29,23 @@ export default function SignupPage({
     const detectedType = TYPE_MAP[typePart?.toLowerCase()] || "STANDALONE";
     setPlayerType(detectedType);
 
-    // Chercher un code d'affiliation dans le hash (prioritaire) ou dans l'URL
+    // Chercher un code d'affiliation : priorité au hash, puis searchParams, puis prop serveur
+    let code: string | null = null;
+
     if (queryString) {
       const params = new URLSearchParams(queryString);
-      const code = params.get("code");
-      if (code) {
-        setResolvedCode(code);
-      }
+      code = params.get("code");
     }
 
+    if (!code) {
+      const params = new URLSearchParams(window.location.search);
+      code = params.get("code");
+    }
+
+    setResolvedCode(code || referralCode);
+
     setReady(true);
-  }, []);
+  }, [referralCode]);
 
   if (!ready) {
     return <Loader message="Préparation de l'inscription..." size="sm" />;

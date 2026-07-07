@@ -24,23 +24,31 @@ const STATUS_LABEL: Record<string, string> = {
 export default function AdvancedRechargesTable() {
   const [data, setData] = useState<PlayerMetricsData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [playerId, setPlayerId] = useState<string>("");
   const [checkingIndex, setCheckingIndex] = useState<number | null>(null);
   const [deletingIndex, setDeletingIndex] = useState<number | null>(null);
 
   const loadMetrics = async () => {
     setLoading(true);
     const res = await getPlayerMetricsAction();
-    if (res.success) setData(res.data || null);
+    if (res.success) {
+      setData(res.data || null);
+      // Récupérer le playerId depuis les métriques via getMyRechargesAction
+      const rechargesRes = await import("@/actions/payment.actions").then(m => m.getMyRechargesAction());
+      if (rechargesRes.success && rechargesRes.data?.playerId) {
+        setPlayerId(rechargesRes.data.playerId);
+      }
+    }
     setLoading(false);
   };
 
   useEffect(() => { loadMetrics(); }, []);
 
   const handleCheck = async (index: number, providerTxId: string) => {
-    if (!providerTxId) return toast.error("Aucune transaction à vérifier.");
+    if (!providerTxId || !playerId) return toast.error("Aucune transaction à vérifier.");
     setCheckingIndex(index);
     try {
-      const res = await checkRechargeStatusAction("", index);
+      const res = await checkRechargeStatusAction(playerId, index);
       if (res.success) {
         toast.success(res.message || "Statut mis à jour.");
         await loadMetrics();
@@ -55,9 +63,10 @@ export default function AdvancedRechargesTable() {
   };
 
   const handleDelete = async (index: number) => {
+    if (!playerId) return toast.error("Impossible d'identifier le joueur.");
     setDeletingIndex(index);
     try {
-      const res = await deleteRechargeAction("", index);
+      const res = await deleteRechargeAction(playerId, index);
       if (res.success) {
         toast.success("Recharge supprimée.");
         await loadMetrics();
