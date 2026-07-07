@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Loader2, Users, Shield, UserCheck, Medal, Activity } from "lucide-react";
 import MetriqueLayout, { type MetricsData } from "./MetriqueLayout";
 import { getMetricsAgentAction, type MetricsAgentData } from "@/actions/metrics.actions";
-import { getCriteresAction } from "@/actions/critere.actions";
+import CriteresAdmin from "./CriteresAdmin";
 
 const TYPE_COLORS: Record<string, string> = {
   standalone: "text-blue-600 bg-blue-100 dark:bg-blue-900/30",
@@ -32,10 +32,7 @@ export default function MetricsAgent({ role }: MetricsAgentProps) {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [res, criteresRes] = await Promise.all([
-        getMetricsAgentAction(),
-        getCriteresAction(),
-      ]);
+      const res = await getMetricsAgentAction();
       if (res.success && res.data) {
         const d: MetricsAgentData = res.data;
         setData({
@@ -63,7 +60,6 @@ export default function MetricsAgent({ role }: MetricsAgentProps) {
           ],
           chart: d.chart,
           topEnrollements: d.topEnrollements,
-          criteres: criteresRes.success ? criteresRes.criteres : [],
           players: d.players,
           equipes: d.equipes,
           totalPlayers: d.totalPlayers,
@@ -100,17 +96,18 @@ export default function MetricsAgent({ role }: MetricsAgentProps) {
   }
 
   return (
-    <MetriqueLayout
-      data={data}
-      role={role}
-      onPlayerAction={(player) => {
-        // Future: ouvrir modal bonus/niveau pour ce joueur
-        console.log("Player action:", player.pseudo);
-      }}
-      onEquipeAction={(equipe) => {
-        // Future: gérer équipe (vérifier paiement, révoquer membre)
-        console.log("Equipe action:", equipe.designation);
-      }}
-    />
+    <div className="space-y-8">
+      <MetriqueLayout
+        data={data}
+        role={role}
+        onPlayerAction={(player) => {
+          console.log("Player action:", player.pseudo);
+        }}
+        onEquipeAction={(equipe) => {
+          console.log("Equipe action:", equipe.designation);
+        }}
+      />
+      <CriteresAdmin />
+    </div>
   );
 }
