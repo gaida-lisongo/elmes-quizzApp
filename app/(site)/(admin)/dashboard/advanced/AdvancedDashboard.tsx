@@ -12,6 +12,9 @@ import {
   BookOpen,
   Swords,
   Loader2,
+  BarChart3,
+  Award,
+  ChevronRight,
 } from "lucide-react";
 import { getPlayerMetricsAction, type PlayerMetricsData } from "@/actions/player.metrics.actions";
 
@@ -74,10 +77,10 @@ export default function AdvancedDashboard() {
   }, []);
 
   const stats = data ? [
-    { label: "Sessions suivies", value: `${data.sessions.length}`, icon: <Route className="h-5 w-5" />, color: "text-purple-500", bg: "bg-purple-50 dark:bg-purple-500/10" },
-    { label: "Score total", value: `${data.stats.scoreTotal} pts`, icon: <TrendingUp className="h-5 w-5" />, color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-500/10" },
-    { label: "Précision", value: `${data.stats.precision}%`, icon: <Target className="h-5 w-5" />, color: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-500/10" },
-    { label: "Niveau actuel", value: `Niv. ${data.stats.level}`, icon: <Medal className="h-5 w-5" />, color: "text-purple-500", bg: "bg-purple-50 dark:bg-purple-500/10" },
+    { label: "Questions OK / Total", value: `${data.averages.questions.ok}/${data.averages.questions.total}`, icon: <Target className="h-5 w-5" />, color: "text-emerald-500", bg: "bg-emerald-50 dark:bg-emerald-500/10" },
+    { label: "Catégories OK / Total", value: `${data.averages.categories.ok}/${data.averages.categories.total}`, icon: <Award className="h-5 w-5" />, color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-500/10" },
+    { label: "Parties OK / Parties", value: `${data.averages.parties.ok}/${data.averages.parties.total}`, icon: <Route className="h-5 w-5" />, color: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-500/10" },
+    { label: "Niveau actuel / 3", value: `${data.averages.level.current}/${data.averages.level.total}`, icon: <Medal className="h-5 w-5" />, color: "text-purple-500", bg: "bg-purple-50 dark:bg-purple-500/10" },
   ] : [];
 
   return (
@@ -125,30 +128,57 @@ export default function AdvancedDashboard() {
             </div>
           </div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.6 }} className="rounded-2xl border border-stroke bg-white p-6 shadow-solid-5 dark:border-strokedark dark:bg-blacksection">
-            <div className="mb-4 flex items-center gap-2">
-              <Clock className="h-5 w-5 text-primary" />
-              <h2 className="text-xl font-semibold text-black dark:text-white">Performance par session</h2>
-            </div>
-            {data?.sessions?.length ? (
-              <div className="space-y-2">
-                {data.sessions.map((session) => (
-                  <div key={session.label} className="flex items-center justify-between rounded-lg border border-stroke px-3 py-2 text-sm dark:border-strokedark">
-                    <span className="text-waterloo">{session.label}</span>
-                    <span className="font-semibold text-primary">{session.count} inscription(s)</span>
-                  </div>
-                ))}
+          <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.6 }} className="rounded-2xl border border-stroke bg-white p-6 shadow-solid-5 dark:border-strokedark dark:bg-blacksection">
+              <div className="mb-4 flex items-center gap-2">
+                <BarChart3 className="h-5 w-5 text-primary" />
+                <h2 className="text-xl font-semibold text-black dark:text-white">Distribution par session</h2>
               </div>
-            ) : (
-              <div className="flex items-center justify-center py-12">
-                <div className="text-center">
-                  <Route className="mx-auto mb-3 h-12 w-12 text-waterloo" />
-                  <p className="text-waterloo">Aucun parcours effectué pour le moment</p>
-                  <p className="mt-1 text-sm text-waterloo/70">Commencez un parcours pour apparaître ici</p>
+              {data?.chart?.length ? (
+                <div className="space-y-3">
+                  {data.chart.map((entry) => (
+                    <div key={entry.label} className="rounded-lg border border-stroke px-3 py-2 dark:border-strokedark">
+                      <div className="mb-1 flex items-center justify-between text-sm">
+                        <span className="font-medium text-black dark:text-white">{entry.label}</span>
+                        <span className="text-waterloo">{entry.value} parcours</span>
+                      </div>
+                      <div className="h-2 overflow-hidden rounded-full bg-stroke dark:bg-strokedark">
+                        <div className="h-full rounded-full bg-purple-500" style={{ width: `${Math.max(10, entry.value * 20)}%` }} />
+                      </div>
+                      <p className="mt-1 text-xs text-waterloo">{entry.detail}</p>
+                    </div>
+                  ))}
                 </div>
+              ) : (
+                <div className="py-10 text-center text-waterloo">Aucune session enregistrée.</div>
+              )}
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.7 }} className="rounded-2xl border border-stroke bg-white p-6 shadow-solid-5 dark:border-strokedark dark:bg-blacksection">
+              <div className="mb-4 flex items-center gap-2">
+                <Clock className="h-5 w-5 text-primary" />
+                <h2 className="text-xl font-semibold text-black dark:text-white">Activité récente</h2>
               </div>
-            )}
-          </motion.div>
+              {data?.recentParties?.length ? (
+                <div className="space-y-3">
+                  {data.recentParties.map((party) => (
+                    <div key={party._id} className="flex items-center justify-between rounded-lg border border-stroke px-3 py-2 text-sm dark:border-strokedark">
+                      <div>
+                        <p className="font-medium text-black dark:text-white">{party.categorie}</p>
+                        <p className="text-waterloo">{new Date(party.createdAt).toLocaleDateString("fr-FR")}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold text-primary">{party.note} pts</p>
+                        <p className="text-xs text-waterloo">{party.status}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="py-10 text-center text-waterloo">Aucune activité récente.</div>
+              )}
+            </motion.div>
+          </div>
         </>
       )}
     </div>

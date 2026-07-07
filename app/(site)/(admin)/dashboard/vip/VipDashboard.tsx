@@ -12,6 +12,8 @@ import {
   Gamepad2,
   Loader2,
   Users,
+  BarChart3,
+  Award,
 } from "lucide-react";
 import { getPlayerMetricsAction, type PlayerMetricsData } from "@/actions/player.metrics.actions";
 
@@ -74,7 +76,7 @@ export default function VipDashboard() {
   }, []);
 
   const stats = data ? [
-    { label: "Parties jouées", value: `${data.stats.partiesJouees}`, icon: <Swords className="h-5 w-5" />, color: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-500/10" },
+    { label: "Questions OK / Total", value: `${data.averages.questions.ok}/${data.averages.questions.total}`, icon: <Target className="h-5 w-5" />, color: "text-emerald-500", bg: "bg-emerald-50 dark:bg-emerald-500/10" },
     { label: "Score total", value: `${data.stats.scoreTotal} pts`, icon: <TrendingUp className="h-5 w-5" />, color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-500/10" },
     { label: "Précision", value: `${data.stats.precision}%`, icon: <Crown className="h-5 w-5" />, color: "text-yellow-500", bg: "bg-yellow-50 dark:bg-yellow-500/10" },
     { label: "Équipe", value: data.team ? data.team.designation : "Aucune", icon: <Users className="h-5 w-5" />, color: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-500/10" },
@@ -125,36 +127,57 @@ export default function VipDashboard() {
             </div>
           </div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.6 }} className="rounded-2xl border border-stroke bg-white p-6 shadow-solid-5 dark:border-strokedark dark:bg-blacksection">
-            <div className="mb-4 flex items-center gap-2">
-              <Clock className="h-5 w-5 text-primary" />
-              <h2 className="text-xl font-semibold text-black dark:text-white">Activité récente</h2>
-            </div>
-            {data?.recentParties?.length ? (
-              <div className="space-y-3">
-                {data.recentParties.map((party) => (
-                  <div key={party._id} className="flex items-center justify-between rounded-lg border border-stroke px-3 py-2 text-sm dark:border-strokedark">
-                    <div>
-                      <p className="font-medium text-black dark:text-white">{party.categorie}</p>
-                      <p className="text-waterloo">{new Date(party.createdAt).toLocaleDateString("fr-FR")}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-semibold text-primary">{party.note} pts</p>
-                      <p className="text-xs text-waterloo">{party.status}</p>
-                    </div>
+          <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.6 }} className="rounded-2xl border border-stroke bg-white p-6 shadow-solid-5 dark:border-strokedark dark:bg-blacksection">
+              <div className="mb-4 flex items-center gap-2">
+                <BarChart3 className="h-5 w-5 text-primary" />
+                <h2 className="text-xl font-semibold text-black dark:text-white">Équipe & sessions</h2>
+              </div>
+              {data?.team ? (
+                <div className="space-y-3">
+                  <div className="rounded-lg border border-stroke bg-alabaster p-3 dark:border-strokedark dark:bg-strokedark">
+                    <p className="text-sm font-medium text-black dark:text-white">{data.team.designation}</p>
+                    <p className="text-xs text-waterloo">Rôle : {data.team.role}</p>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className="flex items-center justify-center py-12">
-                <div className="text-center">
-                  <Swords className="mx-auto mb-3 h-12 w-12 text-waterloo" />
-                  <p className="text-waterloo">Aucun match joué pour le moment</p>
-                  <p className="mt-1 text-sm text-waterloo/70">Lancez un match rapide pour commencer</p>
+                  <div className="space-y-2">
+                    {data.team.members.map((member) => (
+                      <div key={member._id} className="flex items-center justify-between rounded-lg border border-stroke px-3 py-2 text-sm dark:border-strokedark">
+                        <span className="font-medium text-black dark:text-white">{member.pseudo}</span>
+                        <span className="text-waterloo">{member.isSecretary ? 'Secrétaire' : 'Membre'}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
+              ) : (
+                <div className="py-10 text-center text-waterloo">Aucune équipe liée à ce profil.</div>
+              )}
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.7 }} className="rounded-2xl border border-stroke bg-white p-6 shadow-solid-5 dark:border-strokedark dark:bg-blacksection">
+              <div className="mb-4 flex items-center gap-2">
+                <Clock className="h-5 w-5 text-primary" />
+                <h2 className="text-xl font-semibold text-black dark:text-white">Activité récente</h2>
               </div>
-            )}
-          </motion.div>
+              {data?.recentParties?.length ? (
+                <div className="space-y-3">
+                  {data.recentParties.map((party) => (
+                    <div key={party._id} className="flex items-center justify-between rounded-lg border border-stroke px-3 py-2 text-sm dark:border-strokedark">
+                      <div>
+                        <p className="font-medium text-black dark:text-white">{party.categorie}</p>
+                        <p className="text-waterloo">{new Date(party.createdAt).toLocaleDateString("fr-FR")}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold text-primary">{party.note} pts</p>
+                        <p className="text-xs text-waterloo">{party.status}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="py-10 text-center text-waterloo">Aucune activité récente.</div>
+              )}
+            </motion.div>
+          </div>
         </>
       )}
     </div>

@@ -12,6 +12,10 @@ import {
   Target,
   Sparkles,
   Loader2,
+  BarChart3,
+  Trophy,
+  Award,
+  ChevronRight,
 } from "lucide-react";
 import { getPlayerMetricsAction, type PlayerMetricsData } from "@/actions/player.metrics.actions";
 
@@ -75,10 +79,10 @@ export default function StandaloneDashboard() {
 
   const stats = data
     ? [
-        { label: "Parties jouées", value: `${data.stats.partiesJouees}`, icon: <Gamepad2 className="h-5 w-5" />, color: "text-emerald-500", bg: "bg-emerald-50 dark:bg-emerald-500/10" },
-        { label: "Score total", value: `${data.stats.scoreTotal} pts`, icon: <TrendingUp className="h-5 w-5" />, color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-500/10" },
-        { label: "Parties restantes", value: `${data.stats.partiesDisponibles}`, icon: <Ticket className="h-5 w-5" />, color: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-500/10" },
-        { label: "Précision", value: `${data.stats.precision}%`, icon: <Target className="h-5 w-5" />, color: "text-purple-500", bg: "bg-purple-50 dark:bg-purple-500/10" },
+        { label: "Questions OK / Total", value: `${data.averages.questions.ok}/${data.averages.questions.total}`, icon: <Target className="h-5 w-5" />, color: "text-emerald-500", bg: "bg-emerald-50 dark:bg-emerald-500/10" },
+        { label: "Catégories OK / Total", value: `${data.averages.categories.ok}/${data.averages.categories.total}`, icon: <Award className="h-5 w-5" />, color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-500/10" },
+        { label: "Parties OK / Parties", value: `${data.averages.parties.ok}/${data.averages.parties.total}`, icon: <Gamepad2 className="h-5 w-5" />, color: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-500/10" },
+        { label: "Niveau actuel / 3", value: `${data.averages.level.current}/${data.averages.level.total}`, icon: <TrendingUp className="h-5 w-5" />, color: "text-purple-500", bg: "bg-purple-50 dark:bg-purple-500/10" },
       ]
     : [];
 
@@ -127,7 +131,54 @@ export default function StandaloneDashboard() {
             </div>
           </div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.6 }} className="rounded-2xl border border-stroke bg-white p-6 shadow-solid-5 dark:border-strokedark dark:bg-blacksection">
+          <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.6 }} className="rounded-2xl border border-stroke bg-white p-6 shadow-solid-5 dark:border-strokedark dark:bg-blacksection">
+              <div className="mb-4 flex items-center gap-2">
+                <BarChart3 className="h-5 w-5 text-primary" />
+                <h2 className="text-xl font-semibold text-black dark:text-white">Distribution par catégorie</h2>
+              </div>
+              {data?.categoryBreakdown?.length ? (
+                <div className="space-y-3">
+                  {data.categoryBreakdown.map((item) => (
+                    <div key={item.categorie} className="rounded-lg border border-stroke px-3 py-2 dark:border-strokedark">
+                      <div className="mb-1 flex items-center justify-between text-sm">
+                        <span className="font-medium text-black dark:text-white">{item.categorie}</span>
+                        <span className="text-waterloo">{item.parties} parties</span>
+                      </div>
+                      <div className="h-2 overflow-hidden rounded-full bg-stroke dark:bg-strokedark">
+                        <div className="h-full rounded-full bg-primary" style={{ width: `${Math.max(8, item.ok * 10)}%` }} />
+                      </div>
+                      <p className="mt-1 text-xs text-waterloo">{item.ok} bonnes réponses</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="py-10 text-center text-waterloo">Aucune donnée de catégorie disponible.</div>
+              )}
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.7 }} className="rounded-2xl border border-stroke bg-white p-6 shadow-solid-5 dark:border-strokedark dark:bg-blacksection">
+              <div className="mb-4 flex items-center gap-2">
+                <Trophy className="h-5 w-5 text-primary" />
+                <h2 className="text-xl font-semibold text-black dark:text-white">Top & classement</h2>
+              </div>
+              <div className="rounded-xl border border-stroke bg-alabaster p-4 dark:border-strokedark dark:bg-strokedark">
+                <p className="text-sm text-waterloo">Votre position</p>
+                <p className="mt-1 text-2xl font-bold text-black dark:text-white">{data?.top.value || '—'}</p>
+                <p className="mt-1 text-sm text-waterloo">{data?.top.detail || 'Pas encore classé'}</p>
+              </div>
+              <div className="mt-4 space-y-2">
+                {data?.leaderboard?.slice(0, 5).map((player) => (
+                  <div key={player._id} className="flex items-center justify-between rounded-lg border border-stroke px-3 py-2 text-sm dark:border-strokedark">
+                    <span className="font-medium text-black dark:text-white">#{player.rank} {player.pseudo}</span>
+                    <span className="text-waterloo">{player.score} pts</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.8 }} className="rounded-2xl border border-stroke bg-white p-6 shadow-solid-5 dark:border-strokedark dark:bg-blacksection">
             <div className="mb-4 flex items-center gap-2">
               <Clock className="h-5 w-5 text-primary" />
               <h2 className="text-xl font-semibold text-black dark:text-white">Activité récente</h2>
