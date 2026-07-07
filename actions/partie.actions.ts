@@ -122,19 +122,19 @@ async function tirerQuestions(
   playerLevel: number,
   nb: number,
 ): Promise<any[]> {
-  const quizLevels = [0, 1, 2, 3].filter(l => l <= playerLevel);
-  // Si le joueur est au max, on prend aussi les questions du niveau max
+  // Construire les niveaux autorisés (castés en number pour MongoDB)
+  const quizLevels: number[] = [0, 1, 2, 3].filter(l => l <= playerLevel);
   if (playerLevel >= 3) quizLevels.push(3);
 
-  const quizzes = await Quiz.find({
-    categorieId: { $in: categorieIds.map(id => new mongoose.Types.ObjectId(id)) },
-    level: { $in: quizLevels },
-    status: true,
-  }).lean();
+  const objectIds = categorieIds.map(id => new mongoose.Types.ObjectId(id));
 
-  // Mélanger et prendre N questions
-  const shuffled = quizzes.sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, nb);
+  // Agrégation MongoDB : échantillonnage aléatoire performant via $sample
+  const quizzes = await Quiz.aggregate([
+    { $match: { categorieId: { $in: objectIds }, level: { $in: quizLevels }, status: true } },
+    { $sample: { size: nb } },
+  ]);
+
+  return quizzes;
 }
 
 /**
