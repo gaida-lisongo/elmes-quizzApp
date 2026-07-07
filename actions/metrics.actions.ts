@@ -7,6 +7,7 @@ import Categorie from "@/lib/models/Categorie";
 import Quiz from "@/lib/models/Quiz";
 import Partie from "@/lib/models/Partie";
 import Player from "@/lib/models/Player";
+import User from "@/lib/models/User";
 import Equipe from "@/lib/models/Equipe";
 import EnrollementModule from "@/lib/models/Enrollement";
 import { Competition } from "@/lib/models/Competition";

@@ -243,6 +243,7 @@ export async function getCurrentUserDetailed() {
       base.playerType = player.type || 'STANDALONE';
       return {
         ...base,
+        referralCode: player.code || null,
         profile: {
           type: 'PLAYER',
           level: player.level,

@@ -5,8 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   User, Shield, Mail, Phone, Lock, Camera, Save,
   X, CheckCircle, AlertCircle, Loader2, ChevronRight,
-  ArrowLeft, ImageIcon,
+  ArrowLeft, ImageIcon, QrCode, Sparkles, Copy, Link2,
 } from "lucide-react";
+import ShareLink from "@/components/Common/ShareLink";
+import QRCode from "qrcode";
 import { getCurrentUserDetailed } from "@/actions/auth.actions";
 import { updateUser } from "@/actions/user.actions";
 import { uploadToCloudinary } from "@/actions/cloudinary.actions";
@@ -24,6 +26,7 @@ export interface CurrentUser {
   solde: number;
   role: string;
   playerType?: string | null;
+  referralCode?: string | null;
   profile?: {
     type: string;
     level?: number;
@@ -65,8 +68,18 @@ const ProfileDrawer = ({
   const [email, setEmail] = useState(user.email || "");
   const [photo, setPhoto] = useState(user.photo || "");
   const [uploading, setUploading] = useState(false);
+  const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
 
   const tabs = ["Identité", "Mot de passe", "Coordonnées & Photo"];
+
+  useEffect(() => {
+    if (!user.referralCode) return;
+
+    const referralUrl = `${window.location.origin}/auth/signup?code=${encodeURIComponent(user.referralCode)}`;
+    QRCode.toDataURL(referralUrl, { width: 180, margin: 1 })
+      .then(setQrDataUrl)
+      .catch(() => setQrDataUrl(null));
+  }, [user.referralCode]);
 
   const resetSuccess = () => {
     setSuccess(false);
@@ -236,6 +249,43 @@ const ProfileDrawer = ({
                     {role}
                   </div>
                 </div>
+
+                {user.role === "PLAYER" && (
+                  <div className="rounded-xl border border-stroke bg-alabaster p-4 dark:border-strokedark dark:bg-strokedark">
+                    <div className="flex items-center gap-2 text-sm font-medium text-black dark:text-white">
+                      <Sparkles className="h-4 w-4 text-primary" />
+                      Lien d’affiliation
+                    </div>
+                    <p className="mt-2 text-sm text-waterloo">
+                      Partagez votre lien et gagnez des parties supplémentaires à mesure que vos invités rejoignent la plateforme.
+                    </p>
+
+                    {user.referralCode ? (
+                      <div className="mt-3 space-y-3">
+                        <div className="rounded-lg border border-stroke bg-white p-3 text-sm dark:border-strokedark dark:bg-blacksection">
+                          <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-waterloo">
+                            <Link2 className="h-3.5 w-3.5" /> Code d’affiliation
+                          </div>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="rounded-md bg-primary/10 px-2 py-1 font-semibold text-primary">{user.referralCode}</span>
+                            <ShareLink url={`${window.location.origin}/auth/signup?code=${encodeURIComponent(user.referralCode)}`} />
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-start gap-3 rounded-lg border border-stroke bg-white p-3 dark:border-strokedark dark:bg-blacksection sm:flex-row sm:items-center">
+                          {qrDataUrl ? <img src={qrDataUrl} alt="QR code d’affiliation" className="h-24 w-24 rounded-lg border border-stroke p-1 dark:border-strokedark" /> : null}
+                          <div className="text-sm text-waterloo">
+                            <p className="font-medium text-black dark:text-white">QR code prêt</p>
+                            <p>Scannez-le pour rejoindre votre réseau.</p>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="mt-3 rounded-lg border border-dashed border-stroke p-3 text-sm text-waterloo dark:border-strokedark">
+                        <p>Votre lien d’affiliation n’est pas encore disponible. Il sera généré lors de l’inscription.</p>
+                      </div>
+                    )}
+                  </div>
+                )}
               </motion.div>
             )}
 
@@ -463,6 +513,18 @@ export default function ProfileUser() {
           </div>
           <ChevronRight className="h-4 w-4 text-waterloo" />
         </button>
+
+        {user.playerType && user.playerType !== "ADMIN" && user.playerType !== "MOD" && (
+          <div className="hidden xl:flex">
+            <button
+              onClick={() => setOpen(true)}
+              className="flex items-center gap-2 rounded-xl border border-primary/20 bg-primary/5 px-3 py-3 text-sm font-medium text-primary transition hover:bg-primary/10"
+            >
+              <QrCode className="h-4 w-4" />
+              Affiliation
+            </button>
+          </div>
+        )}
 
         {/* Bouton Déconnexion */}
         <button
