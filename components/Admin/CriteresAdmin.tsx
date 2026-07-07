@@ -6,6 +6,7 @@ import {
   Trophy, Plus, Loader2, CheckCircle, XCircle, AlertCircle, ChevronDown,
 } from "lucide-react";
 import { getCriteresAction, createCritereAction, checkCriteresClassementAction } from "@/actions/critere.actions";
+import { getAllSessionsAction } from "@/actions/enrollment.actions";
 import toast from "react-hot-toast";
 
 interface CritereItem {
@@ -27,6 +28,7 @@ interface CritereItem {
 
 export default function CriteresAdmin() {
   const [criteres, setCriteres] = useState<CritereItem[]>([]);
+  const [sessions, setSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [checking, setChecking] = useState<string | null>(null);
@@ -44,8 +46,12 @@ export default function CriteresAdmin() {
 
   const load = async () => {
     setLoading(true);
-    const res = await getCriteresAction();
-    if (res.success) setCriteres(res.criteres || []);
+    const [cRes, sRes] = await Promise.all([
+      getCriteresAction(),
+      getAllSessionsAction(),
+    ]);
+    if (cRes.success) setCriteres(cRes.criteres || []);
+    if (sRes.success) setSessions(sRes.sessions || []);
     setLoading(false);
   };
 
@@ -105,7 +111,13 @@ export default function CriteresAdmin() {
         <motion.form initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} onSubmit={handleCreate} className="rounded-2xl border border-stroke bg-white p-6 space-y-4 dark:border-strokedark dark:bg-blacksection">
           <div>
             <label className="mb-1 block text-sm font-medium text-black dark:text-white">Session</label>
-            <input type="text" placeholder="ID de la session" value={form.sessionId} onChange={(e) => setForm({ ...form, sessionId: e.target.value })} className="w-full rounded-lg border border-stroke bg-transparent px-4 py-2 text-sm dark:border-strokedark dark:text-white" />
+            <select value={form.sessionId} onChange={(e) => setForm({ ...form, sessionId: e.target.value })}
+              className="w-full rounded-lg border border-stroke bg-transparent px-4 py-2 text-sm dark:border-strokedark dark:text-white" required>
+              <option value="">Sélectionner une session…</option>
+              {sessions.map((s: any) => (
+                <option key={s._id} value={s._id}>{s.designation}</option>
+              ))}
+            </select>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
