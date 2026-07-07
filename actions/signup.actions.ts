@@ -14,10 +14,13 @@ const COOKIE_NAME = 'genie_session';
 
 export type PlayerType = 'STANDALONE' | 'ADVANCED' | 'VIP';
 
+export type Statut = 'ELEVE' | 'ETUDIANT' | 'INDEPENDANT';
+
 export interface SignupStep1Data {
   pseudo: string;
   telephone: string;
   email: string;
+  statut: Statut;
   school: string;
   playerType: PlayerType;
   referralCode?: string;
@@ -93,7 +96,7 @@ export async function validateReferralCode(code: string) {
 export async function createPlayerStep1(data: SignupStep1Data) {
   await connectToDb();
 
-  const { pseudo, telephone, email, school, playerType, referralCode } = data;
+  const { pseudo, telephone, email, statut, school, playerType, referralCode } = data;
 
   if (!pseudo?.trim() || !telephone?.trim() || !email?.trim() || !school?.trim()) {
     return { success: false, error: 'Tous les champs sont obligatoires.' };
@@ -123,6 +126,7 @@ export async function createPlayerStep1(data: SignupStep1Data) {
       pseudo: pseudo.trim(),
       telephone: telephone.trim(),
       email: normalizedEmail,
+      statut: statut || 'ELEVE',
       school: school.trim(),
       playerType,
       referedBy: referedBy?.toString() || null,
@@ -193,7 +197,7 @@ export async function createPlayerStep2(data: SignupStep2Data) {
       return { success: false, error: 'Session expirée. Veuillez recommencer l\'inscription.' };
     }
 
-    const { pseudo, telephone, email, school, playerType, referedBy } = tempData;
+    const { pseudo, telephone, email, statut, school, playerType, referedBy } = tempData;
 
     // Vérifier que l'utilisateur n'a pas été créé entre-temps
     const existingUser = await User.findOne({ $or: [{ telephone }, { email }] });
@@ -228,6 +232,7 @@ export async function createPlayerStep2(data: SignupStep2Data) {
       referedBy: referedByObjectId,
       level: 0,
       type: playerType,
+      statut: statut || 'ELEVE',
       school,
       parties: 10, // 10 parties de bienvenue
       code: referralCode,

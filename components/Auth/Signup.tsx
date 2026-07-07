@@ -25,11 +25,14 @@ import {
   Eye,
   EyeOff,
   Link as LinkIcon,
+  GraduationCap,
 } from "lucide-react";
 import Logo from "@/components/Common/Logo";
 import { createPlayerStep1, createPlayerStep2 } from "@/actions/signup.actions";
 import { useLoading } from "@/context/LoadingContext";
 import type { PlayerType } from "@/actions/signup.actions";
+import type { Statut } from "@/actions/signup.actions";
+import EtablissementSelector from "@/components/Common/EtablissementSelector";
 
 interface SignupProps {
   playerType: PlayerType;
@@ -94,6 +97,7 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
     pseudo: "",
     telephone: "",
     email: "",
+    statut: "ELEVE" as Statut,
     school: "",
   });
 
@@ -131,7 +135,7 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
   const handleStep1Submit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const { pseudo, telephone, email, school } = step1Data;
+    const { pseudo, telephone, email, statut, school } = step1Data;
 
     if (!pseudo.trim() || !telephone.trim() || !email.trim() || !school.trim()) {
       toast.error("Tous les champs sont obligatoires.");
@@ -161,6 +165,7 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
             pseudo: pseudo.trim(),
             telephone: telephone.trim(),
             email: email.trim().toLowerCase(),
+            statut: step1Data.statut,
             school: school.trim(),
             playerType: selectedType,
             referralCode: referralCode || undefined,
@@ -539,21 +544,11 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
                       </div>
 
                       <div>
-                        <label className="mb-2 flex items-center gap-2 text-sm font-medium text-black dark:text-white">                          <School className="h-4 w-4 text-primary" />
-                          Établissement
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="Nom de votre école/université"
-                          value={step1Data.school}
-                          onChange={(e) =>
-                            setStep1Data((prev) => ({
-                              ...prev,
-                              school: e.target.value,
-                            }))
-                          }
-                          required
-                          className="w-full rounded-xl border border-stroke bg-transparent px-5 py-3 text-black outline-hidden transition-all duration-200 focus:border-primary focus:shadow-[0_0_0_3px_rgba(0,107,255,0.1)] dark:border-strokedark dark:text-white dark:focus:border-primary"
+                        <EtablissementSelector
+                          statut={step1Data.statut}
+                          etablissement={step1Data.school}
+                          onStatutChange={(s) => setStep1Data((prev) => ({ ...prev, statut: s }))}
+                          onEtablissementChange={(v) => setStep1Data((prev) => ({ ...prev, school: v }))}
                         />
                       </div>
                     </div>
