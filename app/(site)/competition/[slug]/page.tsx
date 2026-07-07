@@ -1,6 +1,6 @@
 import { getCompetitionBySlug } from "@/actions/competitions.actions";
+import { getClassementByRessourceAction, getCriteresForRessourceAction } from "@/actions/classement.actions";
 import GamingPage from "@/components/Gaming";
-import Testimonial from "@/components/Testimonial";
 import { notFound } from "next/navigation";
 
 export default async function CompetitionDetailPage({
@@ -16,6 +16,11 @@ export default async function CompetitionDetailPage({
   }
 
   const competition = res.competition;
+
+  const [classementRes, criteresRes] = await Promise.all([
+    getClassementByRessourceAction('Competition', competition._id),
+    getCriteresForRessourceAction('Competition', competition._id),
+  ]);
 
   const aboutData = {
     left: {
@@ -53,19 +58,16 @@ export default async function CompetitionDetailPage({
 
   return (
     <GamingPage
+      designation={competition.designation || "Compétition"}
+      description={competition.description || "Rejoignez cette compétition et montrez votre niveau."}
       about={aboutData}
       faq={faqData}
       cta={ctaData}
       targetType="competition"
       targetId={competition._id}
       targetName={competition.designation}
-    >
-      <Testimonial
-        title={"Classement des meilleures équipes"}
-        subtitle={"Découvrez les meilleures équipes en compétition"}
-        description={"Les équipes les plus performantes sont mises en avant pour inspirer et motiver les autres participants."}
-        data={[]}
-      />
-    </GamingPage>
+      criteres={criteresRes.success ? criteresRes.criteres : []}
+      classementData={classementRes.success ? classementRes.classement : []}
+    />
   );
 }

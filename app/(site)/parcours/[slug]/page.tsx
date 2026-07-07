@@ -1,6 +1,6 @@
 import { getParcoursBySlug } from "@/actions/parcours.actions";
+import { getClassementByRessourceAction, getCriteresForRessourceAction } from "@/actions/classement.actions";
 import GamingPage from "@/components/Gaming";
-import Testimonial from "@/components/Testimonial";
 import { notFound } from "next/navigation";
 
 export default async function ParcoursDetailPage({
@@ -17,7 +17,11 @@ export default async function ParcoursDetailPage({
 
   const parcours = res.parcours;
 
-  console.log("ParcoursDetailPage: parcours data:", parcours);
+  const [classementRes, criteresRes] = await Promise.all([
+    getClassementByRessourceAction('Parcours', parcours._id),
+    getCriteresForRessourceAction('Parcours', parcours._id),
+  ]);
+
   const aboutData = {
     left: {
       image: '/images/hero/rules.png',
@@ -37,10 +41,12 @@ export default async function ParcoursDetailPage({
       description: parcours.description || "Un parcours d’entraînement pensé pour progresser pas à pas.",
     }
   }
+
   const faqData = {
     url: parcours?.ressource || 'https://katalog.mikanda.info/pmb/opac_css/index.php',
-    categories: parcours?.categories?.map(cat => ({id: cat?.slug, quest: cat?.designation, ans: cat?.description})) || []
+    categories: parcours?.categories?.map((cat: any) => ({id: cat?.slug, quest: cat?.designation, ans: cat?.description})) || []
   }
+
   const ctaData = {
     title: parcours?.status == 'ACTIVE' ? 
       "Vous pouvez vous inscire à ce parcours et tenter de remporter la couronne du mois" 
@@ -49,23 +55,19 @@ export default async function ParcoursDetailPage({
     action: {title: parcours?.status == 'ACTIVE' ? "S'inscrire" : 'Voir le classement' , url: parcours?.status == 'ACTIVE' ? 'subscripe' : 'classement' },
     classement: []
   }
-  const testimonialsData = []
 
   return (
     <GamingPage
+      designation={parcours.designation || "Parcours"}
+      description={parcours.description || "Un parcours d'entraînement pensé pour progresser pas à pas."}
       about={aboutData}
       faq={faqData}
       cta={ctaData}
       targetType="parcours"
       targetId={parcours._id}
       targetName={parcours.designation}
-    >
-      <Testimonial
-        title={"Classement des meilleurs joueurs"}
-        subtitle={"Découvrez les meilleurs joueurs du parcours"}
-        description={"Les joueurs les plus performants du parcours sont mis en avant pour inspirer et motiver les autres participants."}
-        data={testimonialsData}
-      />
-    </GamingPage>
+      criteres={criteresRes.success ? criteresRes.criteres : []}
+      classementData={classementRes.success ? classementRes.classement : []}
+    />
   );
 }

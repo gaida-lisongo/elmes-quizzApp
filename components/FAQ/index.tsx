@@ -99,13 +99,19 @@ const FAQ = ({ data = null} : {data?: any}) => {
               className="animate_right md:w-3/5 lg:w-1/2"
             >
               <div className="rounded-lg bg-white shadow-solid-8 dark:border dark:border-strokedark dark:bg-blacksection">
-                {(data?.categories.length ? data.categories : []).map((faq, key) => (
+              {data?.categories?.length ? (
+                data.categories.map((faq: any, key: number) => (
                   <FAQItem
                     key={key}
-                    faqData={{ ...faq, activeFaq, handleFaqToggle }}
+                    faqData={{ ...faq, id: faq.id || key + 1, activeFaq, handleFaqToggle }}
                   />
-                ))}
-              </div>
+                ))
+              ) : (
+                <div className="px-6 py-10 text-center text-sm text-waterloo">
+                  Aucune catégorie disponible pour ce parcours/compétition.
+                </div>
+              )}
+            </div>
             </motion.div>
           </div>
         </div>

@@ -220,7 +220,7 @@ export async function checkCriteresClassementAction(critereId: string) {
       await Critere.findByIdAndUpdate(critereId, { status: false });
       // Marquer la ressource comme INACTIVE
       const ressourceModel = critere.ressource === 'Competition' ? Competition : Parcours;
-      await ressourceModel.findByIdAndUpdate(critere.ressourceId, { status: 'INACTIVE' });
+      await (ressourceModel as any).findByIdAndUpdate(critere.ressourceId, { status: 'INACTIVE' });
     }
 
     return {
