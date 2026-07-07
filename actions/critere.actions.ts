@@ -110,6 +110,14 @@ export async function updateCritereAction(
     if (data.secondRecompense !== undefined) update.secondRecompense = Number(data.secondRecompense);
     if (data.thirdPoints !== undefined) update.thirdPoints = data.thirdPoints;
     if (data.thirdRecompense !== undefined) update.thirdRecompense = Number(data.thirdRecompense);
+
+    const critere = await Critere.findByIdAndUpdate(id, { $set: update }, { new: true }).lean();
+    if (!critere) return { success: false, error: 'Critère introuvable' };
+
+    return { success: true, critere: JSON.parse(JSON.stringify(critere)) };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
 }
 
 // ── CLASSEMENT AUTO (qualification) ───────────────────────────────
