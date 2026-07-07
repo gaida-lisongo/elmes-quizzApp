@@ -65,7 +65,7 @@ export default function GamePlayer({ partie, onFinish, onCancel }: GamePlayerPro
     try {
       const res = await submitReponseAction(partie.partieId, currentQuestion._id, choix);
       if (res.success) {
-        setCorrect(res.estCorrecte);
+        setCorrect(res.estCorrecte ?? false);
         setCorrection(res.correction || null);
         if (res.estCorrecte) setNotes((prev) => prev + 1);
       }
