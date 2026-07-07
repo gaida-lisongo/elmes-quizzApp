@@ -10,6 +10,10 @@ import QuestionsAdmin from "@/components/Admin/QuestionsAdmin";
 import StandaloneDashboard from "./dashboard/standalone/StandaloneDashboard";
 import AdvancedDashboard from "./dashboard/advanced/AdvancedDashboard";
 import VipDashboard from "./dashboard/vip/VipDashboard";
+import StandaloneTable from "./_components/Standalone";
+import AdvancedRechargesTable from "./_components/Advanced";
+import VipMembresTable from "./_components/Vip";
+import RetraitsTable from "./_components/Retraits"
 
 export type UserRole = "ADMIN" | "MOD" | "PLAYER";
 export type PlayerType = "STANDALONE" | "ADVANCED" | "VIP";
@@ -191,24 +195,16 @@ export default function AdminLayoutClient({
             <QuestionsAdmin />
           )}
           {currentTab === "parties" && (
-            <div className="text-center italic text-waterloo">
-              Module Parties à venir...
-            </div>
+            <StandaloneTable />
           )}
           {currentTab === "retraits" && (
-            <div className="text-center italic text-waterloo">
-              Module Retraits à venir...
-            </div>
+            <RetraitsTable />
           )}
           {currentTab === "parcours" && (
-            <div className="text-center italic text-waterloo">
-              Module Parcours à venir...
-            </div>
+            <AdvancedRechargesTable />
           )}
           {currentTab === "matchs" && (
-            <div className="text-center italic text-waterloo">
-              Module Matchs à venir...
-            </div>
+            <VipMembresTable />
           )}
         </section>
       </div>

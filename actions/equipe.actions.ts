@@ -249,3 +249,113 @@ export async function confirmEquipeCreationAction(payload: {
     return { success: false, error: error.message || "Erreur serveur lors de la confirmation." };
   }
 }
+
+// ═══════════════════════════════════════════════════════════════════
+//  GESTION DES MEMBRES D'ÉQUIPE
+// ═══════════════════════════════════════════════════════════════════
+
+/**
+ * Invite un joueur à rejoindre une équipe.
+ * Ajoute le membre dans l'équipe avec status=false (en attente).
+ */
+export async function inviteMemberAction(equipeId: string, playerId: string) {
+  try {
+    await connectToDb();
+
+    const equipe = await Equipe.findById(equipeId);
+    if (!equipe) return { success: false, error: 'Équipe introuvable.' };
+
+    const player = await Player.findById(playerId);
+    if (!player) return { success: false, error: 'Joueur introuvable.' };
+
+    const alreadyMember = equipe.membres.some((m) => m.player.toString() === playerId);
+    if (alreadyMember) return { success: false, error: 'Ce joueur est déjà dans l\'équipe.' };
+
+    equipe.membres.push({ player: player._id, status: false, isSecretary: false });
+    await equipe.save();
+
+    return { success: true, message: 'Invitation envoyée.' };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'Erreur lors de l\'invitation.' };
+  }
+}
+
+/**
+ * Met à jour le rôle d'un membre (secrétaire ou révoquer).
+ * Seul le capitaine peut faire cette action.
+ */
+export async function updateMemberRoleAction(
+  equipeId: string,
+  playerId: string,
+  action: 'SET_SECRETARY' | 'UNSET_SECRETARY' | 'REVOKE',
+) {
+  try {
+    await connectToDb();
+
+    const equipe = await Equipe.findById(equipeId);
+    if (!equipe) return { success: false, error: 'Équipe introuvable.' };
+
+    const membreIndex = equipe.membres.findIndex((m) => m.player.toString() === playerId);
+    if (membreIndex === -1) return { success: false, error: 'Membre introuvable dans l\'équipe.' };
+
+    if (action === 'REVOKE') {
+      equipe.membres.splice(membreIndex, 1);
+    } else if (action === 'SET_SECRETARY') {
+      equipe.membres[membreIndex].isSecretary = true;
+    } else if (action === 'UNSET_SECRETARY') {
+      equipe.membres[membreIndex].isSecretary = false;
+    }
+
+    await equipe.save();
+    return { success: true, message: 'Membre mis à jour avec succès.' };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'Erreur de mise à jour.' };
+  }
+}
+
+/**
+ * Récupère l'équipe d'un joueur avec tous les détails des membres.
+ */
+export async function getMyEquipeDetailAction(playerId: string) {
+  try {
+    await connectToDb();
+
+    const equipe = await Equipe.findOne({ membres: { $elemMatch: { player: playerId } } })
+      .populate({
+        path: 'membres.player',
+        populate: { path: 'userId', select: 'pseudo photo telephone' },
+      })
+      .populate({ path: 'chefId', populate: { path: 'userId', select: 'pseudo photo telephone' } })
+      .lean();
+
+    if (!equipe) return { success: false, error: 'Aucune équipe trouvée.' };
+
+    const isCaptain = equipe.chefId?._id?.toString() === playerId;
+
+    const membres = (equipe.membres || []).map((m: any) => ({
+      _id: m.player?._id?.toString() || '',
+      pseudo: m.player?.userId?.pseudo || 'Inconnu',
+      telephone: m.player?.userId?.telephone || '',
+      photo: m.player?.userId?.photo || '',
+      status: Boolean(m.status),
+      isSecretary: Boolean(m.isSecretary),
+      isCurrentUser: m.player?._id?.toString() === playerId,
+    }));
+
+    return {
+      success: true,
+      data: {
+        _id: equipe._id.toString(),
+        designation: equipe.designation,
+        description: equipe.description || [],
+        logo: equipe.logo || '',
+        isCaptain,
+        isSecretary: membres.some((m) => m.isCurrentUser && m.isSecretary),
+        chefPseudo: equipe.chefId?.userId?.pseudo || 'Capitaine',
+        membres,
+      },
+    };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'Erreur de récupération.' };
+  }
+}
