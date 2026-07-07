@@ -1,8 +1,13 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { getMetricsCounts } from "@/actions/metrics.actions";
+
+interface FunFactProps {
+  categories: number;
+  quizzes: number;
+  parties: number;
+}
 
 const metrics = [
   { key: "categories" as const, label: "Catégories", suffix: "+" },
@@ -11,7 +16,7 @@ const metrics = [
 ];
 
 function AnimatedCounter({ target, suffix }: { target: number; suffix: string }) {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = React.useState(0);
   const animated = useRef(false);
 
   useEffect(() => {
@@ -40,13 +45,7 @@ function AnimatedCounter({ target, suffix }: { target: number; suffix: string })
   );
 }
 
-const FunFact = () => {
-  const [counts, setCounts] = useState({ categories: 0, quizzes: 0, parties: 0 });
-
-  useEffect(() => {
-    getMetricsCounts().then(setCounts).catch(console.error);
-  }, []);
-
+const FunFact = ({ categories, quizzes, parties }: FunFactProps) => {
   return (
     <>
       {/* <!-- ===== Funfact Start ===== --> */}
@@ -57,7 +56,7 @@ const FunFact = () => {
             height={384}
             src="/images/shape/shape-04.png"
             alt="Man"
-            className="absolute -left-15 -top-25 -z-1 lg:left-0"
+            className="absolute -left-15 -top-25 -z-1 lg:hidden"
           />
           <Image
             width={132}
@@ -121,7 +120,7 @@ const FunFact = () => {
                 className="animate_top text-center"
               >
                 <h3 className="mb-2.5 text-3xl font-bold text-black dark:text-white xl:text-sectiontitle3">
-                  <AnimatedCounter target={counts[m.key]} suffix={m.suffix} />
+                  <AnimatedCounter target={m.key === 'categories' ? categories : m.key === 'quizzes' ? quizzes : parties} suffix={m.suffix} />
                 </h3>
                 <p className="text-lg lg:text-para2">{m.label}</p>
               </motion.div>

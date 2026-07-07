@@ -130,35 +130,36 @@ export default function StandaloneDashboard() {
             </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.7 }} className="rounded-2xl border border-stroke bg-white p-6 shadow-solid-5 dark:border-strokedark dark:bg-blacksection">
-            <div className="mb-4 flex items-center gap-2">
-              <Clock className="h-5 w-5 text-primary" />
-              <h2 className="text-xl font-semibold text-black dark:text-white">Activité récente</h2>
-            </div>
-            {data?.recentParties?.length ? (
-              <div className="space-y-3">
-                {data.recentParties.map((party) => (
-                  <div key={party._id} className="flex items-center justify-between rounded-lg border border-stroke px-3 py-2 text-sm dark:border-strokedark">
-                    <div>
-                      <p className="font-medium text-black dark:text-white">{party.categorie}</p>
-                      <p className="text-waterloo">{new Date(party.createdAt).toLocaleDateString("fr-FR")}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-semibold text-primary">{party.note} pts</p>
-                      <p className="text-xs text-waterloo">{party.status}</p>
-                    </div>
-                  </div>
-                ))}
+              <div className="mb-4 flex items-center gap-2">
+                <Clock className="h-5 w-5 text-primary" />
+                <h2 className="text-xl font-semibold text-black dark:text-white">Activité récente</h2>
               </div>
-            ) : (
-              <div className="flex items-center justify-center py-12">
-                <div className="text-center">
-                  <Brain className="mx-auto mb-3 h-12 w-12 text-waterloo" />
-                  <p className="text-waterloo">Aucune partie jouée pour le moment</p>
-                  <p className="mt-1 text-sm text-waterloo/70">Lancez-vous et commencez à jouer !</p>
+              {data?.recentParties?.length ? (
+                <div className="space-y-3">
+                  {data.recentParties.map((party) => (
+                    <div key={party._id} className="flex items-center justify-between rounded-lg border border-stroke px-3 py-2 text-sm dark:border-strokedark">
+                      <div>
+                        <p className="font-medium text-black dark:text-white">{party.categorie}</p>
+                        <p className="text-waterloo">{new Date(party.createdAt).toLocaleDateString("fr-FR")}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold text-primary">{party.note} pts</p>
+                        <p className="text-xs text-waterloo">{party.status}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
-            )}
-          </motion.div>
+              ) : (
+                <div className="flex items-center justify-center py-12">
+                  <div className="text-center">
+                    <Brain className="mx-auto mb-3 h-12 w-12 text-waterloo" />
+                    <p className="text-waterloo">Aucune partie jouée pour le moment</p>
+                    <p className="mt-1 text-sm text-waterloo/70">Lancez-vous et commencez à jouer !</p>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          </div>
         </>
       )}
     </div>
