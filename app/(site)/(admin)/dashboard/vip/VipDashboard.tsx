@@ -14,6 +14,7 @@ import {
   Users,
   BarChart3,
   Award,
+  Target,
 } from "lucide-react";
 import { getPlayerMetricsAction, type PlayerMetricsData } from "@/actions/player.metrics.actions";
 
