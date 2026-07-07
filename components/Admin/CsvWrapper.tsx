@@ -93,14 +93,16 @@ export default function CsvWrapper({ categorieId, onClose, onComplete }: CsvWrap
           if (rec.length < 3) continue;
 
           const enonce = rec[0]?.trim() || "";
-          const rawAssertions = rec[1]?.trim() || "";
-          const reponse = rec[2]?.trim() || "";
-          const rawLevel = rec[3]?.trim() || "0";
-          const rawType = rec[4]?.trim() || "QCM";
-
           if (!enonce) continue;
 
-          const assertions = rawAssertions.split("|").map(a => a.trim()).filter(Boolean);
+          const rawType = rec[rec.length - 1]?.trim() || "QCM";
+          const rawLevel = rec[rec.length - 2]?.trim() || "0";
+          const reponse = rec[rec.length - 3]?.trim() || "";
+          const assertionCells = rec.slice(1, Math.max(1, rec.length - 3));
+
+          const assertions = assertionCells
+            .map((value) => value.trim())
+            .filter(Boolean);
           const level = LEVEL_MAP[rawLevel.toLowerCase()] ?? 0;
           const type = rawType.toUpperCase() === "VRAI_FAUX" ? "VRAI_FAUX" : "QCM";
 
@@ -108,7 +110,7 @@ export default function CsvWrapper({ categorieId, onClose, onComplete }: CsvWrap
         }
 
         if (parsed.length === 0) {
-          setError("Aucune ligne valide trouvée. Vérifiez le format (énoncé|assertions|réponse|niveau|type).");
+          setError("Aucune ligne valide trouvée. Vérifiez le format (énoncé, option1, option2, ..., réponse, niveau, type).");
           return;
         }
 
@@ -215,7 +217,7 @@ export default function CsvWrapper({ categorieId, onClose, onComplete }: CsvWrap
                 </div>
 
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-black dark:text-white">Séparateur</label>
+                  <label className="mb-1.5 block text-sm font-medium text-black dark:text-white">Séparateur de colonnes</label>
                   <div className="flex gap-2">
                     {[",", ";", "\t", "|"].map(sep => (
                       <button key={sep} onClick={() => setSeparator(sep)}
@@ -240,7 +242,7 @@ export default function CsvWrapper({ categorieId, onClose, onComplete }: CsvWrap
                   <FileText className="mx-auto h-8 w-8 text-waterloo/40" />
                   <p className="mt-2 text-sm text-waterloo">Format attendu :</p>
                   <code className="mt-1 block text-xs text-waterloo/60">
-                    énoncé{separator}prop1|prop2|...{separator}réponse{separator}niveau{separator}type
+                    énoncé{separator}option1{separator}option2{separator}...{separator}réponse{separator}niveau{separator}type
                   </code>
                   <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-center">
                     <button onClick={() => inputRef.current?.click()}
@@ -248,8 +250,8 @@ export default function CsvWrapper({ categorieId, onClose, onComplete }: CsvWrap
                       <Upload className="h-4 w-4" /> Charger un fichier
                     </button>
                     <button onClick={() => {
-                      const header = `énoncé${separator}propositions${separator}réponse${separator}niveau${separator}type`;
-                      const sample = `Quelle est la capitale de la France ?;Paris|Londres|Berlin|Madrid;Paris;0;QCM\nLe Soleil est une étoile.;Vrai|Faux;Vrai;1;VRAI_FAUX`;
+                      const header = `énoncé${separator}option1${separator}option2${separator}option3${separator}option4${separator}réponse${separator}niveau${separator}type`;
+                      const sample = `Quelle est la capitale de la France ?${separator}Paris${separator}Londres${separator}Berlin${separator}Madrid${separator}Paris${separator}0${separator}QCM\nLe Soleil est une étoile.${separator}Vrai${separator}Faux${separator}Vrai${separator}Faux${separator}Vrai${separator}1${separator}VRAI_FAUX`;
                       const bom = "\uFEFF";
                       const blob = new Blob([bom + header + "\n" + sample], { type: "text/csv;charset=utf-8" });
                       const url = URL.createObjectURL(blob);
