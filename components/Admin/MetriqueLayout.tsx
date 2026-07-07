@@ -9,6 +9,20 @@ import {
 /* ================================================================
    Types génériques (agnostiques)
    ================================================================ */
+export interface CritereDisplay {
+  _id: string;
+  designation: string;
+  ressource: string;
+  status: boolean;
+  ressourceId: { _id: string; designation: string };
+  first: Array<{points: number; playerId?: string; equipeId?: string}>;
+  second: Array<{points: number; playerId?: string; equipeId?: string}>;
+  third: Array<{points: number; playerId?: string; equipeId?: string}>;
+}
+
+/* ================================================================
+   Types génériques (agnostiques)
+   ================================================================ */
 export interface MetricMoyennesCard {
   label: string;
   count: number;
@@ -56,6 +70,7 @@ export interface MetricsData {
   moyennesCards: MetricMoyennesCard[];
   chart: ChartCategorieItem[];
   topEnrollements: TopEnrollementItem[];
+  criteres?: CritereDisplay[];
   players?: PlayerRowItem[];
   equipes?: EquipeRowItem[];
   totalPlayers?: number;
@@ -78,7 +93,7 @@ export default function MetriqueLayout({
   onPlayerAction,
   onEquipeAction,
 }: MetriqueLayoutProps) {
-  const { moyennesCards, chart, topEnrollements, players, equipes } = data;
+  const { moyennesCards, chart, topEnrollements, criteres, players, equipes } = data;
 
   // Pagination locale
   const [playerPage, setPlayerPage] = useState(0);
@@ -183,7 +198,7 @@ export default function MetriqueLayout({
           )}
         </motion.div>
 
-        {/* Top enrollements — 1/3 */}
+        {/* Critères de récompense — 1/3 */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -191,35 +206,31 @@ export default function MetriqueLayout({
           className="rounded-xl border border-stroke bg-white p-5 shadow-solid-5 dark:border-strokedark dark:bg-blacksection"
         >
           <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-black dark:text-white">
-            <DollarSign className="h-5 w-5 text-primary" /> Top enrollements
+            <Medal className="h-5 w-5 text-primary" /> Critères de récompense
           </h3>
-          {topEnrollements.length === 0 ? (
-            <p className="py-6 text-center text-sm text-waterloo">Aucun enrollement</p>
-          ) : (
+          {data.criteres && data.criteres.length > 0 ? (
             <div className="space-y-3">
-              {topEnrollements.map((item, i) => (
-                <div
-                  key={item.categorie}
-                  className="flex items-center gap-3 rounded-lg border border-stroke bg-alabaster p-2.5 dark:border-strokedark dark:bg-strokedark"
-                >
-                  <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                    i === 0 ? "bg-yellow-100 text-yellow-700" :
-                    i === 1 ? "bg-gray-200 text-gray-600" :
-                    i === 2 ? "bg-orange-100 text-orange-700" :
-                    "bg-stroke text-waterloo"
-                  }`}>
-                    #{i + 1}
+              {data.criteres.map((critere: any, i: number) => (
+                <div key={critere._id} className="rounded-lg border border-stroke bg-alabaster p-2.5 dark:border-strokedark dark:bg-strokedark">
+                  <div className="flex items-center gap-2">
+                    <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                      critere.status ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
+                    }`}>
+                      {critere.status ? '✓' : '✗'}
+                    </div>
+                    <p className="text-sm font-medium text-black dark:text-white truncate flex-1">{critere.designation}</p>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-black dark:text-white truncate">{item.categorie}</p>
-                    <p className="text-xs text-waterloo">{item.count} inscription(s)</p>
+                  <div className="mt-1.5 grid grid-cols-3 gap-1 text-[10px] text-waterloo">
+                    <span className="text-amber-600">🥉 {critere.third?.filter((e: any) => e.playerId || e.equipeId).length || 0}/6</span>
+                    <span className="text-purple-600">🥈 {critere.second?.filter((e: any) => e.playerId || e.equipeId).length || 0}/4</span>
+                    <span className="text-emerald-600">🏆 {critere.first?.filter((e: any) => e.playerId || e.equipeId).length || 0}/2</span>
                   </div>
-                  <span className="text-sm font-bold text-primary">
-                    {item.revenue.toLocaleString()} F
-                  </span>
+                  <p className="mt-0.5 text-[10px] text-waterloo">{(critere.ressourceId as any)?.designation || critere.ressource}</p>
                 </div>
               ))}
             </div>
+          ) : (
+            <p className="py-6 text-center text-sm text-waterloo">Aucun critère défini</p>
           )}
         </motion.div>
       </div>

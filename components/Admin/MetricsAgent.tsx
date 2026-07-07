@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Loader2, Users, Shield, UserCheck, Medal, Activity } from "lucide-react";
 import MetriqueLayout, { type MetricsData } from "./MetriqueLayout";
 import { getMetricsAgentAction, type MetricsAgentData } from "@/actions/metrics.actions";
+import { getCriteresAction } from "@/actions/critere.actions";
 
 const TYPE_COLORS: Record<string, string> = {
   standalone: "text-blue-600 bg-blue-100 dark:bg-blue-900/30",
@@ -31,7 +32,10 @@ export default function MetricsAgent({ role }: MetricsAgentProps) {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await getMetricsAgentAction();
+      const [res, criteresRes] = await Promise.all([
+        getMetricsAgentAction(),
+        getCriteresAction(),
+      ]);
       if (res.success && res.data) {
         const d: MetricsAgentData = res.data;
         setData({
@@ -59,6 +63,7 @@ export default function MetricsAgent({ role }: MetricsAgentProps) {
           ],
           chart: d.chart,
           topEnrollements: d.topEnrollements,
+          criteres: criteresRes.success ? criteresRes.criteres : [],
           players: d.players,
           equipes: d.equipes,
           totalPlayers: d.totalPlayers,

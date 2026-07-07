@@ -11,6 +11,7 @@ import {
   getCategoriesAction, createCategorieAction, updateCategorieAction, deleteCategorieAction,
   getQuizzesByCategorieAction, createQuizAction, updateQuizAction, deleteQuizAction,
 } from "@/actions/quiz.actions";
+import { getCategoryStatsAction } from "@/actions/critere.actions";
 import QuestionCard from "./QuestionCard";
 import CsvWrapper from "./CsvWrapper";
 
@@ -128,6 +129,7 @@ const CategorieModal = ({
    ================================================================ */
 export default function QuestionsAdmin() {
   const [categories, setCategories] = useState<CategorieItem[]>([]);
+  const [catStats, setCatStats] = useState<Record<string, { ok: number; no: number; total: number; percent: number }>>({});
   const [loading, setLoading] = useState(true);
   const [step, setStep] = useState<Step>("list");
   const [selectedCat, setSelectedCat] = useState<CategorieItem | null>(null);
@@ -144,8 +146,18 @@ export default function QuestionsAdmin() {
 
   const fetchCategories = useCallback(async () => {
     setLoading(true);
-    const res = await getCategoriesAction();
-    if (res.success) setCategories(res.categories);
+    const [catRes, statsRes] = await Promise.all([
+      getCategoriesAction(),
+      getCategoryStatsAction(),
+    ]);
+    if (catRes.success) setCategories(catRes.categories);
+    if (statsRes.success) {
+      const map: Record<string, { ok: number; no: number; total: number; percent: number }> = {};
+      for (const cat of (statsRes.categories || [])) {
+        map[cat.label] = cat;
+      }
+      setCatStats(map);
+    }
     setLoading(false);
   }, []);
 
@@ -230,6 +242,20 @@ export default function QuestionsAdmin() {
                   </div>
                   <h3 className="mb-1 font-semibold text-black dark:text-white">{cat.designation}</h3>
                   {cat.description && <p className="text-xs text-waterloo line-clamp-2">{cat.description}</p>}
+                  {/* Métrique de la catégorie */}
+                  {catStats[cat.designation] && catStats[cat.designation].total > 0 && (
+                    <div className="mt-2">
+                      <div className="flex h-1.5 overflow-hidden rounded-full bg-stroke dark:bg-strokedark">
+                        <div className="h-full rounded-full bg-green-500" style={{ width: `${catStats[cat.designation].percent}%` }} />
+                        <div className="h-full rounded-full bg-red-400" style={{ width: `${100 - catStats[cat.designation].percent}%` }} />
+                      </div>
+                      <div className="mt-0.5 flex justify-between text-[10px] text-waterloo">
+                        <span className="text-green-600">{catStats[cat.designation].ok} OK</span>
+                        <span>{catStats[cat.designation].total} réponses</span>
+                        <span className="text-red-500">{catStats[cat.designation].no} NO</span>
+                      </div>
+                    </div>
+                  )}
                   <div className="mt-3 flex items-center gap-2 text-xs">
                     <span className={`inline-block rounded-full px-2 py-0.5 ${cat.status ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
                       {cat.status ? "Active" : "Inactive"}
