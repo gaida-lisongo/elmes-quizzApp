@@ -520,8 +520,26 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
                       </div>
 
                       <div>
-                        <label className="mb-2 flex items-center gap-2 text-sm font-medium text-black dark:text-white">
-                          <School className="h-4 w-4 text-primary" />
+                        <label className="mb-2 flex items-center gap-2 text-sm font-medium text-black dark:text-white">                          <Mail className="h-4 w-4 text-primary" />
+                          Email
+                        </label>
+                        <input
+                          type="email"
+                          placeholder="votre@email.com"
+                          value={step1Data.email}
+                          onChange={(e) =>
+                            setStep1Data((prev) => ({
+                              ...prev,
+                              email: e.target.value,
+                            }))
+                          }
+                          required
+                          className="w-full rounded-xl border border-stroke bg-transparent px-5 py-3 text-black outline-hidden transition-all duration-200 focus:border-primary focus:shadow-[0_0_0_3px_rgba(0,107,255,0.1)] dark:border-strokedark dark:text-white dark:focus:border-primary"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="mb-2 flex items-center gap-2 text-sm font-medium text-black dark:text-white">                          <School className="h-4 w-4 text-primary" />
                           Établissement
                         </label>
                         <input

@@ -9,49 +9,12 @@ import {
   TrendingUp,
   Target,
   Medal,
-  BookOpen,
-  Swords,
   Loader2,
   BarChart3,
   Award,
-  ChevronRight,
+  Trophy,
 } from "lucide-react";
 import { getPlayerMetricsAction, type PlayerMetricsData } from "@/actions/player.metrics.actions";
-
-const quickActions = [
-  {
-    title: "Nouveau parcours",
-    desc: "Démarrer un parcours chronométré",
-    icon: <Route className="h-8 w-8" />,
-    color: "text-purple-500",
-    gradient: "from-purple-500/10 to-purple-500/5",
-    border: "border-purple-200 dark:border-purple-500/20",
-  },
-  {
-    title: "Mes parcours",
-    desc: "Voir mes parcours en cours",
-    icon: <BookOpen className="h-8 w-8" />,
-    color: "text-indigo-500",
-    gradient: "from-indigo-500/10 to-indigo-500/5",
-    border: "border-indigo-200 dark:border-indigo-500/20",
-  },
-  {
-    title: "Défier",
-    desc: "Lancer un défi à un ami",
-    icon: <Swords className="h-8 w-8" />,
-    color: "text-rose-500",
-    gradient: "from-rose-500/10 to-rose-500/5",
-    border: "border-rose-200 dark:border-rose-500/20",
-  },
-  {
-    title: "Classement",
-    desc: "Voir le classement général",
-    icon: <Medal className="h-8 w-8" />,
-    color: "text-amber-500",
-    gradient: "from-amber-500/10 to-amber-500/5",
-    border: "border-amber-200 dark:border-amber-500/20",
-  },
-];
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -115,20 +78,31 @@ export default function AdvancedDashboard() {
             ))}
           </div>
 
-          <div>
-            <h2 className="mb-4 text-xl font-semibold text-black dark:text-white">Actions rapides</h2>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {quickActions.map((action, i) => (
-                <motion.button key={action.title} custom={i + 4} variants={fadeInUp} initial="hidden" animate="visible" className={`group relative overflow-hidden rounded-2xl border ${action.border} bg-gradient-to-br ${action.gradient} p-6 text-left transition-all duration-300 hover:shadow-lg dark:bg-blacksection`}>
-                  <div className={`mb-4 ${action.color}`}>{action.icon}</div>
-                  <h3 className="mb-1 font-semibold text-black dark:text-white">{action.title}</h3>
-                  <p className="text-sm text-waterloo">{action.desc}</p>
-                </motion.button>
-              ))}
-            </div>
+          {/* Top & classement — ligne pleine largeur */}
+          <div className="grid gap-6 lg:grid-cols-1">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.4 }} className="rounded-2xl border border-stroke bg-white p-6 shadow-solid-5 dark:border-strokedark dark:bg-blacksection">
+              <div className="mb-4 flex items-center gap-2">
+                <Trophy className="h-5 w-5 text-primary" />
+                <h2 className="text-xl font-semibold text-black dark:text-white">Top & classement</h2>
+              </div>
+              <div className="rounded-xl border border-stroke bg-alabaster p-4 dark:border-strokedark dark:bg-strokedark">
+                <p className="text-sm text-waterloo">Votre position</p>
+                <p className="mt-1 text-2xl font-bold text-black dark:text-white">{data?.top.value || '—'}</p>
+                <p className="mt-1 text-sm text-waterloo">{data?.top.detail || 'Pas encore classé'}</p>
+              </div>
+              <div className="mt-4 space-y-2">
+                {data?.leaderboard?.slice(0, 5).map((player) => (
+                  <div key={player._id} className="flex items-center justify-between rounded-lg border border-stroke px-3 py-2 text-sm dark:border-strokedark">
+                    <span className="font-medium text-black dark:text-white">#{player.rank} {player.pseudo}</span>
+                    <span className="text-waterloo">{player.score} pts</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+          {/* Chart 2/3 + Activité 1/3 */}
+          <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.6 }} className="rounded-2xl border border-stroke bg-white p-6 shadow-solid-5 dark:border-strokedark dark:bg-blacksection">
               <div className="mb-4 flex items-center gap-2">
                 <BarChart3 className="h-5 w-5 text-primary" />

@@ -4,54 +4,15 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Trophy,
-  Swords,
   TrendingUp,
-  Medal,
   Clock,
   Crown,
-  Gamepad2,
   Loader2,
   Users,
   BarChart3,
-  Award,
   Target,
 } from "lucide-react";
 import { getPlayerMetricsAction, type PlayerMetricsData } from "@/actions/player.metrics.actions";
-
-const quickActions = [
-  {
-    title: "Match rapide",
-    desc: "Trouver un adversaire",
-    icon: <Swords className="h-8 w-8" />,
-    color: "text-amber-500",
-    gradient: "from-amber-500/10 to-amber-500/5",
-    border: "border-amber-200 dark:border-amber-500/20",
-  },
-  {
-    title: "Compétition",
-    desc: "Voir les compétitions en cours",
-    icon: <Trophy className="h-8 w-8" />,
-    color: "text-orange-500",
-    gradient: "from-orange-500/10 to-orange-500/5",
-    border: "border-orange-200 dark:border-orange-500/20",
-  },
-  {
-    title: "Mes stats",
-    desc: "Analyser mes performances",
-    icon: <TrendingUp className="h-8 w-8" />,
-    color: "text-blue-500",
-    gradient: "from-blue-500/10 to-blue-500/5",
-    border: "border-blue-200 dark:border-blue-500/20",
-  },
-  {
-    title: "Live",
-    desc: "Matchs en direct",
-    icon: <Gamepad2 className="h-8 w-8" />,
-    color: "text-red-500",
-    gradient: "from-red-500/10 to-red-500/5",
-    border: "border-red-200 dark:border-red-500/20",
-  },
-];
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -115,70 +76,31 @@ export default function VipDashboard() {
             ))}
           </div>
 
-          <div>
-            <h2 className="mb-4 text-xl font-semibold text-black dark:text-white">Actions rapides</h2>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {quickActions.map((action, i) => (
-                <motion.button key={action.title} custom={i + 4} variants={fadeInUp} initial="hidden" animate="visible" className={`group relative overflow-hidden rounded-2xl border ${action.border} bg-gradient-to-br ${action.gradient} p-6 text-left transition-all duration-300 hover:shadow-lg dark:bg-blacksection`}>
-                  <div className={`mb-4 ${action.color}`}>{action.icon}</div>
-                  <h3 className="mb-1 font-semibold text-black dark:text-white">{action.title}</h3>
-                  <p className="text-sm text-waterloo">{action.desc}</p>
-                </motion.button>
-              ))}
-            </div>
-          </div>
-
-          <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.6 }} className="rounded-2xl border border-stroke bg-white p-6 shadow-solid-5 dark:border-strokedark dark:bg-blacksection">
+          {/* Top & classement — ligne pleine largeur */}
+          <div className="grid gap-6 lg:grid-cols-1">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.4 }} className="rounded-2xl border border-stroke bg-white p-6 shadow-solid-5 dark:border-strokedark dark:bg-blacksection">
               <div className="mb-4 flex items-center gap-2">
-                <BarChart3 className="h-5 w-5 text-primary" />
-                <h2 className="text-xl font-semibold text-black dark:text-white">Équipe & sessions</h2>
+                <Trophy className="h-5 w-5 text-primary" />
+                <h2 className="text-xl font-semibold text-black dark:text-white">Top & classement</h2>
               </div>
-              {data?.team ? (
-                <div className="space-y-3">
-                  <div className="rounded-lg border border-stroke bg-alabaster p-3 dark:border-strokedark dark:bg-strokedark">
-                    <p className="text-sm font-medium text-black dark:text-white">{data.team.designation}</p>
-                    <p className="text-xs text-waterloo">Rôle : {data.team.role}</p>
-                  </div>
-                  <div className="space-y-2">
-                    {data.team.members.map((member) => (
-                      <div key={member._id} className="flex items-center justify-between rounded-lg border border-stroke px-3 py-2 text-sm dark:border-strokedark">
-                        <span className="font-medium text-black dark:text-white">{member.pseudo}</span>
-                        <span className="text-waterloo">{member.isSecretary ? 'Secrétaire' : 'Membre'}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <div className="py-10 text-center text-waterloo">Aucune équipe liée à ce profil.</div>
-              )}
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.7 }} className="rounded-2xl border border-stroke bg-white p-6 shadow-solid-5 dark:border-strokedark dark:bg-blacksection">
-              <div className="mb-4 flex items-center gap-2">
-                <Clock className="h-5 w-5 text-primary" />
-                <h2 className="text-xl font-semibold text-black dark:text-white">Activité récente</h2>
+              <div className="rounded-xl border border-stroke bg-alabaster p-4 dark:border-strokedark dark:bg-strokedark">
+                <p className="text-sm text-waterloo">Votre position</p>
+                <p className="mt-1 text-2xl font-bold text-black dark:text-white">{data?.top.value || '—'}</p>
+                <p className="mt-1 text-sm text-waterloo">{data?.top.detail || 'Pas encore classé'}</p>
               </div>
-              {data?.recentParties?.length ? (
-                <div className="space-y-3">
-                  {data.recentParties.map((party) => (
-                    <div key={party._id} className="flex items-center justify-between rounded-lg border border-stroke px-3 py-2 text-sm dark:border-strokedark">
-                      <div>
-                        <p className="font-medium text-black dark:text-white">{party.categorie}</p>
-                        <p className="text-waterloo">{new Date(party.createdAt).toLocaleDateString("fr-FR")}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-semibold text-primary">{party.note} pts</p>
-                        <p className="text-xs text-waterloo">{party.status}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="py-10 text-center text-waterloo">Aucune activité récente.</div>
-              )}
+              <div className="mt-4 space-y-2">
+                {data?.leaderboard?.slice(0, 5).map((player) => (
+                  <div key={player._id} className="flex items-center justify-between rounded-lg border border-stroke px-3 py-2 text-sm dark:border-strokedark">
+                    <span className="font-medium text-black dark:text-white">#{player.rank} {player.pseudo}</span>
+                    <span className="text-waterloo">{player.score} pts</span>
+                  </div>
+                ))}
+              </div>
             </motion.div>
           </div>
+
+          {/* Chart 2/3 + Activité 1/3 */}
+          <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
         </>
       )}
     </div>
