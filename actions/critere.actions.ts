@@ -225,29 +225,6 @@ export async function checkCriteresClassementAction(critereId: string) {
       }
     }
 
-    if (alreadyFirst < 2 && secondIds.length > 0) {
-      const matchIds = secondIds.map(id => new mongoose.Types.ObjectId(id));
-      const qualifiables = await Enrollement.aggregate([
-        { $match: { [idField]: { $in: matchIds }, status: 'CONFIRMED', points: { $gte: firstPoints } } },
-        { $group: { _id: `$${idField}`, totalPoints: { $sum: '$points' } } },
-        { $sort: { totalPoints: -1 } },
-        { $limit: 2 - alreadyFirst },
-      ]);
-
-      for (const entry of qualifiables) {
-        await Critere.findByIdAndUpdate(critereId, {
-          $push: {
-            first: {
-              points: entry.totalPoints,
-              recompense: critere.first[0]?.recompense || '',
-              ...(isEquipe ? { equipeId: entry._id } : { playerId: entry._id }),
-              createdAt: new Date(),
-            },
-          },
-        });
-      }
-    }
-
     // Vérifier si le classement est complet (tous les paliers remplis)
     const updatedCritere = await Critere.findById(critereId).lean();
     const firstFull = (updatedCritere?.first || []).filter(e => e.playerId || e.equipeId).length >= 2;
