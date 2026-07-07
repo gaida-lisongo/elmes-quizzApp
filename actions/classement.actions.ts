@@ -70,8 +70,7 @@ export async function getClassementByRessourceAction(
         rank: rank !== '-' ? parseInt(rank.replace('#', '')) : 999,
         points: enr.points || 0,
       };
-    })
-    );
+    });
 
     // Trier par points
     enriched.sort((a, b) => b.points - a.points);
