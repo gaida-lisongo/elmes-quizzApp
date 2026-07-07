@@ -151,7 +151,7 @@ export default function CriteresAdmin() {
           <div className="rounded-2xl border border-stroke bg-white p-10 text-center text-waterloo dark:border-strokedark dark:bg-blacksection">
             Aucun critère défini.
           </div>
-        ) : criterres.map((c) => (
+        ) : criteres.map((c) => (
           <div key={c._id} className="rounded-2xl border border-stroke bg-white p-5 shadow-solid-5 dark:border-strokedark dark:bg-blacksection">
             <div className="mb-3 flex items-center justify-between">
               <div>
