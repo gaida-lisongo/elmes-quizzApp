@@ -18,6 +18,20 @@ export interface ICompetition extends IParcours {
   amount: number; // Montant de la cagnotte pour la compétition
 }
 
+export interface ICritere extends Document {
+  ressource: string;
+  ressourceId: mongoose.Types.ObjectId;
+  designation: string;
+  slug: string;
+  description: string;
+  first: Array<{points: number; recompense: string; playerId?: mongoose.Types.ObjectId; equipeId?: mongoose.Types.ObjectId; createdAt: Date;}>;
+  second: Array<{points: number; recompense: string; playerId?: mongoose.Types.ObjectId; equipeId?: mongoose.Types.ObjectId; createdAt: Date;}>;
+  third: Array<{points: number; recompense: string; playerId?: mongoose.Types.ObjectId; equipeId?: mongoose.Types.ObjectId; createdAt: Date;}>;
+  status: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 const ParcoursSchema: Schema<IParcours> = new Schema(
   {
     designation: { type: String, required: true, trim: true },
@@ -55,7 +69,41 @@ const CompetitionSchema: Schema<ICompetition> = new Schema(
   { timestamps: true }
 );
 
+const CritereSchema: Schema<ICritere> = new Schema(
+  {
+    ressource: { type: String, enum: ['Parcours', 'Competition'], required: true },
+    ressourceId: { type: Schema.Types.ObjectId, required: true, refPath: 'ressource' },
+    designation: { type: String, required: true, trim: true },
+    slug: { type: String, required: true, unique: true },
+    description: { type: String, default: '' },
+    first: [{
+      points: { type: Number, required: true },
+      recompense: { type: String, default: '' },
+      playerId: { type: Schema.Types.ObjectId, ref: 'Player' },
+      equipeId: { type: Schema.Types.ObjectId, ref: 'Equipe' },
+      createdAt: { type: Date, default: Date.now },
+    }],
+    second: [{
+      points: { type: Number, required: true },
+      recompense: { type: String, default: '' },
+      playerId: { type: Schema.Types.ObjectId, ref: 'Player' },
+      equipeId: { type: Schema.Types.ObjectId, ref: 'Equipe' },
+      createdAt: { type: Date, default: Date.now },
+    }],
+    third: [{
+      points: { type: Number, required: true },
+      recompense: { type: String, default: '' },
+      playerId: { type: Schema.Types.ObjectId, ref: 'Player' },
+      equipeId: { type: Schema.Types.ObjectId, ref: 'Equipe' },
+      createdAt: { type: Date, default: Date.now },
+    }],
+    status: { type: Boolean, default: true },
+  },
+  { timestamps: true }
+);
+
 const Competition: Model<ICompetition> = mongoose.models.Competition || mongoose.model<ICompetition>('Competition', CompetitionSchema);
 const Parcours: Model<IParcours> = mongoose.models.Parcours || mongoose.model<IParcours>('Parcours', ParcoursSchema);
+const Critere: Model<ICritere> = mongoose.models.Critere || mongoose.model<ICritere>('Critere', CritereSchema);
 
-export { Competition, Parcours };
+export { Competition, Parcours, Critere };

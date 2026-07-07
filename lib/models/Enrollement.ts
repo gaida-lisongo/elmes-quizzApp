@@ -31,6 +31,8 @@ export interface IEnrollement extends Document {
   code: string; // Code unique pour l'enrôlement;
   orderNumber: string;
   status: 'PENDING' | 'CONFIRMED' | 'CANCELLED';
+  maxParties: number;
+  points: number;
   parties: number; // Parties jouées par l'équipe dans cette compétition
   transactions: ITransaction[];
   createdAt: Date;
@@ -65,6 +67,8 @@ const EnrollementSchema: Schema<IEnrollement> = new Schema(
       enum: ['PENDING', 'CONFIRMED', 'CANCELLED'], 
       default: 'PENDING' 
     },
+    maxParties: { type: Number, default: 0 },
+    points: { type: Number, default: 0},
     parties: { type: Number, default: 0 },
     transactions: [
       {

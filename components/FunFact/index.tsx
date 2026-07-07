@@ -56,7 +56,7 @@ const FunFact = ({ categories, quizzes, parties }: FunFactProps) => {
             height={384}
             src="/images/shape/shape-04.png"
             alt="Man"
-            className="absolute -left-15 -top-25 -z-1 lg:hidden"
+            className="absolute -left-15 -top-25 -z-1 hidden lg:block"
           />
           <Image
             width={132}
