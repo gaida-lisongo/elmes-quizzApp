@@ -23,7 +23,7 @@ export async function getCriteresAction() {
     await connectToDb();
 
     const criterres = await Critere.find({})
-      .populate('ressourceId', 'designation slug')
+      .populate('sessionId', 'designation')
       .sort({ createdAt: -1 })
       .lean();
 
@@ -34,8 +34,7 @@ export async function getCriteresAction() {
 }
 
 export async function createCritereAction(data: {
-  ressource: 'Parcours' | 'Competition';
-  ressourceId: string;
+  sessionId: string;
   designation: string;
   description: string;
   firstPoints: number;
@@ -54,17 +53,25 @@ export async function createCritereAction(data: {
 
     const slug = data.designation.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Date.now();
 
-    const critere = await Critere.create({
-      ressource: data.ressource,
-      ressourceId: new mongoose.Types.ObjectId(data.ressourceId),
+    const payload: any = {
       designation: data.designation,
       slug,
       description: data.description,
-      first: [{ points: data.firstPoints, recompense: data.firstRecompense }],
-      second: [{ points: data.secondPoints, recompense: data.secondRecompense }],
-      third: [{ points: data.thirdPoints, recompense: data.thirdRecompense }],
+      firstPoints: data.firstPoints,
+      firstRecompense: Number(data.firstRecompense),
+      secondPoints: data.secondPoints,
+      secondRecompense: Number(data.secondRecompense),
+      thirdPoints: data.thirdPoints,
+      thirdRecompense: Number(data.thirdRecompense),
+      first: [],
+      second: [],
+      third: [],
       status: true,
-    });
+    };
+
+    if (data.sessionId) payload.sessionId = new mongoose.Types.ObjectId(data.sessionId);
+
+    const critere = await Critere.create(payload);
 
     return { success: true, critere: JSON.parse(JSON.stringify(critere)) };
   } catch (error: any) {
@@ -74,7 +81,17 @@ export async function createCritereAction(data: {
 
 export async function updateCritereAction(
   id: string,
-  data: { status?: boolean; first?: any[]; second?: any[]; third?: any[]; points?: number; designation?: string; description?: string },
+  data: {
+    status?: boolean;
+    firstPoints?: number;
+    firstRecompense?: number;
+    secondPoints?: number;
+    secondRecompense?: number;
+    thirdPoints?: number;
+    thirdRecompense?: number;
+    designation?: string;
+    description?: string;
+  },
 ) {
   try {
     const session = await getSession();
@@ -87,26 +104,20 @@ export async function updateCritereAction(
     if (data.status !== undefined) update.status = data.status;
     if (data.designation) update.designation = data.designation;
     if (data.description !== undefined) update.description = data.description;
-    if (data.first) update.first = data.first;
-    if (data.second) update.second = data.second;
-    if (data.third) update.third = data.third;
-
-    const critere = await Critere.findByIdAndUpdate(id, { $set: update }, { new: true }).lean();
-    if (!critere) return { success: false, error: 'Critère introuvable' };
-
-    return { success: true, critere: JSON.parse(JSON.stringify(critere)) };
-  } catch (error: any) {
-    return { success: false, error: error.message };
-  }
+    if (data.firstPoints !== undefined) update.firstPoints = data.firstPoints;
+    if (data.firstRecompense !== undefined) update.firstRecompense = Number(data.firstRecompense);
+    if (data.secondPoints !== undefined) update.secondPoints = data.secondPoints;
+    if (data.secondRecompense !== undefined) update.secondRecompense = Number(data.secondRecompense);
+    if (data.thirdPoints !== undefined) update.thirdPoints = data.thirdPoints;
+    if (data.thirdRecompense !== undefined) update.thirdRecompense = Number(data.thirdRecompense);
 }
 
 // ── CLASSEMENT AUTO (qualification) ───────────────────────────────
 
 /**
  * Vérifie pour un critère donné si des enrollements atteignent les paliers.
- * - third : 6 premières entités (équipe/joueur) à atteindre le palier → qualifiées
- * - second : parmi les 6 qualifiées, les 4 premières à atteindre le 2e palier
- * - first : parmi les 4, les 2 premières à atteindre le 1er palier
+ * Utilise les points firstPoints/secondPoints/thirdPoints du critère.
+ * Fonctionne avec enrollements filtrés par sessionId.
  */
 export async function checkCriteresClassementAction(critereId: string) {
   try {
@@ -116,36 +127,29 @@ export async function checkCriteresClassementAction(critereId: string) {
     if (!critere) return { success: false, error: 'Critère introuvable' };
     if (!critere.status) return { success: false, error: 'Critère inactif' };
 
-    const thirdPoints = critere.third[0]?.points || 0;
-    const secondPoints = critere.second[0]?.points || 0;
-    const firstPoints = critere.first[0]?.points || 0;
-    const isEquipe = critere.ressource === 'Competition';
+    const { thirdPoints, secondPoints, firstPoints } = critere;
 
-    // Récupérer les enrollements pour cette ressource
-    const matchField = isEquipe ? 'equipeId' : 'playerId';
-    const idField = isEquipe ? 'equipeId' : 'playerId';
+    // Récupérer les enrollements pour cette session
+    const match: any = { status: 'CONFIRMED' };
+    if (critere.sessionId) match.sessionId = critere.sessionId;
+    else return { success: false, error: 'Aucune session associée' };
 
-    // 1. Palier third (6 places) — déjà qualifiés
+    // 1. Palier third (6 places)
     const alreadyThird = (critere.third || []).filter(e => e.playerId || e.equipeId).length;
-
     if (alreadyThird < 6) {
       const qualifiables = await Enrollement.aggregate([
-        { $match: { [idField]: { $exists: true, $ne: null }, status: 'CONFIRMED', points: { $gte: thirdPoints } } },
-        { $group: { _id: `$${idField}`, totalPoints: { $sum: '$points' }, count: { $sum: 1 } } },
-        { $sort: { totalPoints: -1 } },
+        { $match: { ...match, points: { $gte: thirdPoints } } },
+        { $sort: { points: -1 } },
         { $limit: 6 - alreadyThird },
+        { $project: { _id: 1, equipeId: 1, playerId: 1, points: 1 } },
       ]);
 
       for (const entry of qualifiables) {
-        const update: any = { $push: { third: { points: entry.totalPoints, recompense: critere.third[0]?.recompense || '', createdAt: new Date() } } };
-        if (isEquipe) update['$set'] = { 'third.$[].equipeId': entry._id };
-        else update['$set'] = { 'third.$[].playerId': entry._id };
         await Critere.findByIdAndUpdate(critereId, {
           $push: {
             third: {
-              points: entry.totalPoints,
-              recompense: critere.third[0]?.recompense || '',
-              ...(isEquipe ? { equipeId: entry._id } : { playerId: entry._id }),
+              ...(entry.equipeId ? { equipeId: entry.equipeId } : {}),
+              ...(entry.playerId ? { playerId: entry.playerId } : {}),
               createdAt: new Date(),
             },
           },
@@ -153,40 +157,65 @@ export async function checkCriteresClassementAction(critereId: string) {
       }
     }
 
-    // 2. Palier second (4 places) — parmi les qualifiés third
+    // 2. Palier second (4 places)
     const alreadySecond = (critere.second || []).filter(e => e.playerId || e.equipeId).length;
-    const thirdIds = (critere.third || [])
-      .filter(e => e.playerId || e.equipeId)
-      .map(e => (e.playerId || e.equipeId)?.toString());
+    if (alreadySecond < 4) {
+      const thirdEntries = await Critere.findById(critereId).lean();
+      const thirdIds = (thirdEntries?.third || [])
+        .filter(e => e.playerId || e.equipeId)
+        .map(e => (e.playerId || e.equipeId)!);
+      
+      if (thirdIds.length > 0) {
+        const qualifiables = await Enrollement.aggregate([
+          { $match: { ...match, points: { $gte: secondPoints }, $or: [{ playerId: { $in: thirdIds } }, { equipeId: { $in: thirdIds } }] } },
+          { $sort: { points: -1 } },
+          { $limit: Math.min(4 - alreadySecond, thirdIds.length) },
+          { $project: { _id: 1, equipeId: 1, playerId: 1, points: 1 } },
+        ]);
 
-    if (alreadySecond < 4 && thirdIds.length > 0) {
-      const matchIds = thirdIds.map(id => new mongoose.Types.ObjectId(id));
-      const qualifiables = await Enrollement.aggregate([
-        { $match: { [idField]: { $in: matchIds }, status: 'CONFIRMED', points: { $gte: secondPoints } } },
-        { $group: { _id: `$${idField}`, totalPoints: { $sum: '$points' } } },
-        { $sort: { totalPoints: -1 } },
-        { $limit: 4 - alreadySecond },
-      ]);
-
-      for (const entry of qualifiables) {
-        await Critere.findByIdAndUpdate(critereId, {
-          $push: {
-            second: {
-              points: entry.totalPoints,
-              recompense: critere.second[0]?.recompense || '',
-              ...(isEquipe ? { equipeId: entry._id } : { playerId: entry._id }),
-              createdAt: new Date(),
+        for (const entry of qualifiables) {
+          await Critere.findByIdAndUpdate(critereId, {
+            $push: {
+              second: {
+                ...(entry.equipeId ? { equipeId: entry.equipeId } : {}),
+                ...(entry.playerId ? { playerId: entry.playerId } : {}),
+                createdAt: new Date(),
+              },
             },
-          },
-        });
+          });
+        }
       }
     }
 
-    // 3. Palier first (2 places) — parmi les qualifiés second
+    // 3. Palier first (2 places)
     const alreadyFirst = (critere.first || []).filter(e => e.playerId || e.equipeId).length;
-    const secondIds = (critere.second || [])
-      .filter(e => e.playerId || e.equipeId)
-      .map(e => (e.playerId || e.equipeId)?.toString());
+    if (alreadyFirst < 2) {
+      const secondEntries = await Critere.findById(critereId).lean();
+      const secondIds = (secondEntries?.second || [])
+        .filter(e => e.playerId || e.equipeId)
+        .map(e => (e.playerId || e.equipeId)!);
+      
+      if (secondIds.length > 0) {
+        const qualifiables = await Enrollement.aggregate([
+          { $match: { ...match, points: { $gte: firstPoints }, $or: [{ playerId: { $in: secondIds } }, { equipeId: { $in: secondIds } }] } },
+          { $sort: { points: -1 } },
+          { $limit: Math.min(2 - alreadyFirst, secondIds.length) },
+          { $project: { _id: 1, equipeId: 1, playerId: 1, points: 1 } },
+        ]);
+
+        for (const entry of qualifiables) {
+          await Critere.findByIdAndUpdate(critereId, {
+            $push: {
+              first: {
+                ...(entry.equipeId ? { equipeId: entry.equipeId } : {}),
+                ...(entry.playerId ? { playerId: entry.playerId } : {}),
+                createdAt: new Date(),
+              },
+            },
+          });
+        }
+      }
+    }
 
     if (alreadyFirst < 2 && secondIds.length > 0) {
       const matchIds = secondIds.map(id => new mongoose.Types.ObjectId(id));
