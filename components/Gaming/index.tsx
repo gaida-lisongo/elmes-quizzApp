@@ -95,7 +95,7 @@ export default function GamingPage({
         }}
       />
 
-      <div className="overflow-hidden pb-20 xl:pb-25">
+      <div className="overflow-hidden pt-10 pb-20 xl:pb-25">
         <About data={about} />
         <FAQ data={faq} />
         <CTA 

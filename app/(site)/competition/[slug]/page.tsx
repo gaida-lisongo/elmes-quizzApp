@@ -69,6 +69,7 @@ export default async function CompetitionDetailPage({
     <GamingPage
       designation={competition.designation || "Compétition"}
       description={competition.description || "Rejoignez cette compétition et montrez votre niveau."}
+      image={competition.image || null}
       about={aboutData}
       faq={faqData}
       cta={ctaData}
