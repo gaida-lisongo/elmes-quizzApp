@@ -1,5 +1,6 @@
 import { getCompetitionBySlug } from "@/actions/competitions.actions";
 import { getClassementByRessourceAction, getCriteresForRessourceAction } from "@/actions/classement.actions";
+import { getCurrentEquipeInfoAction } from "@/actions/enrollment.actions";
 import GamingPage from "@/components/Gaming";
 import { notFound } from "next/navigation";
 
@@ -17,9 +18,10 @@ export default async function CompetitionDetailPage({
 
   const competition = res.competition;
 
-  const [classementRes, criteresRes] = await Promise.all([
+  const [classementRes, criteresRes, equipeInfoRes] = await Promise.all([
     getClassementByRessourceAction('Competition', competition._id),
     getCriteresForRessourceAction('Competition', competition._id),
+    getCurrentEquipeInfoAction(),
   ]);
 
   const aboutData = {
@@ -47,12 +49,18 @@ export default async function CompetitionDetailPage({
     categories: competition?.categories?.map((cat: any) => ({id: cat?.slug, quest: cat?.designation, ans: cat?.description})) || []
   }
 
+  const canEnroll = competition?.status === 'ACTIVE' && equipeInfoRes.success && !!equipeInfoRes.equipe;
+
   const ctaData = {
-    title: competition?.status == 'ACTIVE' ? 
-      "Inscrivez votre équipe à cette compétition et tentez de remporter la cagnotte" 
-      : (competition?.status == 'INACTIVE' ? "Cette compétition est actuellement indisponible" : "Les inscriptions sont closes"),
+    title: canEnroll
+      ? "Inscrivez votre équipe à cette compétition et tentez de remporter la cagnotte"
+      : competition?.status === 'ACTIVE'
+        ? "Cette compétition nécessite un profil VIP et d'être chef d'une équipe"
+        : competition?.status === 'INACTIVE'
+          ? "Cette compétition est actuellement indisponible"
+          : "Les inscriptions sont closes",
     content: `Frais d'inscription : ${new Intl.NumberFormat().format(competition.amount || 0)} F · Cagnotte : ${new Intl.NumberFormat().format(competition.cagnotte || 0)} F`,
-    action: {title: competition?.status == 'ACTIVE' ? "Inscrire mon équipe" : 'Voir le classement', url: competition?.status == 'ACTIVE' ? 'subscripe' : 'classement'},
+    action: { title: canEnroll ? "Inscrire mon équipe" : 'Voir le classement', url: canEnroll ? 'subscripe' : 'classement' },
     classement: []
   }
 
@@ -68,6 +76,7 @@ export default async function CompetitionDetailPage({
       targetName={competition.designation}
       criteres={criteresRes.success ? criteresRes.criteres : []}
       classementData={classementRes.success ? classementRes.classement : []}
+      enrollmentInfo={equipeInfoRes.success && equipeInfoRes.equipe ? { type: 'equipe', ...equipeInfoRes.equipe } : null}
     />
   );
 }

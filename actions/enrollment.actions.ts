@@ -10,6 +10,102 @@ import Equipe from "@/lib/models/Equipe";
 
 const { Enrollement, Session } = EnrollementModule;
 
+// ── INFOS JOUEUR / ÉQUIPE CONNECTÉ(E) ──────────────────────────────
+
+export interface PlayerInfo {
+  _id: string;
+  type: 'STANDALONE' | 'ADVANCED' | 'VIP';
+  level: number;
+  pseudo: string;
+}
+
+export interface EquipeInfo {
+  _id: string;
+  designation: string;
+  chefId: string;
+}
+
+/**
+ * Récupère les infos du Player connecté (pour parcours).
+ * Retourne null si non connecté ou si le profil n'est pas ADVANCED/VIP.
+ */
+export async function getCurrentPlayerInfoAction(): Promise<{
+  success: boolean;
+  player?: PlayerInfo;
+  error?: string;
+}> {
+  try {
+    const userSession = await getSession();
+    if (!userSession) return { success: true };
+
+    await connectToDb();
+    const player = await Player.findOne({
+      userId: new mongoose.Types.ObjectId(userSession.userId),
+    })
+      .populate<{ userId: { pseudo: string } }>('userId', 'pseudo')
+      .lean();
+
+    if (!player) return { success: true };
+    if (player.type !== 'ADVANCED' && player.type !== 'VIP') {
+      return { success: true };
+    }
+
+    const pseudo = (player.userId as any)?.pseudo || '';
+
+    return {
+      success: true,
+      player: {
+        _id: player._id.toString(),
+        type: player.type,
+        level: player.level,
+        pseudo,
+      },
+    };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Récupère les infos de l'Équipe dont le joueur connecté est chef (pour compétition).
+ * Retourne null si non connecté, non-VIP, ou pas chef d'équipe.
+ */
+export async function getCurrentEquipeInfoAction(): Promise<{
+  success: boolean;
+  equipe?: EquipeInfo;
+  error?: string;
+}> {
+  try {
+    const userSession = await getSession();
+    if (!userSession) return { success: true };
+
+    await connectToDb();
+    const player = await Player.findOne({
+      userId: new mongoose.Types.ObjectId(userSession.userId),
+    }).lean();
+
+    if (!player) return { success: true };
+    if (player.type !== 'VIP') return { success: true };
+
+    const equipe = await Equipe.findOne({
+      chefId: player._id,
+    }).lean();
+
+    if (!equipe) return { success: true };
+
+    return {
+      success: true,
+      equipe: {
+        _id: equipe._id.toString(),
+        designation: equipe.designation,
+        chefId: equipe.chefId.toString(),
+      },
+    };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
 // ── SESSIONS ───────────────────────────────────────────────────────
 
 /**

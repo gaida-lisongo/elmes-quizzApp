@@ -10,6 +10,15 @@ import DrawerClassement from "./DrawerClassement";
 import DrawerInscription from "./DrawerInscription";
 import GamingHero from "./GamingHero";
 
+export interface EnrollmentInfo {
+  type: 'player' | 'equipe';
+  _id: string;
+  designation?: string;
+  pseudo?: string;
+  level?: number;
+  chefId?: string;
+}
+
 interface GamingPageProps {
   designation: string;
   description: string;
@@ -22,6 +31,7 @@ interface GamingPageProps {
   targetType?: "parcours" | "competition";
   targetId?: string;
   targetName?: string;
+  enrollmentInfo?: EnrollmentInfo | null;
 }
 
 export default function GamingPage({
@@ -36,13 +46,14 @@ export default function GamingPage({
   targetType,
   targetId,
   targetName,
+  enrollmentInfo,
 }: GamingPageProps) {
   const [drawerClassementOpen, setDrawerClassementOpen] = useState(false);
   const [drawerInscriptionOpen, setDrawerInscriptionOpen] = useState(false);
 
   const handleActionClick = useCallback(
     (action: { title: string; url: string }) => {
-      if (action.url === "subscripe" && targetType && targetId) {
+      if (action.url === "subscripe" && targetType && targetId && enrollmentInfo) {
         setDrawerInscriptionOpen(true);
       } else if (action.url === "classement") {
         setDrawerClassementOpen(true);
@@ -50,7 +61,7 @@ export default function GamingPage({
         window.location.href = action.url;
       }
     },
-    [targetType, targetId],
+    [targetType, targetId, enrollmentInfo],
   );
 
   return (
@@ -97,13 +108,14 @@ export default function GamingPage({
         open={drawerClassementOpen}
         onClose={() => setDrawerClassementOpen(false)}
       />
-      {targetType && targetId && (
+      {targetType && targetId && enrollmentInfo && (
         <DrawerInscription
           open={drawerInscriptionOpen}
           onClose={() => setDrawerInscriptionOpen(false)}
           type={targetType}
           targetId={targetId}
           targetName={targetName || ""}
+          enrollmentInfo={enrollmentInfo}
         />
       )}
     </div>

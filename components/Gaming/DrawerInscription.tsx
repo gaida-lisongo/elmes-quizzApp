@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Loader2, CheckCircle, AlertCircle, Calendar, User, Users, Target, ChevronRight, ArrowLeft } from "lucide-react";
 import { getActiveSessionsAction, enrollToParcoursAction, enrollToCompetitionAction } from "@/actions/enrollment.actions";
-import { useSession } from "@/context/SessionContext";
+import type { EnrollmentInfo } from "./index";
 
 interface ISessionItem {
   _id: string;
@@ -20,6 +20,7 @@ interface DrawerInscriptionProps {
   type: "parcours" | "competition";
   targetId: string;
   targetName: string;
+  enrollmentInfo: EnrollmentInfo;
 }
 
 type Step = "sessions" | "confirm" | "processing" | "success" | "error";
@@ -30,8 +31,8 @@ export default function DrawerInscription({
   type,
   targetId,
   targetName,
+  enrollmentInfo,
 }: DrawerInscriptionProps) {
-  const { isAuthenticated, playerType } = useSession();
   const [sessions, setSessions] = useState<ISessionItem[]>([]);
   const [selectedSession, setSelectedSession] = useState<ISessionItem | null>(null);
   const [loading, setLoading] = useState(true);
@@ -58,18 +59,14 @@ export default function DrawerInscription({
       .finally(() => setLoading(false));
   }, [open]);
 
-  // Vérifier les prérequis
+  // Vérifier les prérequis (déjà validés côté serveur, mais double-check)
   const canEnroll = () => {
-    if (!isAuthenticated) {
-      setErrorMsg("Vous devez être connecté pour vous inscrire");
+    if (type === "parcours" && enrollmentInfo.type !== 'player') {
+      setErrorMsg("Profil joueur requis pour s'inscrire à un parcours");
       return false;
     }
-    if (type === "parcours" && playerType !== "ADVANCED" && playerType !== "VIP") {
-      setErrorMsg("Seuls les profils ADVANCED et VIP peuvent s'inscrire à un parcours");
-      return false;
-    }
-    if (type === "competition" && playerType !== "VIP") {
-      setErrorMsg("Seuls les profils VIP peuvent inscrire une équipe à une compétition");
+    if (type === "competition" && enrollmentInfo.type !== 'equipe') {
+      setErrorMsg("Équipe requise pour s'inscrire à une compétition");
       return false;
     }
     return true;
@@ -299,8 +296,10 @@ export default function DrawerInscription({
                           </span>
                         </div>
                         <div className="flex justify-between text-sm">
-                          <span className="text-waterloo">Profil</span>
-                          <span className="font-medium text-primary">{playerType}</span>
+                          <span className="text-waterloo">{enrollmentInfo.type === 'equipe' ? "Équipe" : "Profil"}</span>
+                          <span className="font-medium text-primary">
+                            {enrollmentInfo.type === 'equipe' ? enrollmentInfo.designation : enrollmentInfo.pseudo}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -364,8 +363,7 @@ export default function DrawerInscription({
                       Inscription réussie !
                     </h4>
                     <p className="mt-2 text-sm text-waterloo">
-                      Vous êtes maintenant inscrit{playerType === "STANDALONE" ? "e" : ""} à{" "}
-                      {type === "parcours" ? "ce parcours" : "cette compétition"}.
+                      Vous êtes maintenant inscrit{type === "parcours" ? " à ce parcours" : "e à cette compétition"}.
                     </p>
                     <button
                       onClick={onClose}

@@ -1,5 +1,6 @@
 import { getParcoursBySlug } from "@/actions/parcours.actions";
 import { getClassementByRessourceAction, getCriteresForRessourceAction } from "@/actions/classement.actions";
+import { getCurrentPlayerInfoAction } from "@/actions/enrollment.actions";
 import GamingPage from "@/components/Gaming";
 import { notFound } from "next/navigation";
 
@@ -17,9 +18,10 @@ export default async function ParcoursDetailPage({
 
   const parcours = res.parcours;
 
-  const [classementRes, criteresRes] = await Promise.all([
+  const [classementRes, criteresRes, playerInfoRes] = await Promise.all([
     getClassementByRessourceAction('Parcours', parcours._id),
     getCriteresForRessourceAction('Parcours', parcours._id),
+    getCurrentPlayerInfoAction(),
   ]);
 
   const aboutData = {
@@ -47,12 +49,18 @@ export default async function ParcoursDetailPage({
     categories: parcours?.categories?.map((cat: any) => ({id: cat?.slug, quest: cat?.designation, ans: cat?.description})) || []
   }
 
+  const canEnroll = parcours?.status === 'ACTIVE' && playerInfoRes.success && !!playerInfoRes.player;
+
   const ctaData = {
-    title: parcours?.status == 'ACTIVE' ? 
-      "Vous pouvez vous inscire à ce parcours et tenter de remporter la couronne du mois" 
-      : (parcours?.status == 'INACTIVE' ? "Se parcours est actullement indisponible"  : "Les inscriptions ne sont plus disponible" ),
+    title: canEnroll
+      ? "Vous pouvez vous inscrire à ce parcours et tenter de remporter la couronne du mois"
+      : parcours?.status === 'ACTIVE'
+        ? "Ce parcours nécessite un profil ADVANCED ou VIP pour s'inscrire"
+        : parcours?.status === 'INACTIVE'
+          ? "Ce parcours est actuellement indisponible"
+          : "Les inscriptions ne sont plus disponibles",
     content: "À la fin de chaque parcours, les meilleurs profils sont couronnés selon leurs résultats, leur régularité et leur performance sous chrono.",
-    action: {title: parcours?.status == 'ACTIVE' ? "S'inscrire" : 'Voir le classement' , url: parcours?.status == 'ACTIVE' ? 'subscripe' : 'classement' },
+    action: { title: canEnroll ? "S'inscrire" : 'Voir le classement', url: canEnroll ? 'subscripe' : 'classement' },
     classement: []
   }
 
@@ -68,6 +76,7 @@ export default async function ParcoursDetailPage({
       targetName={parcours.designation}
       criteres={criteresRes.success ? criteresRes.criteres : []}
       classementData={classementRes.success ? classementRes.classement : []}
+      enrollmentInfo={playerInfoRes.success && playerInfoRes.player ? { type: 'player' as const, _id: playerInfoRes.player._id, pseudo: playerInfoRes.player.pseudo, level: playerInfoRes.player.level } : null}
     />
   );
 }
