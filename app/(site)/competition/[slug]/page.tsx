@@ -18,6 +18,16 @@ export default async function CompetitionDetailPage({
 
   const competition = res.competition;
 
+  // Serialize competition data to convert ObjectIds to strings
+  const serializedCompetition = {
+    ...competition,
+    _id: competition._id.toString(),
+    categories: competition.categories?.map((cat: any) => ({
+      ...cat,
+      _id: cat._id?.toString(),
+    })),
+  };
+
   const [classementRes, criteresRes, equipeInfoRes, sessionsRes] = await Promise.all([
     getClassementByRessourceAction('Competition', competition._id),
     getCriteresForRessourceAction('Competition', competition._id),
@@ -33,50 +43,50 @@ export default async function CompetitionDetailPage({
       rules : [
         {title: 'Équipe', description: 'Chaque équipe est composée de 5 joueurs, dont un chef qui gère les inscriptions.'},
         {title: 'Points', description: 'Chaque bonne réponse rapporte des points à votre équipe. Plus vous répondez vite, plus vous gagnez de points.'},
-        {title: 'Partie', description: `Une partie se compose de ${competition.questions || 0} questions.`},
-        {title: 'Cagnotte', description: `Une cagnotte de ${new Intl.NumberFormat().format(competition.cagnotte || 0)} F est à partager entre les meilleures équipes.`},
+        {title: 'Partie', description: `Une partie se compose de ${serializedCompetition.questions || 0} questions.`},
+        {title: 'Cagnotte', description: `Une cagnotte de ${new Intl.NumberFormat().format(serializedCompetition.cagnotte || 0)} F est à partager entre les meilleures équipes.`},
       ]
     },
     right: {
       image: '/images/hero/child.png',
       title: 'Compétition',
-      subtitle: competition.designation || "Compétition",
-      description: competition.description || "Rejoignez cette compétition et montrez votre niveau.",
+      subtitle: serializedCompetition.designation || "Compétition",
+      description: serializedCompetition.description || "Rejoignez cette compétition et montrez votre niveau.",
     }
   }
 
   const faqData = {
-    url: competition?.ressources || '',
-    categories: competition?.categories?.map((cat: any) => ({id: cat?.slug, quest: cat?.designation, ans: cat?.description})) || []
+    url: serializedCompetition?.ressources || 'http://livre21.com/LIVREF/F13/F013085.pdf',
+    categories: serializedCompetition?.categories?.map((cat: any) => ({id: cat?.slug, quest: cat?.designation, ans: cat?.description})) || []
   }
 
-  const canEnroll = competition?.status === 'ACTIVE' && equipeInfoRes.success && !!equipeInfoRes.equipe;
+  const canEnroll = serializedCompetition?.status === 'ACTIVE' && equipeInfoRes.success && !!equipeInfoRes.equipe;
 
   const ctaData = {
     title: canEnroll
       ? "Inscrivez votre équipe à cette compétition et tentez de remporter la cagnotte"
-      : competition?.status === 'ACTIVE'
+      : serializedCompetition?.status === 'ACTIVE'
         ? "Cette compétition nécessite un profil VIP et d'être chef d'une équipe"
-        : competition?.status === 'INACTIVE'
+        : serializedCompetition?.status === 'INACTIVE'
           ? "Cette compétition est actuellement indisponible"
           : "Les inscriptions sont closes",
-    content: `Frais d'inscription : ${new Intl.NumberFormat().format(competition.amount || 0)} F · Cagnotte : ${new Intl.NumberFormat().format(competition.cagnotte || 0)} F`,
+    content: `Frais d'inscription : ${new Intl.NumberFormat().format(serializedCompetition.amount || 0)} F · Cagnotte : ${new Intl.NumberFormat().format(serializedCompetition.cagnotte || 0)} F`,
     action: { title: canEnroll ? "Inscrire mon équipe" : 'Voir le classement', url: canEnroll ? 'subscripe' : 'classement' },
     classement: [],
-    amount: competition?.amount
+    amount: serializedCompetition?.amount
   }
 
   return (
     <GamingPage
-      designation={competition.designation || "Compétition"}
-      description={competition.description || "Rejoignez cette compétition et montrez votre niveau."}
-      image={competition.image || null}
+      designation={serializedCompetition.designation || "Compétition"}
+      description={serializedCompetition.description || "Rejoignez cette compétition et montrez votre niveau."}
+      image={serializedCompetition.image || null}
       about={aboutData}
       faq={faqData}
       cta={ctaData}
       targetType="competition"
-      targetId={competition._id}
-      targetName={competition.designation}
+      targetId={serializedCompetition._id}
+      targetName={serializedCompetition.designation}
       criteres={criteresRes.success ? criteresRes.criteres : []}
       classementData={classementRes.success ? classementRes.classement : []}
       sessions={sessionsRes.success ? sessionsRes.sessions : []}

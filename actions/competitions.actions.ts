@@ -48,7 +48,7 @@ export async function getCompetitionBySlug(slug: string) {
   try {
     await connectToDb();
     const competition = await Competition.findOne({ slug })
-      .populate('categories', 'designation slug')
+      .populate('categories', 'designation slug description')
       .lean();
     if (!competition) return { success: false, error: 'Compétition introuvable' };
     return { success: true, competition: JSON.parse(JSON.stringify(competition)) };

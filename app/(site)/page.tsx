@@ -26,6 +26,8 @@ export default async function Home() {
     Partie.countDocuments({ status: 'TERMINE' }),
   ]);
 
+  console.log("Metriques : ", {categories, quizzes, parties})
+
   return (
     <main>
       <Hero />

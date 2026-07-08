@@ -39,6 +39,8 @@ export interface PartieActiveData {
   questionIndex: number;
   notes: number;
   playerId: string;
+  credits?: number;
+  parties?: number;
   mode: string;
 }
 
@@ -324,7 +326,7 @@ export async function startMatchPartieAction(enrollmentId: string) {
       return { success: false, error: 'Aucune question disponible pour cette compÃ©tition Ã  votre niveau.' };
     }
 
-    await Enrollement.findByIdAndUpdate(enrollmentId, { $inc: { parties: 1 } });
+    const enrollementData = (await Enrollement.findByIdAndUpdate(enrollmentId, { $inc: { parties: 1 } }, { new: true }))?.toObject();
 
     const partie = await Partie.create({
       playerId: player._id,
@@ -355,6 +357,7 @@ export async function startMatchPartieAction(enrollmentId: string) {
         notes: 0,
         playerId: player._id.toString(),
         mode: 'VIP',
+        parties : (enrollementData?.maxParties || 0) - (enrollementData?.parties || 0)
       } as PartieActiveData,
     };
   } catch (error: any) {
@@ -398,7 +401,7 @@ export async function submitReponseAction(
  * Termine la partie et met Ã  jour les mÃ©triques du joueur.
  * GÃ¨re la progression de niveau.
  */
-export async function terminerPartieAction(partieId: string) {
+export async function terminerPartieAction(partieId: string, credits: number) {
   try {
     await connectToDb();
     const partie = await Partie.findById(partieId).lean();
@@ -450,10 +453,9 @@ export async function terminerPartieAction(partieId: string) {
       ).lean();
 
       if (partie.mode === 'VIP' && allCorrect && enrollment?.equipeId) {
-        equipeCredit = 200000;
         await Equipe.findByIdAndUpdate(enrollment.equipeId, {
           $inc: {
-            'metriques.soldeUsd': equipeCredit,
+            'metriques.soldeUsd': credits,
             'metriques.matchsWin': 1,
           },
         });

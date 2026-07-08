@@ -47,7 +47,7 @@ export default async function ParcoursDetailPage({
   }
 
   const faqData = {
-    url: parcours?.ressource || 'https://katalog.mikanda.info/pmb/opac_css/index.php',
+    url: parcours?.ressource || 'http://livre21.com/LIVREF/F13/F013085.pdf',
     categories: parcours?.categories?.map((cat: any) => ({id: cat?.slug, quest: cat?.designation, ans: cat?.description})) || []
   }
 

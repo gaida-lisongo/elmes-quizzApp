@@ -25,12 +25,18 @@ export default function VipMatchs() {
 
   useEffect(() => { load(); }, []);
 
-  const handleStart = async (enrollmentId: string) => {
+  const handleStart = async (enrollmentId: string, amount: number) => {
     setStarting(enrollmentId);
     try {
       const res = await startMatchPartieAction(enrollmentId);
       if (res.success && res.data) {
-        setPartie(res.data);
+        setPartie({...res.data, credits: amount});
+        // Mettre à jour les parties restantes dans la liste des enrollments
+        setEnrollments(prev => prev.map(enr => 
+          enr._id === enrollmentId 
+            ? { ...enr, parties: (enr.parties || 0) + 1 }
+            : enr
+        ));
       } else {
         toast.error(res.error || "Impossible de démarrer.");
       }
@@ -45,8 +51,14 @@ export default function VipMatchs() {
     return (
       <GamePlayer
         partie={partie}
-        onFinish={() => {}}
-        onCancel={() => setPartie(null)}
+        onFinish={() => {
+          setPartie(null);
+          load(); // Recharger les enrollments pour mettre à jour les parties restantes
+        }}
+        onCancel={() => {
+          setPartie(null);
+          load(); // Recharger même si annulé (la partie a été comptée)
+        }}
       />
     );
   }
@@ -94,8 +106,8 @@ export default function VipMatchs() {
               return (
                 <button
                   key={enr._id}
-                  onClick={() => handleStart(enr._id)}
-                  disabled={starting === enr._id}
+                  onClick={() => (enr?.maxParties || 0) - (enr.parties || 0) > 0 ? handleStart(enr._id, competition?.cagnote / (enr?.maxParties || 1)) : console.log("Vous n'avez plus assez de parties")}
+                  disabled={starting === enr._id && (enr?.maxParties || 0) - (enr.parties || 0) > 0}
                   className="group flex items-center gap-3 rounded-xl border border-stroke bg-white p-4 text-left transition-all hover:border-primary hover:shadow-md dark:border-strokedark dark:bg-blacksection disabled:opacity-50"
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-500/10">
@@ -104,7 +116,7 @@ export default function VipMatchs() {
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-black dark:text-white truncate">{competition.designation || "Compétition"}</p>
                     <p className="text-xs text-waterloo">
-                      {session.designation || "Session"} — {enr.parties || 0} parties jouées
+                      {session.designation || "Session"} — {(enr?.maxParties || 0) - (enr.parties || 0)} parties restantes
                     </p>
                   </div>
                   {starting === enr._id ? (

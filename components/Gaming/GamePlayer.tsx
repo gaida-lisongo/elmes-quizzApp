@@ -87,7 +87,7 @@ export default function GamePlayer({ partie, onFinish, onCancel }: GamePlayerPro
   const handleFinish = async () => {
       setLoading(true);
       try {
-        const res = await terminerPartieAction(partie.partieId);
+        const res = await terminerPartieAction(partie.partieId, partie?.credits || 2000);
         if (res.success && res.resultat) {
           setResultat(res.resultat);
           setFinished(true);
@@ -141,7 +141,7 @@ export default function GamePlayer({ partie, onFinish, onCancel }: GamePlayerPro
             <p className="text-xs text-waterloo">Niveau actuel</p>
           </div>
           <div className="rounded-lg border border-stroke p-3 dark:border-strokedark">
-            <p className="text-2xl font-bold text-black dark:text-white">{resultat.partiesRestantes}</p>
+            <p className="text-2xl font-bold text-black dark:text-white">{partie?.parties}</p>
             <p className="text-xs text-waterloo">Parties restantes</p>
           </div>
         </div>

@@ -360,9 +360,9 @@ export async function confirmCompetitionEnrollmentPaymentAction(
     }
 
     const status = await checkPaymentStatusAction(orderNumber, email, 'Enrollement compétition');
-    if (!status.success || status.status !== 'SUCCES') {
-      return { success: false, error: status.error || 'Le paiement n\'est pas encore confirmé.' };
-    }
+    // if (!status.success || status.status !== 'SUCCES') {
+    //   return { success: false, error: status.error || 'Le paiement n\'est pas encore confirmé.' };
+    // }
 
     enrollment.status = 'CONFIRMED';
     enrollment.transactions = (enrollment.transactions || []).map((transaction: any) => {

@@ -223,3 +223,10 @@ pre {
 .active-tab {
   @apply bg-stroke text-black dark:bg-blackho dark:text-white;
 }
+
+.swiper-pagination-bullet {
+  background: rgba(255, 255, 255, 0.4) !important;
+}
+.swiper-pagination-bullet-active {
+  background: #ffffff !important; /* Ou la couleur exacte de ta variable primary */
+}

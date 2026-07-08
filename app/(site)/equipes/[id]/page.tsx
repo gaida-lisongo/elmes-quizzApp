@@ -175,8 +175,8 @@ export default async function EquipeDetailPage({ params }: { params: Promise<{ i
                             <p className="font-semibold text-black dark:text-white">{competition?.cagnotte || 0}</p>
                           </div>
                           <div>
-                            <p className="text-xs text-waterloo">Code</p>
-                            <p className="truncate font-mono text-xs font-semibold text-primary">{enrollement.code}</p>
+                            <p className="text-xs text-waterloo">Recettes</p>
+                            <p className="truncate font-mono text-xs font-semibold text-primary">{(equipe.metriques?.matchsWin || 0) * (competition?.cagnotte || 0) / (enrollement.maxParties || 1)} CDF</p>
                           </div>
                         </div>
                       </article>
