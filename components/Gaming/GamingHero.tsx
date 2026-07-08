@@ -50,7 +50,7 @@ export default function GamingHero({
       </div>
 
       <div className="relative z-1 mx-auto max-w-c-1390 px-4 md:px-8 2xl:px-0">
-        <div className={`grid gap-10 lg:grid-cols-${image ? '2' : '1'} lg:gap-15`}>
+        <div className={`grid gap-10 ${image ? 'lg:grid-cols-2' : 'lg:grid-cols-1'} lg:gap-15`}>
           {image ? <motion.div
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
@@ -62,13 +62,15 @@ export default function GamingHero({
               <span className="text-white/80">ELMES-QUIZ</span>
             </div>
             <h1 className="mb-6 text-4xl font-bold text-white xl:text-hero">{designation}</h1>
-            <Image
-              fill
-              src={image}
-              alt={designation}
-              className="rounded-full"
-            />
-          </motion.div> :  null}
+            <div className="relative aspect-square w-full max-w-md overflow-hidden rounded-3xl">
+              <Image
+                fill
+                src={image}
+                alt={designation}
+                className="object-cover"
+              />
+            </div>
+          </motion.div> : null}
 
           <motion.div
             initial={{ opacity: 0, x: 40 }}
