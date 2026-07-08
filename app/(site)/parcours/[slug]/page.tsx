@@ -1,6 +1,6 @@
 import { getParcoursBySlug } from "@/actions/parcours.actions";
 import { getClassementByRessourceAction, getCriteresForRessourceAction } from "@/actions/classement.actions";
-import { getCurrentPlayerInfoAction } from "@/actions/enrollment.actions";
+import { getCurrentPlayerInfoAction, getSessionsByRessourceAction } from "@/actions/enrollment.actions";
 import GamingPage from "@/components/Gaming";
 import { notFound } from "next/navigation";
 
@@ -17,11 +17,13 @@ export default async function ParcoursDetailPage({
   }
 
   const parcours = res.parcours;
+  console.log("Details of parcours : ", parcours)
 
-  const [classementRes, criteresRes, playerInfoRes] = await Promise.all([
+  const [classementRes, criteresRes, playerInfoRes, sessionsRes] = await Promise.all([
     getClassementByRessourceAction('Parcours', parcours._id),
     getCriteresForRessourceAction('Parcours', parcours._id),
     getCurrentPlayerInfoAction(),
+    getSessionsByRessourceAction('Parcours', parcours._id),
   ]);
 
   const aboutData = {
@@ -55,7 +57,7 @@ export default async function ParcoursDetailPage({
     title: canEnroll
       ? "Vous pouvez vous inscrire à ce parcours et tenter de remporter la couronne du mois"
       : parcours?.status === 'ACTIVE'
-        ? "Ce parcours nécessite un profil ADVANCED ou VIP pour s'inscrire"
+        ? "Ce parcours nécessite un profil ADVANCED pour s'inscrire"
         : parcours?.status === 'INACTIVE'
           ? "Ce parcours est actuellement indisponible"
           : "Les inscriptions ne sont plus disponibles",
@@ -76,7 +78,8 @@ export default async function ParcoursDetailPage({
       targetName={parcours.designation}
       criteres={criteresRes.success ? criteresRes.criteres : []}
       classementData={classementRes.success ? classementRes.classement : []}
-      enrollmentInfo={playerInfoRes.success && playerInfoRes.player ? { type: 'player' as const, _id: playerInfoRes.player._id, pseudo: playerInfoRes.player.pseudo, level: playerInfoRes.player.level } : null}
+      sessions={sessionsRes.success ? sessionsRes.sessions : []}
+      enrollmentInfo={playerInfoRes.success && playerInfoRes.player ? { type: 'player' as const, _id: playerInfoRes.player._id, pseudo: playerInfoRes.player.pseudo, level: playerInfoRes.player.level, telephone: playerInfoRes.player.telephone, email: playerInfoRes.player.email } : null}
     />
   );
 }

@@ -10,7 +10,8 @@ interface ParcoursItem {
   _id: string;
   designation: string;
   description: string;
-  categories: { _id: string; designation: string; slug: string }[];
+  ressources: string;
+  categories: { _id: string; designation: string; description: string; slug: string }[];
   questions: number;
   image?: string;
   slug: string;

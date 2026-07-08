@@ -1,6 +1,6 @@
 import { getCompetitionBySlug } from "@/actions/competitions.actions";
 import { getClassementByRessourceAction, getCriteresForRessourceAction } from "@/actions/classement.actions";
-import { getCurrentEquipeInfoAction } from "@/actions/enrollment.actions";
+import { getCurrentEquipeInfoAction, getSessionsByRessourceAction } from "@/actions/enrollment.actions";
 import GamingPage from "@/components/Gaming";
 import { notFound } from "next/navigation";
 
@@ -18,10 +18,11 @@ export default async function CompetitionDetailPage({
 
   const competition = res.competition;
 
-  const [classementRes, criteresRes, equipeInfoRes] = await Promise.all([
+  const [classementRes, criteresRes, equipeInfoRes, sessionsRes] = await Promise.all([
     getClassementByRessourceAction('Competition', competition._id),
     getCriteresForRessourceAction('Competition', competition._id),
     getCurrentEquipeInfoAction(),
+    getSessionsByRessourceAction('Competition', competition._id),
   ]);
 
   const aboutData = {
@@ -76,6 +77,7 @@ export default async function CompetitionDetailPage({
       targetName={competition.designation}
       criteres={criteresRes.success ? criteresRes.criteres : []}
       classementData={classementRes.success ? classementRes.classement : []}
+      sessions={sessionsRes.success ? sessionsRes.sessions : []}
       enrollmentInfo={equipeInfoRes.success && equipeInfoRes.equipe ? { type: 'equipe', ...equipeInfoRes.equipe } : null}
     />
   );

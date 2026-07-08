@@ -12,7 +12,7 @@ export async function getParcoursPublic() {
   try {
     await connectToDb();
     const parcours = await Parcours.find({ status: 'ACTIVE' })
-      .populate('categories', 'designation slug')
+      .populate('categories', 'designation slug description')
       .sort({ createdAt: -1 })
       .lean();
     return { success: true, parcours: JSON.parse(JSON.stringify(parcours)) };
@@ -32,7 +32,7 @@ export async function getAllParcours() {
     }
     await connectToDb();
     const parcours = await Parcours.find()
-      .populate('categories', 'designation slug')
+      .populate('categories', 'designation slug description')
       .sort({ createdAt: -1 })
       .lean();
     return { success: true, parcours: JSON.parse(JSON.stringify(parcours)) };
@@ -48,7 +48,7 @@ export async function getParcoursBySlug(slug: string) {
   try {
     await connectToDb();
     const parcours = await Parcours.findOne({ slug })
-      .populate('categories', 'designation slug')
+      .populate('categories', 'designation slug description')
       .lean();
     if (!parcours) return { success: false, error: 'Parcours introuvable' };
     return { success: true, parcours: JSON.parse(JSON.stringify(parcours)) };
@@ -63,6 +63,7 @@ export async function getParcoursBySlug(slug: string) {
 export async function createParcours(data: {
   designation: string;
   description: string;
+  ressoursces?: string;
   categories: string[];
   questions: number;
   image?: string;
@@ -77,6 +78,7 @@ export async function createParcours(data: {
     const parcours = await Parcours.create({
       designation: data.designation,
       description: data.description,
+      ressources: data.ressoursces || '',
       categories: data.categories,
       questions: data.questions || 1,
       image: data.image || '',
@@ -95,6 +97,7 @@ export async function createParcours(data: {
 export async function updateParcours(id: string, data: {
   designation?: string;
   description?: string;
+  ressources?: string;
   categories?: string[];
   questions?: number;
   image?: string;
@@ -108,7 +111,7 @@ export async function updateParcours(id: string, data: {
     }
     await connectToDb();
     const parcours = await Parcours.findByIdAndUpdate(id, data, { new: true })
-      .populate('categories', 'designation slug')
+      .populate('categories', 'designation slug description')
       .lean();
     if (!parcours) return { success: false, error: 'Parcours introuvable' };
     return { success: true, parcours: JSON.parse(JSON.stringify(parcours)) };
@@ -140,7 +143,7 @@ export async function deleteParcours(id: string) {
 export async function getCategoriesForForm() {
   try {
     await connectToDb();
-    const categories = await Categorie.find({ status: true }).select('designation slug').lean();
+    const categories = await Categorie.find({ status: true }).select('designation slug description').lean();
     return { success: true, categories: JSON.parse(JSON.stringify(categories)) };
   } catch (error: any) {
     return { success: false, error: error.message };

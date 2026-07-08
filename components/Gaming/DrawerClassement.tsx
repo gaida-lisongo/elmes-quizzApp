@@ -20,6 +20,10 @@ interface ClassementItem {
 interface DrawerClassementProps {
   open: boolean;
   onClose: () => void;
+  type?: "Parcours" | "Competition";
+  targetId?: string;
+  sessionId?: string;
+  title?: string;
 }
 
 const rankIcons = [
@@ -36,14 +40,14 @@ const rankColors = [
   "border-stroke bg-white dark:bg-blacksection",
 ];
 
-export default function DrawerClassement({ open, onClose }: DrawerClassementProps) {
+export default function DrawerClassement({ open, onClose, type, targetId, sessionId, title }: DrawerClassementProps) {
   const [classement, setClassement] = useState<ClassementItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!open) return;
     setLoading(true);
-    getClassementAction()
+    getClassementAction(type, targetId, sessionId)
       .then((res) => {
         if (res.success && res.classement) {
           setClassement(res.classement);
@@ -51,7 +55,7 @@ export default function DrawerClassement({ open, onClose }: DrawerClassementProp
       })
       .catch(console.error)
       .finally(() => setLoading(false));
-  }, [open]);
+  }, [open, type, targetId, sessionId]);
 
   return (
     <AnimatePresence>
@@ -79,7 +83,7 @@ export default function DrawerClassement({ open, onClose }: DrawerClassementProp
                   <h3 className="text-lg font-bold text-black dark:text-white">
                     Classement
                   </h3>
-                  <p className="text-xs text-waterloo">Top 5 des meilleurs joueurs</p>
+                  <p className="text-xs text-waterloo">{title || "Top des enrollements confirmés"}</p>
                 </div>
               </div>
               <button
@@ -132,7 +136,7 @@ export default function DrawerClassement({ open, onClose }: DrawerClassementProp
                             {item.pseudo}
                           </p>
                           <p className="text-xs text-waterloo">
-                            Niveau {item.level} · {item.type}
+                            {item.type === "Competition" ? "Equipe" : `Niveau ${item.level}`} · {item.type}
                           </p>
                         </div>
                       </div>

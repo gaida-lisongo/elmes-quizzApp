@@ -11,7 +11,7 @@ import { motion } from "framer-motion";
 import SingleTestimonial from "./SingleTestimonial";
 import { testimonialData } from "./testimonialData";
 
-const Testimonial = ({title, subtitle, description, data}: {title: string, subtitle: string, description: string, data: any[]}) => {
+const Testimonial = ({title, subtitle, description, data, onItemClick}: {title: string, subtitle: string, description: string, data: any[], onItemClick?: (item: any) => void}) => {
   return (
     <>
       <section>
@@ -74,7 +74,7 @@ const Testimonial = ({title, subtitle, description, data}: {title: string, subti
             >
               {(data?.length > 0 ? data : testimonialData).map((review) => (
                 <SwiperSlide key={review?.id}>
-                  <SingleTestimonial review={review} />
+                  <SingleTestimonial review={review} onClick={onItemClick ? () => onItemClick(review) : undefined} />
                 </SwiperSlide>
               ))}
             </Swiper>

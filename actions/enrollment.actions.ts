@@ -7,6 +7,8 @@ import EnrollementModule from "@/lib/models/Enrollement";
 import Partie from "@/lib/models/Partie";
 import Player from "@/lib/models/Player";
 import Equipe from "@/lib/models/Equipe";
+import { initiatePaymentAction, checkPaymentStatusAction } from "@/actions/payment.actions";
+import { randomUUID } from "crypto";
 
 const { Enrollement, Session } = EnrollementModule;
 
@@ -17,12 +19,16 @@ export interface PlayerInfo {
   type: 'STANDALONE' | 'ADVANCED' | 'VIP';
   level: number;
   pseudo: string;
+  telephone?: string;
+  email?: string;
 }
 
 export interface EquipeInfo {
   _id: string;
   designation: string;
   chefId: string;
+  telephone?: string;
+  email?: string;
 }
 
 /**
@@ -42,11 +48,11 @@ export async function getCurrentPlayerInfoAction(): Promise<{
     const player = await Player.findOne({
       userId: new mongoose.Types.ObjectId(userSession.userId),
     })
-      .populate<{ userId: { pseudo: string } }>('userId', 'pseudo')
+      .populate<{ userId: { pseudo: string; telephone?: string; email?: string } }>('userId', 'pseudo telephone email')
       .lean();
 
     if (!player) return { success: true };
-    if (player.type !== 'ADVANCED' && player.type !== 'VIP') {
+    if (player.type !== 'ADVANCED') {
       return { success: true };
     }
 
@@ -59,6 +65,8 @@ export async function getCurrentPlayerInfoAction(): Promise<{
         type: player.type,
         level: player.level,
         pseudo,
+        telephone: (player.userId as any)?.telephone || '',
+        email: (player.userId as any)?.email || '',
       },
     };
   } catch (error: any) {
@@ -82,7 +90,7 @@ export async function getCurrentEquipeInfoAction(): Promise<{
     await connectToDb();
     const player = await Player.findOne({
       userId: new mongoose.Types.ObjectId(userSession.userId),
-    }).lean();
+    }).populate('userId', 'telephone email').lean();
 
     if (!player) return { success: true };
     if (player.type !== 'VIP') return { success: true };
@@ -99,6 +107,8 @@ export async function getCurrentEquipeInfoAction(): Promise<{
         _id: equipe._id.toString(),
         designation: equipe.designation,
         chefId: equipe.chefId.toString(),
+        telephone: (player.userId as any)?.telephone || '',
+        email: (player.userId as any)?.email || '',
       },
     };
   } catch (error: any) {
@@ -133,6 +143,35 @@ export async function getActiveSessionsAction() {
  * Inscription d'un joueur ADVANCED à un parcours
  * Le joueur est résolu automatiquement depuis la session connectée.
  */
+export async function getSessionsByRessourceAction(
+  type: 'Parcours' | 'Competition',
+  refId: string,
+  activeOnly = false,
+) {
+  try {
+    await connectToDb();
+    const now = new Date();
+    const sessions = await Session.find({
+      ...(activeOnly ? { endDate: { $gte: now } } : {}),
+      ressources: {
+        $elemMatch: {
+          type,
+          refId: new mongoose.Types.ObjectId(refId),
+        },
+      },
+    })
+      .sort({ startDate: 1 })
+      .lean();
+
+    return {
+      success: true,
+      sessions: JSON.parse(JSON.stringify(sessions)),
+    };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
 export async function enrollToParcoursAction(
   parcoursId: string,
   sessionId: string,
@@ -146,8 +185,8 @@ export async function enrollToParcoursAction(
     // Résoudre le Player depuis le userId de la session
     const player = await Player.findOne({ userId: new mongoose.Types.ObjectId(userSession.userId) }).lean();
     if (!player) return { success: false, error: 'Profil joueur introuvable' };
-    if (player.type !== 'ADVANCED' && player.type !== 'VIP') {
-      return { success: false, error: 'Seuls les profils ADVANCED et VIP peuvent s\'inscrire à un parcours' };
+    if (player.type !== 'ADVANCED') {
+      return { success: false, error: 'Seuls les profils ADVANCED peuvent s\'inscrire à un parcours' };
     }
 
     const playerId = player._id.toString();
@@ -165,7 +204,7 @@ export async function enrollToParcoursAction(
     }
 
     // Générer un code unique
-    const code = `ENR-${Date.now()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+    const code = randomUUID();
     const orderNumber = `ORD-${Date.now()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
 
     const enrollment = await Enrollement.create({
@@ -175,6 +214,8 @@ export async function enrollToParcoursAction(
       code,
       orderNumber,
       status: 'CONFIRMED',
+      maxParties: 100,
+      points: 0,
       parties: 0,
       transactions: [],
     });
@@ -197,6 +238,12 @@ export async function enrollToParcoursAction(
 export async function enrollToCompetitionAction(
   competitionId: string,
   sessionId: string,
+  payment: {
+    phone: string;
+    email?: string;
+    currency: 'CDF' | 'USD';
+    amount: number;
+  },
 ) {
   try {
     const userSession = await getSession();
@@ -233,9 +280,32 @@ export async function enrollToCompetitionAction(
       return { success: false, error: 'Votre équipe est déjà inscrite à cette compétition' };
     }
 
-    // Générer un code unique
-    const code = `ENR-${Date.now()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-    const orderNumber = `ORD-${Date.now()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+    if (!payment?.phone?.trim()) {
+      return { success: false, error: 'Le numéro Mobile Money est requis' };
+    }
+
+    const paymentRes = await initiatePaymentAction(
+      player._id.toString(),
+      payment.phone.trim(),
+      payment.amount,
+      payment.currency,
+      {
+        id: competitionId,
+        name: 'Enrollement compétition',
+        amountCDF: 14250,
+        amountUSD: 5,
+        type: 'COMPETITION',
+        metadata: { competitionId, sessionId, equipeId },
+      },
+      payment.email?.trim(),
+    );
+
+    if (!paymentRes.success || !paymentRes.orderNumber) {
+      return { success: false, error: paymentRes.error || 'Échec de l\'initiation du paiement' };
+    }
+
+    const code = randomUUID();
+    const orderNumber = paymentRes.orderNumber;
 
     const enrollment = await Enrollement.create({
       equipeId: new mongoose.Types.ObjectId(equipeId),
@@ -244,8 +314,16 @@ export async function enrollToCompetitionAction(
       code,
       orderNumber,
       status: 'PENDING',
+      maxParties: 250,
+      points: 0,
       parties: 0,
-      transactions: [],
+      transactions: [{
+        membre: player._id,
+        montant: payment.amount,
+        status: 'PENDING',
+        orderNumber,
+        phone: payment.phone.trim(),
+      }],
     });
 
     return {
@@ -264,9 +342,92 @@ export async function enrollToCompetitionAction(
  * Récupère le top 5 des joueurs pour un parcours / compétition.
  * Agrège les parties (Partie) par joueur et calcule le score total.
  */
-export async function getClassementAction() {
+export async function confirmCompetitionEnrollmentPaymentAction(
+  enrollmentId: string,
+  orderNumber: string,
+  email?: string,
+) {
+  try {
+    const userSession = await getSession();
+    if (!userSession) return { success: false, error: 'Non connecté' };
+
+    await connectToDb();
+
+    const enrollment = await Enrollement.findById(enrollmentId);
+    if (!enrollment) return { success: false, error: 'Enrollement introuvable' };
+    if (enrollment.orderNumber !== orderNumber) {
+      return { success: false, error: 'Commande invalide pour cet enrollement' };
+    }
+
+    const status = await checkPaymentStatusAction(orderNumber, email, 'Enrollement compétition');
+    if (!status.success || status.status !== 'SUCCES') {
+      return { success: false, error: status.error || 'Le paiement n\'est pas encore confirmé.' };
+    }
+
+    enrollment.status = 'CONFIRMED';
+    enrollment.transactions = (enrollment.transactions || []).map((transaction: any) => {
+      if (transaction.orderNumber === orderNumber) transaction.status = 'PAID';
+      return transaction;
+    });
+    await enrollment.save();
+
+    return {
+      success: true,
+      code: enrollment.code,
+      enrollment: JSON.parse(JSON.stringify(enrollment)),
+    };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+export async function getClassementAction(
+  type?: 'Parcours' | 'Competition',
+  refId?: string,
+  sessionId?: string,
+) {
   try {
     await connectToDb();
+
+    if (type && refId) {
+      const filter: any = { status: 'CONFIRMED' };
+      if (type === 'Parcours') filter.parcoursId = new mongoose.Types.ObjectId(refId);
+      if (type === 'Competition') filter.competitionId = new mongoose.Types.ObjectId(refId);
+      if (sessionId) filter.sessionId = new mongoose.Types.ObjectId(sessionId);
+
+      const enrollements = await Enrollement.find(filter)
+        .populate('sessionId', 'designation startDate endDate')
+        .populate({
+          path: 'playerId',
+          populate: { path: 'userId', select: 'pseudo telephone photo' },
+        })
+        .populate('equipeId', 'designation logo')
+        .sort({ points: -1, updatedAt: 1 })
+        .limit(20)
+        .lean();
+
+      const classement = enrollements.map((item: any) => ({
+        _id: item._id.toString(),
+        totalScore: item.points || 0,
+        partiesJouees: item.parties || 0,
+        meilleurScore: item.points || 0,
+        pseudo: type === 'Competition'
+          ? item.equipeId?.designation || 'Équipe'
+          : item.playerId?.userId?.pseudo || 'Joueur',
+        photo: type === 'Competition' ? item.equipeId?.logo : item.playerId?.userId?.photo,
+        telephone: item.playerId?.userId?.telephone || '',
+        type,
+        level: item.playerId?.level || 0,
+        code: item.code,
+        session: item.sessionId,
+        maxParties: item.maxParties || 0,
+      }));
+
+      return {
+        success: true,
+        classement: JSON.parse(JSON.stringify(classement)),
+      };
+    }
 
     const topPlayers = await Partie.aggregate([
       { $match: { status: 'TERMINE' } },

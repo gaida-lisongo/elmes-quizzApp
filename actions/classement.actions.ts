@@ -37,6 +37,12 @@ export async function getClassementByRessourceAction(
       ...(ressource === 'Competition' ? { competitionId: new mongoose.Types.ObjectId(ressourceId) } : { parcoursId: new mongoose.Types.ObjectId(ressourceId) }),
       status: 'CONFIRMED',
     })
+      .populate('sessionId', 'designation startDate endDate')
+      .populate({
+        path: 'playerId',
+        populate: { path: 'userId', select: 'pseudo telephone photo' },
+      })
+      .populate('equipeId', 'designation logo')
       .sort({ points: -1 })
       .lean();
 
@@ -63,12 +69,19 @@ export async function getClassementByRessourceAction(
 
       return {
         id: enr._id.toString(),
-        name: enr.code || enr.orderNumber || `Enr. ${enr._id.toString().slice(-6)}`,
-        image: '/images/user/user-01.png',
+        name: ressource === 'Competition'
+          ? enr.equipeId?.designation || 'Équipe'
+          : enr.playerId?.userId?.pseudo || 'Joueur',
+        image: ressource === 'Competition'
+          ? enr.equipeId?.logo || '/images/user/user-01.png'
+          : enr.playerId?.userId?.photo || '/images/user/user-01.png',
         designation: `${badge} ${rank} · ${enr.points || 0} pts`,
-        content: `Code: ${enr.code || '—'} · ${enr.parties || 0} partie(s) · ${enr.status}`,
+        content: `${enr.sessionId?.designation || 'Session'} · ${enr.parties || 0}/${enr.maxParties || 0} partie(s)`,
         rank: rank !== '-' ? parseInt(rank.replace('#', '')) : 999,
         points: enr.points || 0,
+        session: enr.sessionId,
+        parties: enr.parties || 0,
+        maxParties: enr.maxParties || 0,
       };
     });
 

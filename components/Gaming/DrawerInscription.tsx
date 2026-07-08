@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Loader2, CheckCircle, AlertCircle, Calendar, User, Users, Target, ChevronRight, ArrowLeft } from "lucide-react";
-import { getActiveSessionsAction, enrollToParcoursAction, enrollToCompetitionAction } from "@/actions/enrollment.actions";
+import { X, Loader2, CheckCircle, AlertCircle, Calendar, User, Users, Target, ChevronRight, ArrowLeft, DollarSign } from "lucide-react";
+import { getSessionsByRessourceAction, enrollToParcoursAction, enrollToCompetitionAction, confirmCompetitionEnrollmentPaymentAction } from "@/actions/enrollment.actions";
 import type { EnrollmentInfo } from "./index";
 
 interface ISessionItem {
@@ -23,7 +23,9 @@ interface DrawerInscriptionProps {
   enrollmentInfo: EnrollmentInfo;
 }
 
-type Step = "sessions" | "confirm" | "processing" | "success" | "error";
+type Step = "sessions" | "confirm" | "payment" | "processing" | "success" | "error";
+
+const TAUX = Number(process.env.NEXT_PUBLIC_TAUX) || 2850;
 
 export default function DrawerInscription({
   open,
@@ -38,6 +40,12 @@ export default function DrawerInscription({
   const [loading, setLoading] = useState(true);
   const [step, setStep] = useState<Step>("sessions");
   const [errorMsg, setErrorMsg] = useState("");
+  const [phone, setPhone] = useState(enrollmentInfo.telephone || "");
+  const [email, setEmail] = useState(enrollmentInfo.email || "");
+  const [currency, setCurrency] = useState<"USD" | "CDF">("USD");
+  const [orderNumber, setOrderNumber] = useState("");
+  const [enrollmentId, setEnrollmentId] = useState("");
+  const [uniqueCode, setUniqueCode] = useState("");
 
   // Charger les sessions disponibles
   useEffect(() => {
@@ -47,7 +55,13 @@ export default function DrawerInscription({
     setSelectedSession(null);
     setErrorMsg("");
 
-    getActiveSessionsAction()
+    setPhone(enrollmentInfo.telephone || "");
+    setEmail(enrollmentInfo.email || "");
+    setOrderNumber("");
+    setEnrollmentId("");
+    setUniqueCode("");
+
+    getSessionsByRessourceAction(type === "parcours" ? "Parcours" : "Competition", targetId, true)
       .then((res) => {
         if (res.success && res.sessions) {
           setSessions(res.sessions);
@@ -57,7 +71,7 @@ export default function DrawerInscription({
       })
       .catch(() => setErrorMsg("Erreur lors du chargement des sessions"))
       .finally(() => setLoading(false));
-  }, [open]);
+  }, [open, type, targetId, enrollmentInfo.telephone, enrollmentInfo.email]);
 
   // Vérifier les prérequis (déjà validés côté serveur, mais double-check)
   const canEnroll = () => {
@@ -80,14 +94,16 @@ export default function DrawerInscription({
 
   const handleConfirm = async () => {
     if (!selectedSession) return;
+    if (type === "competition") {
+      setStep("payment");
+      return;
+    }
+
     setStep("processing");
     setErrorMsg("");
 
     try {
-      const res =
-        type === "parcours"
-          ? await enrollToParcoursAction(targetId, selectedSession._id)
-          : await enrollToCompetitionAction(targetId, selectedSession._id);
+      const res = await enrollToParcoursAction(targetId, selectedSession._id);
 
       if (!res.success) {
         setErrorMsg(res.error || "Échec de l'inscription");
@@ -95,11 +111,58 @@ export default function DrawerInscription({
         return;
       }
 
+      setUniqueCode(res.enrollment?.code || "");
       setStep("success");
     } catch (err: any) {
       setErrorMsg(err.message || "Une erreur est survenue");
       setStep("error");
     }
+  };
+
+  const handlePayCompetition = async () => {
+    if (!selectedSession) return;
+    if (!phone.trim()) {
+      setErrorMsg("Le numéro Mobile Money est requis.");
+      return;
+    }
+
+    setStep("processing");
+    setErrorMsg("");
+
+    const amount = currency === "USD" ? 5 : 5 * TAUX;
+    const res = await enrollToCompetitionAction(targetId, selectedSession._id, {
+      phone,
+      email,
+      currency,
+      amount,
+    });
+
+    if (!res.success || !res.enrollment || !res.orderNumber) {
+      setErrorMsg(res.error || "Échec de l'initiation du paiement");
+      setStep("error");
+      return;
+    }
+
+    setEnrollmentId(res.enrollment._id);
+    setOrderNumber(res.orderNumber);
+    setStep("payment");
+  };
+
+  const handleConfirmPayment = async () => {
+    if (!enrollmentId || !orderNumber) return;
+
+    setStep("processing");
+    setErrorMsg("");
+
+    const res = await confirmCompetitionEnrollmentPaymentAction(enrollmentId, orderNumber, email);
+    if (!res.success) {
+      setErrorMsg(res.error || "Le paiement n'est pas encore confirmé.");
+      setStep("payment");
+      return;
+    }
+
+    setUniqueCode(res.code || "");
+    setStep("success");
   };
 
   // Formater une date
@@ -156,12 +219,16 @@ export default function DrawerInscription({
             {/* Body */}
             <div className="p-6">
               {/* Stepper */}
-              {["sessions", "confirm"].includes(step) && (
+              {["sessions", "confirm", "payment"].includes(step) && (
                 <div className="mb-6 flex items-center gap-2">
-                  {[
+                  {(type === "competition" ? [
                     { key: "sessions", num: 1, label: "Session" },
                     { key: "confirm", num: 2, label: "Confirmer" },
-                  ].map((s, i) => (
+                    { key: "payment", num: 3, label: "Paiement" },
+                  ] : [
+                    { key: "sessions", num: 1, label: "Session" },
+                    { key: "confirm", num: 2, label: "Confirmer" },
+                  ]).map((s, i, steps) => (
                     <div key={s.key} className="flex items-center gap-2">
                       <div
                         className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${
@@ -172,10 +239,10 @@ export default function DrawerInscription({
                       >
                         {s.num}
                       </div>
-                      {i < 1 && (
+                      {i < steps.length - 1 && (
                         <div
                           className={`h-0.5 w-8 ${
-                            step === "confirm"
+                            steps.findIndex((item) => item.key === step) > i
                               ? "bg-meta"
                               : "bg-stroke dark:bg-strokedark"
                           }`}
@@ -330,6 +397,107 @@ export default function DrawerInscription({
                   </motion.div>
                 )}
 
+                {step === "payment" && selectedSession && (
+                  <motion.div
+                    key="payment"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="space-y-5"
+                  >
+                    <div className="flex items-center gap-2 text-waterloo">
+                      <DollarSign className="h-4 w-4" />
+                      <h4 className="font-medium text-black dark:text-white">Paiement de l'enrollement</h4>
+                    </div>
+
+                    <div className="rounded-xl border border-stroke p-4 dark:border-strokedark">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-waterloo">Montant</span>
+                        <span className="font-bold text-primary">$5</span>
+                      </div>
+                      <div className="mt-2 flex justify-between text-sm">
+                        <span className="text-waterloo">Equipe</span>
+                        <span className="font-medium text-black dark:text-white">{enrollmentInfo.designation}</span>
+                      </div>
+                      <div className="mt-2 flex justify-between text-sm">
+                        <span className="text-waterloo">Session</span>
+                        <span className="font-medium text-black dark:text-white">{selectedSession.designation}</span>
+                      </div>
+                      {orderNumber && (
+                        <div className="mt-2 flex justify-between text-sm">
+                          <span className="text-waterloo">Commande</span>
+                          <span className="font-medium text-primary">{orderNumber}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="mb-2 block text-sm font-medium text-black dark:text-white">Monnaie</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {(["USD", "CDF"] as const).map((item) => (
+                          <button
+                            key={item}
+                            onClick={() => setCurrency(item)}
+                            className={`rounded-xl border px-4 py-3 text-sm font-medium transition ${
+                              currency === item
+                                ? "border-primary bg-primary/10 text-primary"
+                                : "border-stroke text-waterloo hover:border-primary dark:border-strokedark"
+                            }`}
+                          >
+                            {item === "USD" ? "$5" : `${(5 * TAUX).toLocaleString("fr-FR")} FC`}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="mb-1.5 block text-sm font-medium text-black dark:text-white">Téléphone Mobile Money</label>
+                      <input
+                        type="tel"
+                        value={phone}
+                        onChange={(event) => setPhone(event.target.value)}
+                        placeholder="243XXXXXXXXX"
+                        className="w-full rounded-lg border border-stroke bg-white px-4 py-2.5 text-sm text-black outline-hidden transition focus:border-primary dark:border-strokedark dark:bg-black dark:text-white"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="mb-1.5 block text-sm font-medium text-black dark:text-white">Email de réception</label>
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
+                        placeholder="prenom.nom@email.com"
+                        className="w-full rounded-lg border border-stroke bg-white px-4 py-2.5 text-sm text-black outline-hidden transition focus:border-primary dark:border-strokedark dark:bg-black dark:text-white"
+                      />
+                    </div>
+
+                    {errorMsg && (
+                      <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600 dark:border-red-800 dark:bg-red-900/20">
+                        {errorMsg}
+                      </div>
+                    )}
+
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => {
+                          setStep("confirm");
+                          setErrorMsg("");
+                        }}
+                        className="flex items-center gap-2 rounded-xl border border-stroke px-6 py-3 text-sm text-black transition hover:bg-stroke dark:text-white dark:hover:bg-strokedark"
+                      >
+                        <ArrowLeft className="h-4 w-4" /> Retour
+                      </button>
+                      <button
+                        onClick={orderNumber ? handleConfirmPayment : handlePayCompetition}
+                        className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-3 font-medium text-white transition hover:bg-primaryho"
+                      >
+                        {orderNumber ? "Vérifier le paiement" : "Payer"} <ChevronRight className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+
                 {/* Processing */}
                 {step === "processing" && (
                   <motion.div
@@ -365,6 +533,12 @@ export default function DrawerInscription({
                     <p className="mt-2 text-sm text-waterloo">
                       Vous êtes maintenant inscrit{type === "parcours" ? " à ce parcours" : "e à cette compétition"}.
                     </p>
+                    {uniqueCode && (
+                      <div className="mt-4 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3">
+                        <p className="text-xs text-waterloo">Code unique</p>
+                        <p className="mt-1 break-all font-mono text-sm font-semibold text-primary">{uniqueCode}</p>
+                      </div>
+                    )}
                     <button
                       onClick={onClose}
                       className="mt-6 rounded-xl bg-primary px-6 py-3 font-medium text-white transition hover:bg-primaryho"

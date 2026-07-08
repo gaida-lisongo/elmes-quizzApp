@@ -17,6 +17,16 @@ export interface EnrollmentInfo {
   pseudo?: string;
   level?: number;
   chefId?: string;
+  telephone?: string;
+  email?: string;
+}
+
+export interface GamingSession {
+  _id: string;
+  slug: string;
+  designation: string;
+  startDate: string;
+  endDate: string;
 }
 
 interface GamingPageProps {
@@ -27,6 +37,7 @@ interface GamingPageProps {
   cta?: any;
   criteres?: any[];
   classementData?: any[];
+  sessions?: GamingSession[];
   children?: ReactNode;
   targetType?: "parcours" | "competition";
   targetId?: string;
@@ -42,6 +53,7 @@ export default function GamingPage({
   cta,
   criteres = [],
   classementData = [],
+  sessions = [],
   children,
   targetType,
   targetId,
@@ -50,6 +62,7 @@ export default function GamingPage({
 }: GamingPageProps) {
   const [drawerClassementOpen, setDrawerClassementOpen] = useState(false);
   const [drawerInscriptionOpen, setDrawerInscriptionOpen] = useState(false);
+  const [selectedClassementSession, setSelectedClassementSession] = useState<GamingSession | null>(null);
 
   const handleActionClick = useCallback(
     (action: { title: string; url: string }) => {
@@ -71,7 +84,12 @@ export default function GamingPage({
         designation={designation}
         description={description}
         criteres={criteres}
-        onShowClassement={() => setDrawerClassementOpen(true)}
+        classementData={classementData}
+        targetType={targetType}
+        onShowClassement={() => {
+          setSelectedClassementSession(null);
+          setDrawerClassementOpen(true);
+        }}
       />
 
       <div className="overflow-hidden pb-20 xl:pb-25">
@@ -84,14 +102,25 @@ export default function GamingPage({
           classement={cta?.classement}
           onActionClick={handleActionClick}
         />
-        {classementData.length > 0 && (
+        {sessions.length > 0 && (
           <section className="py-20 lg:py-25 xl:py-30">
             <div className="mx-auto max-w-c-1315 px-4 md:px-8 xl:px-0">
               <Testimonial
-                title={targetType === "competition" ? "Classement des meilleures équipes" : "Classement des meilleurs joueurs"}
-                subtitle={targetType === "competition" ? "Équipes en tête" : "Joueurs en tête"}
-                description="Les meilleurs performers classés selon leurs points."
-                data={classementData}
+                title="Sessions"
+                subtitle={targetType === "competition" ? "Sessions de la compétition" : "Sessions du parcours"}
+                description="Sélectionnez une session pour afficher son classement précis."
+                data={sessions.map((session) => ({
+                  id: session._id,
+                  name: session.designation,
+                  image: targetType === "competition" ? "/images/hero/player-0.jpg" : "/images/hero/player-1.jpg",
+                  designation: `${new Date(session.startDate).toLocaleDateString("fr-FR")} - ${new Date(session.endDate).toLocaleDateString("fr-FR")}`,
+                  content: "Voir le classement de cette session",
+                  raw: session,
+                }))}
+                onItemClick={(item) => {
+                  setSelectedClassementSession(item.raw);
+                  setDrawerClassementOpen(true);
+                }}
               />
             </div>
           </section>
@@ -107,6 +136,10 @@ export default function GamingPage({
       <DrawerClassement
         open={drawerClassementOpen}
         onClose={() => setDrawerClassementOpen(false)}
+        type={targetType === "competition" ? "Competition" : "Parcours"}
+        targetId={targetId}
+        sessionId={selectedClassementSession?._id}
+        title={selectedClassementSession?.designation}
       />
       {targetType && targetId && enrollmentInfo && (
         <DrawerInscription
