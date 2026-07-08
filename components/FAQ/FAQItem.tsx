@@ -8,6 +8,7 @@ type FaqData = {
 
 const FAQItem = ({ faqData }: { faqData: FaqData }) => {
   const { activeFaq, id, handleFaqToggle, quest, ans } = faqData;
+  console.log("FAQ data : ", faqData)
 
   return (
     <>
