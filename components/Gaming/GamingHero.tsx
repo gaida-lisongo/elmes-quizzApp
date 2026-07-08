@@ -59,9 +59,8 @@ export default function GamingHero({
           >
             <div className="mb-4 flex items-center gap-2 text-sm font-medium text-primary">
               <Trophy className="h-5 w-5" />
-              <span className="text-white/80">ELMES-QUIZ</span>
+              <h1 className="mb-6 text-4xl font-bold text-white xl:text-hero">{designation}</h1>
             </div>
-            <h1 className="mb-6 text-4xl font-bold text-white xl:text-hero">{designation}</h1>
             <div className="relative aspect-square w-full max-w-md overflow-hidden rounded-3xl">
               <Image
                 fill
