@@ -252,7 +252,7 @@ export default function VipDashboard() {
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-waterloo">{member.isSecretary ? 'Secrétaire' : member.status ? 'Membre' : 'Invité'}</span>
-                        {data.team.isCaptain && !member.isCurrentUser && member.status && (
+                        {(data?.team && data.team.isCaptain) && !member.isCurrentUser && member.status && (
                           <button
                             onClick={() => handleSecretary(member._id, member.isSecretary)}
                             disabled={actionLoading === `${member.isSecretary ? "UNSET_SECRETARY" : "SET_SECRETARY"}-${member._id}`}
