@@ -50,17 +50,18 @@ export default function GamingHero({
       </div>
 
       <div className="relative z-1 mx-auto max-w-c-1390 px-4 md:px-8 2xl:px-0">
-        <div className={`grid gap-10 ${image ? 'lg:grid-cols-2' : 'lg:grid-cols-1'} lg:gap-15`}>
+        <div className={`grid gap-6 ${image ? 'lg:grid-cols-2' : 'lg:grid-cols-1'} lg:gap-15`}>
           {image ? <motion.div
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
-            className="flex flex-col justify-center"
+            className="hidden flex-col justify-center lg:flex"
           >
             <div className="mb-4 flex items-center gap-2 text-sm font-medium text-primary">
               <Trophy className="h-5 w-5" />
-              <h1 className="mb-6 text-4xl font-bold text-white xl:text-hero">{designation}</h1>
+              <span className="text-white/80">ELMES-QUIZ</span>
             </div>
+            <h1 className="mb-6 text-4xl font-bold text-white xl:text-hero">{designation}</h1>
             <div className="relative aspect-square w-full max-w-md overflow-hidden rounded-3xl">
               <Image
                 fill
@@ -88,7 +89,7 @@ export default function GamingHero({
               </div>
 
               {podium.length === 0 ? (
-                <div className="py-8 text-center">
+                <div className="py-6 text-center lg:py-8">
                   <p className="text-sm text-white/70">Aucun enrollement confirme pour le moment.</p>
                   {activeCriteres.length > 0 && (
                     <p className="mt-2 text-xs text-white/45">
@@ -98,44 +99,44 @@ export default function GamingHero({
                 </div>
               ) : (
                 <Swiper
-                  spaceBetween={20}
+                  spaceBetween={12}
                   slidesPerView={1}
                   autoplay={{ delay: 4000, disableOnInteraction: false }}
                   pagination={{ clickable: true }}
                   modules={[Autoplay, Pagination]}
-                  className="pb-10"
+                  className="pb-8"
                 >
                   {podium.map((item, index) => (
                     <SwiperSlide key={item.id || item._id}>
-                      <div className="min-h-[290px] px-1">
-                        <div className="mb-5 flex items-center gap-4">
-                          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-white text-2xl font-bold text-primary">
+                      <div className="px-1">
+                        <div className="mb-4 flex items-center gap-3 lg:mb-5 lg:gap-4">
+                          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-lg font-bold text-primary lg:h-16 lg:w-16 lg:text-2xl">
                             #{index + 1}
                           </div>
-                          <div>
-                            <h3 className="text-2xl font-bold text-white">{item.name || item.pseudo}</h3>
-                            <p className="text-sm text-white/60">{item.session?.designation || item.content || "Session globale"}</p>
+                          <div className="min-w-0 flex-1">
+                            <h3 className="truncate text-lg font-bold text-white lg:text-2xl">{item.name || item.pseudo}</h3>
+                            <p className="truncate text-xs text-white/60 lg:text-sm">{item.session?.designation || item.content || "Session globale"}</p>
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-3 gap-3">
-                          <div className="rounded-lg border border-white/10 bg-white/10 p-4">
-                            <p className="text-xs text-white/55">Points</p>
-                            <p className="mt-1 text-2xl font-bold text-white">{item.points ?? item.totalScore ?? 0}</p>
+                        <div className="grid grid-cols-3 gap-2 lg:gap-3">
+                          <div className="rounded-lg border border-white/10 bg-white/10 p-3 lg:p-4">
+                            <p className="text-[10px] text-white/55 lg:text-xs">Points</p>
+                            <p className="mt-1 text-lg font-bold text-white lg:text-2xl">{item.points ?? item.totalScore ?? 0}</p>
                           </div>
-                          <div className="rounded-lg border border-white/10 bg-white/10 p-4">
-                            <p className="text-xs text-white/55">Parties</p>
-                            <p className="mt-1 text-2xl font-bold text-white">{item.parties ?? item.partiesJouees ?? 0}</p>
+                          <div className="rounded-lg border border-white/10 bg-white/10 p-3 lg:p-4">
+                            <p className="text-[10px] text-white/55 lg:text-xs">Parties</p>
+                            <p className="mt-1 text-lg font-bold text-white lg:text-2xl">{item.parties ?? item.partiesJouees ?? 0}</p>
                           </div>
-                          <div className="rounded-lg border border-white/10 bg-white/10 p-4">
-                            <p className="text-xs text-white/55">Max</p>
-                            <p className="mt-1 text-2xl font-bold text-white">{item.maxParties ?? 0}</p>
+                          <div className="rounded-lg border border-white/10 bg-white/10 p-3 lg:p-4">
+                            <p className="text-[10px] text-white/55 lg:text-xs">Max</p>
+                            <p className="mt-1 text-lg font-bold text-white lg:text-2xl">{item.maxParties ?? 0}</p>
                           </div>
                         </div>
 
-                        <div className="mt-5 flex items-center gap-2 text-sm text-white/65">
-                          {targetType === "competition" ? <Users className="h-4 w-4" /> : <User className="h-4 w-4" />}
-                          Classement base sur les points d'enrollement
+                        <div className="mt-4 flex items-center gap-2 text-xs text-white/65 lg:mt-5 lg:text-sm">
+                          {targetType === "competition" ? <Users className="h-3.5 w-3.5 lg:h-4 lg:w-4" /> : <User className="h-3.5 w-3.5 lg:h-4 lg:w-4" />}
+                          <span className="truncate">Classement base sur les points d'enrollement</span>
                         </div>
                       </div>
                     </SwiperSlide>
