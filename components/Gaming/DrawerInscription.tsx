@@ -21,6 +21,7 @@ interface DrawerInscriptionProps {
   targetId: string;
   targetName: string;
   enrollmentInfo: EnrollmentInfo;
+  amount: number
 }
 
 type Step = "sessions" | "confirm" | "payment" | "processing" | "success" | "error";
@@ -34,6 +35,7 @@ export default function DrawerInscription({
   targetId,
   targetName,
   enrollmentInfo,
+  amount
 }: DrawerInscriptionProps) {
   const [sessions, setSessions] = useState<ISessionItem[]>([]);
   const [selectedSession, setSelectedSession] = useState<ISessionItem | null>(null);
@@ -129,12 +131,12 @@ export default function DrawerInscription({
     setStep("processing");
     setErrorMsg("");
 
-    const amount = currency === "USD" ? 5 : 5 * TAUX;
+    const amountConvert = currency === "CDF" ? amount : (amount / TAUX);
     const res = await enrollToCompetitionAction(targetId, selectedSession._id, {
       phone,
       email,
       currency,
-      amount,
+      amount: amountConvert,
     });
 
     if (!res.success || !res.enrollment || !res.orderNumber) {
@@ -413,7 +415,7 @@ export default function DrawerInscription({
                     <div className="rounded-xl border border-stroke p-4 dark:border-strokedark">
                       <div className="flex justify-between text-sm">
                         <span className="text-waterloo">Montant</span>
-                        <span className="font-bold text-primary">$5</span>
+                        <span className="font-bold text-primary">{amount} CDF</span>
                       </div>
                       <div className="mt-2 flex justify-between text-sm">
                         <span className="text-waterloo">Equipe</span>
@@ -444,7 +446,7 @@ export default function DrawerInscription({
                                 : "border-stroke text-waterloo hover:border-primary dark:border-strokedark"
                             }`}
                           >
-                            {item === "USD" ? "$5" : `${(5 * TAUX).toLocaleString("fr-FR")} FC`}
+                            {item === "CDF" ? `${amount} CDF` : `${(amount / TAUX).toFixed()} USD`}
                           </button>
                         ))}
                       </div>

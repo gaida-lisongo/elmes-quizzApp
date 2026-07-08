@@ -80,7 +80,7 @@ export default function StandaloneDashboard() {
           </div>
 
           {/* Top & classement — ligne pleine largeur */}
-          <div className="grid gap-6 lg:grid-cols-1">
+          <div className="hidden">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.4 }} className="rounded-2xl border border-stroke bg-white p-6 shadow-solid-5 dark:border-strokedark dark:bg-blacksection">
               <div className="mb-4 flex items-center gap-2">
                 <Trophy className="h-5 w-5 text-primary" />

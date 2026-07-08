@@ -4,10 +4,11 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Brain, Clock, CheckCircle, XCircle, Loader2, Trophy,
-  AlertTriangle, Zap, ArrowRight, Star,
+  AlertTriangle, Zap, Star,
 } from "lucide-react";
 import { submitReponseAction, terminerPartieAction } from "@/actions/partie.actions";
 import type { PartieActiveData, QuestionJeu } from "@/actions/partie.actions";
+import QuestionPreview from "@/components/Admin/QuestionPreview";
 import toast from "react-hot-toast";
 
 interface GamePlayerProps {
@@ -68,6 +69,13 @@ export default function GamePlayer({ partie, onFinish, onCancel }: GamePlayerPro
         setCorrect(res.estCorrecte ?? false);
         setCorrection(res.correction || null);
         if (res.estCorrecte) setNotes((prev) => prev + 1);
+        if (res.estCorrecte) {
+          setTimeout(() => {
+            handleNext();
+          }, 450);
+        } else {
+          await handleFinish();
+        }
       }
     } catch {
       toast.error("Erreur lors de l'envoi de la réponse.");
@@ -76,9 +84,7 @@ export default function GamePlayer({ partie, onFinish, onCancel }: GamePlayerPro
     }
   }, [currentQuestion, repondu, submitting, partie.partieId]);
 
-  const handleNext = async () => {
-    if (isLast) {
-      // Terminer la partie
+  const handleFinish = async () => {
       setLoading(true);
       try {
         const res = await terminerPartieAction(partie.partieId);
@@ -94,6 +100,11 @@ export default function GamePlayer({ partie, onFinish, onCancel }: GamePlayerPro
       } finally {
         setLoading(false);
       }
+  };
+
+  const handleNext = async () => {
+    if (isLast) {
+      await handleFinish();
     } else {
       setRepondu(false);
       setCorrect(null);
@@ -213,9 +224,9 @@ export default function GamePlayer({ partie, onFinish, onCancel }: GamePlayerPro
             Niveau {currentQuestion.level}
           </span>
         </div>
-        <p className="mt-3 text-base font-medium leading-relaxed text-black dark:text-white">
-          {currentQuestion.enonce}
-        </p>
+        <div className="mt-3 text-base font-medium leading-relaxed text-black dark:text-white">
+          <QuestionPreview enonce={currentQuestion.enonce} mini />
+        </div>
       </motion.div>
 
       {/* Assertions / choix */}
@@ -244,7 +255,9 @@ export default function GamePlayer({ partie, onFinish, onCancel }: GamePlayerPro
               <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-stroke text-xs font-bold text-waterloo dark:bg-strokedark">
                 {lettre}
               </span>
-              <span className="flex-1 text-black dark:text-white">{assertion}</span>
+              <span className="flex-1 text-black dark:text-white">
+                <QuestionPreview enonce={assertion} mini />
+              </span>
               {repondu && assertion === correction && correct && (
                 <CheckCircle className="h-5 w-5 shrink-0 text-green-500" />
               )}
@@ -278,29 +291,18 @@ export default function GamePlayer({ partie, onFinish, onCancel }: GamePlayerPro
                 </div>
                 {correction && (
                   <p className="mt-1 ml-7 text-red-600 dark:text-red-300">
-                    Réponse attendue : <strong>{correction}</strong>
+                    Réponse attendue : <strong><QuestionPreview enonce={correction} mini /></strong>
                   </p>
                 )}
               </div>
             )}
 
-            <button
-              onClick={handleNext}
-              disabled={loading}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 font-medium text-white transition hover:bg-primaryho disabled:opacity-60"
-            >
-              {loading ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
-              ) : isLast ? (
-                <>
-                  Voir les résultats <Trophy className="h-5 w-5" />
-                </>
-              ) : (
-                <>
-                  Question suivante <ArrowRight className="h-5 w-5" />
-                </>
-              )}
-            </button>
+            {correct === true && (
+              <div className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary/10 py-3 text-sm font-medium text-primary">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                {isLast ? "Finalisation..." : "Question suivante..."}
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

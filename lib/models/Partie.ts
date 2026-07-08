@@ -8,7 +8,9 @@ export interface IReponsePartie {
 
 export interface IPartie extends Document {
   playerId: mongoose.Types.ObjectId;
+  enrollmentId?: mongoose.Types.ObjectId;
   categorieId: mongoose.Types.ObjectId;
+  mode?: 'STANDALONE' | 'ADVANCED' | 'VIP';
   levelPlayed: number;
   reponses: IReponsePartie[];
   note: number;
@@ -21,7 +23,9 @@ export interface IPartie extends Document {
 const PartieSchema: Schema<IPartie> = new Schema(
   {
     playerId: { type: Schema.Types.ObjectId, ref: 'Player', required: true },
+    enrollmentId: { type: Schema.Types.ObjectId, ref: 'Enrollement' },
     categorieId: { type: Schema.Types.ObjectId, ref: 'Categorie', required: true },
+    mode: { type: String, enum: ['STANDALONE', 'ADVANCED', 'VIP'], default: 'STANDALONE' },
     levelPlayed: { type: Number, required: true },
     reponses: [
       {

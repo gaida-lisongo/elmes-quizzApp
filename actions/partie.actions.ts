@@ -14,7 +14,7 @@ import { Competition, Parcours } from '@/lib/models/Competition';
 
 const { Enrollement } = EnrollementModule;
 
-// ── CONSTANTES DE JEU ──────────────────────────────────────────────
+// â”€â”€ CONSTANTES DE JEU â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const NB_QUESTIONS: Record<string, number> = {
   STANDALONE: 3,
@@ -23,7 +23,7 @@ const NB_QUESTIONS: Record<string, number> = {
 };
 const TEMPS_PAR_QUESTION = 15_000; // 15 secondes
 const POINTS_PAR_BONNE_REPONSE = 1;
-const LEVEL_THRESHOLDS = [25, 60, 150]; // seuils × 3 pts
+const LEVEL_THRESHOLDS = [25, 60, 150]; // seuils Ã— 3 pts
 
 export interface QuestionJeu {
   _id: string;
@@ -42,12 +42,12 @@ export interface PartieActiveData {
   mode: string;
 }
 
-// ── CATÉGORIES DISPONIBLES (STANDALONE) ────────────────────────────
+// â”€â”€ CATÃ‰GORIES DISPONIBLES (STANDALONE) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export async function getAvailableCategoriesAction() {
   try {
     const session = await getSession();
-    if (!session) return { success: false, error: 'Non connecté' };
+    if (!session) return { success: false, error: 'Non connectÃ©' };
     await connectToDb();
     const categories = await Categorie.find({ status: true })
       .sort({ designation: 1 })
@@ -58,12 +58,12 @@ export async function getAvailableCategoriesAction() {
   }
 }
 
-// ── ENROLLEMENTS PARCOURS (ADVANCED) ──────────────────────────────
+// â”€â”€ ENROLLEMENTS PARCOURS (ADVANCED) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export async function getMyParcoursEnrollmentsAction() {
   try {
     const session = await getSession();
-    if (!session) return { success: false, error: 'Non connecté' };
+    if (!session) return { success: false, error: 'Non connectÃ©' };
     await connectToDb();
     const player = await Player.findOne({ userId: session.userId }).lean();
     if (!player) return { success: false, error: 'Profil joueur introuvable' };
@@ -84,22 +84,23 @@ export async function getMyParcoursEnrollmentsAction() {
   }
 }
 
-// ── ENROLLEMENTS ÉQUIPE / COMPÉTITION (VIP) ───────────────────────
+// â”€â”€ ENROLLEMENTS Ã‰QUIPE / COMPÃ‰TITION (VIP) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export async function getMyEquipeEnrollmentsAction() {
   try {
     const session = await getSession();
-    if (!session) return { success: false, error: 'Non connecté' };
+    if (!session) return { success: false, error: 'Non connectÃ©' };
     await connectToDb();
     const player = await Player.findOne({ userId: session.userId }).lean();
     if (!player) return { success: false, error: 'Profil joueur introuvable' };
 
-    const equipe = await Equipe.findOne({ membres: { $elemMatch: { player: player._id } } }).lean();
-    if (!equipe) return { success: false, error: 'Aucune équipe trouvée' };
+    const equipe = await Equipe.findOne({ membres: { $elemMatch: { player: player._id, status: true } } }).lean();
+    if (!equipe) return { success: false, error: 'Aucune Ã©quipe trouvÃ©e' };
 
     const enrollments = await Enrollement.find({
       equipeId: equipe._id,
       competitionId: { $exists: true },
+      status: 'CONFIRMED',
     })
       .populate('competitionId', 'designation description categories questions slug')
       .populate('sessionId', 'designation startDate endDate')
@@ -112,23 +113,23 @@ export async function getMyEquipeEnrollmentsAction() {
   }
 }
 
-// ── LANCER UNE PARTIE ─────────────────────────────────────────────
+// â”€â”€ LANCER UNE PARTIE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 /**
- * Tire au hasard N questions depuis les catégories cibles, filtrées par level du joueur.
+ * Tire au hasard N questions depuis les catÃ©gories cibles, filtrÃ©es par level du joueur.
  */
 async function tirerQuestions(
   categorieIds: string[],
   playerLevel: number,
   nb: number,
 ): Promise<any[]> {
-  // Construire les niveaux autorisés (castés en number pour MongoDB)
+  // Construire les niveaux autorisÃ©s (castÃ©s en number pour MongoDB)
   const quizLevels: number[] = [0, 1, 2, 3].filter(l => l <= playerLevel);
   if (playerLevel >= 3) quizLevels.push(3);
 
   const objectIds = categorieIds.map(id => new mongoose.Types.ObjectId(id));
 
-  // Agrégation MongoDB : échantillonnage aléatoire performant via $sample
+  // AgrÃ©gation MongoDB : Ã©chantillonnage alÃ©atoire performant via $sample
   const quizzes = await Quiz.aggregate([
     { $match: { categorieId: { $in: objectIds }, level: { $in: quizLevels }, status: true } },
     { $sample: { size: nb } },
@@ -138,12 +139,12 @@ async function tirerQuestions(
 }
 
 /**
- * Lancer une partie STANDALONE (par catégorie)
+ * Lancer une partie STANDALONE (par catÃ©gorie)
  */
 export async function startStandalonePartieAction(categorieId: string) {
   try {
     const session = await getSession();
-    if (!session) return { success: false, error: 'Non connecté' };
+    if (!session) return { success: false, error: 'Non connectÃ©' };
     await connectToDb();
 
     const player = await Player.findOne({ userId: session.userId }).lean();
@@ -152,20 +153,21 @@ export async function startStandalonePartieAction(categorieId: string) {
       return { success: false, error: 'Vous n\'avez plus de parties disponibles. Veuillez recharger.' };
     }
 
-    // Vérifier qu'il n'y a pas de partie EN_COURS
+    // VÃ©rifier qu'il n'y a pas de partie EN_COURS
     const existing = await Partie.findOne({ playerId: player._id, status: 'EN_COURS' }).lean();
     if (existing) {
-      return { success: false, error: 'Vous avez déjà une partie en cours. Terminez-la avant d\'en commencer une nouvelle.' };
+      return { success: false, error: 'Vous avez dÃ©jÃ  une partie en cours. Terminez-la avant d\'en commencer une nouvelle.' };
     }
 
     const questions = await tirerQuestions([categorieId], player.level || 0, NB_QUESTIONS.STANDALONE);
     if (questions.length === 0) {
-      return { success: false, error: 'Aucune question disponible pour cette catégorie à votre niveau.' };
+      return { success: false, error: 'Aucune question disponible pour cette catÃ©gorie Ã  votre niveau.' };
     }
 
     const partie = await Partie.create({
       playerId: player._id,
       categorieId: new mongoose.Types.ObjectId(categorieId),
+      mode: 'STANDALONE',
       levelPlayed: player.level || 0,
       reponses: [],
       note: 0,
@@ -203,7 +205,7 @@ export async function startStandalonePartieAction(categorieId: string) {
 export async function startParcoursPartieAction(enrollmentId: string) {
   try {
     const session = await getSession();
-    if (!session) return { success: false, error: 'Non connecté' };
+    if (!session) return { success: false, error: 'Non connectÃ©' };
     await connectToDb();
 
     const player = await Player.findOne({ userId: session.userId }).lean();
@@ -215,15 +217,15 @@ export async function startParcoursPartieAction(enrollmentId: string) {
     const parcours = enrollment.parcoursId as any;
     if (!parcours) return { success: false, error: 'Parcours introuvable' };
 
-    // Vérifier le nombre max de parties
-    if (enrollment.parties >= (parcours.questions || 0)) {
+    // VÃ©rifier le nombre max de parties
+    if (enrollment.parties >= (enrollment.maxParties || parcours.questions || 0)) {
       return { success: false, error: 'Vous avez atteint le nombre maximum de parties pour ce parcours.' };
     }
 
-    // Vérifier partie en cours
+    // VÃ©rifier partie en cours
     const existing = await Partie.findOne({ playerId: player._id, status: 'EN_COURS' }).lean();
     if (existing) {
-      return { success: false, error: 'Vous avez déjà une partie en cours.' };
+      return { success: false, error: 'Vous avez dÃ©jÃ  une partie en cours.' };
     }
 
     const questions = await tirerQuestions(
@@ -232,15 +234,17 @@ export async function startParcoursPartieAction(enrollmentId: string) {
       NB_QUESTIONS.ADVANCED,
     );
     if (questions.length === 0) {
-      return { success: false, error: 'Aucune question disponible pour ce parcours à votre niveau.' };
+      return { success: false, error: 'Aucune question disponible pour ce parcours Ã  votre niveau.' };
     }
 
-    // Incrémenter le compteur de parties de l'enrollment
+    // IncrÃ©menter le compteur de parties de l'enrollment
     await Enrollement.findByIdAndUpdate(enrollmentId, { $inc: { parties: 1 } });
 
     const partie = await Partie.create({
       playerId: player._id,
-      categorieId: parcours.categories[0], // première catégorie du parcours
+      enrollmentId: enrollment._id,
+      categorieId: parcours.categories[0], // premiÃ¨re catÃ©gorie du parcours
+      mode: 'ADVANCED',
       levelPlayed: player.level || 0,
       reponses: [],
       note: 0,
@@ -278,7 +282,7 @@ export async function startParcoursPartieAction(enrollmentId: string) {
 export async function startMatchPartieAction(enrollmentId: string) {
   try {
     const session = await getSession();
-    if (!session) return { success: false, error: 'Non connecté' };
+    if (!session) return { success: false, error: 'Non connectÃ©' };
     await connectToDb();
 
     const player = await Player.findOne({ userId: session.userId }).lean();
@@ -286,14 +290,29 @@ export async function startMatchPartieAction(enrollmentId: string) {
 
     const enrollment = await Enrollement.findById(enrollmentId).populate('competitionId').lean();
     if (!enrollment) return { success: false, error: 'Inscription introuvable' };
+    if (enrollment.status !== 'CONFIRMED') {
+      return { success: false, error: 'Cet enrollement n\'est pas confirmÃƒÂ©.' };
+    }
+
+    const equipe = await Equipe.findOne({
+      _id: enrollment.equipeId,
+      membres: { $elemMatch: { player: player._id, status: true } },
+    }).lean();
+    if (!equipe) {
+      return { success: false, error: 'Vous devez ÃƒÂªtre membre actif de cette ÃƒÂ©quipe pour jouer ce match.' };
+    }
 
     const competition = enrollment.competitionId as any;
-    if (!competition) return { success: false, error: 'Compétition introuvable' };
+    if (!competition) return { success: false, error: 'CompÃ©tition introuvable' };
 
-    // Vérifier partie en cours
+    if (enrollment.parties >= (enrollment.maxParties || 0)) {
+      return { success: false, error: 'Votre equipe a atteint le nombre maximum de parties pour cet enrollement.' };
+    }
+
+    // VÃ©rifier partie en cours
     const existing = await Partie.findOne({ playerId: player._id, status: 'EN_COURS' }).lean();
     if (existing) {
-      return { success: false, error: 'Vous avez déjà une partie en cours.' };
+      return { success: false, error: 'Vous avez dÃ©jÃ  une partie en cours.' };
     }
 
     const questions = await tirerQuestions(
@@ -302,14 +321,16 @@ export async function startMatchPartieAction(enrollmentId: string) {
       NB_QUESTIONS.VIP,
     );
     if (questions.length === 0) {
-      return { success: false, error: 'Aucune question disponible pour cette compétition à votre niveau.' };
+      return { success: false, error: 'Aucune question disponible pour cette compÃ©tition Ã  votre niveau.' };
     }
 
     await Enrollement.findByIdAndUpdate(enrollmentId, { $inc: { parties: 1 } });
 
     const partie = await Partie.create({
       playerId: player._id,
+      enrollmentId: enrollment._id,
       categorieId: competition.categories[0],
+      mode: 'VIP',
       levelPlayed: player.level || 0,
       reponses: [],
       note: 0,
@@ -341,7 +362,7 @@ export async function startMatchPartieAction(enrollmentId: string) {
   }
 }
 
-// ── SOUMETTRE UNE RÉPONSE ─────────────────────────────────────────
+// â”€â”€ SOUMETTRE UNE RÃ‰PONSE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export async function submitReponseAction(
   partieId: string,
@@ -371,11 +392,11 @@ export async function submitReponseAction(
   }
 }
 
-// ── TERMINER UNE PARTIE ────────────────────────────────────────────
+// â”€â”€ TERMINER UNE PARTIE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 /**
- * Termine la partie et met à jour les métriques du joueur.
- * Gère la progression de niveau.
+ * Termine la partie et met Ã  jour les mÃ©triques du joueur.
+ * GÃ¨re la progression de niveau.
  */
 export async function terminerPartieAction(partieId: string) {
   try {
@@ -386,19 +407,19 @@ export async function terminerPartieAction(partieId: string) {
     const player = await Player.findById(partie.playerId);
     if (!player) return { success: false, error: 'Joueur introuvable' };
 
-    // Marquer comme terminée
+    // Marquer comme terminÃ©e
     await Partie.findByIdAndUpdate(partieId, { status: 'TERMINE' });
 
-    // Mettre à jour les métriques du joueur
+    // Mettre Ã  jour les mÃ©triques du joueur
     const note = partie.note || 0;
     const allCorrect = partie.reponses?.every((r: any) => r.estCorrecte) ?? false;
 
-    // Mise à jour metrics
+    // Mise Ã  jour metrics
     const partiesJouees = (player.metrics?.partiesJouees || 0) + 1;
     const partiesGagnees = (player.metrics?.partiesGagnees || 0) + (allCorrect ? 1 : 0);
     const totalScore = (player.metrics?.totalScore || 0) + note;
 
-    // Vérifier le niveau atteint
+    // VÃ©rifier le niveau atteint
     let newLevel = player.level || 0;
     for (let i = LEVEL_THRESHOLDS.length - 1; i >= 0; i--) {
       if (totalScore >= LEVEL_THRESHOLDS[i] * 3 && i + 1 > newLevel) {
@@ -407,7 +428,7 @@ export async function terminerPartieAction(partieId: string) {
     }
     if (newLevel > 3) newLevel = 3;
 
-    // Déduire une partie du solde (sauf si partiesInfinity)
+    // DÃ©duire une partie du solde (sauf si partiesInfinity)
     const partiesRestantes = Math.max(0, (player.parties || 0) - 1);
 
     await Player.findByIdAndUpdate(player._id, {
@@ -420,6 +441,25 @@ export async function terminerPartieAction(partieId: string) {
       },
     });
 
+    let equipeCredit = 0;
+    if (partie.enrollmentId) {
+      const enrollment = await Enrollement.findByIdAndUpdate(
+        partie.enrollmentId,
+        { $inc: { points: note } },
+        { new: true },
+      ).lean();
+
+      if (partie.mode === 'VIP' && allCorrect && enrollment?.equipeId) {
+        equipeCredit = 200000;
+        await Equipe.findByIdAndUpdate(enrollment.equipeId, {
+          $inc: {
+            'metriques.soldeUsd': equipeCredit,
+            'metriques.matchsWin': 1,
+          },
+        });
+      }
+    }
+
     return {
       success: true,
       resultat: {
@@ -429,6 +469,7 @@ export async function terminerPartieAction(partieId: string) {
         newLevel,
         niveauMonte: newLevel > (player.level || 0),
         partiesRestantes,
+        equipeCredit,
       },
     };
   } catch (error: any) {
@@ -436,12 +477,12 @@ export async function terminerPartieAction(partieId: string) {
   }
 }
 
-// ── VÉRIFIER PARTIE EN COURS ──────────────────────────────────────
+// â”€â”€ VÃ‰RIFIER PARTIE EN COURS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export async function getPartieEnCoursAction() {
   try {
     const session = await getSession();
-    if (!session) return { success: false, error: 'Non connecté' };
+    if (!session) return { success: false, error: 'Non connectÃ©' };
     await connectToDb();
     const player = await Player.findOne({ userId: session.userId }).lean();
     if (!player) return { success: false, error: 'Profil joueur introuvable' };
@@ -456,7 +497,7 @@ export async function getPartieEnCoursAction() {
       success: true,
       data: {
         partieId: partie._id.toString(),
-        categorie: (partie.categorieId as any)?.designation || 'Catégorie',
+        categorie: (partie.categorieId as any)?.designation || 'CatÃ©gorie',
         status: 'EN_COURS',
       },
     };

@@ -152,6 +152,7 @@ export default function GamingPage({
           targetId={targetId}
           targetName={targetName || ""}
           enrollmentInfo={enrollmentInfo}
+          amount={cta?.amount ?? 0}
         />
       )}
     </div>

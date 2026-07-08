@@ -201,7 +201,7 @@ export async function initiatePaymentAction(
     const player = await Player.findById(playerId).populate('userId', 'email pseudo');
     if (!player) return { success: false, error: 'Joueur introuvable.' };
 
-    const reference = `PAY-${product.type}-${product.id}-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+    const reference = `PAY-${product.type}-${(product.id).slice(-1, 5)}-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
     console.log("Initiating payment with reference:", reference);
 
     const collection = await initiateCollection({

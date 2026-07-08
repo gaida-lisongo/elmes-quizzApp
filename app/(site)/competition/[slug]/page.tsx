@@ -62,7 +62,8 @@ export default async function CompetitionDetailPage({
           : "Les inscriptions sont closes",
     content: `Frais d'inscription : ${new Intl.NumberFormat().format(competition.amount || 0)} F · Cagnotte : ${new Intl.NumberFormat().format(competition.cagnotte || 0)} F`,
     action: { title: canEnroll ? "Inscrire mon équipe" : 'Voir le classement', url: canEnroll ? 'subscripe' : 'classement' },
-    classement: []
+    classement: [],
+    amount: competition?.amount
   }
 
   return (

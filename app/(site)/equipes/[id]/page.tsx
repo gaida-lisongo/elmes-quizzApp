@@ -8,8 +8,8 @@ import EnrollementModel from "@/lib/models/Enrollement";
 const BANNER_IMAGE = "/images/team/team-2.jpg";
 
 export const metadata = {
-  title: "ELMES-QUIZ | Équipe",
-  description: "Profil détaillé d’une équipe sur ELMES-QUIZ.",
+  title: "ELMES-QUIZ | Equipe",
+  description: "Profil detaille d'une equipe sur ELMES-QUIZ.",
 };
 
 export default async function EquipeDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -18,123 +18,170 @@ export default async function EquipeDetailPage({ params }: { params: Promise<{ i
   await connectToDb();
   const equipe = await Equipe.findById(id)
     .populate({ path: "chefId", populate: { path: "userId", select: "pseudo photo telephone" } })
+    .populate({ path: "membres.player", populate: { path: "userId", select: "pseudo photo telephone" } })
     .lean();
 
-  if (!equipe) {
-    notFound();
-  }
+  if (!equipe) notFound();
 
   const enrollements = await EnrollementModel.Enrollement.find({ equipeId: equipe._id })
-    .populate({ path: "competitionId", select: "designation slug image" })
+    .populate({ path: "competitionId", select: "designation slug image cagnotte" })
     .populate({ path: "sessionId", select: "designation slug startDate endDate" })
     .sort({ createdAt: -1 })
     .lean();
 
-  const members = (equipe.membres || []).map((member: any) => ({
-    id: member.player?.toString?.() || "",
-    status: Boolean(member.status),
-    isSecretary: Boolean(member.isSecretary),
-  }));
+  const activeMembers = (equipe.membres || []).filter((member: any) => member.status);
+  const pendingMembers = (equipe.membres || []).filter((member: any) => !member.status);
+  const captain = (equipe.chefId as any)?.userId;
+  const totalPoints = enrollements.reduce((sum: number, enrollement: any) => sum + (enrollement.points || 0), 0);
 
   return (
     <main className="pb-20 pt-28 lg:pt-32">
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 h-72 bg-black">
-          <Image src={BANNER_IMAGE} alt={equipe.designation} fill className="object-cover opacity-80" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/70" />
+      <section className="relative overflow-hidden bg-black">
+        <div className="absolute inset-0">
+          <Image src={BANNER_IMAGE} alt={equipe.designation} fill priority className="object-cover opacity-45" />
+          <div className="absolute inset-0 bg-linear-to-r from-black via-black/80 to-black/45" />
         </div>
 
-        <div className="relative mx-auto max-w-c-1280 px-4 pt-20 md:px-8 xl:px-0">
-          <div className="rounded-[32px] border border-white/10 bg-white/90 p-6 shadow-solid-8 backdrop-blur dark:border-strokedark dark:bg-blacksection/90 md:p-8">
-            <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-              <div className="flex flex-col gap-4 md:flex-row md:items-end">
-                <div className="relative h-28 w-28 overflow-hidden rounded-full border-4 border-white bg-white shadow-solid-8 dark:border-blacksection">
-                  {equipe.logo ? (
-                    <Image src={equipe.logo} alt={equipe.designation} fill className="object-cover" />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-primary/10 text-3xl font-semibold text-primary">
-                      {equipe.designation?.charAt(0).toUpperCase()}
-                    </div>
-                  )}
-                </div>
-                <div>
-                  <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
-                    {equipe.metriques?.competitions || 0} compétitions
+        <div className="relative mx-auto max-w-c-1280 px-4 py-16 md:px-8 lg:py-20 xl:px-0">
+          <Link href="/equipes" className="mb-8 inline-flex text-sm font-medium text-white/70 transition hover:text-white">
+            Retour aux equipes
+          </Link>
+
+          <div className="grid gap-8 lg:grid-cols-[1fr_360px] lg:items-end">
+            <div className="flex flex-col gap-6 md:flex-row md:items-end">
+              <div className="relative h-28 w-28 overflow-hidden rounded-2xl border border-white/20 bg-white shadow-solid-8">
+                {equipe.logo ? (
+                  <Image src={equipe.logo} alt={equipe.designation} fill className="object-cover" />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center bg-primary/10 text-4xl font-bold text-primary">
+                    {equipe.designation?.charAt(0).toUpperCase()}
                   </div>
-                  <h1 className="mt-3 text-3xl font-semibold text-black dark:text-white">{equipe.designation}</h1>
-                  <p className="mt-2 text-sm text-waterloo">Capitaine : {(equipe.chefId as any)?.userId?.pseudo || "À définir"}</p>
-                </div>
+                )}
               </div>
-              <div className="rounded-2xl border border-stroke bg-alabaster px-4 py-3 text-sm text-waterloo dark:border-strokedark dark:bg-strokedark">
-                <div className="font-semibold text-black dark:text-white">Métriques</div>
-                <div className="mt-1 flex gap-4">
-                  <span>{equipe.metriques?.matchsWin || 0} victoires</span>
-                  <span>{equipe.metriques?.soldeUsd || 0} USD</span>
-                </div>
+
+              <div>
+                <p className="mb-3 inline-flex rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white/75">
+                  Equipe VIP
+                </p>
+                <h1 className="text-4xl font-bold text-white md:text-5xl">{equipe.designation}</h1>
+                <p className="mt-3 text-sm text-white/65">
+                  Capitaine : {captain?.pseudo || "A definir"}
+                </p>
               </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 rounded-lg border border-white/15 bg-white/10 p-4 backdrop-blur-md">
+              {[
+                { label: "Membres actifs", value: activeMembers.length },
+                { label: "Competitions", value: enrollements.length },
+                { label: "Victoires", value: equipe.metriques?.matchsWin || 0 },
+                { label: "Points", value: totalPoints },
+              ].map((item) => (
+                <div key={item.label} className="rounded-lg bg-white/10 p-3">
+                  <p className="text-2xl font-bold text-white">{item.value}</p>
+                  <p className="mt-1 text-xs text-white/60">{item.label}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
       <section className="mx-auto mt-10 max-w-c-1280 px-4 md:px-8 xl:px-0">
-        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="grid gap-8 lg:grid-cols-[380px_1fr]">
           <aside className="space-y-6">
-            <div className="rounded-3xl border border-stroke bg-white p-6 shadow-solid-8 dark:border-strokedark dark:bg-blacksection">
-              <h2 className="text-xl font-semibold text-black dark:text-white">À propos</h2>
-              <div className="mt-4 space-y-3 text-sm leading-7 text-waterloo whitespace-pre-line">
-                {(equipe.description || []).map((line: string, index: number) => (
-                  <p key={`${line}-${index}`}>{line}</p>
-                ))}
+            <div className="rounded-lg border border-stroke bg-white p-6 shadow-solid-5 dark:border-strokedark dark:bg-blacksection">
+              <h2 className="text-xl font-semibold text-black dark:text-white">A propos</h2>
+              <div className="mt-4 space-y-3 text-sm leading-7 text-waterloo">
+                {(equipe.description || []).length ? (
+                  (equipe.description || []).map((line: string, index: number) => (
+                    <p key={`${line}-${index}`}>{line}</p>
+                  ))
+                ) : (
+                  <p>Aucune description publique pour cette equipe.</p>
+                )}
               </div>
             </div>
 
-            <div className="rounded-3xl border border-stroke bg-white p-6 shadow-solid-8 dark:border-strokedark dark:bg-blacksection">
+            <div className="rounded-lg border border-stroke bg-white p-6 shadow-solid-5 dark:border-strokedark dark:bg-blacksection">
               <h2 className="text-xl font-semibold text-black dark:text-white">Membres</h2>
               <div className="mt-4 space-y-3">
-                {members.map((member) => (
-                  <div key={member.id} className="flex items-center justify-between rounded-2xl bg-alabaster px-4 py-3 dark:bg-strokedark">
-                    <div>
-                      <p className="font-medium text-black dark:text-white">Membre #{member.id.slice(-4)}</p>
-                      <p className="text-sm text-waterloo">{member.isSecretary ? "Secrétaire" : "Membre"}</p>
+                {(equipe.membres || []).map((member: any) => {
+                  const user = member.player?.userId;
+                  return (
+                    <div key={member.player?._id?.toString() || member.player?.toString()} className="flex items-center justify-between rounded-lg border border-stroke bg-alabaster px-4 py-3 dark:border-strokedark dark:bg-strokedark">
+                      <div>
+                        <p className="font-medium text-black dark:text-white">{user?.pseudo || "Membre"}</p>
+                        <p className="text-sm text-waterloo">{member.isSecretary ? "Secretaire" : "Membre"}</p>
+                      </div>
+                      <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${member.status ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}>
+                        {member.status ? "Actif" : "Invite"}
+                      </span>
                     </div>
-                    <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${member.status ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}>
-                      {member.status ? "Actif" : "En attente"}
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
+                {pendingMembers.length > 0 && (
+                  <p className="text-xs text-waterloo">{pendingMembers.length} invitation(s) en attente.</p>
+                )}
               </div>
             </div>
           </aside>
 
           <div className="space-y-6">
-            <div className="rounded-3xl border border-stroke bg-white p-6 shadow-solid-8 dark:border-strokedark dark:bg-blacksection">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-black dark:text-white">Enrôlements</h2>
-                <Link href="/equipes" className="text-sm font-medium text-primary">Retour aux équipes</Link>
+            <div className="rounded-lg border border-stroke bg-white p-6 shadow-solid-5 dark:border-strokedark dark:bg-blacksection">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <h2 className="text-xl font-semibold text-black dark:text-white">Competitions et sessions</h2>
+                  <p className="mt-1 text-sm text-waterloo">Historique des enrollements de cette equipe.</p>
+                </div>
               </div>
-              <div className="mt-6 space-y-4">
+
+              <div className="mt-6 grid gap-4">
                 {enrollements.length === 0 ? (
-                  <div className="rounded-2xl border border-dashed border-stroke p-6 text-center text-sm text-waterloo dark:border-strokedark">
-                    Cette équipe n’a pas encore d’enrôlement.
+                  <div className="rounded-lg border border-dashed border-stroke p-8 text-center text-sm text-waterloo dark:border-strokedark">
+                    Cette equipe n'a pas encore d'enrollement.
                   </div>
                 ) : (
-                  enrollements.map((enrollement: any) => (
-                    <div key={enrollement._id} className="rounded-2xl border border-stroke bg-alabaster p-4 dark:border-strokedark dark:bg-strokedark">
-                      <div className="flex flex-wrap items-center justify-between gap-3">
-                        <div>
-                          <h3 className="font-semibold text-black dark:text-white">{enrollement.competitionId?.designation || "Compétition"}</h3>
-                          <p className="text-sm text-waterloo">Session : {enrollement.sessionId?.designation || "À définir"}</p>
+                  enrollements.map((enrollement: any) => {
+                    const competition = enrollement.competitionId;
+                    const session = enrollement.sessionId;
+                    return (
+                      <article key={enrollement._id.toString()} className="rounded-lg border border-stroke bg-alabaster p-5 dark:border-strokedark dark:bg-strokedark">
+                        <div className="flex flex-wrap items-start justify-between gap-4">
+                          <div>
+                            <h3 className="text-lg font-semibold text-black dark:text-white">
+                              {competition?.designation || "Competition"}
+                            </h3>
+                            <p className="mt-1 text-sm text-waterloo">
+                              Session : {session?.designation || "A definir"}
+                            </p>
+                          </div>
+                          <span className={`rounded-full px-3 py-1 text-xs font-medium ${enrollement.status === "CONFIRMED" ? "bg-emerald-100 text-emerald-700" : "bg-yellow-100 text-yellow-700"}`}>
+                            {enrollement.status}
+                          </span>
                         </div>
-                        <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">{enrollement.status}</span>
-                      </div>
-                      <div className="mt-3 flex flex-wrap gap-3 text-sm text-waterloo">
-                        <span>Code : {enrollement.code}</span>
-                        <span>Parties : {enrollement.parties}</span>
-                        <span>Commande : {enrollement.orderNumber}</span>
-                      </div>
-                    </div>
-                  ))
+
+                        <div className="mt-5 grid gap-3 sm:grid-cols-4">
+                          <div>
+                            <p className="text-xs text-waterloo">Points</p>
+                            <p className="font-semibold text-black dark:text-white">{enrollement.points || 0}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-waterloo">Parties</p>
+                            <p className="font-semibold text-black dark:text-white">{enrollement.parties || 0}/{enrollement.maxParties || 0}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-waterloo">Cagnotte</p>
+                            <p className="font-semibold text-black dark:text-white">{competition?.cagnotte || 0}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-waterloo">Code</p>
+                            <p className="truncate font-mono text-xs font-semibold text-primary">{enrollement.code}</p>
+                          </div>
+                        </div>
+                      </article>
+                    );
+                  })
                 )}
               </div>
             </div>

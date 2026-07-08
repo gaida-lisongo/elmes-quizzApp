@@ -47,10 +47,12 @@ export interface PlayerMetricsData {
   leaderboard?: Array<{ _id: string; pseudo: string; score: number; parties: number; precision: number; rank: number; level: number }>;
   recharges?: Array<{ _id: string; amount: number; status: string; targetLevel: number; createdAt: string; providerTxId: string }>;
   team?: {
+    _id: string;
     designation: string;
     role: 'CAPTAIN' | 'SECRETARY' | 'MEMBER';
     isCaptain: boolean;
     isSecretary: boolean;
+    status: boolean;
     members: Array<{ _id: string; pseudo: string; isSecretary: boolean; status: boolean; isCurrentUser: boolean }>;
   } | null;
 }
@@ -154,11 +156,14 @@ export async function getPlayerMetricsAction(): Promise<{ success: boolean; data
 
         const isCaptain = teamDoc.chefId?._id?.toString() === player._id.toString();
         const isSecretary = memberDetails.some((member) => member.isCurrentUser && member.isSecretary);
+        const currentMember = memberDetails.find((member) => member.isCurrentUser);
         team = {
+          _id: teamDoc._id.toString(),
           designation: teamDoc.designation,
           role: isCaptain ? 'CAPTAIN' : isSecretary ? 'SECRETARY' : 'MEMBER',
           isCaptain,
           isSecretary,
+          status: isCaptain || Boolean(currentMember?.status),
           members: memberDetails,
         };
       }

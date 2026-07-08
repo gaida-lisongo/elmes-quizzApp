@@ -3,7 +3,9 @@
 import connectToDb from "@/lib/utils/db";
 import Equipe from "@/lib/models/Equipe";
 import Player from "@/lib/models/Player";
+import User from "@/lib/models/User";
 import { initiatePaymentAction, checkPaymentStatusAction } from "@/actions/payment.actions";
+import { getSession } from "@/lib/utils/auth";
 
 export type EquipeSummary = {
   _id: string;
@@ -27,6 +29,12 @@ export type EquipeSummary = {
   };
   payment: Array<{ orderNumber: string; status: string; providerText: string }>;
   createdAt: string;
+};
+
+const getCurrentPlayer = async () => {
+  const session = await getSession();
+  if (!session) return null;
+  return Player.findOne({ userId: session.userId }).lean();
 };
 
 const serializeEquipe = (equipe: any) => {
@@ -258,14 +266,88 @@ export async function confirmEquipeCreationAction(payload: {
  * Invite un joueur à rejoindre une équipe.
  * Ajoute le membre dans l'équipe avec status=false (en attente).
  */
+export async function searchInvitableVipPlayersAction(query: string) {
+  try {
+    await connectToDb();
+
+    const currentPlayer = await getCurrentPlayer();
+    if (!currentPlayer) return { success: false, error: "Profil joueur introuvable." };
+
+    const equipe = await Equipe.findOne({ chefId: currentPlayer._id }).lean();
+    if (!equipe) return { success: false, error: "Seul le capitaine peut inviter des joueurs." };
+
+    if (!query || query.trim().length < 2) return { success: true, players: [] };
+
+    const searchRegex = new RegExp(query.trim(), "i");
+    const users = await User.find({
+      $or: [{ pseudo: searchRegex }, { telephone: searchRegex }, { email: searchRegex }],
+    }).select("pseudo telephone email photo").limit(12).lean();
+
+    const vipPlayers = await Player.find({
+      userId: { $in: users.map((user: any) => user._id) },
+      type: "VIP",
+      _id: { $ne: currentPlayer._id },
+    }).populate("userId", "pseudo telephone email photo").lean();
+
+    const playerIds = vipPlayers.map((player: any) => player._id);
+    const unavailableTeams = await Equipe.find({
+      $or: [
+        { chefId: { $in: playerIds } },
+        { membres: { $elemMatch: { player: { $in: playerIds } } } },
+      ],
+    }).select("chefId membres").lean();
+
+    const unavailableIds = new Set<string>();
+    unavailableTeams.forEach((team: any) => {
+      if (team.chefId) unavailableIds.add(team.chefId.toString());
+      (team.membres || []).forEach((member: any) => {
+        if (member.player) unavailableIds.add(member.player.toString());
+      });
+    });
+
+    return {
+      success: true,
+      players: vipPlayers
+        .filter((player: any) => !unavailableIds.has(player._id.toString()))
+        .map((player: any) => ({
+          _id: player._id.toString(),
+          pseudo: player.userId?.pseudo || "Joueur",
+          telephone: player.userId?.telephone || "",
+          email: player.userId?.email || "",
+          photo: player.userId?.photo || "",
+        })),
+    };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Erreur de recherche." };
+  }
+}
+
 export async function inviteMemberAction(equipeId: string, playerId: string) {
   try {
     await connectToDb();
 
     const equipe = await Equipe.findById(equipeId);
+    const currentPlayer = await getCurrentPlayer();
+    if (equipe && (!currentPlayer || equipe.chefId.toString() !== currentPlayer._id.toString())) {
+      return { success: false, error: 'Seul le capitaine peut inviter un joueur.' };
+    }
     if (!equipe) return { success: false, error: 'Équipe introuvable.' };
 
     const player = await Player.findById(playerId);
+    if (player && player.type !== 'VIP') {
+      return { success: false, error: 'Seuls les joueurs VIP peuvent rejoindre une Ã©quipe.' };
+    }
+    if (player) {
+      const alreadyInTeam = await Equipe.findOne({
+        $or: [
+          { chefId: player._id },
+          { membres: { $elemMatch: { player: player._id } } },
+        ],
+      }).lean();
+      if (alreadyInTeam) {
+        return { success: false, error: 'Ce joueur est dÃ©jÃ  dans une Ã©quipe ou capitaine d\'une autre Ã©quipe.' };
+      }
+    }
     if (!player) return { success: false, error: 'Joueur introuvable.' };
 
     const alreadyMember = equipe.membres.some((m) => m.player.toString() === playerId);
@@ -284,6 +366,63 @@ export async function inviteMemberAction(equipeId: string, playerId: string) {
  * Met à jour le rôle d'un membre (secrétaire ou révoquer).
  * Seul le capitaine peut faire cette action.
  */
+export async function respondEquipeInvitationAction(
+  equipeId: string,
+  response: 'ACCEPT' | 'DECLINE',
+) {
+  try {
+    await connectToDb();
+
+    const currentPlayer = await getCurrentPlayer();
+    if (!currentPlayer) return { success: false, error: "Profil joueur introuvable." };
+
+    const equipe = await Equipe.findOne({
+      _id: equipeId,
+      membres: { $elemMatch: { player: currentPlayer._id, status: false } },
+    });
+    if (!equipe) return { success: false, error: "Invitation introuvable." };
+
+    const memberIndex = equipe.membres.findIndex((member) => member.player.toString() === currentPlayer._id.toString());
+    if (memberIndex === -1) return { success: false, error: "Invitation introuvable." };
+
+    if (response === "DECLINE") {
+      equipe.membres.splice(memberIndex, 1);
+      await equipe.save();
+      return { success: true, message: "Invitation refusee." };
+    }
+
+    equipe.membres[memberIndex].status = true;
+    await equipe.save();
+    return { success: true, message: "Invitation acceptee." };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Erreur de traitement." };
+  }
+}
+
+export async function leaveEquipeAction(equipeId: string) {
+  try {
+    await connectToDb();
+
+    const currentPlayer = await getCurrentPlayer();
+    if (!currentPlayer) return { success: false, error: "Profil joueur introuvable." };
+
+    const equipe = await Equipe.findById(equipeId);
+    if (!equipe) return { success: false, error: "Equipe introuvable." };
+    if (equipe.chefId.toString() === currentPlayer._id.toString()) {
+      return { success: false, error: "Le capitaine ne peut pas quitter son equipe." };
+    }
+
+    const memberIndex = equipe.membres.findIndex((member) => member.player.toString() === currentPlayer._id.toString());
+    if (memberIndex === -1) return { success: false, error: "Vous n'etes pas membre de cette equipe." };
+
+    equipe.membres.splice(memberIndex, 1);
+    await equipe.save();
+    return { success: true, message: "Vous avez quitte l'equipe." };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Erreur lors du retrait." };
+  }
+}
+
 export async function updateMemberRoleAction(
   equipeId: string,
   playerId: string,
@@ -294,6 +433,11 @@ export async function updateMemberRoleAction(
 
     const equipe = await Equipe.findById(equipeId);
     if (!equipe) return { success: false, error: 'Équipe introuvable.' };
+
+    const currentPlayer = await getCurrentPlayer();
+    if (!currentPlayer || equipe.chefId.toString() !== currentPlayer._id.toString()) {
+      return { success: false, error: 'Seul le capitaine peut modifier les rÃ´les.' };
+    }
 
     const membreIndex = equipe.membres.findIndex((m) => m.player.toString() === playerId);
     if (membreIndex === -1) return { success: false, error: 'Membre introuvable dans l\'équipe.' };
