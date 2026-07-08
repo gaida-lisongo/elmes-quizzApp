@@ -32,6 +32,7 @@ export interface GamingSession {
 interface GamingPageProps {
   designation: string;
   description: string;
+  image: any;
   about?: any;
   faq?: any;
   cta?: any;
@@ -48,6 +49,7 @@ interface GamingPageProps {
 export default function GamingPage({
   designation,
   description,
+  image,
   about,
   faq,
   cta,
@@ -83,6 +85,7 @@ export default function GamingPage({
       <GamingHero
         designation={designation}
         description={description}
+        image={image}
         criteres={criteres}
         classementData={classementData}
         targetType={targetType}

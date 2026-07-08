@@ -70,6 +70,7 @@ export default async function ParcoursDetailPage({
     <GamingPage
       designation={parcours.designation || "Parcours"}
       description={parcours.description || "Un parcours d'entraînement pensé pour progresser pas à pas."}
+      image={parcours.image || null}
       about={aboutData}
       faq={faqData}
       cta={ctaData}

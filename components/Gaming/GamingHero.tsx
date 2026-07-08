@@ -6,6 +6,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+import Image from "next/image";
 
 interface CritereDisplay {
   _id: string;
@@ -20,6 +21,7 @@ interface CritereDisplay {
 interface GamingHeroProps {
   designation: string;
   description: string;
+  image: any;
   criteres: CritereDisplay[];
   classementData?: any[];
   targetType?: "parcours" | "competition";
@@ -29,6 +31,7 @@ interface GamingHeroProps {
 export default function GamingHero({
   designation,
   description,
+  image,
   criteres,
   classementData = [],
   targetType = "parcours",
@@ -47,8 +50,8 @@ export default function GamingHero({
       </div>
 
       <div className="relative z-1 mx-auto max-w-c-1390 px-4 md:px-8 2xl:px-0">
-        <div className="grid gap-10 lg:grid-cols-2 lg:gap-15">
-          <motion.div
+        <div className={`grid gap-10 lg:grid-cols-${image ? '2' : '1'} lg:gap-15`}>
+          {image ?? <motion.div
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
@@ -59,18 +62,13 @@ export default function GamingHero({
               <span className="text-white/80">ELMES-QUIZ</span>
             </div>
             <h1 className="mb-6 text-4xl font-bold text-white xl:text-hero">{designation}</h1>
-            <p className="mb-8 max-w-xl text-lg text-white/75">{description}</p>
-            <div className="flex flex-wrap gap-4">
-              <button
-                onClick={onShowClassement}
-                className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-white transition hover:bg-primaryho"
-              >
-                <Medal className="h-5 w-5" />
-                Voir le classement
-                <ChevronRight className="h-5 w-5" />
-              </button>
-            </div>
-          </motion.div>
+            <Image
+              fill
+              src={image}
+              alt={designation}
+              className="rounded-full"
+            />
+          </motion.div>}
 
           <motion.div
             initial={{ opacity: 0, x: 40 }}
