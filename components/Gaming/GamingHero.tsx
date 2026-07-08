@@ -51,7 +51,7 @@ export default function GamingHero({
 
       <div className="relative z-1 mx-auto max-w-c-1390 px-4 md:px-8 2xl:px-0">
         <div className={`grid gap-10 lg:grid-cols-${image ? '2' : '1'} lg:gap-15`}>
-          {image ?? <motion.div
+          {image ? <motion.div
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
@@ -68,7 +68,7 @@ export default function GamingHero({
               alt={designation}
               className="rounded-full"
             />
-          </motion.div>}
+          </motion.div> :  null}
 
           <motion.div
             initial={{ opacity: 0, x: 40 }}
