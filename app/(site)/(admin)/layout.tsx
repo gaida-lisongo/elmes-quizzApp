@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getSession } from "@/lib/utils/auth";
 import User from "@/lib/models/User";
 import Player from "@/lib/models/Player";
@@ -51,15 +52,17 @@ export default async function AdminLayout({
   const { role, playerType } = await getUserRoleAndType();
 
   return (
-    <AdminLayoutClient
-      serverRole={role}
-      serverPlayerType={playerType}
-      agents={agents}
-      metriques={metriques}
-      enrollements={enrollements}
-    >
-      {children}
-    </AdminLayoutClient>
+    <Suspense fallback={<div className="flex h-screen items-center justify-center"><div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div></div>}>
+      <AdminLayoutClient
+        serverRole={role}
+        serverPlayerType={playerType}
+        agents={agents}
+        metriques={metriques}
+        enrollements={enrollements}
+      >
+        {children}
+      </AdminLayoutClient>
+    </Suspense>
   );
 }
             
