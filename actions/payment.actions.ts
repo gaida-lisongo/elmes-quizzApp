@@ -262,7 +262,7 @@ export async function initiatePaymentAction(
     const player = await Player.findById(playerId).populate('userId', 'email pseudo');
     if (!player) return { success: false, error: 'Joueur introuvable.' };
 
-    const reference = `PAY-${product.type}-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+    const reference = `PAY-${product.type}-${playerId.toString().slice(2, 8).toUpperCase()}`;
     const resourceId =
       product.metadata?.enrollmentId ||
       product.metadata?.equipeId ||
