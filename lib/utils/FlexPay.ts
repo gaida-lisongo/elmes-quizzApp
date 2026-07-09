@@ -32,7 +32,7 @@ const OUT = {
     balance: process.env.FLEX_BALANCE || ''
 }
 
-const SERVER = process.env.HOST || 'http://localhost:3000/';
+const SERVER = process.env.HOST || 'http://localhost:3000';
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || SERVER;
 
 class FlexPay {
@@ -71,28 +71,56 @@ class FlexPay {
                 return `${APP_URL.replace(/\/$/, "")}/payment/verification?${params.toString()}`;
             };
 
-            const req = await fetch(`${IN.card}`, {
-                method: "POST",
-                headers :{
-                    "Content-Type": "application/json",
-                    "Authorization": `${IN.token}`
-                },
-                body: JSON.stringify({
-                    authorization:`${IN.token}`,
-                    merchant:`${IN.merchant}`,
-                    reference:ref,
-                    amount,
-                    currency:currency,
-                    language:"fr",
-                    description:`[ELMES-QUIZ] Phone: ${phone}`,
-                    callback_url:`${SERVER.replace(/\/$/, "")}/api/flexpay`,
-                    approve_url: buildReturnUrl("approve"),
-                    cancel_url: buildReturnUrl("cancel"),
-                    decline_url: buildReturnUrl("decline"),
-                })
+            // Nettoyer le token (enlever "Bearer " s'il est déjà présent car on l'ajoute dans le header)
+            const cleanToken = IN.token.replace(/^Bearer\s+/i, '');
+            const authHeader = `Bearer ${cleanToken}`;
+
+            const requestBody = {
+                authorization: `${IN.token}`,
+                merchant: IN.merchant,
+                reference: ref,
+                amount: Number(amount),
+                currency: currency.toUpperCase(),
+                language: "fr",
+                description: `[ELMES-QUIZ] Phone: ${phone}`,
+                callback_url: `${SERVER.replace(/\/$/, "")}/api/flexpay`,
+                approve_url: buildReturnUrl("approve"),
+                cancel_url: buildReturnUrl("cancel"),
+                decline_url: buildReturnUrl("decline"),
+            };
+
+            console.log("[FlexPay] InitCard request:", {
+                url: IN.card,
+                merchant: IN.merchant,
+                reference: ref,
+                amount,
+                currency,
             });
 
-            const data = await req.json();
+            const req = await fetch(`${IN.card}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": authHeader
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            // Vérifier si la réponse est OK avant de parser
+            const responseText = await req.text();
+            console.log("[FlexPay] InitCard raw response:", responseText.substring(0, 500));
+
+            let data;
+            try {
+                data = JSON.parse(responseText);
+            } catch (parseError) {
+                console.error("[FlexPay] JSON parse error:", parseError);
+                return {
+                    success: false,
+                    error: `Réponse invalide du serveur: ${responseText.substring(0, 200)}`,
+                };
+            }
+
             const {code, message, orderNumber, url} = data;
             const normalizedCode = String(code ?? "");
             const success = normalizedCode === "0";

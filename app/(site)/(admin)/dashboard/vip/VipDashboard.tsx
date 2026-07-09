@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { getPlayerMetricsAction, type PlayerMetricsData } from "@/actions/player.metrics.actions";
 import { inviteMemberAction, leaveEquipeAction, respondEquipeInvitationAction, searchInvitableVipPlayersAction, updateMemberRoleAction } from "@/actions/equipe.actions";
+import PlayerRecentActivity from "../PlayerRecentActivity";
 import toast from "react-hot-toast";
 
 const fadeInUp = {
@@ -298,6 +299,14 @@ export default function VipDashboard() {
             </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.7 }} className="rounded-2xl border border-stroke bg-white p-6 shadow-solid-5 dark:border-strokedark dark:bg-blacksection">
+              <div className="mb-4 flex items-center gap-2">
+                <Clock className="h-5 w-5 text-primary" />
+                <h2 className="text-xl font-semibold text-black dark:text-white">Bons de commande</h2>
+              </div>
+              <PlayerRecentActivity />
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.7 }} className="hidden">
               <div className="mb-4 flex items-center gap-2">
                 <Clock className="h-5 w-5 text-primary" />
                 <h2 className="text-xl font-semibold text-black dark:text-white">Activité récente</h2>

@@ -37,6 +37,23 @@ const getCurrentPlayer = async () => {
   return Player.findOne({ userId: session.userId }).lean();
 };
 
+const TEAM_MAX_MEMBERS = 5;
+
+const getTeamOccupancy = (equipe: any) => {
+  const acceptedIds = new Set<string>();
+  if (equipe.chefId) acceptedIds.add(equipe.chefId.toString());
+  (equipe.membres || []).forEach((member: any) => {
+    if (member.status && member.player) acceptedIds.add(member.player.toString());
+  });
+  const pendingInvitationsCount = (equipe.membres || []).filter((member: any) => !member.status).length;
+  const acceptedMembersCount = acceptedIds.size;
+  return {
+    acceptedMembersCount,
+    pendingInvitationsCount,
+    availableSlots: TEAM_MAX_MEMBERS - (acceptedMembersCount + pendingInvitationsCount),
+  };
+};
+
 const serializeEquipe = (equipe: any) => {
   const toPlainString = (value: unknown) => {
     if (typeof value === "string") return value;
@@ -326,6 +343,103 @@ export async function searchInvitableVipPlayersAction(query: string) {
   }
 }
 
+export async function createPurchaseOrderAction(beneficiaryPlayerId: string, amount: number, reason: string) {
+  try {
+    await connectToDb();
+    const currentPlayer = await getCurrentPlayer();
+    if (!currentPlayer) return { success: false, error: "Profil joueur introuvable." };
+
+    const equipe = await Equipe.findOne({
+      membres: { $elemMatch: { player: currentPlayer._id, status: true, isSecretary: true } },
+    });
+    if (!equipe) return { success: false, error: "Seul le secrétaire actif d'une équipe peut créer un bon." };
+
+    const numericAmount = Number(amount);
+    if (!Number.isFinite(numericAmount) || numericAmount <= 0) return { success: false, error: "Montant invalide." };
+    if ((equipe.metriques?.soldeUsd || 0) < numericAmount) return { success: false, error: "Solde d'équipe insuffisant." };
+
+    const isBeneficiaryMember = equipe.chefId.toString() === beneficiaryPlayerId
+      || equipe.membres.some((member) => member.player.toString() === beneficiaryPlayerId && member.status);
+    if (!isBeneficiaryMember) return { success: false, error: "Le bénéficiaire doit être membre actif de l'équipe." };
+
+    const beneficiaryPlayer = await Player.findById(beneficiaryPlayerId).lean();
+    if (!beneficiaryPlayer?.userId) return { success: false, error: "Bénéficiaire introuvable." };
+
+    if (!equipe.purchaseOrders) equipe.purchaseOrders = [] as any;
+    equipe.purchaseOrders.push({
+      createdBy: currentPlayer._id,
+      beneficiaryUserId: beneficiaryPlayer.userId,
+      beneficiaryPlayerId: beneficiaryPlayer._id,
+      amount: numericAmount,
+      reason: reason?.trim() || "Bon de commande équipe",
+      status: "pending",
+      createdAt: new Date(),
+    });
+    await equipe.save();
+
+    return { success: true, message: "Bon de commande créé." };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Erreur création bon." };
+  }
+}
+
+export async function approvePurchaseOrderAction(orderId: string) {
+  try {
+    await connectToDb();
+    const currentPlayer = await getCurrentPlayer();
+    if (!currentPlayer) return { success: false, error: "Profil joueur introuvable." };
+
+    const equipe = await Equipe.findOne({ chefId: currentPlayer._id, "purchaseOrders._id": orderId });
+    if (!equipe) return { success: false, error: "Seul le capitaine peut valider ce bon." };
+
+    const order: any = (equipe.purchaseOrders as any).id(orderId);
+    if (!order) return { success: false, error: "Bon introuvable." };
+    if (order.status !== "pending" || order.creditedAt) return { success: false, error: "Ce bon a déjà été traité." };
+    if ((equipe.metriques?.soldeUsd || 0) < order.amount) return { success: false, error: "Solde d'équipe insuffisant." };
+
+    const isBeneficiaryMember = equipe.chefId.toString() === order.beneficiaryPlayerId.toString()
+      || equipe.membres.some((member) => member.player.toString() === order.beneficiaryPlayerId.toString() && member.status);
+    if (!isBeneficiaryMember) return { success: false, error: "Le bénéficiaire n'est plus membre actif de l'équipe." };
+
+    // TODO: créer une transaction interne dédiée si un modèle Transaction global est ajouté au projet.
+    await User.findByIdAndUpdate(order.beneficiaryUserId, { $inc: { solde: order.amount } });
+    equipe.metriques.soldeUsd = Math.max(0, (equipe.metriques.soldeUsd || 0) - order.amount);
+    order.status = "approved";
+    order.approvedBy = currentPlayer._id;
+    order.approvedAt = new Date();
+    order.creditedAt = new Date();
+    await equipe.save();
+
+    return { success: true, message: "Bon validé et solde membre crédité." };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Erreur validation bon." };
+  }
+}
+
+export async function rejectPurchaseOrderAction(orderId: string) {
+  try {
+    await connectToDb();
+    const currentPlayer = await getCurrentPlayer();
+    if (!currentPlayer) return { success: false, error: "Profil joueur introuvable." };
+
+    const equipe = await Equipe.findOne({ chefId: currentPlayer._id, "purchaseOrders._id": orderId });
+    if (!equipe) return { success: false, error: "Seul le capitaine peut refuser ce bon." };
+
+    const order: any = (equipe.purchaseOrders as any).id(orderId);
+    if (!order) return { success: false, error: "Bon introuvable." };
+    if (order.status !== "pending" || order.creditedAt) return { success: false, error: "Ce bon a déjà été traité." };
+
+    order.status = "rejected";
+    order.approvedBy = currentPlayer._id;
+    order.approvedAt = new Date();
+    await equipe.save();
+
+    return { success: true, message: "Bon refusé." };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Erreur refus bon." };
+  }
+}
+
 export async function inviteMemberAction(equipeId: string, playerId: string) {
   try {
     await connectToDb();
@@ -336,6 +450,9 @@ export async function inviteMemberAction(equipeId: string, playerId: string) {
       return { success: false, error: 'Seul le capitaine peut inviter un joueur.' };
     }
     if (!equipe) return { success: false, error: 'Équipe introuvable.' };
+    if (getTeamOccupancy(equipe).availableSlots <= 0) {
+      return { success: false, error: "Cette équipe a déjà atteint la limite de 5 membres ou possède trop d'invitations en attente." };
+    }
 
     const player = await Player.findById(playerId);
     if (player && player.type !== 'VIP') {
@@ -393,6 +510,18 @@ export async function respondEquipeInvitationAction(
       equipe.membres.splice(memberIndex, 1);
       await equipe.save();
       return { success: true, message: "Invitation refusee." };
+    }
+
+    const activeIds = new Set<string>();
+    if (equipe.chefId) activeIds.add(equipe.chefId.toString());
+    equipe.membres.forEach((member) => {
+      if (member.status && member.player) activeIds.add(member.player.toString());
+    });
+    const activeCount = activeIds.size;
+    if (activeCount >= TEAM_MAX_MEMBERS) {
+      equipe.membres.splice(memberIndex, 1);
+      await equipe.save();
+      return { success: false, error: "Cette équipe a déjà atteint la limite de 5 membres ou possède trop d'invitations en attente." };
     }
 
     equipe.membres[memberIndex].status = true;

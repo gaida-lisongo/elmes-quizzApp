@@ -9,7 +9,7 @@ import Categorie from '@/lib/models/Categorie';
 import EnrollementModule from '@/lib/models/Enrollement';
 import Equipe from '@/lib/models/Equipe';
 
-const { Enrollement } = EnrollementModule;
+const { Enrollement, Session } = EnrollementModule;
 
 export interface PlayerMetricsData {
   playerType: 'STANDALONE' | 'ADVANCED' | 'VIP';
@@ -45,7 +45,8 @@ export interface PlayerMetricsData {
   chart: Array<{ label: string; value: number; detail: string }>;
   sessions: Array<{ label: string; count: number }>;
   leaderboard?: Array<{ _id: string; pseudo: string; score: number; parties: number; precision: number; rank: number; level: number }>;
-  recharges?: Array<{ _id: string; amount: number; status: string; targetLevel: number; createdAt: string; providerTxId: string }>;
+  recharges?: Array<{ _id: string; index: number; amount: number; status: string; targetLevel: number; creditedParties: number; createdAt: string; providerTxId: string; reference?: string }>;
+  rewards?: Array<{ _id: string; parcours: string; session: string; rank: number; amount: number; status: string; reference: string; createdAt: string }>;
   team?: {
     _id: string;
     designation: string;
@@ -54,8 +55,17 @@ export interface PlayerMetricsData {
     isSecretary: boolean;
     status: boolean;
     members: Array<{ _id: string; pseudo: string; isSecretary: boolean; status: boolean; isCurrentUser: boolean }>;
+    soldeUsd: number;
+    purchaseOrders: Array<{ _id: string; beneficiaryPseudo: string; amount: number; reason: string; status: string; createdAt: string; approvedAt?: string; creditedAt?: string; canApprove: boolean }>;
   } | null;
 }
+
+const getTrainingPassParties = (amountCDF: number, targetLevel: number) => {
+  if (amountCDF === 2500 || targetLevel === 1) return 15;
+  if (amountCDF === 7000 || targetLevel === 2) return 40;
+  if (amountCDF === 15000 || targetLevel === 3) return 130;
+  return 0;
+};
 
 export async function getPlayerMetricsAction(): Promise<{ success: boolean; data?: PlayerMetricsData; error?: string }> {
   try {
@@ -165,9 +175,46 @@ export async function getPlayerMetricsAction(): Promise<{ success: boolean; data
           isSecretary,
           status: isCaptain || Boolean(currentMember?.status),
           members: memberDetails,
+          soldeUsd: teamDoc.metriques?.soldeUsd || 0,
+          purchaseOrders: await Promise.all((teamDoc.purchaseOrders || []).map(async (order: any) => {
+            const beneficiary = await User.findById(order.beneficiaryUserId).select('pseudo').lean();
+            return {
+              _id: order._id?.toString?.() || `${order.createdAt?.getTime?.() || Date.now()}`,
+              beneficiaryPseudo: beneficiary?.pseudo || 'Membre',
+              amount: order.amount || 0,
+              reason: order.reason || '',
+              status: order.status || 'pending',
+              createdAt: order.createdAt?.toISOString?.() || '',
+              approvedAt: order.approvedAt?.toISOString?.(),
+              creditedAt: order.creditedAt?.toISOString?.(),
+              canApprove: isCaptain && order.status === 'pending',
+            };
+          })),
         };
       }
     }
+
+    const rewardSessions = player.type === 'ADVANCED'
+      ? await Session.find({ 'rewardTransactions.beneficiaryType': 'PLAYER', 'rewardTransactions.beneficiaryId': player._id })
+          .populate({ path: 'rewardTransactions.enrollmentId', populate: [{ path: 'parcoursId', select: 'designation' }] })
+          .sort({ paymentProcessedAt: -1, updatedAt: -1 })
+          .lean()
+      : [];
+
+    const rewards = rewardSessions.flatMap((sessionDoc: any) =>
+      (sessionDoc.rewardTransactions || [])
+        .filter((reward: any) => reward.beneficiaryType === 'PLAYER' && reward.beneficiaryId?.toString() === player._id.toString())
+        .map((reward: any) => ({
+          _id: `${sessionDoc._id}-${reward.enrollmentId?._id || reward.enrollmentId}`,
+          parcours: reward.enrollmentId?.parcoursId?.designation || 'Parcours',
+          session: sessionDoc.designation || 'Session',
+          rank: Number(String(reward.reason || '').replace('PARCOURS_TOP_', '')) || 0,
+          amount: reward.amount || 0,
+          status: sessionDoc.rewardsDistributed ? 'créditée' : 'en attente',
+          reference: reward.reason || '',
+          createdAt: reward.createdAt?.toISOString?.() || sessionDoc.paymentProcessedAt?.toISOString?.() || '',
+        }))
+    );
 
     return {
       success: true,
@@ -229,14 +276,18 @@ export async function getPlayerMetricsAction(): Promise<{ success: boolean; data
         })),
         sessions: aggregatedSessions,
         leaderboard: leaderboardRows,
-        recharges: (player.recharges || []).map((recharge: any) => ({
+        recharges: (player.recharges || []).map((recharge: any, index: number) => ({
           _id: recharge.providerTxId || `${recharge.amount}-${recharge.createdAt}`,
+          index,
           amount: recharge.amount || 0,
           status: recharge.status || 'EN_ATTENTE',
           targetLevel: recharge.targetLevel || 0,
+          creditedParties: getTrainingPassParties(recharge.amount || 0, recharge.targetLevel || 0),
           createdAt: recharge.createdAt?.toISOString?.() || '',
           providerTxId: recharge.providerTxId || '',
+          reference: recharge.reference || '',
         })),
+        rewards,
         team,
       },
     };

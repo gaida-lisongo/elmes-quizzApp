@@ -462,6 +462,24 @@ export async function verifyRechargeByOrderNumberAction(orderNumber: string) {
   }
 }
 
+export async function verifyMyRechargeAction(rechargeIndex: number) {
+  try {
+    const session = await getSession();
+    if (!session) return { success: false, error: "Non connecté." };
+
+    await connectToDb();
+    const player = await Player.findOne({ userId: session.userId });
+    if (!player) return { success: false, error: "Profil joueur introuvable." };
+
+    const recharge = player.recharges?.[rechargeIndex];
+    if (!recharge) return { success: false, error: "Recharge introuvable." };
+
+    return verifyRechargeByOrderNumberAction(recharge.providerTxId || recharge.reference || "");
+  } catch (error: any) {
+    return { success: false, error: error.message || "Erreur de vérification." };
+  }
+}
+
 export async function verifyPersistedPaymentAction(params: {
   orderNumber?: string;
   reference?: string;
