@@ -18,6 +18,7 @@ export interface ISession extends Document {
     type: 'Parcours' | 'Competition';
     refId: mongoose.Types.ObjectId;
   }[];
+  status: 'ACTIVE' | 'INACTIVE' | 'COMPLETED' | 'PAYMENT'
   createdAt: Date;
   updatedAt: Date;
 }
@@ -45,6 +46,7 @@ const SessionSchema: Schema<ISession> = new Schema(
     designation: { type: String, required: true, trim: true },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
+    status: { type: String, enum: ['ACTIVE', 'INACTIVE', 'COMPLETED', 'PAYMENT'], default: 'ACTIVE' },
     ressources: [{
       type: { type: String, enum: ['Parcours', 'Competition'], required: true },
       refId: { type: Schema.Types.ObjectId, required: true, refPath: 'ressources.type' },

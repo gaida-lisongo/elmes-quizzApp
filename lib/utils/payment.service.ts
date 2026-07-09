@@ -6,6 +6,8 @@
  *   PAYMENT_API_URL   – URL de base de l'Edge Function
  */
 
+import FlexPay from "./FlexPay";
+
 const BASE_URL = process.env.PAYMENT_API_URL;
 
 // ── Types ──────────────────────────────────────────────────────────
@@ -29,6 +31,7 @@ export interface PayoutPayload {
 export interface PaymentResponse {
   success: boolean;
   orderNumber?: string;
+  redirectUrl?: string;
   message?: string;
   error?: string;
   raw?: any;
@@ -75,6 +78,40 @@ async function request<T>(
  * 1. Initie une COLLECTE (paiement depuis un joueur vers le compte marchand).
  *    Utilisé pour les recharges de niveau.
  */
+export async function initialCard(payload: CollectionPayload): Promise<PaymentResponse>{
+  try {
+    console.log("Payload for initiateCollection:", payload);
+    const flexCard = new FlexPay();
+    const card = await flexCard.initCard(
+      payload.phone,
+      payload.reference,
+      payload.currency || 'USD',
+      payload.amount,
+    );
+
+    if (card.success && card.orderNumber && card.url) {
+      return {
+        success: true,
+        orderNumber: card.orderNumber,
+        redirectUrl: card.url,
+        message: card.message || 'Paiement carte initie avec succes.',
+        raw: card.raw,
+      };
+    }
+
+    return {
+      success: false,
+      error: card.error || card.message || "Echec de l'initiation du paiement carte.",
+      raw: card.raw,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error.message || 'Erreur reseau lors du paiement carte.',
+    };
+  }
+}
+
 export async function initiateCollection(
   payload: CollectionPayload,
 ): Promise<PaymentResponse> {

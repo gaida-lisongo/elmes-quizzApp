@@ -3,6 +3,7 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 export interface IRecharge {
   amount: number;
   providerTxId: string;
+  reference?: string;
   status: 'EN_ATTENTE' | 'SUCCES' | 'ECHEC';
   targetLevel: number;
   currency?: 'CDF' | 'USD';
@@ -52,6 +53,7 @@ const PlayerSchema: Schema<IPlayer> = new Schema(
       {
         amount: { type: Number, required: true },
         providerTxId: { type: String, required: true },
+        reference: { type: String },
         status: { type: String, enum: ['EN_ATTENTE', 'SUCCES', 'ECHEC'], default: 'EN_ATTENTE' },
         targetLevel: { type: Number, required: true },
         currency: { type: String, enum: ['CDF', 'USD'], default: 'CDF' },

@@ -4,7 +4,7 @@ import connectToDb from "@/lib/utils/db";
 import Equipe from "@/lib/models/Equipe";
 import Player from "@/lib/models/Player";
 import User from "@/lib/models/User";
-import { initiatePaymentAction, checkPaymentStatusAction } from "@/actions/payment.actions";
+import { initiatePaymentAction, checkPaymentStatusAction, type PaymentMethod } from "@/actions/payment.actions";
 import { getSession } from "@/lib/utils/auth";
 
 export type EquipeSummary = {
@@ -107,7 +107,8 @@ export async function initiateEquipeCreationAction(
   description: string,
   logo: string,
   phone: string,
-  email?: string
+  email?: string,
+  paymentMethod: PaymentMethod = "MOBILE_MONEY",
 ) {
   try {
     await connectToDb();
@@ -147,7 +148,8 @@ export async function initiateEquipeCreationAction(
           logo: cleanLogo,
         },
       },
-      email?.trim()
+      email?.trim(),
+      paymentMethod,
     );
 
     console.log("Payment initiation result:", payment);
@@ -159,6 +161,8 @@ export async function initiateEquipeCreationAction(
     return {
       success: true,
       orderNumber: payment.orderNumber,
+      redirectUrl: payment.redirectUrl,
+      paymentMethod,
       message: "Paiement initié. Vérifiez ensuite la confirmation pour finaliser l'équipe.",
     };
   } catch (error: any) {

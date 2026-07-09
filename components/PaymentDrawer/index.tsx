@@ -29,7 +29,7 @@ interface PaymentDrawerProps {
   onSuccess: (data: { orderNumber: string; product: ProductInfo }) => void;
 }
 
-const TAUX = Number(process.env.NEXT_PUBLIC_TAUX) || 2850;
+const TAUX = Number(process.env.NEXT_PUBLIC_TAUX) || 2350;
 
 // ─── SearchUser sub-component ───────────────────────────────────────
 
@@ -69,9 +69,21 @@ const PaymentDrawer = ({ product, onClose, onSuccess }: PaymentDrawerProps) => {
     if (!selectedUser) return;
     setStep("processing");
     setErrorMsg("");
-    const res = await initiatePaymentAction(selectedUser?.playerId ?? "", phone, amountToPay, currency, product, email.trim());
+    const res = await initiatePaymentAction(
+      selectedUser?.playerId ?? "",
+      phone,
+      amountToPay,
+      currency,
+      product,
+      email.trim(),
+      cardMode ? "CARD" : "MOBILE_MONEY",
+    );
     if (!res.success || !res.orderNumber) { setStep("error"); setErrorMsg(res.error || "Échec de l'initiation du paiement."); return; }
     setOrderNumber(res.orderNumber);
+    if (cardMode && res.redirectUrl) {
+      window.location.href = res.redirectUrl;
+      return;
+    }
     setStep("success");
     setTimeout(() => onSuccess({ orderNumber: res.orderNumber!, product }), 1200);
   };

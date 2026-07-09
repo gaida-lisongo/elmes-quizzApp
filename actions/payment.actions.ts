@@ -4,7 +4,7 @@ import connectToDb from "@/lib/utils/db";
 import User from "@/lib/models/User";
 import Player from "@/lib/models/Player";
 import Agent from "@/lib/models/Agent";
-import { initiateCollection, initiatePayout, checkStatus } from "@/lib/utils/payment.service";
+import { initiateCollection, initiatePayout, checkStatus, initialCard } from "@/lib/utils/payment.service";
 import { getSession } from "@/lib/utils/auth";
 import type { PipelineStage } from "mongoose";
 import type { IRetrait } from "@/lib/models/Player";
@@ -18,6 +18,8 @@ export type ProductPayload = {
   type: 'TRAINING_PASS' | 'COMPETITION' | 'EQUIPE';
   metadata?: Record<string, any>;
 };
+
+export type PaymentMethod = "MOBILE_MONEY" | "CARD";
 
 // ── CONSTANTES ─────────────────────────────────────────────────────
 
@@ -40,8 +42,24 @@ const PACK_NAMES: Record<number, string> = {
 };
 
 const buildVerificationUrl = (orderNumber: string) => {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || "https://elmes-quiz.com";
-  return `${baseUrl.replace(/\/$/, "")}/dashboard?orderNumber=${encodeURIComponent(orderNumber)}`;
+  const baseUrl =
+    process.env.PAYMENT_VERIFICATION_URL ||
+    process.env.NEXT_PUBLIC_PAYMENT_VERIFICATION_URL ||
+    process.env.NEXT_PUBLIC_APP_URL ||
+    process.env.APP_URL ||
+    "https://elmes-quiz.com";
+  return `${baseUrl.replace(/\/$/, "")}/payment/verification?type=email&orderNumber=${encodeURIComponent(orderNumber)}`;
+};
+
+const getCollectionByMethod = (method: PaymentMethod) => {
+  return method === "CARD" ? initialCard : initiateCollection;
+};
+
+const getTrainingPassParties = (amountCDF: number, targetLevel: number) => {
+  if (amountCDF === 2500 || targetLevel === 1) return 15;
+  if (amountCDF === 7000 || targetLevel === 2) return 40;
+  if (amountCDF === 15000 || targetLevel === 3) return 130;
+  return 0;
 };
 
 const notifyPaymentByEmail = async ({
@@ -71,6 +89,14 @@ const notifyPaymentByEmail = async ({
           : status === "failed"
             ? "échouée"
             : "initiée";
+    const statusText =
+      status === "confirmed"
+        ? "Votre transaction a été confirmée."
+        : status === "failed"
+          ? "Votre transaction a échoué."
+          : status === "pending"
+            ? "Votre transaction est encore en attente de confirmation."
+            : "Votre transaction a été initiée et attend votre validation.";
 
     await sendMail({
       to: email,
@@ -79,7 +105,8 @@ const notifyPaymentByEmail = async ({
         <div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;background:#f7f9fc;border-radius:16px;">
           <h2 style="margin:0 0 12px;color:#0f172a;">Paiement ${statusLabel}</h2>
           <p style="margin:0 0 12px;color:#334155;">Bonjour,</p>
-          <p style="margin:0 0 12px;color:#334155;">Votre transaction pour <strong>${productName}</strong> a été traitée avec succès.</p>
+          <p style="margin:0 0 12px;color:#334155;">${statusText}</p>
+          <p style="margin:0 0 12px;color:#334155;">Produit : <strong>${productName}</strong></p>
           <p style="margin:0 0 12px;color:#334155;"><strong>Commande :</strong> ${orderNumber}</p>
           <p style="margin:0 0 12px;color:#334155;"><strong>Montant :</strong> ${amount.toLocaleString()} ${currency}</p>
           <p style="margin:0 0 16px;color:#334155;">Vous pouvez vérifier le statut de la transaction ici :</p>
@@ -193,6 +220,7 @@ export async function initiatePaymentAction(
   currency: 'CDF' | 'USD',
   product: ProductPayload,
   email?: string,
+  paymentMethod: PaymentMethod = "MOBILE_MONEY",
 ) {
   try {
     console.log("Initiating payment for playerId:", playerId, "phone:", phone, "amount:", amount, "currency:", currency, "product:", product);
@@ -201,10 +229,10 @@ export async function initiatePaymentAction(
     const player = await Player.findById(playerId).populate('userId', 'email pseudo');
     if (!player) return { success: false, error: 'Joueur introuvable.' };
 
-    const reference = `PAY-${product.type}-${(product.id).slice(-1, 5)}-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+    const reference = `PAY-${product.type}-${(product.id).slice(-1, 5)}`;
     console.log("Initiating payment with reference:", reference);
 
-    const collection = await initiateCollection({
+    const collection = await getCollectionByMethod(paymentMethod)({
       phone,
       amount,
       reference,
@@ -222,13 +250,23 @@ export async function initiatePaymentAction(
     }
 
     const orderNumber = collection.orderNumber;
+    const amountToStore = currency === "USD" && product.amountCDF ? product.amountCDF : amount;
+    const targetLevel =
+      product.type === "TRAINING_PASS"
+        ? product.id === "motuya"
+          ? 2
+          : product.id === "elonga"
+            ? 3
+            : 1
+        : 0;
 
     // Enregistrer la recharge dans Player
     player.recharges.push({
-      amount,
+      amount: amountToStore,
       providerTxId: orderNumber,
+      reference,
       status: 'EN_ATTENTE',
-      targetLevel: product.type === 'TRAINING_PASS' ? 1 : 0,
+      targetLevel,
       currency,
       createdAt: new Date(),
     });
@@ -241,14 +279,22 @@ export async function initiatePaymentAction(
       await notifyPaymentByEmail({
         email: recipientEmail,
         orderNumber,
-        amount,
+        amount: amountToStore,
         currency,
         productName: product.name,
         status: 'initiated',
       });
     }
 
-    return { success: true, orderNumber, message: 'Paiement initié. En attente de confirmation.' };
+    return {
+      success: true,
+      orderNumber,
+      redirectUrl: collection.redirectUrl,
+      paymentMethod,
+      message: paymentMethod === "CARD"
+        ? 'Paiement carte initie. Redirection vers FlexPay.'
+        : 'Paiement initié. En attente de confirmation.',
+    };
   } catch (error: any) {
     return { success: false, error: error.message || 'Erreur serveur.' };
   }
@@ -290,6 +336,79 @@ export async function checkPaymentStatusAction(orderNumber: string, email?: stri
   }
 }
 
+export async function verifyRechargeByOrderNumberAction(orderNumber: string) {
+  try {
+    if (!orderNumber?.trim()) {
+      return { success: false, error: "Numero de commande requis." };
+    }
+
+    await connectToDb();
+
+    const player = await Player.findOne({
+      $or: [
+        { "recharges.providerTxId": orderNumber },
+        { "recharges.reference": orderNumber },
+      ],
+    });
+    if (!player) {
+      return { success: false, error: "Recharge introuvable pour cette commande." };
+    }
+
+    const rechargeIndex = player.recharges.findIndex(
+      (item) => item.providerTxId === orderNumber || item.reference === orderNumber,
+    );
+    const recharge = player.recharges[rechargeIndex];
+    if (!recharge) {
+      return { success: false, error: "Recharge introuvable." };
+    }
+
+    if (recharge.status !== "EN_ATTENTE") {
+      return {
+        success: true,
+        status: recharge.status,
+        orderNumber: recharge.providerTxId,
+        message: recharge.status === "SUCCES" ? "Transaction deja validee." : "Transaction deja traitee.",
+      };
+    }
+
+    const providerOrderNumber = recharge.providerTxId;
+    const statusCheck = await checkStatus(providerOrderNumber);
+    if (!statusCheck.success) {
+      return {
+        success: false,
+        error: statusCheck.error || "Impossible de verifier le statut.",
+      };
+    }
+
+    const newStatus = statusCheck.status || "ECHEC";
+    player.recharges[rechargeIndex].status = newStatus;
+
+    if (newStatus === "SUCCES") {
+      const parties = getTrainingPassParties(recharge.amount, recharge.targetLevel);
+      if (parties > 0) {
+        player.parties += parties;
+      }
+    }
+
+    await player.save();
+
+    return {
+      success: true,
+      status: newStatus,
+      orderNumber: providerOrderNumber,
+      message:
+        newStatus === "SUCCES"
+          ? "Transaction validee avec succes."
+          : newStatus === "ECHEC"
+            ? "La transaction a echoue."
+            : "Transaction encore en attente.",
+    };
+  } catch (error: any) {
+    console.error("[verifyRechargeByOrderNumberAction]", error);
+    return { success: false, error: error.message || "Erreur de verification." };
+  }
+}
+
 // ═══════════════════════════════════════════════════════════════════
 //  RECHARGE JOUEUR (passer à un niveau supérieur)
 // ═══════════════════════════════════════════════════════════════════
@@ -304,6 +423,8 @@ export async function rechargePlayerAction(
   targetLevel: number,
   amount: number,
   currency: 'CDF' | 'USD' = 'CDF',
+  paymentMethod: PaymentMethod = "MOBILE_MONEY",
+  email?: string,
 ) {
   try {
     if (!playerId || !phone || !amount || !targetLevel) {
@@ -337,7 +458,7 @@ export async function rechargePlayerAction(
     const reference = `REQ-REC-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
 
     // 4. Initier la collecte via FlexPay (dans la devise d'origine)
-    const collection = await initiateCollection({
+    const collection = await getCollectionByMethod(paymentMethod)({
       phone,
       amount: amountProvider,
       reference,
@@ -360,6 +481,7 @@ export async function rechargePlayerAction(
     player.recharges.push({
       amount: amountCDF,
       providerTxId: orderNumber,
+      reference,
       status: "EN_ATTENTE",
       targetLevel,
       currency,
@@ -368,12 +490,29 @@ export async function rechargePlayerAction(
 
     await player.save();
 
+    const user = await User.findById(player.userId).select("email").lean();
+    const recipientEmail = email?.trim() || (user as any)?.email || "";
+    if (recipientEmail) {
+      await notifyPaymentByEmail({
+        email: recipientEmail,
+        orderNumber,
+        amount: amountCDF,
+        currency,
+        productName: `Recharge ${PACK_NAMES[targetLevel] || `niveau ${targetLevel}`}`,
+        status: "initiated",
+      });
+    }
+
     return {
       success: true,
       orderNumber,
+      redirectUrl: collection.redirectUrl,
+      paymentMethod,
       amountCDF,
       currency,
-      message: "Collecte initiée. En attente de confirmation.",
+      message: paymentMethod === "CARD"
+        ? "Paiement carte initie. Redirection vers FlexPay."
+        : "Collecte initiée. En attente de confirmation.",
     };
   } catch (error: any) {
     console.error("[rechargePlayerAction]", error);

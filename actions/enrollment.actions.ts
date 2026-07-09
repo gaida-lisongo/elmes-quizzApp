@@ -7,7 +7,7 @@ import EnrollementModule from "@/lib/models/Enrollement";
 import Partie from "@/lib/models/Partie";
 import Player from "@/lib/models/Player";
 import Equipe from "@/lib/models/Equipe";
-import { initiatePaymentAction, checkPaymentStatusAction } from "@/actions/payment.actions";
+import { initiatePaymentAction, checkPaymentStatusAction, type PaymentMethod } from "@/actions/payment.actions";
 import { randomUUID } from "crypto";
 
 const { Enrollement, Session } = EnrollementModule;
@@ -243,6 +243,7 @@ export async function enrollToCompetitionAction(
     email?: string;
     currency: 'CDF' | 'USD';
     amount: number;
+    method?: PaymentMethod;
   },
 ) {
   try {
@@ -298,6 +299,7 @@ export async function enrollToCompetitionAction(
         metadata: { competitionId, sessionId, equipeId },
       },
       payment.email?.trim(),
+      payment.method || "MOBILE_MONEY",
     );
 
     if (!paymentRes.success || !paymentRes.orderNumber) {
@@ -330,6 +332,8 @@ export async function enrollToCompetitionAction(
       success: true,
       enrollment: JSON.parse(JSON.stringify(enrollment)),
       orderNumber,
+      redirectUrl: paymentRes.redirectUrl,
+      paymentMethod: payment.method || "MOBILE_MONEY",
     };
   } catch (error: any) {
     return { success: false, error: error.message };

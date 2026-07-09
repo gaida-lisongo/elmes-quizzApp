@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Loader2, CheckCircle, AlertCircle, Calendar, User, Users, Target, ChevronRight, ArrowLeft, DollarSign } from "lucide-react";
+import { X, Loader2, CheckCircle, AlertCircle, Calendar, User, Users, Target, ChevronRight, ArrowLeft, DollarSign, CreditCard } from "lucide-react";
 import { getSessionsByRessourceAction, enrollToParcoursAction, enrollToCompetitionAction, confirmCompetitionEnrollmentPaymentAction } from "@/actions/enrollment.actions";
 import type { EnrollmentInfo } from "./index";
 
@@ -45,6 +45,7 @@ export default function DrawerInscription({
   const [phone, setPhone] = useState(enrollmentInfo.telephone || "");
   const [email, setEmail] = useState(enrollmentInfo.email || "");
   const [currency, setCurrency] = useState<"USD" | "CDF">("USD");
+  const [paymentMethod, setPaymentMethod] = useState<"MOBILE_MONEY" | "CARD">("MOBILE_MONEY");
   const [orderNumber, setOrderNumber] = useState("");
   const [enrollmentId, setEnrollmentId] = useState("");
   const [uniqueCode, setUniqueCode] = useState("");
@@ -62,6 +63,7 @@ export default function DrawerInscription({
     setOrderNumber("");
     setEnrollmentId("");
     setUniqueCode("");
+    setPaymentMethod("MOBILE_MONEY");
 
     getSessionsByRessourceAction(type === "parcours" ? "Parcours" : "Competition", targetId, true)
       .then((res) => {
@@ -137,6 +139,7 @@ export default function DrawerInscription({
       email,
       currency,
       amount: amountConvert,
+      method: paymentMethod,
     });
 
     if (!res.success || !res.enrollment || !res.orderNumber) {
@@ -147,6 +150,10 @@ export default function DrawerInscription({
 
     setEnrollmentId(res.enrollment._id);
     setOrderNumber(res.orderNumber);
+    if (paymentMethod === "CARD" && res.redirectUrl) {
+      window.location.href = res.redirectUrl;
+      return;
+    }
     setStep("payment");
   };
 
@@ -449,6 +456,33 @@ export default function DrawerInscription({
                             {item === "CDF" ? `${amount} CDF` : `${(amount / TAUX).toFixed()} USD`}
                           </button>
                         ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="mb-2 block text-sm font-medium text-black dark:text-white">Mode de paiement</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {[
+                          { label: "Mobile Money", value: "MOBILE_MONEY" as const, icon: DollarSign },
+                          { label: "Carte bancaire", value: "CARD" as const, icon: CreditCard },
+                        ].map((item) => {
+                          const Icon = item.icon;
+                          return (
+                            <button
+                              key={item.value}
+                              type="button"
+                              onClick={() => setPaymentMethod(item.value)}
+                              className={`flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm font-medium transition ${
+                                paymentMethod === item.value
+                                  ? "border-primary bg-primary/10 text-primary"
+                                  : "border-stroke text-waterloo hover:border-primary dark:border-strokedark"
+                              }`}
+                            >
+                              <Icon className="h-4 w-4" />
+                              {item.label}
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
 

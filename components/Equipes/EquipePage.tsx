@@ -22,6 +22,7 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
   const [description, setDescription] = useState("");
   const [logo, setLogo] = useState("");
   const [orderNumber, setOrderNumber] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<"MOBILE_MONEY" | "CARD">("MOBILE_MONEY");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -59,7 +60,8 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
       description,
       logo || FALLBACK_LOGO,
       phone,
-      email
+      email,
+      paymentMethod,
     );
 
     if (!result.success) {
@@ -69,6 +71,10 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
     }
 
     setOrderNumber(result.orderNumber || "");
+    if (paymentMethod === "CARD" && result.redirectUrl) {
+      window.location.href = result.redirectUrl;
+      return;
+    }
     setMessage(result.message || "Paiement initié.");
     setStep(3);
     setLoading(false);
@@ -108,6 +114,7 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
     setDescription("");
     setLogo("");
     setOrderNumber("");
+    setPaymentMethod("MOBILE_MONEY");
     setLoading(false);
   };
 
@@ -331,6 +338,29 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
                       className="w-full rounded-xl border border-stroke bg-transparent px-4 py-3 text-sm text-black outline-none focus:border-primary dark:border-strokedark dark:text-white"
                       required
                     />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-black dark:text-white">Mode de paiement</label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {[
+                        { label: "Mobile Money", value: "MOBILE_MONEY" as const },
+                        { label: "Carte bancaire", value: "CARD" as const },
+                      ].map((item) => (
+                        <button
+                          key={item.value}
+                          type="button"
+                          onClick={() => setPaymentMethod(item.value)}
+                          className={`rounded-xl border px-4 py-3 text-sm font-medium transition ${
+                            paymentMethod === item.value
+                              ? "border-primary bg-primary/10 text-primary"
+                              : "border-stroke text-waterloo hover:border-primary dark:border-strokedark"
+                          }`}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
                   <button
