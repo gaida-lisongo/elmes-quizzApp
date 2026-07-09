@@ -80,8 +80,8 @@ class FlexPay {
                 body: JSON.stringify({
                     authorization:`${IN.token}`,
                     merchant:`${IN.merchant}`,
-                    reference:'test', //ref
-                    amount:amount * 2,
+                    reference:ref,
+                    amount,
                     currency:currency,
                     language:"fr",
                     description:`[ELMES-QUIZ] Phone: ${phone}`,
@@ -95,7 +95,7 @@ class FlexPay {
             const data = await req.json();
             const {code, message, orderNumber, url} = data;
             const normalizedCode = String(code ?? "");
-            const success = normalizedCode === "0" || normalizedCode !== "1";
+            const success = normalizedCode === "0";
 
             if(success && orderNumber && url){
                 this.orderNumber = orderNumber;

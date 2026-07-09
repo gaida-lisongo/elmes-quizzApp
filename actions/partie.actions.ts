@@ -172,6 +172,7 @@ export async function startStandalonePartieAction(categorieId: string) {
       playerId: player._id,
       categorieId: new mongoose.Types.ObjectId(categorieId),
       mode: 'STANDALONE',
+      gameSource: 'standard',
       levelPlayed: player.level || 0,
       reponses: [],
       note: 0,
@@ -295,6 +296,7 @@ export async function startParcoursPartieAction(enrollmentId: string) {
       enrollmentId: enrollment._id,
       categorieId: parcours.categories[0], // premiÃ¨re catÃ©gorie du parcours
       mode: 'ADVANCED',
+      gameSource: 'parcours',
       levelPlayed: player.level || 0,
       reponses: [],
       note: 0,
@@ -422,6 +424,7 @@ export async function startMatchPartieAction(enrollmentId: string) {
       enrollmentId: enrollment._id,
       categorieId: competition.categories[0],
       mode: 'VIP',
+      gameSource: 'competition',
       levelPlayed: player.level || 0,
       reponses: [],
       note: 0,

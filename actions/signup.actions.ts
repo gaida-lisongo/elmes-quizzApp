@@ -31,6 +31,14 @@ export interface SignupStep2Data {
   photo?: string;
 }
 
+async function generateUniqueReferralCode(pseudo: string) {
+  let code = generateReferralCode(pseudo);
+  while (await Player.exists({ code })) {
+    code = generateReferralCode(pseudo);
+  }
+  return code;
+}
+
 /**
  * Parse l'URL pour extraire le type de joueur et le code d'affiliation.
  * Exemples :
@@ -117,6 +125,8 @@ export async function createPlayerStep1(data: SignupStep1Data) {
       const parrain = await Player.findOne({ code: referralCode.trim().toUpperCase() });
       if (parrain) {
         referedBy = parrain._id;
+      } else {
+        return { success: false, error: "Code d'affiliation invalide." };
       }
     }
 
@@ -219,7 +229,7 @@ export async function createPlayerStep2(data: SignupStep2Data) {
     });
 
     // Générer un code de parrainage
-    const referralCode = generateReferralCode(pseudo);
+    const referralCode = await generateUniqueReferralCode(pseudo);
 
     // Convertir referedBy en ObjectId si c'est une string (vient du cookie)
     const referedByObjectId = referedBy && referedBy !== 'null'
@@ -236,6 +246,7 @@ export async function createPlayerStep2(data: SignupStep2Data) {
       school,
       parties: 10, // 10 parties de bienvenue
       code: referralCode,
+      usedAffiliateGames: 0,
       recharges: [],
       metrics: { totalScore: 0, partiesJouees: 0, partiesGagnees: 0 },
     });

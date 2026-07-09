@@ -13,6 +13,14 @@ import { generateReferralCode } from '../lib/utils/referral';
 const JWT_SECRET = process.env.JWT_SECRET || 'genie_quiz_secret_key_ultra_secure_2026';
 const COOKIE_NAME = 'genie_session';
 
+async function generateUniqueReferralCode(pseudo: string) {
+  let code = generateReferralCode(pseudo);
+  while (await Player.exists({ code })) {
+    code = generateReferralCode(pseudo);
+  }
+  return code;
+}
+
 // Fonctions utilitaires internes pour le jeton : userId:role:timestamp|signature
 function generateToken(userId: string, role: string): string {
   const timestamp = Date.now();
@@ -48,6 +56,13 @@ export async function registerPlayer(formData: FormData) {
       return { success: false, error: 'Ce numéro de téléphone est déjà utilisé.' };
     }
 
+    if (ref) {
+      const parrainExists = await Player.exists({ code: ref.trim().toUpperCase() });
+      if (!parrainExists) {
+        return { success: false, error: "Code d'affiliation invalide." };
+      }
+    }
+
     const hashedPassword = await hashPassword(password);
 
     // Création de l'utilisateur de base (Rôle fixé à 'PLAYER' selon l'interface User)
@@ -62,15 +77,17 @@ export async function registerPlayer(formData: FormData) {
     // Résoudre le parrain (ref = pseudo du joueur parrain)
     let referedBy: mongoose.Types.ObjectId | undefined = undefined;
     if (ref) {
-      const parrain = await Player.findOne({ code: ref.trim() });
+      const parrain = await Player.findOne({ code: ref.trim().toUpperCase() });
       if (parrain) {
         referedBy = parrain._id;
+      } else {
+        return { success: false, error: "Code d'affiliation invalide." };
       }
     }
 
     // Création du profil Player associé (10 parties de bienvenue offertes)
     // Générer un code de parrainage lisible pour le nouveau joueur
-    const referralCode = generateReferralCode(pseudo);
+    const referralCode = await generateUniqueReferralCode(pseudo);
 
     await Player.create({
       userId: newUser._id,
@@ -80,6 +97,7 @@ export async function registerPlayer(formData: FormData) {
       school: school.trim(),
       parties: 10,
       code: referralCode,
+      usedAffiliateGames: 0,
       recharges: [],
       metrics: { totalScore: 0, partiesJouees: 0, partiesGagnees: 0 }
     });

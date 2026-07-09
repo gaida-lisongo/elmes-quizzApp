@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import Logo from "@/components/Common/Logo";
 import Link from "next/link";
 import { useState, FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import { accessAffiliationByCodeAction } from "@/actions/affiliation.actions";
 import type { FooterParcours, FooterCompetition } from "@/actions/footer.actions";
 
 const Footer = ({
@@ -13,11 +15,21 @@ const Footer = ({
   competitions: FooterCompetition[];
 }) => {
   const [ticketCode, setTicketCode] = useState("");
+  const [ticketMessage, setTicketMessage] = useState("");
+  const [checkingCode, setCheckingCode] = useState(false);
+  const router = useRouter();
 
-  const handleTicketSubmit = (e: FormEvent) => {
+  const handleTicketSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log("Numéro de ticket saisi :", ticketCode);
-    setTicketCode("");
+    setCheckingCode(true);
+    setTicketMessage("");
+    const res = await accessAffiliationByCodeAction(ticketCode);
+    if (res.success && res.redirectTo) {
+      router.push(res.redirectTo);
+    } else {
+      setTicketMessage(res.error || "Code invalide.");
+    }
+    setCheckingCode(false);
   };
 
   return (
@@ -166,17 +178,17 @@ const Footer = ({
                   className="animate_top"
                 >
                   <h4 className="mb-9 text-itemtitle2 font-medium text-black dark:text-white">
-                    Partie
+                    Affiliation
                   </h4>
                   <p className="mb-4 w-[90%]">
-                    Démarrer une partie
+                    Accéder à vos métriques par code.
                   </p>
 
                   <form onSubmit={handleTicketSubmit}>
                     <div className="relative">
                       <input
                         type="text"
-                        placeholder="Numéro de ticket"
+                        placeholder="Code d'affiliation"
                         value={ticketCode}
                         onChange={(e) => setTicketCode(e.target.value)}
                         className="w-full rounded-full border border-stroke px-6 py-3 shadow-solid-11 focus:border-primary focus:outline-hidden dark:border-strokedark dark:bg-black dark:shadow-none dark:focus:border-primary"
@@ -184,7 +196,8 @@ const Footer = ({
 
                       <button
                         type="submit"
-                        aria-label="lancer la partie"
+                        aria-label="ouvrir mes métriques d'affiliation"
+                        disabled={checkingCode}
                         className="absolute right-0 p-4"
                       >
                         <svg
@@ -209,6 +222,9 @@ const Footer = ({
                         </svg>
                       </button>
                     </div>
+                    {ticketMessage ? (
+                      <p className="mt-2 text-xs text-red-500">{ticketMessage}</p>
+                    ) : null}
                   </form>
                 </motion.div>
               </div>

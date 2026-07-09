@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { getCurrentUserDetailed } from "@/actions/auth.actions";
 import ProfileUser from "@/components/Admin/ProfileUser";
@@ -14,6 +15,7 @@ import RetraitsTable from "./_components/Retraits"
 import PartiesStandalone from "./_components/PartiesStandalone";
 import ParcoursAdvanced from "./_components/ParcoursAdvanced";
 import MatchsVip from "./_components/MatchsVip";
+import Parrainages from "./_components/Parrainages";
 
 export type UserRole = "ADMIN" | "MOD" | "PLAYER";
 export type PlayerType = "STANDALONE" | "ADVANCED" | "VIP";
@@ -30,6 +32,7 @@ const USER_MENU: { account: string; menu: MenuTab[] }[] = [
       { id: "metriques", name: "Métriques" },
       { id: "questions", name: "Questions" },
       { id: "enrollements", name: "Enrollements" },
+      { id: "retraits", name: "Retraits" },
     ],
   },
   {
@@ -38,6 +41,7 @@ const USER_MENU: { account: string; menu: MenuTab[] }[] = [
       { id: "metriques", name: "Métriques" },
       { id: "agents", name: "Agents" },
       { id: "enrollements", name: "Enrollements" },
+      { id: "retraits", name: "Retraits" },
     ],
   },
   {
@@ -45,6 +49,7 @@ const USER_MENU: { account: string; menu: MenuTab[] }[] = [
     menu: [
       { id: "metriques", name: "Métriques" },
       { id: "parties", name: "Parties" },
+      { id: "affiliation", name: "Affiliation" },
       { id: "retraits", name: "Retraits" },
     ],
   },
@@ -53,6 +58,7 @@ const USER_MENU: { account: string; menu: MenuTab[] }[] = [
     menu: [
       { id: "metriques", name: "Métriques" },
       { id: "parcours", name: "Parcours" },
+      { id: "affiliation", name: "Affiliation" },
       { id: "retraits", name: "Retraits" },
     ],
   },
@@ -61,6 +67,7 @@ const USER_MENU: { account: string; menu: MenuTab[] }[] = [
     menu: [
       { id: "metriques", name: "Métriques" },
       { id: "matchs", name: "Matchs" },
+      { id: "affiliation", name: "Affiliation" },
       { id: "retraits", name: "Retraits" },
     ],
   },
@@ -97,6 +104,7 @@ export default function AdminLayoutClient({
   serverPlayerType: PlayerType | null;
 }) {
   const [currentTab, setCurrentTab] = useState("metriques");
+  const searchParams = useSearchParams();
   const [menuKey, setMenuKey] = useState<string>(
     resolveMenuKey(serverRole, serverPlayerType)
   );
@@ -126,6 +134,11 @@ export default function AdminLayoutClient({
     }
     checkSession();
   }, [serverPlayerType, serverRole]);
+
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    if (tab) setCurrentTab(tab);
+  }, [searchParams]);
 
   const activeMenu =
     USER_MENU.find((u) => u.account === menuKey)?.menu || USER_MENU[1].menu;
@@ -199,6 +212,9 @@ export default function AdminLayoutClient({
           )}
           {currentTab === "retraits" && (
             <RetraitsTable />
+          )}
+          {currentTab === "affiliation" && (
+            <Parrainages />
           )}
           {currentTab === "parcours" && (
             <ParcoursAdvanced />

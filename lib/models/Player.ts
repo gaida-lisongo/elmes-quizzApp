@@ -16,7 +16,14 @@ export interface IRecharge {
 export interface IRetrait {
   amount: number;
   providerTxId: string;
+  reference?: string;
   status: 'EN_ATTENTE' | 'SUCCES' | 'ECHEC';
+  method?: string;
+  currency?: 'CDF' | 'USD';
+  beneficiaryName?: string;
+  message?: string;
+  processedAt?: Date;
+  validatedAt?: Date;
   createdAt: Date;
 }
 
@@ -35,6 +42,7 @@ export interface IPlayer extends Document {
   statut: 'ELEVE' | 'ETUDIANT' | 'INDEPENDANT';
   school: string;
   parties: number;
+  usedAffiliateGames: number;
   recharges: IRecharge[];
   retraits: IRetrait[];
   metrics: IMetrics;
@@ -51,6 +59,7 @@ const PlayerSchema: Schema<IPlayer> = new Schema(
     statut: { type: String, enum: ['ELEVE', 'ETUDIANT', 'INDEPENDANT'], default: 'ELEVE' },
     school: { type: String, required: true },
     parties: { type: Number, default: 0},
+    usedAffiliateGames: { type: Number, default: 0 },
     code: { type: String, default: ""},
     recharges: [
       {
@@ -70,7 +79,14 @@ const PlayerSchema: Schema<IPlayer> = new Schema(
       {
         amount: { type: Number, required: true },
         providerTxId: { type: String, required: true },
+        reference: { type: String },
         status: { type: String, enum: ['EN_ATTENTE', 'SUCCES', 'ECHEC'], default: 'EN_ATTENTE' },
+        method: { type: String, default: 'MOBILE_MONEY' },
+        currency: { type: String, enum: ['CDF', 'USD'], default: 'CDF' },
+        beneficiaryName: { type: String },
+        message: { type: String },
+        processedAt: { type: Date },
+        validatedAt: { type: Date },
         createdAt: { type: Date, default: Date.now }
       }
     ],

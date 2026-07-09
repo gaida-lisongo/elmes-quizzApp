@@ -208,7 +208,7 @@ export async function checkStatus(
 
     console.log("[Payment Service Check]", data)
 
-    const { transaction } = data
+    const transaction = data?.transaction || data || {};
 
     // Adapter selon la forme de la réponse de l'Edge Function
     const statusMap: Record<string, 'EN_ATTENTE' | 'SUCCES' | 'ECHEC'> = {
@@ -220,7 +220,7 @@ export async function checkStatus(
 
     const mappedStatus =
       statusMap[data.status?.toLowerCase()] ||
-      (transaction.status === '2' ? 'EN_ATTENTE' : (transaction.status === '0' ? 'SUCCES' : 'ECHEC'));
+      (String(transaction.status) === '2' ? 'EN_ATTENTE' : (String(transaction.status) === '0' ? 'SUCCES' : 'ECHEC'));
 
     return {
       success: true,
