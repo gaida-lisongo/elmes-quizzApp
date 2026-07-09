@@ -36,7 +36,7 @@ export default function RetraitsTable() {
     if (res.success) {
       setData(res.data || null);
       setPhone(res.data?.telephone || "");
-      if (["ADMIN", "MOD"].includes(res.data?.role)) {
+      if (res.data?.role && ["ADMIN", "MOD"].includes(res.data.role)) {
         const adminRes = await getPendingWithdrawalsAdminAction();
         if (adminRes.success) setAdminWithdrawals(adminRes.data || []);
       }
