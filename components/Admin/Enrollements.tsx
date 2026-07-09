@@ -12,6 +12,7 @@ import {
   createSessionAction, deleteSessionAction,
   updateSessionRessourcesAction, getAvailableRessourcesAction,
   getEnrollementsByRessourceAction,
+  updateSessionStatusAction,
 } from "@/actions/enrollment.actions";
 
 /* ================================================================
@@ -21,6 +22,8 @@ interface SessionItem {
   _id: string;
   slug: string;
   designation: string;
+  type?: "parcours" | "competition";
+  status?: "ACTIVE" | "INACTIVE" | "COMPLETED" | "PAYMENT";
   startDate: string;
   endDate: string;
   ressources?: { type: "Parcours" | "Competition"; refId: any }[];
@@ -63,6 +66,7 @@ const SessionModal = ({
   const [etape, setEtape] = useState(1);
   const [form, setForm] = useState({
     designation: session?.designation || "",
+    type: session?.type || "parcours",
     startDate: session?.startDate?.split("T")[0] || "",
     endDate: session?.endDate?.split("T")[0] || "",
   });
@@ -96,7 +100,7 @@ const SessionModal = ({
     setSelectedRessources(prev =>
       prev.some(r => r.type === type && r.refId === refId)
         ? prev.filter(r => !(r.type === type && r.refId === refId))
-        : [...prev, { type, refId }]
+        : [...prev.filter((item) => item.type === type), { type, refId }]
     );
   };
 
@@ -112,7 +116,7 @@ const SessionModal = ({
       }
 
       if (mode === "create" || !createdId) {
-        const res = await createSessionAction(form);
+        const res = await createSessionAction(form as any);
         if (!res.success) throw new Error(res.error);
         setCreatedId(res.session._id);
       }
@@ -178,6 +182,28 @@ const SessionModal = ({
                 placeholder="Ex: Session Juillet 2026"
                 className="w-full rounded-lg border border-stroke bg-transparent px-4 py-2.5 text-sm text-black outline-none transition focus:border-primary dark:border-strokedark dark:text-white" />
             </div>
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-black dark:text-white">Type</label>
+              <div className="grid grid-cols-2 gap-2">
+                {(["parcours", "competition"] as const).map((item) => (
+                  <button
+                    key={item}
+                    type="button"
+                    onClick={() => {
+                      setForm(f => ({ ...f, type: item }));
+                      setSelectedRessources([]);
+                    }}
+                    className={`rounded-lg border px-3 py-2 text-sm font-medium transition ${
+                      form.type === item
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-stroke text-waterloo hover:border-primary dark:border-strokedark"
+                    }`}
+                  >
+                    {item === "parcours" ? "Parcours" : "CompÃ©tition"}
+                  </button>
+                ))}
+              </div>
+            </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-black dark:text-white">Date début</label>
@@ -209,11 +235,11 @@ const SessionModal = ({
                   <h5 className="mb-2 text-xs font-semibold uppercase text-waterloo">Parcours</h5>
                   <div className="space-y-1.5 max-h-48 overflow-y-auto">
                     {availableParcours.map(p => (
-                      <button key={p._id} onClick={() => toggleRessource("Parcours", p._id)}
+                      <button key={p._id} disabled={form.type !== "parcours"} onClick={() => toggleRessource("Parcours", p._id)}
                         className={`w-full rounded-lg border px-3 py-2 text-left text-xs transition ${
                           isRessourceSelected("Parcours", p._id)
                             ? "border-primary bg-primary/10 text-primary"
-                            : "border-stroke text-waterloo hover:border-primary dark:border-strokedark"
+                            : "border-stroke text-waterloo hover:border-primary disabled:opacity-40 dark:border-strokedark"
                         }`}>{p.designation}</button>
                     ))}
                     {availableParcours.length === 0 && <p className="text-xs text-waterloo/60">Aucun parcours actif</p>}
@@ -224,11 +250,11 @@ const SessionModal = ({
                   <h5 className="mb-2 text-xs font-semibold uppercase text-waterloo">Compétitions</h5>
                   <div className="space-y-1.5 max-h-48 overflow-y-auto">
                     {availableCompetitions.map(c => (
-                      <button key={c._id} onClick={() => toggleRessource("Competition", c._id)}
+                      <button key={c._id} disabled={form.type !== "competition"} onClick={() => toggleRessource("Competition", c._id)}
                         className={`w-full rounded-lg border px-3 py-2 text-left text-xs transition ${
                           isRessourceSelected("Competition", c._id)
                             ? "border-primary bg-primary/10 text-primary"
-                            : "border-stroke text-waterloo hover:border-primary dark:border-strokedark"
+                            : "border-stroke text-waterloo hover:border-primary disabled:opacity-40 dark:border-strokedark"
                         }`}>{c.designation}</button>
                     ))}
                     {availableCompetitions.length === 0 && <p className="text-xs text-waterloo/60">Aucune compétition active</p>}
@@ -308,6 +334,25 @@ export default function Enrollements() {
     await deleteSessionAction(id);
     fetchSessions();
   };
+
+  const handleUpdateStatus = async (session: SessionItem, status: "ACTIVE" | "INACTIVE" | "COMPLETED" | "PAYMENT", e: React.MouseEvent) => {
+    e.stopPropagation();
+    const res = await updateSessionStatusAction(session._id, status);
+    if (res.success) {
+      fetchSessions();
+      if (selectedSession?._id === session._id && res.session) setSelectedSession(res.session);
+    } else {
+      alert(res.error || "Changement de statut impossible.");
+    }
+  };
+
+  const getSessionType = (session: SessionItem) =>
+    session.type || ((session.ressources || []).some((r) => r.type === "Competition") ? "competition" : "parcours");
+
+  const getStatusWorkflow = (session: SessionItem) =>
+    getSessionType(session) === "competition"
+      ? (["ACTIVE", "INACTIVE", "COMPLETED"] as const)
+      : (["ACTIVE", "PAYMENT"] as const);
 
   const handleSelectSession = (session: SessionItem) => {
     setSelectedSession(session);
@@ -413,6 +458,27 @@ export default function Enrollements() {
                     <span>Du {formatDate(session.startDate)}</span>
                     <span>•</span>
                     <span>au {formatDate(session.endDate)}</span>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-2 text-xs">
+                    <span className="rounded-full bg-primary/10 px-2.5 py-1 font-medium text-primary">
+                      {getSessionType(session) === "parcours" ? "Parcours" : "CompÃ©tition"}
+                    </span>
+                    <span className="rounded-full bg-stroke px-2.5 py-1 font-medium text-black dark:bg-strokedark dark:text-white">
+                      {session.status || "ACTIVE"}
+                    </span>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {getStatusWorkflow(session).map((status) => (
+                      <button
+                        key={status}
+                        type="button"
+                        onClick={(e) => handleUpdateStatus(session, status, e)}
+                        disabled={(session.status || "ACTIVE") === status}
+                        className="rounded-md border border-stroke px-2 py-1 text-[11px] font-medium text-waterloo transition hover:border-primary hover:text-primary disabled:cursor-default disabled:border-primary disabled:bg-primary/10 disabled:text-primary dark:border-strokedark"
+                      >
+                        {status}
+                      </button>
+                    ))}
                   </div>
                 </motion.div>
               ))}

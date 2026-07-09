@@ -103,11 +103,12 @@ export default function VipMatchs() {
             {enrollments.map((enr) => {
               const competition = enr.competitionId || {};
               const session = enr.sessionId || {};
+              const remainingGames = enr.remainingGames ?? Math.max(0, (enr?.maxParties || 0) - (enr.parties || 0));
               return (
                 <button
                   key={enr._id}
-                  onClick={() => (enr?.maxParties || 0) - (enr.parties || 0) > 0 ? handleStart(enr._id, competition?.cagnote / (enr?.maxParties || 1)) : console.log("Vous n'avez plus assez de parties")}
-                  disabled={starting === enr._id && (enr?.maxParties || 0) - (enr.parties || 0) > 0}
+                  onClick={() => remainingGames > 0 && session.status === "COMPLETED" ? handleStart(enr._id, 0) : console.log("Match indisponible")}
+                  disabled={starting === enr._id || remainingGames <= 0 || session.status !== "COMPLETED"}
                   className="group flex items-center gap-3 rounded-xl border border-stroke bg-white p-4 text-left transition-all hover:border-primary hover:shadow-md dark:border-strokedark dark:bg-blacksection disabled:opacity-50"
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-500/10">

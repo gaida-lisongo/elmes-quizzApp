@@ -91,12 +91,13 @@ export default function AdvancedParcours() {
             {enrollments.map((enr) => {
               const parcours = enr.parcoursId || {};
               const session = enr.sessionId || {};
-              const maxParties = parcours.questions || 0;
+              const maxParties = enr.totalGrantedGames || enr.maxParties || 0;
+              const remainingGames = enr.remainingGames ?? Math.max(0, maxParties - (enr.parties || 0));
               return (
                 <button
                   key={enr._id}
                   onClick={() => handleStart(enr._id)}
-                  disabled={starting === enr._id || enr.parties >= maxParties}
+                  disabled={starting === enr._id || remainingGames <= 0 || session.status !== "ACTIVE"}
                   className="group flex items-center gap-3 rounded-xl border border-stroke bg-white p-4 text-left transition-all hover:border-primary hover:shadow-md dark:border-strokedark dark:bg-blacksection disabled:opacity-50"
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-500/10">

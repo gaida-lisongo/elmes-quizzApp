@@ -7,10 +7,50 @@ import EnrollementModule from "@/lib/models/Enrollement";
 import Partie from "@/lib/models/Partie";
 import Player from "@/lib/models/Player";
 import Equipe from "@/lib/models/Equipe";
+import { Competition, Parcours } from "@/lib/models/Competition";
+import { sendMail } from "@/lib/utils/mail";
 import { initiatePaymentAction, checkPaymentStatusAction, type PaymentMethod } from "@/actions/payment.actions";
+import { distributeCompetitionSessionRewards, distributeParcoursSessionRewards } from "@/lib/utils/enrollmentRewards";
 import { randomUUID } from "crypto";
 
 const { Enrollement, Session } = EnrollementModule;
+const PARCOURS_GRANTED_GAMES = 180;
+const COMPETITION_GRANTED_GAMES = 250;
+
+const normalizeSessionStatus = (status: string) => status.toUpperCase();
+
+async function sendEnrollmentEmail({
+  email,
+  sessionName,
+  resourceName,
+  orderNumber,
+  ressources,
+}: {
+  email?: string;
+  sessionName: string;
+  resourceName: string;
+  orderNumber: string;
+  ressources?: string;
+}) {
+  if (!email?.trim()) return;
+  try {
+    await sendMail({
+      to: email,
+      subject: 'ELMES-QUIZ - Confirmation d’enrollement',
+      html: `
+        <div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;background:#f7f9fc;border-radius:16px;">
+          <h2 style="margin:0 0 12px;color:#0f172a;">Enrollement confirmé</h2>
+          <p style="margin:0 0 12px;color:#334155;">Votre enrollement à la session <strong>${sessionName}</strong> est confirmé.</p>
+          <p style="margin:0 0 12px;color:#334155;"><strong>Ressource :</strong> ${resourceName}</p>
+          <p style="margin:0 0 12px;color:#334155;"><strong>Commande / facture :</strong> ${orderNumber}</p>
+          <p style="margin:0;color:#334155;"><strong>À préparer :</strong> ${ressources?.trim() || 'Ressource à consulter dans votre espace joueur.'}</p>
+        </div>
+      `,
+    });
+  } catch (error) {
+    console.error('[sendEnrollmentEmail]', error);
+  }
+}
 
 // ── INFOS JOUEUR / ÉQUIPE CONNECTÉ(E) ──────────────────────────────
 
@@ -125,7 +165,7 @@ export async function getActiveSessionsAction() {
   try {
     await connectToDb();
     const now = new Date();
-    const sessions = await Session.find({ endDate: { $gte: now } })
+    const sessions = await Session.find({ endDate: { $gte: now }, status: 'ACTIVE' })
       .sort({ startDate: 1 })
       .lean();
     return {
@@ -152,7 +192,8 @@ export async function getSessionsByRessourceAction(
     await connectToDb();
     const now = new Date();
     const sessions = await Session.find({
-      ...(activeOnly ? { endDate: { $gte: now } } : {}),
+      ...(activeOnly ? { endDate: { $gte: now }, status: 'ACTIVE' } : {}),
+      $or: [{ type: type === 'Parcours' ? 'parcours' : 'competition' }, { type: { $exists: false } }],
       ressources: {
         $elemMatch: {
           type,
@@ -183,13 +224,33 @@ export async function enrollToParcoursAction(
     await connectToDb();
 
     // Résoudre le Player depuis le userId de la session
-    const player = await Player.findOne({ userId: new mongoose.Types.ObjectId(userSession.userId) }).lean();
+    const player = await Player.findOne({ userId: new mongoose.Types.ObjectId(userSession.userId) })
+      .populate('userId', 'email')
+      .lean();
     if (!player) return { success: false, error: 'Profil joueur introuvable' };
     if (player.type !== 'ADVANCED') {
       return { success: false, error: 'Seuls les profils ADVANCED peuvent s\'inscrire à un parcours' };
     }
 
     const playerId = player._id.toString();
+
+    const sessionDoc = await Session.findOne({
+      _id: new mongoose.Types.ObjectId(sessionId),
+      $or: [{ type: 'parcours' }, { type: { $exists: false } }],
+      status: 'ACTIVE',
+      ressources: {
+        $elemMatch: {
+          type: 'Parcours',
+          refId: new mongoose.Types.ObjectId(parcoursId),
+        },
+      },
+    }).lean();
+    if (!sessionDoc) {
+      return { success: false, error: 'Cette session de parcours n’est pas ouverte aux enrollements' };
+    }
+
+    const parcours = await Parcours.findById(parcoursId).select('designation ressources').lean();
+    if (!parcours) return { success: false, error: 'Parcours introuvable' };
 
     // Vérifier que le joueur n'est pas déjà inscrit à ce parcours pour cette session
     const existing = await Enrollement.findOne({
@@ -214,10 +275,22 @@ export async function enrollToParcoursAction(
       code,
       orderNumber,
       status: 'CONFIRMED',
-      maxParties: 100,
+      maxParties: PARCOURS_GRANTED_GAMES,
+      totalGrantedGames: PARCOURS_GRANTED_GAMES,
+      usedGames: 0,
+      remainingGames: PARCOURS_GRANTED_GAMES,
       points: 0,
       parties: 0,
       transactions: [],
+    });
+
+    // TODO: brancher ici le paiement d'enrollement parcours si le produit de paiement Advanced est activé.
+    await sendEnrollmentEmail({
+      email: (player.userId as any)?.email,
+      sessionName: (sessionDoc as any).designation,
+      resourceName: (parcours as any).designation,
+      orderNumber,
+      ressources: (parcours as any).ressources,
     });
 
     return {
@@ -253,7 +326,9 @@ export async function enrollToCompetitionAction(
     await connectToDb();
 
     // Résoudre le Player depuis la session
-    const player = await Player.findOne({ userId: new mongoose.Types.ObjectId(userSession.userId) }).lean();
+    const player = await Player.findOne({ userId: new mongoose.Types.ObjectId(userSession.userId) })
+      .populate('userId', 'email')
+      .lean();
     if (!player) return { success: false, error: 'Profil joueur introuvable' };
 
     // Vérifier que le joueur est VIP
@@ -268,6 +343,24 @@ export async function enrollToCompetitionAction(
     }
 
     const equipeId = equipe._id.toString();
+
+    const sessionDoc = await Session.findOne({
+      _id: new mongoose.Types.ObjectId(sessionId),
+      $or: [{ type: 'competition' }, { type: { $exists: false } }],
+      status: 'ACTIVE',
+      ressources: {
+        $elemMatch: {
+          type: 'Competition',
+          refId: new mongoose.Types.ObjectId(competitionId),
+        },
+      },
+    }).lean();
+    if (!sessionDoc) {
+      return { success: false, error: 'Cette session de compétition n’est pas ouverte aux enrollements' };
+    }
+
+    const competition = await Competition.findById(competitionId).select('designation ressources').lean();
+    if (!competition) return { success: false, error: 'Compétition introuvable' };
 
     // Vérifier que l'équipe n'est pas déjà inscrite
     const existing = await Enrollement.findOne({
@@ -316,7 +409,10 @@ export async function enrollToCompetitionAction(
       code,
       orderNumber,
       status: 'PENDING',
-      maxParties: 250,
+      maxParties: COMPETITION_GRANTED_GAMES,
+      totalGrantedGames: COMPETITION_GRANTED_GAMES,
+      usedGames: 0,
+      remainingGames: COMPETITION_GRANTED_GAMES,
       points: 0,
       parties: 0,
       transactions: [{
@@ -357,7 +453,13 @@ export async function confirmCompetitionEnrollmentPaymentAction(
 
     await connectToDb();
 
-    const enrollment = await Enrollement.findById(enrollmentId);
+    const enrollment = await Enrollement.findById(enrollmentId)
+      .populate('sessionId', 'designation')
+      .populate('competitionId', 'designation ressources')
+      .populate({
+        path: 'equipeId',
+        populate: { path: 'chefId', populate: { path: 'userId', select: 'email' } },
+      });
     if (!enrollment) return { success: false, error: 'Enrollement introuvable' };
     if (enrollment.orderNumber !== orderNumber) {
       return { success: false, error: 'Commande invalide pour cet enrollement' };
@@ -369,11 +471,23 @@ export async function confirmCompetitionEnrollmentPaymentAction(
     // }
 
     enrollment.status = 'CONFIRMED';
+    enrollment.totalGrantedGames = enrollment.totalGrantedGames || COMPETITION_GRANTED_GAMES;
+    enrollment.usedGames = enrollment.usedGames || enrollment.parties || 0;
+    enrollment.remainingGames = Math.max(0, (enrollment.totalGrantedGames || COMPETITION_GRANTED_GAMES) - (enrollment.usedGames || 0));
+    enrollment.maxParties = enrollment.totalGrantedGames || COMPETITION_GRANTED_GAMES;
     enrollment.transactions = (enrollment.transactions || []).map((transaction: any) => {
       if (transaction.orderNumber === orderNumber) transaction.status = 'PAID';
       return transaction;
     });
     await enrollment.save();
+
+    await sendEnrollmentEmail({
+      email: (enrollment.equipeId as any)?.chefId?.userId?.email,
+      sessionName: (enrollment.sessionId as any)?.designation || 'Session',
+      resourceName: (enrollment.competitionId as any)?.designation || 'Compétition',
+      orderNumber,
+      ressources: (enrollment.competitionId as any)?.ressources,
+    });
 
     return {
       success: true,
@@ -516,6 +630,7 @@ export async function createSessionAction(data: {
   designation: string;
   startDate: string;
   endDate: string;
+  type?: 'parcours' | 'competition';
 }) {
   try {
     const userSession = await getSession();
@@ -532,6 +647,7 @@ export async function createSessionAction(data: {
     const session = await Session.create({
       slug,
       designation: data.designation,
+      type: data.type || 'parcours',
       startDate: new Date(data.startDate),
       endDate: new Date(data.endDate),
       ressources: [],
@@ -557,15 +673,69 @@ export async function updateSessionRessourcesAction(
     }
     await connectToDb();
 
+    const current = await Session.findById(sessionId).lean();
+    if (!current) return { success: false, error: 'Session introuvable' };
+
+    const resolvedSessionType = current.type || (ressources[0]?.type === 'Competition' ? 'competition' : 'parcours');
+    const expectedResourceType = resolvedSessionType === 'competition' ? 'Competition' : 'Parcours';
+    if (ressources.some((item) => item.type !== expectedResourceType)) {
+      return { success: false, error: `Une session ${resolvedSessionType} ne peut contenir que des ressources ${expectedResourceType}` };
+    }
+
     const session = await Session.findByIdAndUpdate(
       sessionId,
-      { $set: { ressources: ressources.map(r => ({ type: r.type, refId: r.refId })) } },
+      { $set: { type: resolvedSessionType, ressources: ressources.map(r => ({ type: r.type, refId: r.refId })) } },
       { new: true },
     ).populate('ressources.refId').lean();
 
     if (!session) return { success: false, error: 'Session introuvable' };
 
     return { success: true, session: JSON.parse(JSON.stringify(session)) };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+export async function updateSessionStatusAction(
+  sessionId: string,
+  nextStatus: 'ACTIVE' | 'INACTIVE' | 'COMPLETED' | 'PAYMENT' | 'active' | 'inactive' | 'completed' | 'payment',
+) {
+  try {
+    const userSession = await getSession();
+    if (!userSession || !['ADMIN', 'MOD'].includes(userSession.role)) {
+      return { success: false, error: 'Non autorisé' };
+    }
+    await connectToDb();
+
+    const normalizedStatus = normalizeSessionStatus(nextStatus);
+    const session = await Session.findById(sessionId);
+    if (!session) return { success: false, error: 'Session introuvable' };
+
+    const sessionType = session.type || ((session.ressources || []).some((item: any) => item.type === 'Competition') ? 'competition' : 'parcours');
+    const allowedByType: Record<string, string[]> = {
+      parcours: ['ACTIVE', 'PAYMENT'],
+      competition: ['ACTIVE', 'INACTIVE', 'COMPLETED'],
+    };
+    if (!allowedByType[sessionType]?.includes(normalizedStatus)) {
+      return { success: false, error: `Statut ${normalizedStatus} invalide pour une session ${sessionType}` };
+    }
+
+    session.type = sessionType as any;
+    session.status = normalizedStatus as any;
+    await session.save();
+
+    let workflowResult: any = null;
+    if (session.type === 'parcours' && normalizedStatus === 'PAYMENT') {
+      workflowResult = await distributeParcoursSessionRewards(sessionId);
+    }
+    // Dans ce code existant, COMPLETED correspond à l'ouverture effective des matchs VIP.
+    // La distribution proportionnelle est tentée ici et reste idempotente si elle a déjà été faite.
+    if (session.type === 'competition' && normalizedStatus === 'COMPLETED') {
+      workflowResult = await distributeCompetitionSessionRewards(sessionId);
+    }
+
+    const updated = await Session.findById(sessionId).populate('ressources.refId').lean();
+    return { success: true, session: JSON.parse(JSON.stringify(updated)), workflowResult };
   } catch (error: any) {
     return { success: false, error: error.message };
   }

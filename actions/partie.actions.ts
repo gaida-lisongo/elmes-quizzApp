@@ -13,6 +13,8 @@ import Equipe from '@/lib/models/Equipe';
 import { Competition, Parcours } from '@/lib/models/Competition';
 
 const { Enrollement } = EnrollementModule;
+const PARCOURS_GRANTED_GAMES = 180;
+const COMPETITION_GRANTED_GAMES = 250;
 
 // â”€â”€ CONSTANTES DE JEU â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
@@ -76,7 +78,7 @@ export async function getMyParcoursEnrollmentsAction() {
       status: { $in: ['PENDING', 'CONFIRMED'] },
     })
       .populate('parcoursId', 'designation description questions slug')
-      .populate('sessionId', 'designation startDate endDate')
+      .populate('sessionId', 'designation startDate endDate status type')
       .sort({ createdAt: -1 })
       .lean();
 
@@ -105,7 +107,7 @@ export async function getMyEquipeEnrollmentsAction() {
       status: 'CONFIRMED',
     })
       .populate('competitionId', 'designation description categories questions slug')
-      .populate('sessionId', 'designation startDate endDate')
+      .populate('sessionId', 'designation startDate endDate status type')
       .sort({ createdAt: -1 })
       .lean();
 
@@ -213,14 +215,37 @@ export async function startParcoursPartieAction(enrollmentId: string) {
     const player = await Player.findOne({ userId: session.userId }).lean();
     if (!player) return { success: false, error: 'Profil joueur introuvable' };
 
-    const enrollment = await Enrollement.findById(enrollmentId).populate('parcoursId').lean();
+    const enrollment = await Enrollement.findById(enrollmentId)
+      .populate('parcoursId')
+      .populate('sessionId', 'status type')
+      .lean();
     if (!enrollment) return { success: false, error: 'Inscription introuvable' };
+    if (enrollment.status !== 'CONFIRMED') {
+      return { success: false, error: 'Cet enrollement n’est pas confirmé.' };
+    }
+    if (enrollment.playerId?.toString() !== player._id.toString()) {
+      return { success: false, error: 'Cet enrollement ne vous appartient pas.' };
+    }
+
+    const sessionDoc = enrollment.sessionId as any;
+    if (!sessionDoc || sessionDoc.status !== 'ACTIVE') {
+      return { success: false, error: 'Cette session de parcours n’est pas active.' };
+    }
+    if (sessionDoc.type && sessionDoc.type !== 'parcours') {
+      return { success: false, error: 'Session de parcours invalide.' };
+    }
 
     const parcours = enrollment.parcoursId as any;
     if (!parcours) return { success: false, error: 'Parcours introuvable' };
 
     // VÃ©rifier le nombre max de parties
-    if (enrollment.parties >= (enrollment.maxParties || parcours.questions || 0)) {
+    const totalGrantedGames = enrollment.totalGrantedGames || enrollment.maxParties || PARCOURS_GRANTED_GAMES;
+    const usedGames = enrollment.usedGames ?? enrollment.parties ?? 0;
+    const remainingGames = enrollment.remainingGames && enrollment.remainingGames > 0
+      ? enrollment.remainingGames
+      : Math.max(0, totalGrantedGames - usedGames);
+
+    if (remainingGames <= 0) {
       return { success: false, error: 'Vous avez atteint le nombre maximum de parties pour ce parcours.' };
     }
 
@@ -240,7 +265,30 @@ export async function startParcoursPartieAction(enrollmentId: string) {
     }
 
     // IncrÃ©menter le compteur de parties de l'enrollment
-    await Enrollement.findByIdAndUpdate(enrollmentId, { $inc: { parties: 1 } });
+    const consumedEnrollment = await Enrollement.findOneAndUpdate(
+      {
+        _id: enrollmentId,
+        status: 'CONFIRMED',
+        $or: [
+          { remainingGames: { $gt: 0 } },
+          { totalGrantedGames: { $exists: false } },
+          { totalGrantedGames: 0 },
+          { $expr: { $lt: ['$usedGames', '$totalGrantedGames'] } },
+        ],
+      },
+      {
+        $set: {
+          totalGrantedGames,
+          maxParties: totalGrantedGames,
+          remainingGames: Math.max(0, remainingGames - 1),
+        },
+        $inc: { parties: 1, usedGames: 1 },
+      },
+      { new: true },
+    ).lean();
+    if (!consumedEnrollment) {
+      return { success: false, error: 'Aucune partie restante sur cet enrollement.' };
+    }
 
     const partie = await Partie.create({
       playerId: player._id,
@@ -271,6 +319,7 @@ export async function startParcoursPartieAction(enrollmentId: string) {
         notes: 0,
         playerId: player._id.toString(),
         mode: 'ADVANCED',
+        parties: consumedEnrollment.remainingGames,
       } as PartieActiveData,
     };
   } catch (error: any) {
@@ -290,10 +339,21 @@ export async function startMatchPartieAction(enrollmentId: string) {
     const player = await Player.findOne({ userId: session.userId }).lean();
     if (!player) return { success: false, error: 'Profil joueur introuvable' };
 
-    const enrollment = await Enrollement.findById(enrollmentId).populate('competitionId').lean();
+    const enrollment = await Enrollement.findById(enrollmentId)
+      .populate('competitionId')
+      .populate('sessionId', 'status type')
+      .lean();
     if (!enrollment) return { success: false, error: 'Inscription introuvable' };
     if (enrollment.status !== 'CONFIRMED') {
       return { success: false, error: 'Cet enrollement n\'est pas confirmÃƒÂ©.' };
+    }
+
+    const sessionDoc = enrollment.sessionId as any;
+    if (!sessionDoc || sessionDoc.status !== 'COMPLETED') {
+      return { success: false, error: 'Les matchs ne sont pas ouverts pour cette session.' };
+    }
+    if (sessionDoc.type && sessionDoc.type !== 'competition') {
+      return { success: false, error: 'Session de compétition invalide.' };
     }
 
     const equipe = await Equipe.findOne({
@@ -307,7 +367,13 @@ export async function startMatchPartieAction(enrollmentId: string) {
     const competition = enrollment.competitionId as any;
     if (!competition) return { success: false, error: 'CompÃ©tition introuvable' };
 
-    if (enrollment.parties >= (enrollment.maxParties || 0)) {
+    const totalGrantedGames = enrollment.totalGrantedGames || enrollment.maxParties || COMPETITION_GRANTED_GAMES;
+    const usedGames = enrollment.usedGames ?? enrollment.parties ?? 0;
+    const remainingGames = enrollment.remainingGames && enrollment.remainingGames > 0
+      ? enrollment.remainingGames
+      : Math.max(0, totalGrantedGames - usedGames);
+
+    if (remainingGames <= 0) {
       return { success: false, error: 'Votre equipe a atteint le nombre maximum de parties pour cet enrollement.' };
     }
 
@@ -326,7 +392,30 @@ export async function startMatchPartieAction(enrollmentId: string) {
       return { success: false, error: 'Aucune question disponible pour cette compÃ©tition Ã  votre niveau.' };
     }
 
-    const enrollementData = (await Enrollement.findByIdAndUpdate(enrollmentId, { $inc: { parties: 1 } }, { new: true }))?.toObject();
+    const enrollementData = await Enrollement.findOneAndUpdate(
+      {
+        _id: enrollmentId,
+        status: 'CONFIRMED',
+        $or: [
+          { remainingGames: { $gt: 0 } },
+          { totalGrantedGames: { $exists: false } },
+          { totalGrantedGames: 0 },
+          { $expr: { $lt: ['$usedGames', '$totalGrantedGames'] } },
+        ],
+      },
+      {
+        $set: {
+          totalGrantedGames,
+          maxParties: totalGrantedGames,
+          remainingGames: Math.max(0, remainingGames - 1),
+        },
+        $inc: { parties: 1, usedGames: 1 },
+      },
+      { new: true },
+    ).lean();
+    if (!enrollementData) {
+      return { success: false, error: 'Aucune partie restante sur cet enrollement.' };
+    }
 
     const partie = await Partie.create({
       playerId: player._id,
@@ -357,7 +446,7 @@ export async function startMatchPartieAction(enrollmentId: string) {
         notes: 0,
         playerId: player._id.toString(),
         mode: 'VIP',
-        parties : (enrollementData?.maxParties || 0) - (enrollementData?.parties || 0)
+        parties : enrollementData.remainingGames
       } as PartieActiveData,
     };
   } catch (error: any) {
@@ -432,7 +521,9 @@ export async function terminerPartieAction(partieId: string, credits: number) {
     if (newLevel > 3) newLevel = 3;
 
     // DÃ©duire une partie du solde (sauf si partiesInfinity)
-    const partiesRestantes = Math.max(0, (player.parties || 0) - 1);
+    const partiesRestantes = partie.mode === 'STANDALONE'
+      ? Math.max(0, (player.parties || 0) - 1)
+      : (player.parties || 0);
 
     await Player.findByIdAndUpdate(player._id, {
       $set: {
@@ -455,7 +546,6 @@ export async function terminerPartieAction(partieId: string, credits: number) {
       if (partie.mode === 'VIP' && allCorrect && enrollment?.equipeId) {
         await Equipe.findByIdAndUpdate(enrollment.equipeId, {
           $inc: {
-            'metriques.soldeUsd': credits,
             'metriques.matchsWin': 1,
           },
         });

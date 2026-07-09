@@ -41,6 +41,7 @@ const ParcoursSchema: Schema<IParcours> = new Schema(
   {
     designation: { type: String, required: true, trim: true },
     description: { type: String, default: '' },
+    ressources: { type: String, default: '' },
     categories: [{ type: Schema.Types.ObjectId, ref: 'Categorie', required: true }],
     questions: { type: Number, required: true, default: 1 },
     status: { 
