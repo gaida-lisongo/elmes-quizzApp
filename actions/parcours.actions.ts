@@ -63,7 +63,7 @@ export async function getParcoursBySlug(slug: string) {
 export async function createParcours(data: {
   designation: string;
   description: string;
-  ressoursces?: string;
+  ressources?: string;
   categories: string[];
   questions: number;
   image?: string;
@@ -78,7 +78,7 @@ export async function createParcours(data: {
     const parcours = await Parcours.create({
       designation: data.designation,
       description: data.description,
-      ressources: data.ressoursces || '',
+      ressources: data.ressources || '',
       categories: data.categories,
       questions: data.questions || 1,
       image: data.image || '',

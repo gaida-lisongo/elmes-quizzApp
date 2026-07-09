@@ -4,6 +4,8 @@ import connectToDb from "@/lib/utils/db";
 import User from "@/lib/models/User";
 import Player from "@/lib/models/Player";
 import Agent from "@/lib/models/Agent";
+import Equipe from "@/lib/models/Equipe";
+import EnrollementModule from "@/lib/models/Enrollement";
 import { initiateCollection, initiatePayout, checkStatus, initialCard } from "@/lib/utils/payment.service";
 import { getSession } from "@/lib/utils/auth";
 import type { PipelineStage } from "mongoose";
@@ -41,14 +43,31 @@ const PACK_NAMES: Record<number, string> = {
   3: "ELONGA",
 };
 
-const buildVerificationUrl = (orderNumber: string) => {
+const { Enrollement } = EnrollementModule;
+
+const buildVerificationUrl = (
+  orderNumber: string,
+  params: {
+    playerId?: string;
+    resourceType?: string;
+    resourceId?: string;
+    reference?: string;
+    date?: string | number;
+  } = {},
+) => {
   const baseUrl =
     process.env.PAYMENT_VERIFICATION_URL ||
     process.env.NEXT_PUBLIC_PAYMENT_VERIFICATION_URL ||
     process.env.NEXT_PUBLIC_APP_URL ||
     process.env.APP_URL ||
     "https://elmes-quiz.com";
-  return `${baseUrl.replace(/\/$/, "")}/payment/verification?type=email&orderNumber=${encodeURIComponent(orderNumber)}`;
+  const search = new URLSearchParams();
+  search.set("type", "email");
+  search.set("orderNumber", orderNumber);
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== "") search.set(key, String(value));
+  });
+  return `${baseUrl.replace(/\/$/, "")}/payment/verification?${search.toString()}`;
 };
 
 const getCollectionByMethod = (method: PaymentMethod) => {
@@ -69,6 +88,10 @@ const notifyPaymentByEmail = async ({
   currency,
   productName,
   status,
+  playerId,
+  resourceType,
+  resourceId,
+  reference,
 }: {
   email?: string;
   orderNumber: string;
@@ -76,11 +99,21 @@ const notifyPaymentByEmail = async ({
   currency: "CDF" | "USD";
   productName: string;
   status: "initiated" | "confirmed" | "pending" | "failed";
+  playerId?: string;
+  resourceType?: string;
+  resourceId?: string;
+  reference?: string;
 }) => {
   if (!email?.trim()) return;
 
   try {
-    const verificationUrl = buildVerificationUrl(orderNumber);
+    const verificationUrl = buildVerificationUrl(orderNumber, {
+      playerId,
+      resourceType,
+      resourceId,
+      reference,
+      date: Date.now(),
+    });
     const statusLabel =
       status === "confirmed"
         ? "confirmée"
@@ -229,7 +262,13 @@ export async function initiatePaymentAction(
     const player = await Player.findById(playerId).populate('userId', 'email pseudo');
     if (!player) return { success: false, error: 'Joueur introuvable.' };
 
-    const reference = `PAY-${product.type}-${(product.id).slice(-1, 5)}`;
+    const reference = `PAY-${product.type}-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+    const resourceId =
+      product.metadata?.enrollmentId ||
+      product.metadata?.equipeId ||
+      product.metadata?.competitionId ||
+      product.metadata?.captainId ||
+      product.id;
     console.log("Initiating payment with reference:", reference);
 
     const collection = await getCollectionByMethod(paymentMethod)({
@@ -237,6 +276,13 @@ export async function initiatePaymentAction(
       amount,
       reference,
       currency,
+      verificationParams: {
+        playerId,
+        resourceType: product.type,
+        resourceId,
+        reference,
+        date: Date.now(),
+      },
     });
 
     console.log("Payment initiation response:", collection);
@@ -267,6 +313,9 @@ export async function initiatePaymentAction(
       reference,
       status: 'EN_ATTENTE',
       targetLevel,
+      productType: product.type,
+      resourceId: String(resourceId || product.id),
+      metadata: product.metadata || {},
       currency,
       createdAt: new Date(),
     });
@@ -283,6 +332,10 @@ export async function initiatePaymentAction(
         currency,
         productName: product.name,
         status: 'initiated',
+        playerId,
+        resourceType: product.type,
+        resourceId: String(resourceId || product.id),
+        reference,
       });
     }
 
@@ -409,6 +462,154 @@ export async function verifyRechargeByOrderNumberAction(orderNumber: string) {
   }
 }
 
+export async function verifyPersistedPaymentAction(params: {
+  orderNumber?: string;
+  reference?: string;
+  playerId?: string;
+  resourceType?: string;
+  resourceId?: string;
+}) {
+  try {
+    const identifier = params.orderNumber?.trim() || params.reference?.trim();
+    if (!identifier) {
+      return { success: false, error: "Aucun numero de commande ou reference fourni." };
+    }
+
+    await connectToDb();
+
+    const playerQuery: any = {
+      $or: [
+        { "recharges.providerTxId": identifier },
+        { "recharges.reference": identifier },
+      ],
+    };
+    if (params.playerId) playerQuery._id = params.playerId;
+
+    const player = await Player.findOne(playerQuery);
+    if (!player) {
+      const enrollment = await Enrollement.findOne({
+        $or: [{ orderNumber: identifier }, { "transactions.orderNumber": identifier }],
+      });
+      if (!enrollment) return { success: false, error: "Transaction introuvable." };
+
+      if (enrollment.status === "CONFIRMED") {
+        return { success: true, status: "SUCCES", message: "Enrollement deja confirme." };
+      }
+
+      const statusCheck = await checkStatus(enrollment.orderNumber);
+      if (!statusCheck.success) return { success: false, error: statusCheck.error || "Impossible de verifier le paiement." };
+
+      if (statusCheck.status === "SUCCES") {
+        enrollment.status = "CONFIRMED";
+        enrollment.transactions = (enrollment.transactions || []).map((transaction: any) => {
+          if (transaction.orderNumber === enrollment.orderNumber) transaction.status = "PAID";
+          return transaction;
+        });
+        await enrollment.save();
+      }
+
+      return {
+        success: true,
+        status: statusCheck.status,
+        message: statusCheck.status === "SUCCES" ? "Enrollement confirme." : "Paiement non confirme.",
+      };
+    }
+
+    const rechargeIndex = player.recharges.findIndex(
+      (item) => item.providerTxId === identifier || item.reference === identifier,
+    );
+    const recharge = player.recharges[rechargeIndex];
+    if (!recharge) return { success: false, error: "Transaction introuvable." };
+
+    const resourceType = params.resourceType || recharge.productType || "TRAINING_PASS";
+    const providerOrderNumber = recharge.providerTxId;
+
+    if (recharge.status !== "EN_ATTENTE") {
+      return {
+        success: true,
+        status: recharge.status,
+        orderNumber: providerOrderNumber,
+        message: recharge.status === "SUCCES" ? "Transaction deja validee." : "Transaction deja traitee.",
+      };
+    }
+
+    const statusCheck = await checkStatus(providerOrderNumber);
+    if (!statusCheck.success) {
+      return { success: false, error: statusCheck.error || "Impossible de verifier le statut." };
+    }
+
+    player.recharges[rechargeIndex].status = statusCheck.status || "ECHEC";
+
+    if (statusCheck.status === "SUCCES") {
+      if (resourceType === "TRAINING_PASS") {
+        const parties = getTrainingPassParties(recharge.amount, recharge.targetLevel);
+        if (parties > 0) player.parties += parties;
+      }
+
+      if (resourceType === "EQUIPE") {
+        const metadata: any = recharge.metadata || {};
+        const captainId = metadata.captainId || params.resourceId || recharge.resourceId;
+        const equipeConditions: any[] = [{ "payment.orderNumber": providerOrderNumber }];
+        if (metadata.designation) {
+          equipeConditions.push({ designation: new RegExp(`^${String(metadata.designation).trim()}$`, "i") });
+        }
+        const existingEquipe = await Equipe.findOne({ $or: equipeConditions });
+
+        if (!existingEquipe && captainId && metadata.designation && metadata.description) {
+          await Equipe.create({
+            chefId: captainId,
+            designation: String(metadata.designation).trim(),
+            description: [String(metadata.description).trim()],
+            logo: String(metadata.logo || "").trim(),
+            payment: [{
+              orderNumber: providerOrderNumber,
+              status: "CONFIRMED",
+              providerText: "FlexPay",
+            }],
+            membres: [{ player: captainId, status: true, isSecretary: true }],
+            metriques: { competitions: 0, soldeUsd: 0, matchsWin: 0 },
+          });
+        }
+      }
+
+      if (resourceType === "COMPETITION") {
+        const metadata: any = recharge.metadata || {};
+        const enrollmentConditions: any[] = [
+          { orderNumber: providerOrderNumber },
+          { "transactions.orderNumber": providerOrderNumber },
+        ];
+        if (metadata.enrollmentId) enrollmentConditions.unshift({ _id: metadata.enrollmentId });
+        const enrollment = await Enrollement.findOne({ $or: enrollmentConditions });
+        if (enrollment && enrollment.status !== "CONFIRMED") {
+          enrollment.status = "CONFIRMED";
+          enrollment.transactions = (enrollment.transactions || []).map((transaction: any) => {
+            if (transaction.orderNumber === providerOrderNumber) transaction.status = "PAID";
+            return transaction;
+          });
+          await enrollment.save();
+        }
+      }
+    }
+
+    await player.save();
+
+    return {
+      success: true,
+      status: statusCheck.status,
+      orderNumber: providerOrderNumber,
+      message:
+        statusCheck.status === "SUCCES"
+          ? "Paiement valide et transaction appliquee."
+          : statusCheck.status === "ECHEC"
+            ? "Le paiement a echoue."
+            : "Paiement encore en attente.",
+    };
+  } catch (error: any) {
+    console.error("[verifyPersistedPaymentAction]", error);
+    return { success: false, error: error.message || "Erreur de verification." };
+  }
+}
+
 // ═══════════════════════════════════════════════════════════════════
 //  RECHARGE JOUEUR (passer à un niveau supérieur)
 // ═══════════════════════════════════════════════════════════════════
@@ -463,6 +664,13 @@ export async function rechargePlayerAction(
       amount: amountProvider,
       reference,
       currency: providerCurrency,
+      verificationParams: {
+        playerId,
+        resourceType: "TRAINING_PASS",
+        resourceId: String(targetLevel),
+        reference,
+        date: Date.now(),
+      },
     });
 
     console.log("Recharge Response :", collection);
@@ -484,6 +692,9 @@ export async function rechargePlayerAction(
       reference,
       status: "EN_ATTENTE",
       targetLevel,
+      productType: "TRAINING_PASS",
+      resourceId: String(targetLevel),
+      metadata: { targetLevel },
       currency,
       createdAt: new Date(),
     });
@@ -500,6 +711,10 @@ export async function rechargePlayerAction(
         currency,
         productName: `Recharge ${PACK_NAMES[targetLevel] || `niveau ${targetLevel}`}`,
         status: "initiated",
+        playerId,
+        resourceType: "TRAINING_PASS",
+        resourceId: String(targetLevel),
+        reference,
       });
     }
 

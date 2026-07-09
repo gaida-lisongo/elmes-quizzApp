@@ -3,7 +3,8 @@ export interface FlexPayProps {
     phone: string,
     reference: string,
     currency: string,
-    amount: number
+    amount: number,
+    verificationParams?: Record<string, string | number | undefined>
 }
 
 export interface FlexPayInitResponse {
@@ -57,8 +58,19 @@ class FlexPay {
         }
     }
 
-    async initCard(phone: string, ref: string, currency: string, amount: number): Promise<FlexPayInitResponse>{
+    async initCard(phone: string, ref: string, currency: string, amount: number, verificationParams: Record<string, string | number | undefined> = {}): Promise<FlexPayInitResponse>{
         try {
+            const buildReturnUrl = (status: string) => {
+                const params = new URLSearchParams();
+                params.set("type", "callback-flexpay");
+                params.set("status", status);
+                params.set("reference", ref);
+                Object.entries(verificationParams).forEach(([key, value]) => {
+                    if (value !== undefined && value !== "") params.set(key, String(value));
+                });
+                return `${APP_URL.replace(/\/$/, "")}/payment/verification?${params.toString()}`;
+            };
+
             const req = await fetch(`${IN.card}`, {
                 method: "POST",
                 headers :{
@@ -74,9 +86,9 @@ class FlexPay {
                     language:"fr",
                     description:`[ELMES-QUIZ] Phone: ${phone}`,
                     callback_url:`${SERVER.replace(/\/$/, "")}/api/flexpay`,
-                    approve_url:`${APP_URL.replace(/\/$/, "")}/payment/verification?type=callback-flexpay&status=approve&orderNumber=${encodeURIComponent(ref)}`,
-                    cancel_url:`${APP_URL.replace(/\/$/, "")}/payment/verification?type=callback-flexpay&status=cancel&orderNumber=${encodeURIComponent(ref)}`,
-                    decline_url:`${APP_URL.replace(/\/$/, "")}/payment/verification?type=callback-flexpay&status=decline&orderNumber=${encodeURIComponent(ref)}`,
+                    approve_url: buildReturnUrl("approve"),
+                    cancel_url: buildReturnUrl("cancel"),
+                    decline_url: buildReturnUrl("decline"),
                 })
             });
 

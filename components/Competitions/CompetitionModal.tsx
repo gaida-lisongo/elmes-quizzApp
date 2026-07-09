@@ -19,6 +19,7 @@ interface CompetitionItem {
   _id: string;
   designation: string;
   description: string;
+  ressources?: string;
   cagnotte: number;
   amount: number;
   categories: { _id: string; designation: string; slug: string }[];
@@ -37,6 +38,7 @@ interface ModalState {
 const EMPTY_FORM = {
   designation: "",
   description: "",
+  ressources: "",
   categories: [] as string[],
   questions: 1,
   cagnotte: 0,
@@ -71,6 +73,7 @@ const CompetitionModal = ({
       setForm({
         designation: modal.data.designation,
         description: modal.data.description || "",
+        ressources: modal.data.ressources || "",
         categories: modal.data.categories?.map((c) => c._id) || [],
         questions: modal.data.questions,
         cagnotte: modal.data.cagnotte,
@@ -114,6 +117,7 @@ const CompetitionModal = ({
       const payload = {
         designation: form.designation,
         description: form.description,
+        ressources: form.ressources,
         categories: form.categories,
         questions: form.questions,
         cagnotte: form.cagnotte,
@@ -226,6 +230,16 @@ const CompetitionModal = ({
                     onChange={(e) => updateField("description", e.target.value)}
                     placeholder="Description de la compétition"
                     rows={4}
+                    className="w-full rounded-lg border border-stroke bg-transparent px-4 py-2 text-black outline-none transition focus:border-primary dark:border-strokedark dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-black dark:text-white">Ressource de préparation</label>
+                  <input
+                    type="url"
+                    value={form.ressources}
+                    onChange={(e) => updateField("ressources", e.target.value)}
+                    placeholder="https://..."
                     className="w-full rounded-lg border border-stroke bg-transparent px-4 py-2 text-black outline-none transition focus:border-primary dark:border-strokedark dark:text-white"
                   />
                 </div>

@@ -6,6 +6,9 @@ export interface IRecharge {
   reference?: string;
   status: 'EN_ATTENTE' | 'SUCCES' | 'ECHEC';
   targetLevel: number;
+  productType?: 'TRAINING_PASS' | 'COMPETITION' | 'EQUIPE';
+  resourceId?: string;
+  metadata?: Record<string, any>;
   currency?: 'CDF' | 'USD';
   createdAt: Date;
 }
@@ -56,6 +59,9 @@ const PlayerSchema: Schema<IPlayer> = new Schema(
         reference: { type: String },
         status: { type: String, enum: ['EN_ATTENTE', 'SUCCES', 'ECHEC'], default: 'EN_ATTENTE' },
         targetLevel: { type: Number, required: true },
+        productType: { type: String, enum: ['TRAINING_PASS', 'COMPETITION', 'EQUIPE'] },
+        resourceId: { type: String },
+        metadata: { type: Schema.Types.Mixed, default: {} },
         currency: { type: String, enum: ['CDF', 'USD'], default: 'CDF' },
         createdAt: { type: Date, default: Date.now }
       }

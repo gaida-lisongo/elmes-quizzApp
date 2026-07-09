@@ -63,6 +63,7 @@ export async function getCompetitionBySlug(slug: string) {
 export async function createCompetition(data: {
   designation: string;
   description: string;
+  ressources?: string;
   categories: string[];
   questions: number;
   cagnotte: number;
@@ -79,6 +80,7 @@ export async function createCompetition(data: {
     const competition = await Competition.create({
       designation: data.designation,
       description: data.description,
+      ressources: data.ressources || '',
       categories: data.categories,
       questions: data.questions || 1,
       cagnotte: data.cagnotte || 0,
@@ -99,6 +101,7 @@ export async function createCompetition(data: {
 export async function updateCompetition(id: string, data: {
   designation?: string;
   description?: string;
+  ressources?: string;
   categories?: string[];
   questions?: number;
   cagnotte?: number;

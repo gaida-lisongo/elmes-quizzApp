@@ -19,6 +19,7 @@ export interface CollectionPayload {
   amount: number;
   reference: string;
   currency?: PaymentCurrency;
+  verificationParams?: Record<string, string | number | undefined>;
 }
 
 export interface PayoutPayload {
@@ -87,6 +88,7 @@ export async function initialCard(payload: CollectionPayload): Promise<PaymentRe
       payload.reference,
       payload.currency || 'USD',
       payload.amount,
+      payload.verificationParams,
     );
 
     if (card.success && card.orderNumber && card.url) {
