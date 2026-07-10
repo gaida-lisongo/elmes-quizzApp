@@ -23,15 +23,9 @@ export interface ICritere extends Document {
   designation: string;
   slug: string;
   description: string;
-  firstPoints: number;
   firstRecompense: number;
-  secondPoints: number;
   secondRecompense: number;
-  thirdPoints: number;
   thirdRecompense: number;
-  first: Array<{playerId?: mongoose.Types.ObjectId; equipeId?: mongoose.Types.ObjectId; createdAt: Date;}>;
-  second: Array<{playerId?: mongoose.Types.ObjectId; equipeId?: mongoose.Types.ObjectId; createdAt: Date;}>;
-  third: Array<{playerId?: mongoose.Types.ObjectId; equipeId?: mongoose.Types.ObjectId; createdAt: Date;}>;
   status: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -81,27 +75,9 @@ const CritereSchema: Schema<ICritere> = new Schema(
     designation: { type: String, required: true, trim: true },
     slug: { type: String, required: true, unique: true },
     description: { type: String, default: '' },
-    firstPoints: { type: Number, required: true, default: 0 },
     firstRecompense: { type: Number, default: 0 },
-    secondPoints: { type: Number, required: true, default: 0 },
     secondRecompense: { type: Number, default: 0 },
-    thirdPoints: { type: Number, required: true, default: 0 },
     thirdRecompense: { type: Number, default: 0 },
-    first: [{
-      playerId: { type: Schema.Types.ObjectId, ref: 'Player' },
-      equipeId: { type: Schema.Types.ObjectId, ref: 'Equipe' },
-      createdAt: { type: Date, default: Date.now },
-    }],
-    second: [{
-      playerId: { type: Schema.Types.ObjectId, ref: 'Player' },
-      equipeId: { type: Schema.Types.ObjectId, ref: 'Equipe' },
-      createdAt: { type: Date, default: Date.now },
-    }],
-    third: [{
-      playerId: { type: Schema.Types.ObjectId, ref: 'Player' },
-      equipeId: { type: Schema.Types.ObjectId, ref: 'Equipe' },
-      createdAt: { type: Date, default: Date.now },
-    }],
     status: { type: Boolean, default: true },
   },
   { timestamps: true }

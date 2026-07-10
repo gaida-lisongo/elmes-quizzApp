@@ -100,9 +100,6 @@ export default function MetricsAgent({ role }: MetricsAgentProps) {
 
   return (
     <div className="space-y-8">
-      <SessionRevenueOverview />
-      {role === "MOD" && <ModeratorPlayerManagement />}
-      {role === "ADMIN" && <AdminTeamManagement />}
       <MetriqueLayout
         data={data}
         role={role}
@@ -114,6 +111,9 @@ export default function MetricsAgent({ role }: MetricsAgentProps) {
         }}
       />
       <CriteresAdmin />
+      <SessionRevenueOverview />
+      {role === "MOD" && <ModeratorPlayerManagement />}
+      {role === "ADMIN" && <AdminTeamManagement />}
     </div>
   );
 }

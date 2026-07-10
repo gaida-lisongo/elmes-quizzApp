@@ -80,7 +80,7 @@ export default function SessionRevenueOverview() {
               total: {
                 show: true,
                 label: "Total encaissé",
-                formatter: () => `${selectedSession.totalRevenue.toLocaleString("fr-FR")} FC`,
+                formatter: () => `${selectedSession.totalRevenue.toLocaleString("fr-FR")} USD`,
               },
             },
           },
@@ -88,7 +88,7 @@ export default function SessionRevenueOverview() {
       },
       tooltip: {
         y: {
-          formatter: (value: number) => `${value.toLocaleString("fr-FR")} FC`,
+          formatter: (value: number) => `${value.toLocaleString("fr-FR")} USD`,
         },
       },
     });
@@ -188,7 +188,7 @@ export default function SessionRevenueOverview() {
                     </p>
                   </div>
                   <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                    {session.totalRevenue.toLocaleString("fr-FR")} FC
+                    {session.totalRevenue.toLocaleString("fr-FR")} USD
                   </span>
                 </div>
                 <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-waterloo">
@@ -212,7 +212,7 @@ export default function SessionRevenueOverview() {
             <>
               <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                 {[
-                  { label: "Total encaissé", value: `${selectedSession.totalRevenue.toLocaleString("fr-FR")} FC` },
+                  { label: "Total encaissé", value: `${selectedSession.totalRevenue.toLocaleString("fr-FR")} USD` },
                   { label: "Enrôlements", value: String(selectedSession.totalEnrollments) },
                   { label: "Paiements validés", value: String(selectedSession.validatedPayments) },
                   { label: "Paiements pending", value: String(selectedSession.pendingPayments) },
@@ -231,7 +231,7 @@ export default function SessionRevenueOverview() {
                     <p className="text-xs text-waterloo">Session sélectionnée : {selectedSession.name}</p>
                   </div>
                   <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                    {selectedSession.totalRevenue.toLocaleString("fr-FR")} FC
+                    {selectedSession.totalRevenue.toLocaleString("fr-FR")} USD
                   </span>
                 </div>
                 <div ref={chartRef} />
@@ -250,7 +250,7 @@ export default function SessionRevenueOverview() {
                           </p>
                         </div>
                         <span className="shrink-0 font-semibold text-primary">
-                          {row.amount.toLocaleString("fr-FR")} FC
+                          {row.amount.toLocaleString("fr-FR")} USD
                         </span>
                       </div>
                     ))}

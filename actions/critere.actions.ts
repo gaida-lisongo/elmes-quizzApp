@@ -37,9 +37,6 @@ export async function createCritereAction(data: {
   sessionId: string;
   designation: string;
   description: string;
-  firstPoints: number;
-  secondPoints: number;
-  thirdPoints: number;
   firstRecompense: string;
   secondRecompense: string;
   thirdRecompense: string;
@@ -57,15 +54,9 @@ export async function createCritereAction(data: {
       designation: data.designation,
       slug,
       description: data.description,
-      firstPoints: data.firstPoints,
-      firstRecompense: Number(data.firstRecompense),
-      secondPoints: data.secondPoints,
-      secondRecompense: Number(data.secondRecompense),
-      thirdPoints: data.thirdPoints,
-      thirdRecompense: Number(data.thirdRecompense),
-      first: [],
-      second: [],
-      third: [],
+      firstRecompense: Number(data.firstRecompense) || 0,
+      secondRecompense: Number(data.secondRecompense) || 0,
+      thirdRecompense: Number(data.thirdRecompense) || 0,
       status: true,
     };
 
@@ -83,11 +74,8 @@ export async function updateCritereAction(
   id: string,
   data: {
     status?: boolean;
-    firstPoints?: number;
     firstRecompense?: number;
-    secondPoints?: number;
     secondRecompense?: number;
-    thirdPoints?: number;
     thirdRecompense?: number;
     designation?: string;
     description?: string;
@@ -104,11 +92,8 @@ export async function updateCritereAction(
     if (data.status !== undefined) update.status = data.status;
     if (data.designation) update.designation = data.designation;
     if (data.description !== undefined) update.description = data.description;
-    if (data.firstPoints !== undefined) update.firstPoints = data.firstPoints;
     if (data.firstRecompense !== undefined) update.firstRecompense = Number(data.firstRecompense);
-    if (data.secondPoints !== undefined) update.secondPoints = data.secondPoints;
     if (data.secondRecompense !== undefined) update.secondRecompense = Number(data.secondRecompense);
-    if (data.thirdPoints !== undefined) update.thirdPoints = data.thirdPoints;
     if (data.thirdRecompense !== undefined) update.thirdRecompense = Number(data.thirdRecompense);
 
     const critere = await Critere.findByIdAndUpdate(id, { $set: update }, { new: true }).lean();
@@ -120,124 +105,18 @@ export async function updateCritereAction(
   }
 }
 
-// ── CLASSEMENT AUTO (qualification) ───────────────────────────────
-
-/**
- * Vérifie pour un critère donné si des enrollements atteignent les paliers.
- * Utilise les points firstPoints/secondPoints/thirdPoints du critère.
- * Fonctionne avec enrollements filtrés par sessionId.
- */
-export async function checkCriteresClassementAction(critereId: string) {
+export async function deleteCritereAction(id: string) {
   try {
+    const session = await getSession();
+    if (!session || !['ADMIN', 'MOD'].includes(session.role)) {
+      return { success: false, error: 'Non autorisé' };
+    }
     await connectToDb();
 
-    const critere = await Critere.findById(critereId).lean();
+    const critere = await Critere.findByIdAndDelete(id).lean();
     if (!critere) return { success: false, error: 'Critère introuvable' };
-    if (!critere.status) return { success: false, error: 'Critère inactif' };
 
-    const { thirdPoints, secondPoints, firstPoints } = critere;
-
-    // Récupérer les enrollements pour cette session
-    const match: any = { status: 'CONFIRMED' };
-    if (critere.sessionId) match.sessionId = critere.sessionId;
-    else return { success: false, error: 'Aucune session associée' };
-
-    // 1. Palier third (6 places)
-    const alreadyThird = (critere.third || []).filter(e => e.playerId || e.equipeId).length;
-    if (alreadyThird < 6) {
-      const qualifiables = await Enrollement.aggregate([
-        { $match: { ...match, points: { $gte: thirdPoints } } },
-        { $sort: { points: -1 } },
-        { $limit: 6 - alreadyThird },
-        { $project: { _id: 1, equipeId: 1, playerId: 1, points: 1 } },
-      ]);
-
-      for (const entry of qualifiables) {
-        await Critere.findByIdAndUpdate(critereId, {
-          $push: {
-            third: {
-              ...(entry.equipeId ? { equipeId: entry.equipeId } : {}),
-              ...(entry.playerId ? { playerId: entry.playerId } : {}),
-              createdAt: new Date(),
-            },
-          },
-        });
-      }
-    }
-
-    // 2. Palier second (4 places)
-    const alreadySecond = (critere.second || []).filter(e => e.playerId || e.equipeId).length;
-    if (alreadySecond < 4) {
-      const thirdEntries = await Critere.findById(critereId).lean();
-      const thirdIds = (thirdEntries?.third || [])
-        .filter(e => e.playerId || e.equipeId)
-        .map(e => (e.playerId || e.equipeId)!);
-      
-      if (thirdIds.length > 0) {
-        const qualifiables = await Enrollement.aggregate([
-          { $match: { ...match, points: { $gte: secondPoints }, $or: [{ playerId: { $in: thirdIds } }, { equipeId: { $in: thirdIds } }] } },
-          { $sort: { points: -1 } },
-          { $limit: Math.min(4 - alreadySecond, thirdIds.length) },
-          { $project: { _id: 1, equipeId: 1, playerId: 1, points: 1 } },
-        ]);
-
-        for (const entry of qualifiables) {
-          await Critere.findByIdAndUpdate(critereId, {
-            $push: {
-              second: {
-                ...(entry.equipeId ? { equipeId: entry.equipeId } : {}),
-                ...(entry.playerId ? { playerId: entry.playerId } : {}),
-                createdAt: new Date(),
-              },
-            },
-          });
-        }
-      }
-    }
-
-    // 3. Palier first (2 places)
-    const alreadyFirst = (critere.first || []).filter(e => e.playerId || e.equipeId).length;
-    if (alreadyFirst < 2) {
-      const secondEntries = await Critere.findById(critereId).lean();
-      const secondIds = (secondEntries?.second || [])
-        .filter(e => e.playerId || e.equipeId)
-        .map(e => (e.playerId || e.equipeId)!);
-      
-      if (secondIds.length > 0) {
-        const qualifiables = await Enrollement.aggregate([
-          { $match: { ...match, points: { $gte: firstPoints }, $or: [{ playerId: { $in: secondIds } }, { equipeId: { $in: secondIds } }] } },
-          { $sort: { points: -1 } },
-          { $limit: Math.min(2 - alreadyFirst, secondIds.length) },
-          { $project: { _id: 1, equipeId: 1, playerId: 1, points: 1 } },
-        ]);
-
-        for (const entry of qualifiables) {
-          await Critere.findByIdAndUpdate(critereId, {
-            $push: {
-              first: {
-                ...(entry.equipeId ? { equipeId: entry.equipeId } : {}),
-                ...(entry.playerId ? { playerId: entry.playerId } : {}),
-                createdAt: new Date(),
-              },
-            },
-          });
-        }
-      }
-    }
-
-    // Vérifier si le classement est complet (tous les paliers remplis)
-    const updatedCritere = await Critere.findById(critereId).lean();
-    const firstFull = (updatedCritere?.first || []).filter(e => e.playerId || e.equipeId).length >= 2;
-    const isComplete = firstFull;
-
-    if (isComplete) {
-      await Critere.findByIdAndUpdate(critereId, { status: false });
-    }
-
-    return {
-      success: true,
-      data: JSON.parse(JSON.stringify(await Critere.findById(critereId).populate('sessionId', 'designation').lean())),
-    };
+    return { success: true, message: 'Critère supprimé.' };
   } catch (error: any) {
     return { success: false, error: error.message };
   }
