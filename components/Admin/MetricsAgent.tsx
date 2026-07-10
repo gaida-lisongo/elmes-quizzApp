@@ -6,6 +6,9 @@ import { Loader2, Users, Shield, UserCheck, Medal, Activity } from "lucide-react
 import MetriqueLayout, { type MetricsData } from "./MetriqueLayout";
 import { getMetricsAgentAction, type MetricsAgentData } from "@/actions/metrics.actions";
 import CriteresAdmin from "./CriteresAdmin";
+import SessionRevenueOverview from "./SessionRevenueOverview";
+import ModeratorPlayerManagement from "./ModeratorPlayerManagement";
+import AdminTeamManagement from "./AdminTeamManagement";
 
 const TYPE_COLORS: Record<string, string> = {
   standalone: "text-blue-600 bg-blue-100 dark:bg-blue-900/30",
@@ -97,6 +100,9 @@ export default function MetricsAgent({ role }: MetricsAgentProps) {
 
   return (
     <div className="space-y-8">
+      <SessionRevenueOverview />
+      {role === "MOD" && <ModeratorPlayerManagement />}
+      {role === "ADMIN" && <AdminTeamManagement />}
       <MetriqueLayout
         data={data}
         role={role}

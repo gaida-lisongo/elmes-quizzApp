@@ -1,5 +1,6 @@
 'use server';
 
+import mongoose from 'mongoose';
 import connectToDb from '@/lib/utils/db';
 import { getSession } from '@/lib/utils/auth';
 import Player from '@/lib/models/Player';
@@ -10,6 +11,9 @@ import EnrollementModule from '@/lib/models/Enrollement';
 import Equipe from '@/lib/models/Equipe';
 
 const { Enrollement, Session } = EnrollementModule;
+
+const isStaffSession = (session: { role?: string } | null | undefined) =>
+  Boolean(session && ['ADMIN', 'MOD'].includes(session.role || ''));
 
 export interface PlayerMetricsData {
   playerType: 'STANDALONE' | 'ADVANCED' | 'VIP';
@@ -66,6 +70,12 @@ const getTrainingPassParties = (amountCDF: number, targetLevel: number) => {
   if (amountCDF === 15000 || targetLevel === 3) return 130;
   return 0;
 };
+
+async function ensureStaffAccess() {
+  const session = await getSession();
+  if (!isStaffSession(session)) return null;
+  return session;
+}
 
 export async function getPlayerMetricsAction(): Promise<{ success: boolean; data?: PlayerMetricsData; error?: string }> {
   try {
@@ -293,5 +303,244 @@ export async function getPlayerMetricsAction(): Promise<{ success: boolean; data
     };
   } catch (error: any) {
     return { success: false, error: error.message };
+  }
+}
+
+export async function searchModeratorPlayersAction(query: string): Promise<{
+  success: boolean;
+  players?: Array<{
+    _id: string;
+    pseudo: string;
+    telephone: string;
+    email?: string;
+    type: string;
+    level: number;
+    statut: string;
+    parties: number;
+    score: number;
+    playerId: string;
+  }>;
+  error?: string;
+}> {
+  try {
+    const session = await ensureStaffAccess();
+    if (!session) return { success: false, error: 'Non autorisé' };
+
+    const search = query.trim();
+    if (search.length < 2) return { success: true, players: [] };
+
+    await connectToDb();
+    const regex = new RegExp(search, 'i');
+    const objectId = mongoose.isValidObjectId(search) ? new mongoose.Types.ObjectId(search) : null;
+    const numericLevel = Number(search);
+    const levelMatch = Number.isInteger(numericLevel) ? [{ level: numericLevel }] : [];
+
+    const players = await Player.aggregate([
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'user',
+        },
+      },
+      { $unwind: '$user' },
+      {
+        $match: {
+          $or: [
+            { 'user.pseudo': regex },
+            { 'user.telephone': regex },
+            { 'user.email': regex },
+            { type: regex },
+            { statut: regex },
+            ...levelMatch,
+            ...(objectId ? [{ _id: objectId }, { userId: objectId }] : []),
+          ],
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          pseudo: '$user.pseudo',
+          telephone: '$user.telephone',
+          email: '$user.email',
+          type: 1,
+          level: 1,
+          statut: 1,
+          parties: 1,
+          score: '$metrics.totalScore',
+          createdAt: 1,
+          playerId: { $toString: '$_id' },
+        },
+      },
+      { $sort: { score: -1, createdAt: -1 } },
+      { $limit: 20 },
+    ]);
+
+    return { success: true, players: JSON.parse(JSON.stringify(players)) };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'Erreur de recherche.' };
+  }
+}
+
+export async function getModeratorPlayerDetailAction(playerId: string): Promise<{
+  success: boolean;
+  data?: {
+    profile: {
+      _id: string;
+      pseudo: string;
+      telephone: string;
+      email?: string;
+      photo?: string;
+      type: string;
+      level: number;
+      statut: string;
+      parties: number;
+      score: number;
+    };
+    games: Array<{
+      _id: string;
+      category: string;
+      score: number;
+      status: string;
+      mode: string;
+      session: string;
+      createdAt: string;
+    }>;
+    enrollments: Array<{
+      _id: string;
+      session: string;
+      resource: string;
+      status: string;
+      points: number;
+      remainingGames: number;
+    }>;
+  };
+  error?: string;
+}> {
+  try {
+    const session = await ensureStaffAccess();
+    if (!session) return { success: false, error: 'Non autorisé' };
+
+    await connectToDb();
+    const player = await Player.findById(playerId)
+      .populate('userId', 'pseudo telephone email photo role')
+      .lean();
+    if (!player) return { success: false, error: 'Joueur introuvable.' };
+
+    const [games, enrollments] = await Promise.all([
+      Partie.find({ playerId: player._id })
+        .populate('categorieId', 'designation')
+        .populate('sessionId', 'designation status type')
+        .sort({ createdAt: -1 })
+        .limit(12)
+        .lean(),
+      Enrollement.find({ playerId: player._id })
+        .populate('sessionId', 'designation status type')
+        .populate('parcoursId', 'designation')
+        .populate('competitionId', 'designation')
+        .sort({ createdAt: -1 })
+        .limit(12)
+        .lean(),
+    ]);
+
+    return {
+      success: true,
+      data: {
+        profile: {
+          _id: player._id.toString(),
+          pseudo: (player.userId as any)?.pseudo || 'Joueur',
+          telephone: (player.userId as any)?.telephone || '',
+          email: (player.userId as any)?.email || '',
+          photo: (player.userId as any)?.photo || '',
+          type: player.type,
+          level: player.level || 0,
+          statut: player.statut || 'ELEVE',
+          parties: player.parties || 0,
+          score: player.metrics?.totalScore || 0,
+        },
+        games: JSON.parse(JSON.stringify((games || []).map((game: any) => ({
+          _id: game._id.toString(),
+          category: game.categorieId?.designation || 'Catégorie',
+          score: game.note || 0,
+          status: game.status || 'UNKNOWN',
+          mode: game.mode || 'STANDARD',
+          session: game.sessionId?.designation || '',
+          createdAt: game.createdAt?.toISOString?.() || '',
+        })))),
+        enrollments: JSON.parse(JSON.stringify((enrollments || []).map((enrollment: any) => ({
+          _id: enrollment._id.toString(),
+          session: enrollment.sessionId?.designation || 'Session',
+          resource: enrollment.parcoursId?.designation || enrollment.competitionId?.designation || 'Ressource',
+          status: enrollment.status || 'PENDING',
+          points: enrollment.points || 0,
+          remainingGames: enrollment.remainingGames || 0,
+        })))),
+      },
+    };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'Erreur de chargement.' };
+  }
+}
+
+export async function updatePlayerLevelAction(playerId: string, nextLevel: number): Promise<{
+  success: boolean;
+  message?: string;
+  error?: string;
+}> {
+  try {
+    const session = await ensureStaffAccess();
+    if (!session) return { success: false, error: 'Non autorisé' };
+
+    const allowedLevels = [0, 1, 2, 3];
+    const numericLevel = Number(nextLevel);
+    if (!Number.isInteger(numericLevel) || !allowedLevels.includes(numericLevel)) {
+      return { success: false, error: 'Niveau invalide.' };
+    }
+
+    await connectToDb();
+    const player = await Player.findByIdAndUpdate(
+      playerId,
+      { $set: { level: numericLevel } },
+      { new: true },
+    ).lean();
+    if (!player) return { success: false, error: 'Joueur introuvable.' };
+
+    return { success: true, message: 'Niveau mis à jour.' };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'Erreur de mise à jour.' };
+  }
+}
+
+export async function grantPlayerBonusPartiesAction(playerId: string, bonusCount: number, reason?: string): Promise<{
+  success: boolean;
+  message?: string;
+  error?: string;
+}> {
+  try {
+    const session = await ensureStaffAccess();
+    if (!session) return { success: false, error: 'Non autorisé' };
+
+    const numericBonus = Number(bonusCount);
+    if (!Number.isInteger(numericBonus) || numericBonus <= 0) {
+      return { success: false, error: 'Le nombre de bonus doit être positif.' };
+    }
+
+    await connectToDb();
+    const player = await Player.findById(playerId);
+    if (!player) return { success: false, error: 'Joueur introuvable.' };
+
+    player.parties = (player.parties || 0) + numericBonus;
+    await player.save();
+
+    // TODO: tracer l'attribution dans un modèle d'audit ou de transaction si l'application en expose un.
+    return {
+      success: true,
+      message: reason?.trim()
+        ? `${numericBonus} partie(s) ajoutée(s) - ${reason.trim()}`
+        : `${numericBonus} partie(s) ajoutée(s)`,
+    };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'Erreur lors de l\'attribution.' };
   }
 }

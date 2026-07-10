@@ -1,11 +1,15 @@
 'use server';
 
+import mongoose from "mongoose";
 import connectToDb from "@/lib/utils/db";
 import Equipe from "@/lib/models/Equipe";
 import Player from "@/lib/models/Player";
 import User from "@/lib/models/User";
+import EnrollementModule from "@/lib/models/Enrollement";
 import { initiatePaymentAction, checkPaymentStatusAction, type PaymentMethod } from "@/actions/payment.actions";
 import { getSession } from "@/lib/utils/auth";
+
+const { Enrollement } = EnrollementModule;
 
 export type EquipeSummary = {
   _id: string;
@@ -634,5 +638,235 @@ export async function getMyEquipeDetailAction(playerId: string) {
     };
   } catch (error: any) {
     return { success: false, error: error.message || 'Erreur de récupération.' };
+  }
+}
+
+const ensureAdminSession = async () => {
+  const session = await getSession();
+  if (!session || session.role !== "ADMIN") return null;
+  return session;
+};
+
+const mapTeamSummary = (equipe: any) => {
+  const activeMemberIds = new Set<string>();
+  if (equipe.chefId?._id) activeMemberIds.add(equipe.chefId._id.toString());
+  (equipe.membres || []).forEach((member: any) => {
+    if (member.status && member.player?._id) activeMemberIds.add(member.player._id.toString());
+  });
+
+  const captainPseudo = equipe.chefId?.userId?.pseudo || "—";
+  const pendingInvitationsCount = (equipe.membres || []).filter((member: any) => !member.status).length;
+
+  return {
+    _id: equipe._id.toString(),
+    designation: equipe.designation,
+    description: Array.isArray(equipe.description) ? equipe.description : [],
+    logo: equipe.logo || "",
+    status: equipe.status || "ACTIVE",
+    captain: {
+      _id: equipe.chefId?._id?.toString?.() || "",
+      pseudo: captainPseudo,
+    },
+    membersCount: activeMemberIds.size,
+    pendingInvitationsCount,
+    soldeUsd: equipe.metriques?.soldeUsd || 0,
+    competitions: equipe.metriques?.competitions || 0,
+    matchsWin: equipe.metriques?.matchsWin || 0,
+    createdAt: equipe.createdAt?.toISOString?.() || "",
+  };
+};
+
+export async function getTeamsAdminAction(query: string = "") {
+  try {
+    const session = await ensureAdminSession();
+    if (!session) return { success: false, error: "Accès réservé à l'administration." };
+
+    await connectToDb();
+    const search = query.trim();
+    const filter: any = {};
+    if (search.length >= 2) {
+      filter.designation = new RegExp(search, "i");
+    }
+
+    const equipes = await Equipe.find(filter)
+      .populate({ path: "chefId", populate: { path: "userId", select: "pseudo photo telephone" } })
+      .populate({ path: "membres.player", populate: { path: "userId", select: "pseudo photo telephone" } })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    return {
+      success: true,
+      data: equipes.map((equipe: any) => mapTeamSummary(equipe)),
+    };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Erreur de chargement des équipes." };
+  }
+}
+
+export async function getTeamAdminDetailAction(teamId: string) {
+  try {
+    const session = await ensureAdminSession();
+    if (!session) return { success: false, error: "Accès réservé à l'administration." };
+
+    await connectToDb();
+    const equipe = await Equipe.findById(teamId)
+      .populate({ path: "chefId", populate: { path: "userId", select: "pseudo photo telephone email" } })
+      .populate({ path: "membres.player", populate: { path: "userId", select: "pseudo photo telephone email" } })
+      .lean();
+
+    if (!equipe) return { success: false, error: "Équipe introuvable." };
+
+    const enrollments = await Enrollement.find({ equipeId: equipe._id })
+      .populate("sessionId", "designation status type startDate endDate")
+      .populate("competitionId", "designation slug")
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const members = (equipe.membres || []).map((member: any) => ({
+      _id: member.player?._id?.toString?.() || member.player?.toString?.() || "",
+      pseudo: member.player?.userId?.pseudo || "Membre",
+      telephone: member.player?.userId?.telephone || "",
+      email: member.player?.userId?.email || "",
+      isSecretary: Boolean(member.isSecretary),
+      status: Boolean(member.status),
+      isCaptain: equipe.chefId?._id?.toString?.() === member.player?._id?.toString?.(),
+    }));
+
+    const invitations = members.filter((member: any) => !member.status);
+
+    const competitions = Array.from(
+      new Map(
+        (enrollments || [])
+          .filter((enrollment: any) => enrollment.competitionId)
+          .map((enrollment: any) => [
+            enrollment.competitionId?._id?.toString?.() || enrollment.competitionId?.toString?.(),
+            {
+              _id: enrollment.competitionId?._id?.toString?.() || enrollment.competitionId?.toString?.(),
+              designation: enrollment.competitionId?.designation || "Compétition",
+              session: enrollment.sessionId?.designation || "Session",
+              status: enrollment.sessionId?.status || enrollment.status || "PENDING",
+            },
+          ]),
+      ).values(),
+    );
+
+    return {
+      success: true,
+      data: {
+        _id: equipe._id.toString(),
+        designation: equipe.designation,
+        description: Array.isArray(equipe.description) ? equipe.description : [],
+        logo: equipe.logo || "",
+        status: equipe.status || "ACTIVE",
+        captain: {
+          _id: equipe.chefId?._id?.toString?.() || "",
+          pseudo: equipe.chefId?.userId?.pseudo || "Capitaine",
+        },
+        members,
+        invitations,
+        enrollments: JSON.parse(JSON.stringify(enrollments || [])),
+        competitions,
+        metriques: equipe.metriques || { competitions: 0, soldeUsd: 0, matchsWin: 0 },
+      },
+    };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Erreur de chargement." };
+  }
+}
+
+export async function updateTeamAdminAction(
+  teamId: string,
+  data: { designation?: string; description?: string; logo?: string; status?: "ACTIVE" | "INACTIVE" | "ARCHIVED" },
+) {
+  try {
+    const session = await ensureAdminSession();
+    if (!session) return { success: false, error: "Accès réservé à l'administration." };
+
+    await connectToDb();
+    const equipe = await Equipe.findById(teamId);
+    if (!equipe) return { success: false, error: "Équipe introuvable." };
+
+    if (data.designation?.trim()) equipe.designation = data.designation.trim();
+    if (data.description !== undefined) equipe.description = data.description.trim() ? [data.description.trim()] : [];
+    if (data.logo !== undefined) equipe.logo = data.logo.trim();
+    if (data.status) equipe.status = data.status;
+    if (data.status === "ARCHIVED") equipe.archivedAt = new Date();
+    if (data.status && data.status !== "ARCHIVED") equipe.archivedAt = undefined;
+
+    await equipe.save();
+
+    return { success: true, message: "Équipe mise à jour." };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Erreur de mise à jour." };
+  }
+}
+
+export async function changeTeamCaptainAdminAction(teamId: string, playerId: string) {
+  try {
+    const session = await ensureAdminSession();
+    if (!session) return { success: false, error: "Accès réservé à l'administration." };
+
+    await connectToDb();
+    const equipe = await Equipe.findById(teamId);
+    if (!equipe) return { success: false, error: "Équipe introuvable." };
+
+    const isMember = equipe.chefId?.toString?.() === playerId
+      || (equipe.membres || []).some((member: any) => member.player?.toString?.() === playerId && member.status);
+    if (!isMember) return { success: false, error: "Le nouveau capitaine doit déjà être membre de l'équipe." };
+
+    equipe.chefId = new mongoose.Types.ObjectId(playerId);
+    const member = (equipe.membres || []).find((item: any) => item.player?.toString?.() === playerId);
+    if (member) {
+      member.status = true;
+    }
+
+    await equipe.save();
+    return { success: true, message: "Capitaine mis à jour." };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Erreur de changement de capitaine." };
+  }
+}
+
+export async function toggleTeamStatusAdminAction(teamId: string, status: "ACTIVE" | "INACTIVE" | "ARCHIVED") {
+  try {
+    const session = await ensureAdminSession();
+    if (!session) return { success: false, error: "Accès réservé à l'administration." };
+
+    await connectToDb();
+    const equipe = await Equipe.findById(teamId);
+    if (!equipe) return { success: false, error: "Équipe introuvable." };
+
+    equipe.status = status;
+    equipe.archivedAt = status === "ARCHIVED" ? new Date() : undefined;
+    await equipe.save();
+
+    return { success: true, message: "Statut de l'équipe mis à jour." };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Erreur de mise à jour." };
+  }
+}
+
+export async function removeTeamMemberAdminAction(teamId: string, playerId: string) {
+  try {
+    const session = await ensureAdminSession();
+    if (!session) return { success: false, error: "Accès réservé à l'administration." };
+
+    await connectToDb();
+    const equipe = await Equipe.findById(teamId);
+    if (!equipe) return { success: false, error: "Équipe introuvable." };
+
+    if (equipe.chefId?.toString?.() === playerId) {
+      return { success: false, error: "Le capitaine ne peut pas être retiré directement." };
+    }
+
+    const memberIndex = (equipe.membres || []).findIndex((member: any) => member.player?.toString?.() === playerId);
+    if (memberIndex === -1) return { success: false, error: "Membre introuvable." };
+
+    equipe.membres.splice(memberIndex, 1);
+    await equipe.save();
+
+    return { success: true, message: "Membre retiré." };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Erreur de suppression du membre." };
   }
 }

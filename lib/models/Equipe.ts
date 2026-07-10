@@ -11,6 +11,8 @@ export interface IEquipe extends Document {
   designation: string;
   description: string[];
   logo: string;
+  status: 'ACTIVE' | 'INACTIVE' | 'ARCHIVED';
+  archivedAt?: Date;
   payment: {
     orderNumber: string;
     status: string;
@@ -40,6 +42,8 @@ const EquipeSchema: Schema<IEquipe> = new Schema(
     designation: { type: String, required: true, trim: true },
     description: [{ type: String, required: true, trim: true }],
     logo: { type: String, default: '' },
+    status: { type: String, enum: ['ACTIVE', 'INACTIVE', 'ARCHIVED'], default: 'ACTIVE' },
+    archivedAt: { type: Date },
     payment: [
       {
         orderNumber: { type: String, required: true },
