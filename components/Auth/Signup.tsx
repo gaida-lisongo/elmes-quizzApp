@@ -239,21 +239,6 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
     PLAYER_TYPES.find((t) => t.type === selectedType) || PLAYER_TYPES[0];
 
   return (
-        toast.error(result.error || "Erreur lors de la création du compte.");
-        return;
-      }
-
-      toast.success("Compte créé avec succès !");
-      router.push(result.redirectTo || "/dashboard/standalone");
-    } catch {
-      toast.error("Une erreur est survenue.");
-    }
-  };
-
-  const currentTypeInfo =
-    PLAYER_TYPES.find((t) => t.type === selectedType) || PLAYER_TYPES[0];
-
-  return (
     <section className="relative min-h-screen overflow-hidden pb-12.5 pt-32.5 lg:pb-25 lg:pt-45 xl:pb-30 xl:pt-50">
       {/* Éléments décoratifs de fond */}
       <div className="pointer-events-none absolute inset-0 -z-1">
