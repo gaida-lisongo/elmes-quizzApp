@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { AlertCircle, CheckCircle, Clock, XCircle } from "lucide-react";
 import { verifyPersistedPaymentAction } from "@/actions/payment.actions";
+import { Metadata } from "next";
+import { buildMetadata } from "@/lib/utils/metadata";
+
+export const metadata: Metadata = buildMetadata("Vérification de paiement");
 
 type SearchParams = {
   type?: string;

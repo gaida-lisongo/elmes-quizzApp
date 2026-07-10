@@ -11,6 +11,24 @@ import type { PartieActiveData, QuestionJeu } from "@/actions/partie.actions";
 import QuestionPreview from "@/components/Admin/QuestionPreview";
 import toast from "react-hot-toast";
 
+// Sons du jeu
+const soundCorrect = typeof Audio !== "undefined" ? new Audio("/sounds/game/correct.wav") : null;
+const soundWrong = typeof Audio !== "undefined" ? new Audio("/sounds/game/wrong.wav") : null;
+const soundWin = typeof Audio !== "undefined" ? new Audio("/sounds/game/win.wav") : null;
+const soundLose = typeof Audio !== "undefined" ? new Audio("/sounds/game/lose.wav") : null;
+
+// Préchargement
+if (soundCorrect) soundCorrect.preload = "auto";
+if (soundWrong) soundWrong.preload = "auto";
+if (soundWin) soundWin.preload = "auto";
+if (soundLose) soundLose.preload = "auto";
+
+const playSound = (sound: HTMLAudioElement | null) => {
+  if (!sound) return;
+  sound.currentTime = 0;
+  sound.play().catch(() => {});
+};
+
 interface GamePlayerProps {
   partie: PartieActiveData;
   onFinish: (resultat: any) => void;
@@ -68,12 +86,14 @@ export default function GamePlayer({ partie, onFinish, onCancel }: GamePlayerPro
       if (res.success) {
         setCorrect(res.estCorrecte ?? false);
         setCorrection(res.correction || null);
-        if (res.estCorrecte) setNotes((prev) => prev + 1);
         if (res.estCorrecte) {
+          playSound(soundCorrect);
+          setNotes((prev) => prev + 1);
           setTimeout(() => {
             handleNext();
           }, 450);
         } else {
+          playSound(soundWrong);
           await handleFinish();
         }
       }
@@ -91,6 +111,11 @@ export default function GamePlayer({ partie, onFinish, onCancel }: GamePlayerPro
         if (res.success && res.resultat) {
           setResultat(res.resultat);
           setFinished(true);
+          // Jouer son de fin (win si toutes bonnes, lose sinon)
+          setTimeout(() => {
+            if (res.resultat.allCorrect) playSound(soundWin);
+            else playSound(soundLose);
+          }, 300);
           onFinish(res.resultat);
         } else {
           toast.error(res.error || "Erreur de finalisation.");

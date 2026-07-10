@@ -1,3 +1,5 @@
+import { Metadata } from "next";
+import { buildMetadata } from "@/lib/utils/metadata";
 import AboutLeft from "@/components/About/AboutLeft";
 import AboutRight from "@/components/About/AboutRight";
 import AboutEntreprise from "@/components/About/AboutEntreprise";
@@ -6,6 +8,8 @@ import Team from "@/components/Team";
 import { LandingPage } from "@/lib/models/Landing";
 import { getSession } from "@/lib/utils/auth";
 import connectToDb from "@/lib/utils/db";
+
+export const metadata: Metadata = buildMetadata("À propos");
 
 export default async function AboutPage() {
     const session = await getSession();

@@ -3,6 +3,17 @@ import { getClassementByRessourceAction, getCriteresForRessourceAction } from "@
 import { getCurrentPlayerInfoAction, getSessionsByRessourceAction } from "@/actions/enrollment.actions";
 import GamingPage from "@/components/Gaming";
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
+import { buildMetadata } from "@/lib/utils/metadata";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const res = await getParcoursBySlug(slug);
+  if (res.success && res.parcours) {
+    return buildMetadata(res.parcours.designation);
+  }
+  return buildMetadata("Parcours");
+}
 
 export default async function ParcoursDetailPage({
   params,

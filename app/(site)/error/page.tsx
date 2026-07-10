@@ -1,12 +1,8 @@
 import { Metadata } from "next";
+import { buildMetadata } from "@/lib/utils/metadata";
 import Image from "next/image";
 
-export const metadata: Metadata = {
-  title: "Error Page - Solid SaaS Boilerplate",
-
-  // other metadata
-  description: "This is Error page for Solid Pro"
-};
+export const metadata: Metadata = buildMetadata("Erreur");
 
 const ErroPage = () => {
   return (

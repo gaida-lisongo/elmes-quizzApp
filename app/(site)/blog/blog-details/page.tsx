@@ -1,14 +1,10 @@
 import RelatedPost from "@/components/Blog/RelatedPost";
 import SharePost from "@/components/Blog/SharePost";
 import { Metadata } from "next";
+import { buildMetadata } from "@/lib/utils/metadata";
 import Image from "next/image";
 
-export const metadata: Metadata = {
-  title: "Blog Details Page - Solid SaaS Boilerplate",
-
-  // other metadata
-  description: "This is Blog details page for Solid Pro"
-};
+export const metadata: Metadata = buildMetadata("Article");
 
 const SingleBlogPage = async () => {
   return (

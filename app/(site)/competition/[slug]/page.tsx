@@ -3,6 +3,17 @@ import { getClassementByRessourceAction, getCriteresForRessourceAction } from "@
 import { getCurrentEquipeInfoAction, getSessionsByRessourceAction } from "@/actions/enrollment.actions";
 import GamingPage from "@/components/Gaming";
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
+import { buildMetadata } from "@/lib/utils/metadata";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const res = await getCompetitionBySlug(slug);
+  if (res.success && res.competition) {
+    return buildMetadata(res.competition.designation);
+  }
+  return buildMetadata("Compétition");
+}
 
 export default async function CompetitionDetailPage({
   params,

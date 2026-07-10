@@ -4,13 +4,12 @@ import Link from "next/link";
 import connectToDb from "@/lib/utils/db";
 import Equipe from "@/lib/models/Equipe";
 import EnrollementModel from "@/lib/models/Enrollement";
+import { Metadata } from "next";
+import { buildMetadata } from "@/lib/utils/metadata";
 
 const BANNER_IMAGE = "/images/team/team-2.jpg";
 
-export const metadata = {
-  title: "ELMES-QUIZ | Equipe",
-  description: "Profil detaille d'une equipe sur ELMES-QUIZ.",
-};
+export const metadata: Metadata = buildMetadata("Détail de l'équipe");
 
 export default async function EquipeDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

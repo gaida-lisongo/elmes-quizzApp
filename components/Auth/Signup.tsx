@@ -119,7 +119,15 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      toast.error("Veuillez sélectionner une image valide.");
+      toast.error("Veuillez sélectionner une image valide (JPG, PNG, WebP).");
+      return;
+    }
+
+    // Limite de taille : 10 Mo
+    const MAX_SIZE = 10 * 1024 * 1024; // 10 Mo en octets
+    if (file.size > MAX_SIZE) {
+      toast.error("L'image est trop volumineuse. Taille maximum : 10 Mo.");
+      e.target.value = "";
       return;
     }
 
@@ -128,6 +136,9 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
       const dataUrl = ev.target?.result as string;
       setPhotoPreview(dataUrl);
       setStep2Data((prev) => ({ ...prev, photo: dataUrl }));
+    };
+    reader.onerror = () => {
+      toast.error("Erreur lors de la lecture de l'image. Veuillez réessayer.");
     };
     reader.readAsDataURL(file);
   };

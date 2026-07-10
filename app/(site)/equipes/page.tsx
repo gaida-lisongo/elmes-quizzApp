@@ -1,11 +1,9 @@
 import { getEquipesAction } from "@/actions/equipe.actions";
 import EquipesPageClient from "@/components/Equipes/EquipePage";
 import { Metadata } from "next";
+import { buildMetadata } from "@/lib/utils/metadata";
 
-export const metadata: Metadata = {
-  title: "ELMES-QUIZ | Équipes",
-  description: "Découvrez et créez des équipes de compétition sur la plateforme ELMES-QUIZ.",
-};
+export const metadata: Metadata = buildMetadata("Équipes");
 
 export default async function EquipesPage() {
   try {

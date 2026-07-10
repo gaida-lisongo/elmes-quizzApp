@@ -1,3 +1,8 @@
+import { Metadata } from "next";
+import { buildMetadata } from "@/lib/utils/metadata";
+
+export const metadata: Metadata = buildMetadata("Compétitions");
+
 export default function CompetitionsPage() {
   return (
     <section className="overflow-hidden pb-20 pt-35 md:pt-40 xl:pb-25 xl:pt-46">

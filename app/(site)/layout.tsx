@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import "../globals.css";
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/utils/metadata";
 import Proivder from "./Provider";
 
 import {
@@ -11,13 +12,7 @@ import { getCurrentUserDetailed } from "@/actions/auth.actions";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "Solid | Next.js Template for Startup and SaaS",
-  description: "Built with Next.js and TypeScript",
-  icons: {
-    icon: "/images/favicon.ico",
-  },
-};
+export const metadata: Metadata = buildMetadata("Accueil");
 
 export default async function RootLayout({
   children,

@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { buildMetadata } from "@/lib/utils/metadata";
 import Hero from "@/components/Hero";
 import FunFact from "@/components/FunFact";
 import ParcoursSection from "@/components/Parcours";
@@ -10,10 +11,7 @@ import Categorie from "@/lib/models/Categorie";
 import Quiz from "@/lib/models/Quiz";
 import Partie from "@/lib/models/Partie";
 
-export const metadata: Metadata = {
-  title: "ELMES-QUIZ | Le savoir devient un pouvoir",
-  description: "Plateforme de quiz et compétition intellectuelle"
-};
+export const metadata: Metadata = buildMetadata("Accueil");
 
 export default async function Home() {
   const session = await getSession();

@@ -1,12 +1,8 @@
 import SidebarLink from "@/components/Docs/SidebarLink";
 import { Metadata } from "next";
+import { buildMetadata } from "@/lib/utils/metadata";
 
-export const metadata: Metadata = {
-  title: "Docs Page - Solid SaaS Boilerplate",
-
-  // other metadata
-  description: "This is Docs page for Solid Pro"
-};
+export const metadata: Metadata = buildMetadata("Documentation");
 
 export default function DocsPage() {
   return (

@@ -1,13 +1,9 @@
 import React from "react";
 import Contact from "@/components/Contact";
 import { Metadata } from "next";
+import { buildMetadata } from "@/lib/utils/metadata";
 
-export const metadata: Metadata = {
-  title: "Contact - ELMES Solution",
-
-  // other metadata
-  description: "Contactez ELMES Solution pour toute question, demande d'information ou assistance. Nous sommes à votre écoute."
-};
+export const metadata: Metadata = buildMetadata("Support & Contact");
 
 const SupportPage = () => {
   return (
