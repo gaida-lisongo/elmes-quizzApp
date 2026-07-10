@@ -710,8 +710,21 @@ export async function getTeamAdminDetailAction(teamId: string) {
 
     await connectToDb();
     const equipe = await Equipe.findById(teamId)
-      .populate({ path: "chefId", populate: { path: "userId", select: "pseudo photo telephone email" } })
-      .populate({ path: "membres.player", populate: { path: "userId", select: "pseudo photo telephone email" } })
+      .populate({
+        path: 'chefId',
+        populate: {
+          path: 'userId',
+          select: 'pseudo photo telephone email solde role',
+        },
+      })
+      .populate({
+        path: 'membres.player',
+        select: 'userId level type statut school parties metrics',
+        populate: {
+          path: 'userId',
+          select: 'pseudo photo telephone email solde role',
+        },
+      })
       .lean();
 
     if (!equipe) return { success: false, error: "Équipe introuvable." };
