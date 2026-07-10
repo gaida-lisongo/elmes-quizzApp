@@ -431,7 +431,11 @@ export async function getModeratorPlayerDetailAction(playerId: string): Promise<
     const [games, enrollments] = await Promise.all([
       Partie.find({ playerId: player._id })
         .populate('categorieId', 'designation')
-        .populate('sessionId', 'designation status type')
+        .populate({
+          path: 'enrollmentId',
+          select: 'sessionId',
+          populate: { path: 'sessionId', select: 'designation status type' },
+        })
         .sort({ createdAt: -1 })
         .limit(12)
         .lean(),
@@ -465,7 +469,7 @@ export async function getModeratorPlayerDetailAction(playerId: string): Promise<
           score: game.note || 0,
           status: game.status || 'UNKNOWN',
           mode: game.mode || 'STANDARD',
-          session: game.sessionId?.designation || '',
+          session: game.enrollmentId?.sessionId?.designation || '',
           createdAt: game.createdAt?.toISOString?.() || '',
         })))),
         enrollments: JSON.parse(JSON.stringify((enrollments || []).map((enrollment: any) => ({
