@@ -378,7 +378,7 @@ export async function getSessionRevenueOverviewAction(sessionId?: string): Promi
       .limit(8)
       .lean();
 
-    const rows = [];
+    const rows: SessionRevenueOverviewRow[] = [];
     for (const sessionDoc of sessions as any[]) {
       rows.push(await buildSessionRevenueRow(sessionDoc));
     }
