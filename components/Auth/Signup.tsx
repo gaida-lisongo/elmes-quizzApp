@@ -235,9 +235,6 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
     }
   };
 
-  const currentTypeInfo =
-    PLAYER_TYPES.find((t) => t.type === selectedType) || PLAYER_TYPES[0];
-
   return (
     <section className="relative min-h-screen overflow-hidden pb-12.5 pt-32.5 lg:pb-25 lg:pt-45 xl:pb-30 xl:pt-50">
       {/* Éléments décoratifs de fond */}
@@ -389,8 +386,6 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
                 <p className="text-sm font-medium text-primary">Étape {step} sur 3</p>
                 <h3 className="text-lg font-bold text-black dark:text-white">{STEP_LABELS[step - 1]}</h3>
                 <p className="mt-1 text-sm text-waterloo">{STEP_DESCRIPTIONS[step - 1]}</p>
-              </div>
-                </div>
               </div>
 
               <AnimatePresence mode="wait">
