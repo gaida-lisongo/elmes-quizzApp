@@ -28,7 +28,6 @@ export interface SignupStep1Data {
 
 export interface SignupStep2Data {
   password: string;
-  photo?: string;
 }
 
 async function generateUniqueReferralCode(pseudo: string) {
@@ -177,7 +176,7 @@ export async function createPlayerStep1(data: SignupStep1Data) {
 export async function createPlayerStep2(data: SignupStep2Data) {
   await connectToDb();
 
-  const { password, photo } = data;
+  const { password } = data;
 
   if (!password || password.length < 4) {
     return { success: false, error: 'Le mot de passe doit contenir au moins 4 caractères.' };
@@ -218,6 +217,7 @@ export async function createPlayerStep2(data: SignupStep2Data) {
     const hashedPassword = await hashPassword(password);
 
     // Création de l'utilisateur
+    // TODO: permettre l'ajout ou la modification de la photo de profil depuis la page Profil après inscription.
     const newUser = await User.create({
       pseudo,
       telephone,
@@ -225,7 +225,7 @@ export async function createPlayerStep2(data: SignupStep2Data) {
       solde: 0,
       role: 'PLAYER',
       secure: hashedPassword,
-      photo: photo || '',  // URL Cloudinary (uploadée depuis le frontend) ou chaîne vide
+      photo: '',
     });
 
     // Générer un code de parrainage

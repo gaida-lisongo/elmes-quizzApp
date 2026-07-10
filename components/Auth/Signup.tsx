@@ -9,11 +9,8 @@ import toast from "react-hot-toast";
 import {
   User,
   Phone,
-  School,
   Mail,
   Lock,
-  Image as ImageIcon,
-  Upload,
   ArrowRight,
   ArrowLeft,
   Check,
@@ -26,11 +23,9 @@ import {
   EyeOff,
   Link as LinkIcon,
   GraduationCap,
-  Loader2,
 } from "lucide-react";
 import Logo from "@/components/Common/Logo";
 import { createPlayerStep1, createPlayerStep2 } from "@/actions/signup.actions";
-import { uploadProfileImageToCloudinary } from "@/actions/profile.upload.actions";
 import { useLoading } from "@/context/LoadingContext";
 import type { PlayerType } from "@/actions/signup.actions";
 import type { Statut } from "@/actions/signup.actions";
@@ -87,113 +82,125 @@ const PLAYER_TYPES: {
   },
 ];
 
+const STATUT_OPTIONS: { value: Statut; label: string; icon: string }[] = [
+  { value: "ELEVE", label: "Élève", icon: "🎒" },
+  { value: "ETUDIANT", label: "Étudiant", icon: "🎓" },
+  { value: "INDEPENDANT", label: "Ni l'un, ni l'autre", icon: "💼" },
+];
+
+const STEP_LABELS = ["Choix du compte", "Identités", "Sécurité"];
+const STEP_DESCRIPTIONS = [
+  "Choisis ton profil de départ pour personnaliser ton expérience.",
+  "Ajoute les informations qui permettront d'identifier ton compte.",
+  "Sécurise ton compte avec un mot de passe.",
+];
+
 const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
   const router = useRouter();
   const { withLoading } = useLoading();
   const [step, setStep] = useState(1);
   const [selectedType, setSelectedType] = useState<PlayerType>(initialType);
   const [showPassword, setShowPassword] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  // Step 1 data
-  const [step1Data, setStep1Data] = useState({
-    pseudo: "",
-    telephone: "",
-    email: "",
-    statut: "ELEVE" as Statut,
-    school: "",
-  });
+  // Étape 1
+  const [statut, setStatut] = useState<Statut>("ELEVE");
 
-  // Step 2 data
-  const [step2Data, setStep2Data] = useState({
-    password: "",
-    confirmPassword: "",
-    photo: "",
-  });
+  // Étape 2
+  const [pseudo, setPseudo] = useState("");
+  const [telephone, setTelephone] = useState("");
+  const [email, setEmail] = useState("");
+  const [school, setSchool] = useState("");
 
-  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
-  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  // Étape 3
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleTypeSelect = (type: PlayerType) => {
-    setSelectedType(type);
+  const handleTypeSelect = (type: PlayerType) => setSelectedType(type);
+
+  const currentTypeInfo =
+    PLAYER_TYPES.find((t) => t.type === selectedType) || PLAYER_TYPES[0];
+
+  // ── Validation étape 1 ───────────────────────────────────────
+  const validateStep1 = (): boolean => {
+    if (!statut) {
+      toast.error("Veuillez sélectionner votre statut.");
+      return false;
+    }
+    return true;
   };
 
-  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith("image/")) {
-      toast.error("Veuillez sélectionner une image valide (JPG, PNG, WebP).");
-      return;
+  // ── Validation étape 2 ───────────────────────────────────────
+  const validateStep2 = (): boolean => {
+    if (!pseudo.trim()) {
+      toast.error("Le pseudo est obligatoire.");
+      return false;
     }
-
-    // Limite de taille : 10 Mo
-    const MAX_SIZE = 10 * 1024 * 1024;
-    if (file.size > MAX_SIZE) {
-      toast.error("L'image est trop volumineuse. Taille maximum : 10 Mo.");
-      e.target.value = "";
-      return;
+    if (!telephone.trim()) {
+      toast.error("Le numéro de téléphone est obligatoire.");
+      return false;
     }
-
-    // Afficher un aperçu local immédiat
-    const localPreview = URL.createObjectURL(file);
-    setPhotoPreview(localPreview);
-    setUploadingPhoto(true);
-
-    // Upload vers Cloudinary via FormData
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const result = await uploadProfileImageToCloudinary(formData);
-
-      if (!result.success) {
-        throw new Error(result.error || "Échec de l'upload");
-      }
-
-      setStep2Data((prev) => ({ ...prev, photo: result.url }));
-      toast.success("Photo téléchargée avec succès !");
-    } catch (err: any) {
-      toast.error(err.message || "Erreur lors du téléchargement de la photo.");
-      setPhotoPreview(null);
-    } finally {
-      setUploadingPhoto(false);
+    if (!email.trim()) {
+      toast.error("L'adresse email est obligatoire.");
+      return false;
     }
-  };
-
-  const handleStep1Submit = async (e: FormEvent) => {
-    e.preventDefault();
-
-    const { pseudo, telephone, email, statut, school } = step1Data;
-
-    if (!pseudo.trim() || !telephone.trim() || !email.trim() || !school.trim()) {
-      toast.error("Tous les champs sont obligatoires.");
-      return;
+    if (!school.trim()) {
+      toast.error("L'établissement est obligatoire.");
+      return false;
     }
-
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email.trim())) {
       toast.error("Veuillez saisir une adresse email valide.");
-      return;
+      return false;
     }
-
-// Validation téléphone: 0XX (max 10 chiffres) ou +243XXX (max 14 caractères)
     const phone = telephone.trim();
     const isValid =
-      /^0\d{2,9}$/.test(phone) || // 0XX → max 10 chiffres au total
-      /^\+243\d{6,11}$/.test(phone); // +243XXX → max 14 caractères (indicatif + 11 chiffres max)
+      /^0\d{2,9}$/.test(phone) ||
+      /^\+243\d{6,11}$/.test(phone);
     if (!isValid) {
       toast.error("Numéro de téléphone invalide. Formats acceptés: 0XX (10 chiffres max) ou +243XXX (14 car. max)");
-      return;
+      return false;
     }
+    return true;
+  };
+
+  // ── Validation étape 3 ───────────────────────────────────────
+  const validateStep3 = (): boolean => {
+    if (!password || password.length < 4) {
+      toast.error("Le mot de passe doit contenir au moins 4 caractères.");
+      return false;
+    }
+    if (password !== confirmPassword) {
+      toast.error("Les mots de passe ne correspondent pas.");
+      return false;
+    }
+    return true;
+  };
+
+  // ── Navigation ───────────────────────────────────────────────
+  const handleNext = () => {
+    if (step === 1 && !validateStep1()) return;
+    if (step === 2 && !validateStep2()) return;
+    setStep((prev) => Math.min(prev + 1, 3));
+  };
+
+  const handleBack = () => setStep((prev) => Math.max(prev - 1, 1));
+
+  // ── Soumission finale ────────────────────────────────────────
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!validateStep3()) return;
+    if (submitting) return;
+    setSubmitting(true);
 
     try {
-      const result = await withLoading(
+      const step1Result = await withLoading(
         () =>
           createPlayerStep1({
             pseudo: pseudo.trim(),
             telephone: telephone.trim(),
             email: email.trim().toLowerCase(),
-            statut: step1Data.statut,
+            statut,
             school: school.trim(),
             playerType: selectedType,
             referralCode: referralCode || undefined,
@@ -201,44 +208,37 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
         "Vérification de vos informations…"
       );
 
-      if (!result.success) {
-        toast.error(result.error || "Erreur lors de la validation.");
+      if (!step1Result.success) {
+        toast.error(step1Result.error || "Erreur lors de la validation.");
+        setSubmitting(false);
         return;
       }
 
-      toast.success("Informations validées !");
-      setStep(2);
-    } catch {
-      toast.error("Une erreur est survenue.");
-    }
-  };
-
-  const handleStep2Submit = async (e: FormEvent) => {
-    e.preventDefault();
-
-    const { password, confirmPassword } = step2Data;
-
-    if (!password || password.length < 4) {
-      toast.error("Le mot de passe doit contenir au moins 4 caractères.");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      toast.error("Les mots de passe ne correspondent pas.");
-      return;
-    }
-
-    try {
-      const result = await withLoading(
-        () =>
-          createPlayerStep2({
-            password,
-            photo: step2Data.photo || undefined,
-          }),
+      // TODO: permettre l'ajout ou la modification de la photo de profil depuis la page Profil après inscription.
+      const step2Result = await withLoading(
+        () => createPlayerStep2({ password }),
         "Création de votre compte…"
       );
 
-      if (!result.success) {
+      if (!step2Result.success) {
+        toast.error(step2Result.error || "Erreur lors de la création du compte.");
+        setSubmitting(false);
+        return;
+      }
+
+      toast.success("Compte créé avec succès !");
+      router.push(step2Result.redirectTo || "/dashboard/standalone");
+    } catch {
+      toast.error("Une erreur est survenue.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const currentTypeInfo =
+    PLAYER_TYPES.find((t) => t.type === selectedType) || PLAYER_TYPES[0];
+
+  return (
         toast.error(result.error || "Erreur lors de la création du compte.");
         return;
       }
@@ -360,52 +360,59 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
                 </p>
               </div>
 
-              {/* Barre de progression */}
+              {/* Barre de progression 3 étapes */}
               <div className="mb-8">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${
-                        step >= 1
-                          ? "bg-primary text-white"
-                          : "bg-stroke text-waterloo dark:bg-strokedark"
-                      }`}
-                    >
-                      {step > 1 ? <Check className="h-4 w-4" /> : "1"}
+                  {[1, 2, 3].map((s) => (
+                    <div key={s} className="flex items-center gap-2 flex-1 last:flex-none">
+                      <div
+                        className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${
+                          step > s
+                            ? "bg-primary text-white"
+                            : step === s
+                            ? "bg-primary text-white"
+                            : "bg-stroke text-waterloo dark:bg-strokedark"
+                        }`}
+                      >
+                        {step > s ? <Check className="h-4 w-4" /> : s}
+                      </div>
+                      <span
+                        className={`hidden text-xs sm:inline ${
+                          step === s
+                            ? "font-medium text-primary"
+                            : "text-waterloo"
+                        }`}
+                      >
+                        {STEP_LABELS[s - 1]}
+                      </span>
+                      {s < 3 && (
+                        <div
+                          className={`mx-2 h-0.5 flex-1 ${
+                            step > s
+                              ? "bg-primary"
+                              : "bg-stroke dark:bg-strokedark"
+                          }`}
+                        />
+                      )}
                     </div>
-                    <span className="text-sm font-medium text-black dark:text-white">
-                      Profil
-                    </span>
-                  </div>
-                  <div
-                    className={`mx-4 h-0.5 flex-1 ${
-                      step >= 2
-                        ? "bg-primary"
-                        : "bg-stroke dark:bg-strokedark"
-                    }`}
-                  />
-                  <div className="flex items-center gap-2">
-                    <div
-                      className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${
-                        step >= 2
-                          ? "bg-primary text-white"
-                          : "bg-stroke text-waterloo dark:bg-strokedark"
-                      }`}
-                    >
-                      2
-                    </div>
-                    <span className="text-sm font-medium text-black dark:text-white">
-                      Sécurité
-                    </span>
-                  </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Titre + description de l'étape */}
+              <div className="mb-6 text-center">
+                <p className="text-sm font-medium text-primary">Étape {step} sur 3</p>
+                <h3 className="text-lg font-bold text-black dark:text-white">{STEP_LABELS[step - 1]}</h3>
+                <p className="mt-1 text-sm text-waterloo">{STEP_DESCRIPTIONS[step - 1]}</p>
+              </div>
                 </div>
               </div>
 
               <AnimatePresence mode="wait">
+                {/* ÉTAPE 1 — Choix du compte et statut */}
                 {step === 1 && (
-                  <motion.form
+                  <motion.div
                     key="step1"
-                    onSubmit={handleStep1Submit}
                     variants={{
                       hidden: { opacity: 0, y: 20 },
                       visible: { opacity: 1, y: 0 },
@@ -415,7 +422,7 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.3 }}
                   >
-                    {/* Sélection du type de joueur */}
+                    {/* Type de joueur */}
                     <div className="mb-6">
                       <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                         Type de joueur
@@ -432,28 +439,14 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
                                 : "border-stroke dark:border-strokedark hover:border-primary/50"
                             }`}
                           >
-                            <div
-                              className={`${
-                                selectedType === pt.type
-                                  ? pt.color
-                                  : "text-waterloo"
-                              }`}
-                            >
+                            <div className={selectedType === pt.type ? pt.color : "text-waterloo"}>
                               {pt.icon}
                             </div>
                             <div>
-                              <p
-                                className={`text-xs font-bold ${
-                                  selectedType === pt.type
-                                    ? "text-black dark:text-white"
-                                    : "text-waterloo"
-                                }`}
-                              >
+                              <p className={`text-xs font-bold ${selectedType === pt.type ? "text-black dark:text-white" : "text-waterloo"}`}>
                                 {pt.label}
                               </p>
-                              <p className="text-[10px] text-waterloo">
-                                {pt.tagline}
-                              </p>
+                              <p className="text-[10px] text-waterloo">{pt.tagline}</p>
                             </div>
                             {selectedType === pt.type && (
                               <div className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white">
@@ -465,7 +458,6 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
                       </div>
                     </div>
 
-                    {/* Type sélectionné - Features */}
                     <motion.div
                       key={selectedType}
                       initial={{ opacity: 0, height: 0 }}
@@ -474,137 +466,78 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
                     >
                       <div className="mb-2 flex items-center gap-2">
                         <Sparkles className="h-4 w-4 text-primary" />
-                        <span className="text-sm font-semibold text-black dark:text-white">
-                          {currentTypeInfo.label}
-                        </span>
+                        <span className="text-sm font-semibold text-black dark:text-white">{currentTypeInfo.label}</span>
                       </div>
-                      <p className="mb-3 text-xs text-waterloo leading-relaxed">
-                        {currentTypeInfo.description}
-                      </p>
+                      <p className="mb-3 text-xs text-waterloo leading-relaxed">{currentTypeInfo.description}</p>
                       <ul className="space-y-1">
                         {currentTypeInfo.features.map((f, i) => (
-                          <li
-                            key={i}
-                            className="flex items-center gap-2 text-sm text-waterloo"
-                          >
-                            <Check className="h-3.5 w-3.5 text-primary" />
-                            {f}
+                          <li key={i} className="flex items-center gap-2 text-sm text-waterloo">
+                            <Check className="h-3.5 w-3.5 text-primary" /> {f}
                           </li>
                         ))}
                       </ul>
                     </motion.div>
 
-                    {/* Code d'affiliation */}
                     {referralCode && (
                       <div className="mb-6 flex items-center gap-3 rounded-xl bg-amber-50 p-4 dark:bg-amber-500/10">
                         <LinkIcon className="h-5 w-5 text-amber-500" />
                         <div>
-                          <p className="text-sm font-medium text-amber-700 dark:text-amber-300">
-                            Code d&apos;affiliation
-                          </p>
+                          <p className="text-sm font-medium text-amber-700 dark:text-amber-300">Code d&apos;affiliation</p>
                           <p className="text-xs text-amber-600 dark:text-amber-400">
-                            Vous êtes invité par le code{" "}
-                            <strong>{referralCode}</strong>
+                            Vous êtes invité par le code <strong>{referralCode}</strong>
                           </p>
                         </div>
                       </div>
                     )}
 
-                    {/* Champs du formulaire */}
-                    <div className="mb-6 space-y-5">
-                      <div>
-                        <label className="mb-2 flex items-center gap-2 text-sm font-medium text-black dark:text-white">
-                          <User className="h-4 w-4 text-primary" />
-                          Pseudo
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="Votre pseudo"
-                          value={step1Data.pseudo}
-                          onChange={(e) =>
-                            setStep1Data((prev) => ({
-                              ...prev,
-                              pseudo: e.target.value,
-                            }))
-                          }
-                          required
-                          className="w-full rounded-xl border border-stroke bg-transparent px-5 py-3 text-black outline-hidden transition-all duration-200 focus:border-primary focus:shadow-[0_0_0_3px_rgba(0,107,255,0.1)] dark:border-strokedark dark:text-white dark:focus:border-primary"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="mb-2 flex items-center gap-2 text-sm font-medium text-black dark:text-white">
-                          <Phone className="h-4 w-4 text-primary" />
-                          Téléphone
-                        </label>
-                        <input
-                          type="tel"
-                          placeholder="09XXXXXXXX"
-                          value={step1Data.telephone}
-                          onChange={(e) =>
-                            setStep1Data((prev) => ({
-                              ...prev,
-                              telephone: e.target.value,
-                            }))
-                          }
-                          required
-                          className="w-full rounded-xl border border-stroke bg-transparent px-5 py-3 text-black outline-hidden transition-all duration-200 focus:border-primary focus:shadow-[0_0_0_3px_rgba(0,107,255,0.1)] dark:border-strokedark dark:text-white dark:focus:border-primary"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="mb-2 flex items-center gap-2 text-sm font-medium text-black dark:text-white">                          <Mail className="h-4 w-4 text-primary" />
-                          Email
-                        </label>
-                        <input
-                          type="email"
-                          placeholder="votre@email.com"
-                          value={step1Data.email}
-                          onChange={(e) =>
-                            setStep1Data((prev) => ({
-                              ...prev,
-                              email: e.target.value,
-                            }))
-                          }
-                          required
-                          className="w-full rounded-xl border border-stroke bg-transparent px-5 py-3 text-black outline-hidden transition-all duration-200 focus:border-primary focus:shadow-[0_0_0_3px_rgba(0,107,255,0.1)] dark:border-strokedark dark:text-white dark:focus:border-primary"
-                        />
-                      </div>
-
-                      <div>
-                        <EtablissementSelector
-                          statut={step1Data.statut}
-                          etablissement={step1Data.school}
-                          onStatutChange={(s) => setStep1Data((prev) => ({ ...prev, statut: s }))}
-                          onEtablissementChange={(v) => setStep1Data((prev) => ({ ...prev, school: v }))}
-                        />
+                    {/* Statut personnel */}
+                    <div className="mb-6">
+                      <label className="mb-3 flex items-center gap-2 text-sm font-medium text-black dark:text-white">
+                        <GraduationCap className="h-4 w-4 text-primary" />
+                        Statut
+                      </label>
+                      <div className="grid grid-cols-3 gap-3">
+                        {STATUT_OPTIONS.map((opt) => (
+                          <button
+                            key={opt.value}
+                            type="button"
+                            onClick={() => setStatut(opt.value)}
+                            className={`flex flex-col items-center gap-1 rounded-xl border-2 p-3 text-center transition-all duration-200 ${
+                              statut === opt.value
+                                ? "border-primary bg-primary/5 shadow-lg"
+                                : "border-stroke dark:border-strokedark hover:border-primary/50"
+                            }`}
+                          >
+                            <span className="text-xl">{opt.icon}</span>
+                            <span className={`text-xs font-medium ${statut === opt.value ? "text-black dark:text-white" : "text-waterloo"}`}>
+                              {opt.label}
+                            </span>
+                          </button>
+                        ))}
                       </div>
                     </div>
 
                     <button
-                      type="submit"
+                      type="button"
+                      onClick={handleNext}
                       className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 font-medium text-white transition-all duration-200 hover:bg-primaryho"
                     >
-                      Continuer
-                      <ArrowRight className="h-5 w-5" />
+                      Suivant <ArrowRight className="h-5 w-5" />
                     </button>
 
                     <p className="mt-4 text-center text-sm text-waterloo">
                       Déjà un compte ?{" "}
-                      <Link
-                        href="/auth/signin"
-                        className="font-medium text-primary hover:underline"
-                      >
+                      <Link href="/auth/signin" className="font-medium text-primary hover:underline">
                         Connectez-vous
                       </Link>
                     </p>
-                  </motion.form>
+                  </motion.div>
                 )}
 
+                {/* ÉTAPE 2 — Identités */}
                 {step === 2 && (
-                  <motion.form
+                  <motion.div
                     key="step2"
-                    onSubmit={handleStep2Submit}
                     variants={{
                       hidden: { opacity: 0, y: 20 },
                       visible: { opacity: 1, y: 0 },
@@ -614,173 +547,132 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.3 }}
                   >
-                    {/* Résumé rapide */}
-                    <div className="mb-6 rounded-xl bg-gradient-to-r from-primary/5 to-primary/10 p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm text-waterloo">
-                            Inscription en tant que
-                          </p>
-                          <p className="font-semibold text-black dark:text-white">
-                            {step1Data.pseudo || "..."}{" "}
-                            <span className="text-primary">
-                              ({currentTypeInfo.label})
-                            </span>
-                          </p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => setStep(1)}
-                          className="text-xs text-primary hover:underline"
-                        >
-                          Modifier
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Photo de profil */}
-                    <div className="mb-6">
-                      <label className="mb-2 flex items-center gap-2 text-sm font-medium text-black dark:text-white">
-                        <ImageIcon className="h-4 w-4 text-primary" />
-                        Photo de profil
-                      </label>
-                      <div className="flex items-center gap-4">
-                        <div className="relative h-20 w-20 overflow-hidden rounded-full border-2 border-dashed border-stroke dark:border-strokedark">
-                          {uploadingPhoto ? (
-                            <div className="flex h-full w-full items-center justify-center bg-stroke/50 dark:bg-strokedark/50">
-                              <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                            </div>
-                          ) : photoPreview ? (
-                            <Image
-                              src={photoPreview}
-                              alt="Aperçu"
-                              fill
-                              className="object-cover"
-                            />
-                          ) : (
-                            <div className="flex h-full w-full items-center justify-center bg-stroke/50 dark:bg-strokedark/50">
-                              <Upload className="h-6 w-6 text-waterloo" />
-                            </div>
-                          )}
-                        </div>
-                        <label className="cursor-pointer rounded-lg border border-stroke px-4 py-2 text-sm text-waterloo transition-all hover:border-primary hover:text-primary dark:border-strokedark">
-                          <span>{uploadingPhoto ? "Téléchargement..." : "Choisir une photo"}</span>
-                          <input
-                            type="file"
-                            accept="image/jpeg,image/png,image/webp"
-                            onChange={handlePhotoChange}
-                            className="hidden"
-                            disabled={uploadingPhoto}
-                          />
-                        </label>
-                      </div>
-                      <p className="mt-1.5 text-xs text-waterloo">
-                        Optionnel. Format JPG, PNG, WebP. Max 10 Mo. L'image est uploadée sur Cloudinary.
-                      </p>
-                    </div>
-
-                    {/* Mot de passe */}
                     <div className="mb-6 space-y-5">
                       <div>
                         <label className="mb-2 flex items-center gap-2 text-sm font-medium text-black dark:text-white">
-                          <Lock className="h-4 w-4 text-primary" />
-                          Mot de passe
+                          <User className="h-4 w-4 text-primary" /> Pseudo
                         </label>
-                        <div className="relative">
-                          <input
-                            type={showPassword ? "text" : "password"}
-                            placeholder="Minimum 4 caractères"
-                            value={step2Data.password}
-                            onChange={(e) =>
-                              setStep2Data((prev) => ({
-                                ...prev,
-                                password: e.target.value,
-                              }))
-                            }
-                            required
-                            className="w-full rounded-xl border border-stroke bg-transparent px-5 py-3 pr-12 text-black outline-hidden transition-all duration-200 focus:border-primary focus:shadow-[0_0_0_3px_rgba(0,107,255,0.1)] dark:border-strokedark dark:text-white dark:focus:border-primary"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 text-waterloo hover:text-primary"
-                          >
-                            {showPassword ? (
-                              <EyeOff className="h-5 w-5" />
-                            ) : (
-                              <Eye className="h-5 w-5" />
-                            )}
-                          </button>
-                        </div>
+                        <input type="text" placeholder="Votre pseudo" value={pseudo} onChange={(e) => setPseudo(e.target.value)} required
+                          className="w-full rounded-xl border border-stroke bg-transparent px-5 py-3 text-black outline-hidden transition-all duration-200 focus:border-primary focus:shadow-[0_0_0_3px_rgba(0,107,255,0.1)] dark:border-strokedark dark:text-white dark:focus:border-primary" />
                       </div>
-
                       <div>
                         <label className="mb-2 flex items-center gap-2 text-sm font-medium text-black dark:text-white">
-                          <Shield className="h-4 w-4 text-primary" />
-                          Confirmer le mot de passe
+                          <Phone className="h-4 w-4 text-primary" /> Téléphone
                         </label>
-                        <input
-                          type="password"
-                          placeholder="Retaper le mot de passe"
-                          value={step2Data.confirmPassword}
-                          onChange={(e) =>
-                            setStep2Data((prev) => ({
-                              ...prev,
-                              confirmPassword: e.target.value,
-                            }))
-                          }
-                          required
-                          className="w-full rounded-xl border border-stroke bg-transparent px-5 py-3 text-black outline-hidden transition-all duration-200 focus:border-primary focus:shadow-[0_0_0_3px_rgba(0,107,255,0.1)] dark:border-strokedark dark:text-white dark:focus:border-primary"
+                        <input type="tel" placeholder="09XXXXXXXX" value={telephone} onChange={(e) => setTelephone(e.target.value)} required
+                          className="w-full rounded-xl border border-stroke bg-transparent px-5 py-3 text-black outline-hidden transition-all duration-200 focus:border-primary focus:shadow-[0_0_0_3px_rgba(0,107,255,0.1)] dark:border-strokedark dark:text-white dark:focus:border-primary" />
+                      </div>
+                      <div>
+                        <label className="mb-2 flex items-center gap-2 text-sm font-medium text-black dark:text-white">
+                          <Mail className="h-4 w-4 text-primary" /> Email
+                        </label>
+                        <input type="email" placeholder="votre@email.com" value={email} onChange={(e) => setEmail(e.target.value)} required
+                          className="w-full rounded-xl border border-stroke bg-transparent px-5 py-3 text-black outline-hidden transition-all duration-200 focus:border-primary focus:shadow-[0_0_0_3px_rgba(0,107,255,0.1)] dark:border-strokedark dark:text-white dark:focus:border-primary" />
+                      </div>
+                      <div>
+                        <EtablissementSelector
+                          statut={statut}
+                          etablissement={school}
+                          onStatutChange={(s) => setStatut(s)}
+                          onEtablissementChange={(v) => setSchool(v)}
                         />
                       </div>
                     </div>
 
-                    {/* Indicateur de force du mot de passe */}
-                    {step2Data.password && (
+                    <div className="flex gap-3">
+                      <button type="button" onClick={handleBack}
+                        className="flex items-center justify-center gap-2 rounded-xl border border-stroke px-6 py-3.5 font-medium text-black transition-all duration-200 hover:bg-stroke dark:border-strokedark dark:text-white dark:hover:bg-strokedark">
+                        <ArrowLeft className="h-5 w-5" /> Retour
+                      </button>
+                      <button type="button" onClick={handleNext}
+                        className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 font-medium text-white transition-all duration-200 hover:bg-primaryho">
+                        Suivant <ArrowRight className="h-5 w-5" />
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* ÉTAPE 3 — Sécurité */}
+                {step === 3 && (
+                  <motion.form
+                    key="step3"
+                    onSubmit={handleSubmit}
+                    variants={{
+                      hidden: { opacity: 0, y: 20 },
+                      visible: { opacity: 1, y: 0 },
+                    }}
+                    initial="hidden"
+                    animate="visible"
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="mb-6 rounded-xl bg-gradient-to-r from-primary/5 to-primary/10 p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-waterloo">Inscription en tant que</p>
+                          <p className="font-semibold text-black dark:text-white">
+                            {pseudo || "..."} <span className="text-primary">({currentTypeInfo.label})</span>
+                          </p>
+                        </div>
+                        <button type="button" onClick={() => setStep(1)} className="text-xs text-primary hover:underline">Modifier</button>
+                      </div>
+                    </div>
+
+                    <div className="mb-6 space-y-5">
+                      <div>
+                        <label className="mb-2 flex items-center gap-2 text-sm font-medium text-black dark:text-white">
+                          <Lock className="h-4 w-4 text-primary" /> Mot de passe
+                        </label>
+                        <div className="relative">
+                          <input type={showPassword ? "text" : "password"} placeholder="Minimum 4 caractères"
+                            value={password} onChange={(e) => setPassword(e.target.value)} required
+                            className="w-full rounded-xl border border-stroke bg-transparent px-5 py-3 pr-12 text-black outline-hidden transition-all duration-200 focus:border-primary focus:shadow-[0_0_0_3px_rgba(0,107,255,0.1)] dark:border-strokedark dark:text-white dark:focus:border-primary" />
+                          <button type="button" onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 text-waterloo hover:text-primary">
+                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                          </button>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="mb-2 flex items-center gap-2 text-sm font-medium text-black dark:text-white">
+                          <Shield className="h-4 w-4 text-primary" /> Confirmer le mot de passe
+                        </label>
+                        <input type="password" placeholder="Retaper le mot de passe"
+                          value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required
+                          className="w-full rounded-xl border border-stroke bg-transparent px-5 py-3 text-black outline-hidden transition-all duration-200 focus:border-primary focus:shadow-[0_0_0_3px_rgba(0,107,255,0.1)] dark:border-strokedark dark:text-white dark:focus:border-primary" />
+                      </div>
+                    </div>
+
+                    {password && (
                       <div className="mb-6">
                         <div className="mb-1 flex gap-1">
                           {[1, 2, 3].map((level) => (
-                            <div
-                              key={level}
+                            <div key={level}
                               className={`h-1.5 flex-1 rounded-full transition-all ${
-                                step2Data.password.length >= level * 4
-                                  ? step2Data.password.length >= 8
-                                    ? "bg-emerald-500"
-                                    : step2Data.password.length >= 6
-                                      ? "bg-amber-500"
-                                      : "bg-red-500"
+                                password.length >= level * 4
+                                  ? password.length >= 8 ? "bg-emerald-500" : password.length >= 6 ? "bg-amber-500" : "bg-red-500"
                                   : "bg-stroke dark:bg-strokedark"
-                              }`}
-                            />
+                              }`} />
                           ))}
                         </div>
                         <p className="text-xs text-waterloo">
-                          {step2Data.password.length === 0
-                            ? ""
-                            : step2Data.password.length < 4
-                              ? "Trop court"
-                              : step2Data.password.length < 8
-                                ? "Moyen"
-                                : "Fort"}
+                          {password.length === 0 ? "" : password.length < 4 ? "Trop court" : password.length < 8 ? "Moyen" : "Fort"}
                         </p>
                       </div>
                     )}
 
                     <div className="flex gap-3">
-                      <button
-                        type="button"
-                        onClick={() => setStep(1)}
-                        className="flex items-center justify-center gap-2 rounded-xl border border-stroke px-6 py-3.5 font-medium text-black transition-all duration-200 hover:bg-stroke dark:border-strokedark dark:text-white dark:hover:bg-strokedark"
-                      >
-                        <ArrowLeft className="h-5 w-5" />
-                        Retour
+                      <button type="button" onClick={handleBack}
+                        className="flex items-center justify-center gap-2 rounded-xl border border-stroke px-6 py-3.5 font-medium text-black transition-all duration-200 hover:bg-stroke dark:border-strokedark dark:text-white dark:hover:bg-strokedark">
+                        <ArrowLeft className="h-5 w-5" /> Retour
                       </button>
-                      <button
-                        type="submit"
-                        className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 font-medium text-white transition-all duration-200 hover:bg-primaryho"
-                      >
-                        Créer mon compte
-                        <Check className="h-5 w-5" />
+                      <button type="submit" disabled={submitting}
+                        className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 font-medium text-white transition-all duration-200 hover:bg-primaryho disabled:opacity-60">
+                        {submitting ? (
+                          <><svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>Création...</>
+                        ) : (
+                          <>Créer mon compte <Check className="h-5 w-5" /></>
+                        )}
                       </button>
                     </div>
                   </motion.form>
