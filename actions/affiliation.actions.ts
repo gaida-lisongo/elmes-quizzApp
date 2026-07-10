@@ -142,12 +142,13 @@ export async function startAffiliateTrainingPartieAction(categorieId: string) {
       return { success: false, error: 'Vous avez déjà une partie en cours.' };
     }
 
-    const quizLevels = [0, 1, 2, 3].filter((level) => level <= (player.level || 0));
+    // Ne tirer que les questions du niveau exact du joueur
+    const quizLevel = Math.max(0, Math.min(3, player.level || 0));
     const questions = await Quiz.aggregate([
       {
         $match: {
           categorieId: new mongoose.Types.ObjectId(categorieId),
-          level: { $in: quizLevels },
+          level: quizLevel,
           status: true,
         },
       },
