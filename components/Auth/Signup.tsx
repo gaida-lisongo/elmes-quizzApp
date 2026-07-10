@@ -26,9 +26,11 @@ import {
   EyeOff,
   Link as LinkIcon,
   GraduationCap,
+  Loader2,
 } from "lucide-react";
 import Logo from "@/components/Common/Logo";
 import { createPlayerStep1, createPlayerStep2 } from "@/actions/signup.actions";
+import { uploadProfileImageToCloudinary } from "@/actions/profile.upload.actions";
 import { useLoading } from "@/context/LoadingContext";
 import type { PlayerType } from "@/actions/signup.actions";
 import type { Statut } from "@/actions/signup.actions";
@@ -109,12 +111,13 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
   });
 
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
   const handleTypeSelect = (type: PlayerType) => {
     setSelectedType(type);
   };
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -124,23 +127,37 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
     }
 
     // Limite de taille : 10 Mo
-    const MAX_SIZE = 10 * 1024 * 1024; // 10 Mo en octets
+    const MAX_SIZE = 10 * 1024 * 1024;
     if (file.size > MAX_SIZE) {
       toast.error("L'image est trop volumineuse. Taille maximum : 10 Mo.");
       e.target.value = "";
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      const dataUrl = ev.target?.result as string;
-      setPhotoPreview(dataUrl);
-      setStep2Data((prev) => ({ ...prev, photo: dataUrl }));
-    };
-    reader.onerror = () => {
-      toast.error("Erreur lors de la lecture de l'image. Veuillez réessayer.");
-    };
-    reader.readAsDataURL(file);
+    // Afficher un aperçu local immédiat
+    const localPreview = URL.createObjectURL(file);
+    setPhotoPreview(localPreview);
+    setUploadingPhoto(true);
+
+    // Upload vers Cloudinary via FormData
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const result = await uploadProfileImageToCloudinary(formData);
+
+      if (!result.success) {
+        throw new Error(result.error || "Échec de l'upload");
+      }
+
+      setStep2Data((prev) => ({ ...prev, photo: result.url }));
+      toast.success("Photo téléchargée avec succès !");
+    } catch (err: any) {
+      toast.error(err.message || "Erreur lors du téléchargement de la photo.");
+      setPhotoPreview(null);
+    } finally {
+      setUploadingPhoto(false);
+    }
   };
 
   const handleStep1Submit = async (e: FormEvent) => {
@@ -629,7 +646,11 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
                       </label>
                       <div className="flex items-center gap-4">
                         <div className="relative h-20 w-20 overflow-hidden rounded-full border-2 border-dashed border-stroke dark:border-strokedark">
-                          {photoPreview ? (
+                          {uploadingPhoto ? (
+                            <div className="flex h-full w-full items-center justify-center bg-stroke/50 dark:bg-strokedark/50">
+                              <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                            </div>
+                          ) : photoPreview ? (
                             <Image
                               src={photoPreview}
                               alt="Aperçu"
@@ -643,17 +664,18 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
                           )}
                         </div>
                         <label className="cursor-pointer rounded-lg border border-stroke px-4 py-2 text-sm text-waterloo transition-all hover:border-primary hover:text-primary dark:border-strokedark">
-                          <span>Choisir une photo</span>
+                          <span>{uploadingPhoto ? "Téléchargement..." : "Choisir une photo"}</span>
                           <input
                             type="file"
-                            accept="image/*"
+                            accept="image/jpeg,image/png,image/webp"
                             onChange={handlePhotoChange}
                             className="hidden"
+                            disabled={uploadingPhoto}
                           />
                         </label>
                       </div>
                       <p className="mt-1.5 text-xs text-waterloo">
-                        Optionnel. Format JPG, PNG. Max 10 Mo.
+                        Optionnel. Format JPG, PNG, WebP. Max 10 Mo. L'image est uploadée sur Cloudinary.
                       </p>
                     </div>
 

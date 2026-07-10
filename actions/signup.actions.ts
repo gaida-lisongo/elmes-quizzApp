@@ -225,7 +225,7 @@ export async function createPlayerStep2(data: SignupStep2Data) {
       solde: 0,
       role: 'PLAYER',
       secure: hashedPassword,
-      photo: photo || '',
+      photo: photo || '',  // URL Cloudinary (uploadée depuis le frontend) ou chaîne vide
     });
 
     // Générer un code de parrainage
