@@ -11,6 +11,7 @@ import Categorie from '@/lib/models/Categorie';
 import EnrollementModule from '@/lib/models/Enrollement';
 import Equipe from '@/lib/models/Equipe';
 import { Competition, Parcours } from '@/lib/models/Competition';
+import { creditScholarshipForWonGame } from '@/lib/utils/scholarship.service';
 
 const { Enrollement } = EnrollementModule;
 const PARCOURS_GRANTED_GAMES = 180;
@@ -78,7 +79,7 @@ export async function getMyParcoursEnrollmentsAction() {
       status: { $in: ['PENDING', 'CONFIRMED'] },
     })
       .populate('parcoursId', 'designation description questions slug')
-      .populate('sessionId', 'designation startDate endDate status type')
+      .populate('sessionId', 'designation startDate endDate status type enrollmentFeeCDF totalValidatedEnrollments totalCollectedCDF platformAmountCDF scholarshipInitialAmountCDF scholarshipDistributedAmountCDF scholarshipRemainingAmountCDF totalGrantedGames unitRewardPerWonGameCDF gamesPerEnrollment')
       .sort({ createdAt: -1 })
       .lean();
 
@@ -107,7 +108,7 @@ export async function getMyEquipeEnrollmentsAction() {
       status: 'CONFIRMED',
     })
       .populate('competitionId', 'designation description categories questions slug')
-      .populate('sessionId', 'designation startDate endDate status type')
+      .populate('sessionId', 'designation startDate endDate status type enrollmentFeeCDF totalValidatedEnrollments totalCollectedCDF platformAmountCDF scholarshipInitialAmountCDF scholarshipDistributedAmountCDF scholarshipRemainingAmountCDF totalGrantedGames unitRewardPerWonGameCDF gamesPerEnrollment')
       .sort({ createdAt: -1 })
       .lean();
 
@@ -195,6 +196,7 @@ export async function startStandalonePartieAction(categorieId: string) {
         questionIndex: 0,
         notes: 0,
         playerId: player._id.toString(),
+        parties: player.parties || 0,
         mode: 'STANDALONE',
       } as PartieActiveData,
     };
@@ -342,19 +344,34 @@ export async function startMatchPartieAction(enrollmentId: string) {
 
     const enrollment = await Enrollement.findById(enrollmentId)
       .populate('competitionId')
-      .populate('sessionId', 'status type')
+      .populate('sessionId', 'status type scholarshipRemainingAmountCDF')
       .lean();
     if (!enrollment) return { success: false, error: 'Inscription introuvable' };
     if (enrollment.status !== 'CONFIRMED') {
-      return { success: false, error: 'Cet enrollement n\'est pas confirmÃƒÂ©.' };
+      return { success: false, error: 'Cet enrollement n\'est pas confirmé.' };
     }
 
     const sessionDoc = enrollment.sessionId as any;
+    if (sessionDoc?.status === 'INACTIVE') {
+      return {
+        success: false,
+        error: 'La session est inactive : la Bourse d\'Excellence AcadÃ©mique disponible a Ã©tÃ© entiÃ¨rement distribuÃ©e ou suspendue par la gestion.',
+      };
+    }
     if (!sessionDoc || sessionDoc.status !== 'COMPLETED') {
       return { success: false, error: 'Les matchs ne sont pas ouverts pour cette session.' };
     }
     if (sessionDoc.type && sessionDoc.type !== 'competition') {
       return { success: false, error: 'Session de compétition invalide.' };
+    }
+
+    // Vérifier la Bourse d'Excellence Académique restante
+    const scholarshipRemaining = sessionDoc.scholarshipRemainingAmountCDF ?? 0;
+    if (scholarshipRemaining <= 0) {
+      return {
+        success: false,
+        error: 'La session est inactive : la Bourse d\'Excellence Académique disponible a été entièrement distribuée ou suspendue par la gestion.',
+      };
     }
 
     const equipe = await Equipe.findOne({
@@ -551,6 +568,16 @@ export async function terminerPartieAction(partieId: string, credits: number) {
             'metriques.matchsWin': 1,
           },
         });
+
+        // Créditer la Bourse d'Excellence Académique pour cette partie gagnée
+        try {
+          const scholarshipRes = await creditScholarshipForWonGame(partieId, partie.enrollmentId.toString());
+          if (scholarshipRes.success && scholarshipRes.rewardCDF) {
+            equipeCredit = scholarshipRes.rewardCDF;
+          }
+        } catch (error) {
+          console.error('[terminerPartieAction] Erreur crédit Bourse:', error);
+        }
       }
     }
 

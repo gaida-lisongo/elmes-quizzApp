@@ -10,7 +10,9 @@ import Equipe from "@/lib/models/Equipe";
 import { Competition, Parcours } from "@/lib/models/Competition";
 import { sendMail } from "@/lib/utils/mail";
 import { initiatePaymentAction, checkPaymentStatusAction, type PaymentMethod } from "@/actions/payment.actions";
-import { distributeCompetitionSessionRewards, distributeParcoursSessionRewards } from "@/lib/utils/enrollmentRewards";
+import { checkStatus } from "@/lib/utils/payment.service";
+import { distributeParcoursSessionRewards } from "@/lib/utils/enrollmentRewards";
+import { recomputeCompetitionScholarship } from "@/lib/utils/scholarship.service";
 import { randomUUID } from "crypto";
 
 const { Enrollement, Session } = EnrollementModule;
@@ -25,12 +27,21 @@ async function sendEnrollmentEmail({
   resourceName,
   orderNumber,
   ressources,
+  scholarshipInfo,
 }: {
   email?: string;
   sessionName: string;
   resourceName: string;
   orderNumber: string;
   ressources?: string;
+  scholarshipInfo?: {
+    enrollmentFeeCDF: number;
+    totalEnrolledTeams: number;
+    currentScholarshipCDF: number;
+    gamesPerTeam: number;
+    unitRewardCDF: number;
+    paidCurrency?: string;
+  } | null;
 }) {
   if (!email?.trim()) return;
   try {
@@ -43,6 +54,18 @@ async function sendEnrollmentEmail({
           <p style="margin:0 0 12px;color:#334155;">Votre enrollement à la session <strong>${sessionName}</strong> est confirmé.</p>
           <p style="margin:0 0 12px;color:#334155;"><strong>Ressource :</strong> ${resourceName}</p>
           <p style="margin:0 0 12px;color:#334155;"><strong>Commande / facture :</strong> ${orderNumber}</p>
+          ${scholarshipInfo ? `
+            <div style="margin:16px 0;padding:14px;border:1px solid #dbe3ef;border-radius:12px;background:#fff;">
+              <p style="margin:0 0 8px;color:#0f172a;font-weight:700;">Bourse d'Excellence AcadÃ©mique</p>
+              <p style="margin:0 0 6px;color:#334155;"><strong>Frais d'enrÃ´lement CDF :</strong> ${scholarshipInfo.enrollmentFeeCDF.toLocaleString('fr-FR')} FC</p>
+              ${scholarshipInfo.paidCurrency ? `<p style="margin:0 0 6px;color:#334155;"><strong>Devise payÃ©e :</strong> ${scholarshipInfo.paidCurrency}</p>` : ''}
+              <p style="margin:0 0 6px;color:#334155;"><strong>Ã‰quipes validÃ©es :</strong> ${scholarshipInfo.totalEnrolledTeams}</p>
+              <p style="margin:0 0 6px;color:#334155;"><strong>Bourse actuelle :</strong> ${scholarshipInfo.currentScholarshipCDF.toLocaleString('fr-FR')} FC</p>
+              <p style="margin:0 0 6px;color:#334155;"><strong>Parties accordÃ©es Ã  l'Ã©quipe :</strong> ${scholarshipInfo.gamesPerTeam}</p>
+              <p style="margin:0;color:#334155;"><strong>Valeur actuelle d'une partie gagnÃ©e :</strong> ${scholarshipInfo.unitRewardCDF.toLocaleString('fr-FR')} FC</p>
+            </div>
+            <p style="margin:0 0 12px;color:#334155;">La Bourse actuelle Ã©volue selon les enrÃ´lements validÃ©s et les performances.</p>
+          ` : ''}
           <p style="margin:0;color:#334155;"><strong>À préparer :</strong> ${ressources?.trim() || 'Ressource à consulter dans votre espace joueur.'}</p>
         </div>
       `,
@@ -50,6 +73,80 @@ async function sendEnrollmentEmail({
   } catch (error) {
     console.error('[sendEnrollmentEmail]', error);
   }
+}
+
+async function applyEnrollmentConfirmation(enrollment: any, orderNumber: string, sendEmail = true) {
+  const isCompetition = Boolean(enrollment.competitionId);
+  const grantedGames = isCompetition ? COMPETITION_GRANTED_GAMES : PARCOURS_GRANTED_GAMES;
+
+  enrollment.status = 'CONFIRMED';
+  enrollment.totalGrantedGames = enrollment.totalGrantedGames || grantedGames;
+  enrollment.usedGames = enrollment.usedGames || enrollment.parties || 0;
+  enrollment.remainingGames = Math.max(0, (enrollment.totalGrantedGames || grantedGames) - (enrollment.usedGames || 0));
+  enrollment.maxParties = enrollment.totalGrantedGames || grantedGames;
+  enrollment.transactions = (enrollment.transactions || []).map((transaction: any) => {
+    if (!orderNumber || transaction.orderNumber === orderNumber) transaction.status = 'PAID';
+    return transaction;
+  });
+  await enrollment.save();
+
+  if (isCompetition && enrollment.sessionId?._id) {
+    try {
+      await recomputeCompetitionScholarship(enrollment.sessionId._id.toString());
+    } catch (error) {
+      console.error('[applyEnrollmentConfirmation] Erreur recalcul Bourse:', error);
+    }
+  }
+
+  if (sendEmail) {
+    // Récupérer les infos Bourse pour les compétitions
+    let scholarshipInfo = null;
+    if (isCompetition && enrollment.sessionId?._id) {
+      try {
+        const freshSession = await Session.findById(enrollment.sessionId._id).lean();
+        if (freshSession && freshSession.scholarshipInitialAmountCDF > 0) {
+          scholarshipInfo = {
+            enrollmentFeeCDF: freshSession.enrollmentFeeCDF ?? 0,
+            totalEnrolledTeams: freshSession.totalValidatedEnrollments ?? 0,
+            currentScholarshipCDF: freshSession.scholarshipInitialAmountCDF ?? 0,
+            gamesPerTeam: freshSession.gamesPerEnrollment ?? 250,
+            unitRewardCDF: freshSession.unitRewardPerWonGameCDF ?? 0,
+            paidCurrency: enrollment.transactions?.find((t: any) => t.orderNumber === orderNumber)?.currency,
+          };
+        }
+      } catch (e) {
+        console.error('[applyEnrollmentConfirmation] Erreur chargement Bourse:', e);
+      }
+    }
+
+    await sendEnrollmentEmail({
+      email: isCompetition
+        ? enrollment.equipeId?.chefId?.userId?.email
+        : enrollment.playerId?.userId?.email,
+      sessionName: enrollment.sessionId?.designation || 'Session',
+      resourceName: enrollment.competitionId?.designation || enrollment.parcoursId?.designation || 'Ressource',
+      orderNumber: orderNumber || enrollment.orderNumber,
+      ressources: enrollment.competitionId?.ressources || enrollment.parcoursId?.ressources,
+      scholarshipInfo,
+    });
+  }
+
+  // Recalculer la Bourse si c'est un enrôlement de compétition
+}
+
+async function findManageableEnrollment(enrollmentId: string) {
+  if (!mongoose.Types.ObjectId.isValid(enrollmentId)) return null;
+  return Enrollement.findById(enrollmentId)
+    .populate('sessionId', 'designation')
+    .populate('parcoursId', 'designation ressources')
+    .populate('competitionId', 'designation ressources')
+    .populate({ path: 'playerId', populate: { path: 'userId', select: 'email pseudo telephone' } })
+    .populate({ path: 'equipeId', populate: { path: 'chefId', populate: { path: 'userId', select: 'email pseudo telephone' } } });
+}
+
+async function ensureStaffSession() {
+  const session = await getSession();
+  return session && ['ADMIN', 'MOD'].includes(session.role || '') ? session : null;
 }
 
 // ── INFOS JOUEUR / ÉQUIPE CONNECTÉ(E) ──────────────────────────────
@@ -359,7 +456,7 @@ export async function enrollToCompetitionAction(
       return { success: false, error: 'Cette session de compétition n’est pas ouverte aux enrollements' };
     }
 
-    const competition = await Competition.findById(competitionId).select('designation ressources').lean();
+    const competition = await Competition.findById(competitionId).select('designation ressources amount').lean();
     if (!competition) return { success: false, error: 'Compétition introuvable' };
 
     // Vérifier que l'équipe n'est pas déjà inscrite
@@ -378,6 +475,11 @@ export async function enrollToCompetitionAction(
       return { success: false, error: 'Le numéro Mobile Money est requis' };
     }
 
+    const enrollmentAmountCDF = Number((competition as any).amount || 0);
+    if (enrollmentAmountCDF <= 0) {
+      return { success: false, error: 'Montant CDF de reference indisponible pour cette competition.' };
+    }
+
     const paymentRes = await initiatePaymentAction(
       player._id.toString(),
       payment.phone.trim(),
@@ -386,7 +488,7 @@ export async function enrollToCompetitionAction(
       {
         id: competitionId,
         name: 'Enrollement compétition',
-        amountCDF: 14250,
+        amountCDF: enrollmentAmountCDF,
         amountUSD: 5,
         type: 'COMPETITION',
         metadata: { competitionId, sessionId, equipeId },
@@ -418,6 +520,7 @@ export async function enrollToCompetitionAction(
       transactions: [{
         membre: player._id,
         montant: payment.amount,
+        currency: payment.currency,
         status: 'PENDING',
         orderNumber,
         phone: payment.phone.trim(),
@@ -481,12 +584,37 @@ export async function confirmCompetitionEnrollmentPaymentAction(
     });
     await enrollment.save();
 
+    // Recalculer la Bourse après confirmation de paiement
+    try {
+      await recomputeCompetitionScholarship(enrollment.sessionId._id.toString());
+    } catch (error) {
+      console.error('[confirmCompetitionEnrollmentPaymentAction] Erreur recalcul Bourse:', error);
+    }
+
+    // Récupérer les infos Bourse pour le mail
+    let scholarshipInfo = null;
+    try {
+      const freshSession = await Session.findById(enrollment.sessionId._id).lean();
+      if (freshSession && freshSession.scholarshipInitialAmountCDF > 0) {
+        scholarshipInfo = {
+          enrollmentFeeCDF: freshSession.enrollmentFeeCDF ?? 0,
+          totalEnrolledTeams: freshSession.totalValidatedEnrollments ?? 0,
+          currentScholarshipCDF: freshSession.scholarshipInitialAmountCDF ?? 0,
+          gamesPerTeam: freshSession.gamesPerEnrollment ?? 250,
+          unitRewardCDF: freshSession.unitRewardPerWonGameCDF ?? 0,
+        };
+      }
+    } catch (e) {
+      console.error('[confirmCompetitionEnrollmentPaymentAction] Erreur chargement Bourse:', e);
+    }
+
     await sendEnrollmentEmail({
       email: (enrollment.equipeId as any)?.chefId?.userId?.email,
       sessionName: (enrollment.sessionId as any)?.designation || 'Session',
       resourceName: (enrollment.competitionId as any)?.designation || 'Compétition',
       orderNumber,
       ressources: (enrollment.competitionId as any)?.ressources,
+      scholarshipInfo,
     });
 
     return {
@@ -731,7 +859,7 @@ export async function updateSessionStatusAction(
     // Dans ce code existant, COMPLETED correspond à l'ouverture effective des matchs VIP.
     // La distribution proportionnelle est tentée ici et reste idempotente si elle a déjà été faite.
     if (session.type === 'competition' && normalizedStatus === 'COMPLETED') {
-      workflowResult = await distributeCompetitionSessionRewards(sessionId);
+      workflowResult = await recomputeCompetitionScholarship(sessionId);
     }
 
     const updated = await Session.findById(sessionId).populate('ressources.refId').lean();
@@ -794,7 +922,7 @@ export async function getEnrollementsByRessourceAction(
   try {
     await connectToDb();
 
-    const filter: any = { sessionId, status: 'CONFIRMED' };
+    const filter: any = { sessionId };
     if (type === 'Parcours') {
       filter.parcoursId = refId;
     } else {
@@ -804,11 +932,12 @@ export async function getEnrollementsByRessourceAction(
     const enrollements = await Enrollement.find(filter)
       .populate({
         path: 'playerId',
-        populate: { path: 'userId', select: 'pseudo telephone photo' },
+        populate: { path: 'userId', select: 'pseudo telephone email photo' },
       })
       .populate({
         path: 'equipeId',
-        select: 'designation',
+        select: 'designation chefId',
+        populate: { path: 'chefId', populate: { path: 'userId', select: 'pseudo telephone email' } },
       })
       .sort({ createdAt: -1 })
       .lean();
@@ -819,5 +948,119 @@ export async function getEnrollementsByRessourceAction(
     };
   } catch (error: any) {
     return { success: false, error: error.message };
+  }
+}
+
+export async function verifyEnrollmentPaymentByManagerAction(enrollmentId: string) {
+  try {
+    const staff = await ensureStaffSession();
+    if (!staff) return { success: false, error: 'Non autorisé' };
+
+    await connectToDb();
+    const enrollment = await findManageableEnrollment(enrollmentId);
+    if (!enrollment) return { success: false, error: 'Enrollement introuvable' };
+    if (!enrollment.orderNumber) return { success: false, error: 'Aucune commande liée à cet enrollement.' };
+
+    const statusCheck = await checkStatus(enrollment.orderNumber);
+    if (!statusCheck.success) {
+      return { success: false, error: statusCheck.error || 'Vérification FlexPay impossible.' };
+    }
+
+    if (statusCheck.status === 'SUCCES') {
+      await applyEnrollmentConfirmation(enrollment, enrollment.orderNumber, true);
+      return { success: true, status: statusCheck.status, message: 'Paiement confirmé et mail envoyé.' };
+    }
+
+    if (statusCheck.status === 'ECHEC') {
+      enrollment.status = 'CANCELLED';
+      enrollment.transactions = (enrollment.transactions || []).map((transaction: any) => {
+        if (transaction.orderNumber === enrollment.orderNumber) transaction.status = 'FAILED';
+        return transaction;
+      });
+      await enrollment.save();
+      return { success: true, status: statusCheck.status, message: 'Paiement échoué chez FlexPay.' };
+    }
+
+    return { success: true, status: statusCheck.status, message: 'Paiement encore en attente chez FlexPay.' };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'Vérification impossible.' };
+  }
+}
+
+export async function manuallyConfirmEnrollmentByManagerAction(enrollmentId: string) {
+  try {
+    const staff = await ensureStaffSession();
+    if (!staff) return { success: false, error: 'Non autorisé' };
+
+    await connectToDb();
+    const enrollment = await findManageableEnrollment(enrollmentId);
+    if (!enrollment) return { success: false, error: 'Enrollement introuvable' };
+
+    await applyEnrollmentConfirmation(enrollment, enrollment.orderNumber, true);
+    return { success: true, message: 'Enrollement validé manuellement et mail envoyé.' };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'Validation impossible.' };
+  }
+}
+
+export async function resendEnrollmentEmailByManagerAction(enrollmentId: string) {
+  try {
+    const staff = await ensureStaffSession();
+    if (!staff) return { success: false, error: 'Non autorisé' };
+
+    await connectToDb();
+    const enrollment = await findManageableEnrollment(enrollmentId);
+    if (!enrollment) return { success: false, error: 'Enrollement introuvable' };
+
+    const isCompetition = Boolean(enrollment.competitionId);
+
+    // Récupérer les infos Bourse pour le mail
+    let scholarshipInfo = null;
+    if (isCompetition && enrollment.sessionId?._id) {
+      try {
+        const freshSession = await Session.findById(enrollment.sessionId._id).lean();
+        if (freshSession && freshSession.scholarshipInitialAmountCDF > 0) {
+          scholarshipInfo = {
+            enrollmentFeeCDF: freshSession.enrollmentFeeCDF ?? 0,
+            totalEnrolledTeams: freshSession.totalValidatedEnrollments ?? 0,
+            currentScholarshipCDF: freshSession.scholarshipInitialAmountCDF ?? 0,
+            gamesPerTeam: freshSession.gamesPerEnrollment ?? 250,
+            unitRewardCDF: freshSession.unitRewardPerWonGameCDF ?? 0,
+          };
+        }
+      } catch (e) {
+        console.error('[resendEnrollmentEmailByManagerAction] Erreur chargement Bourse:', e);
+      }
+    }
+
+    await sendEnrollmentEmail({
+      email: isCompetition
+        ? enrollment.equipeId?.chefId?.userId?.email
+        : enrollment.playerId?.userId?.email,
+      sessionName: enrollment.sessionId?.designation || 'Session',
+      resourceName: enrollment.competitionId?.designation || enrollment.parcoursId?.designation || 'Ressource',
+      orderNumber: enrollment.orderNumber,
+      ressources: enrollment.competitionId?.ressources || enrollment.parcoursId?.ressources,
+      scholarshipInfo,
+    });
+
+    return { success: true, message: 'Mail envoyé.' };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'Envoi du mail impossible.' };
+  }
+}
+
+export async function deleteEnrollmentByManagerAction(enrollmentId: string) {
+  try {
+    const staff = await ensureStaffSession();
+    if (!staff) return { success: false, error: 'Non autorisé' };
+
+    await connectToDb();
+    const deleted = await Enrollement.findByIdAndDelete(enrollmentId).lean();
+    if (!deleted) return { success: false, error: 'Enrollement introuvable' };
+
+    return { success: true, message: 'Enrollement supprimé.' };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'Suppression impossible.' };
   }
 }

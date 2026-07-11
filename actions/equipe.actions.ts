@@ -29,6 +29,7 @@ export type EquipeSummary = {
   metriques: {
     competitions: number;
     soldeUsd: number;
+    soldeCDF: number;
     matchsWin: number;
   };
   payment: Array<{ orderNumber: string; status: string; providerText: string }>;
@@ -91,7 +92,7 @@ const serializeEquipe = (equipe: any) => {
       status: Boolean(membre.status),
       isSecretary: Boolean(membre.isSecretary),
     })),
-    metriques: equipe.metriques || { competitions: 0, soldeUsd: 0, matchsWin: 0 },
+    metriques: equipe.metriques || { competitions: 0, soldeUsd: 0, soldeCDF: 0, matchsWin: 0 },
     payment: (equipe.payment || []).map((item: any) => ({
       orderNumber: item.orderNumber,
       status: item.status,
@@ -243,6 +244,7 @@ export async function confirmEquipeCreationAction(payload: {
       metriques: {
         competitions: 0,
         soldeUsd: 0,
+        soldeCDF: 0,
         matchsWin: 0,
       },
     });
@@ -269,7 +271,7 @@ export async function confirmEquipeCreationAction(payload: {
           status: membre.status,
           isSecretary: membre.isSecretary,
         })),
-        metriques: equipe.metriques || { competitions: 0, soldeUsd: 0, matchsWin: 0 },
+        metriques: equipe.metriques || { competitions: 0, soldeUsd: 0, soldeCDF: 0, matchsWin: 0 },
         payment: (equipe.payment || []).map((item: any) => ({
           orderNumber: item.orderNumber,
           status: item.status,
@@ -766,7 +768,7 @@ export async function getTeamAdminDetailAction(teamId: string) {
         invitations,
         enrollments: JSON.parse(JSON.stringify(enrollments || [])),
         competitions,
-        metriques: equipe.metriques || { competitions: 0, soldeUsd: 0, matchsWin: 0 },
+        metriques: equipe.metriques || { competitions: 0, soldeUsd: 0, soldeCDF: 0, matchsWin: 0 },
       },
     };
   } catch (error: any) {

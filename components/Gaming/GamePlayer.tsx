@@ -166,7 +166,9 @@ export default function GamePlayer({ partie, onFinish, onCancel }: GamePlayerPro
             <p className="text-xs text-waterloo">Niveau actuel</p>
           </div>
           <div className="rounded-lg border border-stroke p-3 dark:border-strokedark">
-            <p className="text-2xl font-bold text-black dark:text-white">{partie?.parties}</p>
+            <p className="text-2xl font-bold text-black dark:text-white">
+              {resultat.partiesRestantes ?? partie?.parties ?? 0}
+            </p>
             <p className="text-xs text-waterloo">Parties restantes</p>
           </div>
         </div>
@@ -174,6 +176,12 @@ export default function GamePlayer({ partie, onFinish, onCancel }: GamePlayerPro
           <div className="mb-4 flex items-center justify-center gap-2 rounded-lg bg-amber-50 p-3 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400">
             <Star className="h-5 w-5" />
             <span className="font-semibold">Niveau supérieur atteint !</span>
+          </div>
+        )}
+        {resultat.equipeCredit > 0 && (
+          <div className="mb-4 flex items-center justify-center gap-2 rounded-lg bg-emerald-50 p-3 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400">
+            <Trophy className="h-5 w-5" />
+            <span className="font-semibold">Bourse creditee : {resultat.equipeCredit.toLocaleString("fr-FR")} FC</span>
           </div>
         )}
         <button

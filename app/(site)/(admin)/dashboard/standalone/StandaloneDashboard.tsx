@@ -41,6 +41,7 @@ export default function StandaloneDashboard() {
 
   const stats = data
     ? [
+        { label: "Parties restantes", value: String(data.stats.partiesDisponibles || 0), icon: <Gamepad2 className="h-5 w-5" />, color: "text-primary", bg: "bg-primary/10" },
         { label: "Questions OK / Total", value: `${data.averages.questions.ok}/${data.averages.questions.total}`, icon: <Target className="h-5 w-5" />, color: "text-emerald-500", bg: "bg-emerald-50 dark:bg-emerald-500/10" },
         { label: "Catégories OK / Total", value: `${data.averages.categories.ok}/${data.averages.categories.total}`, icon: <Award className="h-5 w-5" />, color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-500/10" },
         { label: "Parties OK / Parties", value: `${data.averages.parties.ok}/${data.averages.parties.total}`, icon: <Gamepad2 className="h-5 w-5" />, color: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-500/10" },
@@ -68,7 +69,7 @@ export default function StandaloneDashboard() {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
             {stats.map((stat, i) => (
               <motion.div key={stat.label} custom={i} variants={fadeInUp} initial="hidden" animate="visible" className="rounded-2xl border border-stroke bg-white p-5 shadow-solid-5 transition-all duration-300 hover:shadow-lg dark:border-strokedark dark:bg-blacksection">
                 <div className={`mb-3 flex h-10 w-10 items-center justify-center rounded-xl ${stat.bg}`}>

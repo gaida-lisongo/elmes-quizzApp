@@ -25,6 +25,8 @@ export default function VipMatchs() {
 
   useEffect(() => { load(); }, []);
 
+  const formatCDF = (value: number) => `${Math.floor(Number(value || 0)).toLocaleString("fr-FR")} FC`;
+
   const handleStart = async (enrollmentId: string, amount: number) => {
     setStarting(enrollmentId);
     try {
@@ -119,6 +121,14 @@ export default function VipMatchs() {
                     <p className="text-xs text-waterloo">
                       {session.designation || "Session"} — {(enr?.maxParties || 0) - (enr.parties || 0)} parties restantes
                     </p>
+                    <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-waterloo">
+                      <span>Enrolement CDF : {formatCDF(session.enrollmentFeeCDF)}</span>
+                      <span>Equipes validees : {session.totalValidatedEnrollments || 0}</span>
+                      <span>Bourse actuelle : {formatCDF(session.scholarshipInitialAmountCDF)}</span>
+                      <span>Bourse distribuee : {formatCDF(session.scholarshipDistributedAmountCDF)}</span>
+                      <span>Bourse restante : {formatCDF(session.scholarshipRemainingAmountCDF)}</span>
+                      <span>Valeur partie gagnee : {formatCDF(session.unitRewardPerWonGameCDF)}</span>
+                    </div>
                   </div>
                   {starting === enr._id ? (
                     <Loader2 className="h-5 w-5 animate-spin text-primary" />

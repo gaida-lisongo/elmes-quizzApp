@@ -11,6 +11,7 @@ import { getSession } from "@/lib/utils/auth";
 import type { PipelineStage } from "mongoose";
 import type { IRetrait } from "@/lib/models/Player";
 import { sendMail } from "@/lib/utils/mail";
+import { recomputeCompetitionScholarship } from "@/lib/utils/scholarship.service";
 
 export type ProductPayload = {
   id: string;
@@ -519,11 +520,18 @@ export async function verifyPersistedPaymentAction(params: {
 
       if (statusCheck.status === "SUCCES") {
         enrollment.status = "CONFIRMED";
+        enrollment.totalGrantedGames = enrollment.totalGrantedGames || 250;
+        enrollment.usedGames = enrollment.usedGames || enrollment.parties || 0;
+        enrollment.remainingGames = Math.max(0, (enrollment.totalGrantedGames || 250) - (enrollment.usedGames || 0));
+        enrollment.maxParties = enrollment.totalGrantedGames || 250;
         enrollment.transactions = (enrollment.transactions || []).map((transaction: any) => {
           if (transaction.orderNumber === enrollment.orderNumber) transaction.status = "PAID";
           return transaction;
         });
         await enrollment.save();
+        if (enrollment.sessionId) {
+          await recomputeCompetitionScholarship(enrollment.sessionId.toString());
+        }
       }
 
       return {
@@ -585,7 +593,7 @@ export async function verifyPersistedPaymentAction(params: {
               providerText: "FlexPay",
             }],
             membres: [{ player: captainId, status: true, isSecretary: true }],
-            metriques: { competitions: 0, soldeUsd: 0, matchsWin: 0 },
+            metriques: { competitions: 0, soldeUsd: 0, soldeCDF: 0, matchsWin: 0 },
           });
         }
       }
@@ -600,11 +608,18 @@ export async function verifyPersistedPaymentAction(params: {
         const enrollment = await Enrollement.findOne({ $or: enrollmentConditions });
         if (enrollment && enrollment.status !== "CONFIRMED") {
           enrollment.status = "CONFIRMED";
+          enrollment.totalGrantedGames = enrollment.totalGrantedGames || 250;
+          enrollment.usedGames = enrollment.usedGames || enrollment.parties || 0;
+          enrollment.remainingGames = Math.max(0, (enrollment.totalGrantedGames || 250) - (enrollment.usedGames || 0));
+          enrollment.maxParties = enrollment.totalGrantedGames || 250;
           enrollment.transactions = (enrollment.transactions || []).map((transaction: any) => {
             if (transaction.orderNumber === providerOrderNumber) transaction.status = "PAID";
             return transaction;
           });
           await enrollment.save();
+          if (enrollment.sessionId) {
+            await recomputeCompetitionScholarship(enrollment.sessionId.toString());
+          }
         }
       }
     }

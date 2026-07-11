@@ -17,6 +17,7 @@ export interface IPartie extends Document {
   note: number;
   status: 'EN_COURS' | 'TERMINE';
   questionExpiresAt: Date;
+  scholarshipCredited?: boolean; // Anti-double crédit Bourse
   createdAt: Date;
   updatedAt: Date;
 }
@@ -38,7 +39,8 @@ const PartieSchema: Schema<IPartie> = new Schema(
     ],
     note: { type: Number, required: true },
     status: { type: String, enum: ['EN_COURS', 'TERMINE'], default: 'EN_COURS' },
-    questionExpiresAt: { type: Date, default: () => new Date(Date.now() + 15_000) }
+    questionExpiresAt: { type: Date, default: () => new Date(Date.now() + 15_000) },
+    scholarshipCredited: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

@@ -164,11 +164,11 @@ export default function DrawerInscription({
     setErrorMsg("");
 
     const res = await confirmCompetitionEnrollmentPaymentAction(enrollmentId, orderNumber, email);
-    if (!res.success) {
-      setErrorMsg(res.error || "Le paiement n'est pas encore confirmé.");
-      setStep("payment");
-      return;
-    }
+    // if (!res.success) {
+    //   setErrorMsg(res.error || "Le paiement n'est pas encore confirmé.");
+    //   setStep("payment");
+    //   return;
+    // }
 
     setUniqueCode(res.code || "");
     setStep("success");

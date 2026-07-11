@@ -60,6 +60,7 @@ export interface PlayerMetricsData {
     status: boolean;
     members: Array<{ _id: string; pseudo: string; isSecretary: boolean; status: boolean; isCurrentUser: boolean }>;
     soldeUsd: number;
+    soldeCDF: number;
     purchaseOrders: Array<{ _id: string; beneficiaryPseudo: string; amount: number; reason: string; status: string; createdAt: string; approvedAt?: string; creditedAt?: string; canApprove: boolean }>;
   } | null;
 }
@@ -186,6 +187,7 @@ export async function getPlayerMetricsAction(): Promise<{ success: boolean; data
           status: isCaptain || Boolean(currentMember?.status),
           members: memberDetails,
           soldeUsd: teamDoc.metriques?.soldeUsd || 0,
+          soldeCDF: teamDoc.metriques?.soldeCDF || 0,
           purchaseOrders: await Promise.all((teamDoc.purchaseOrders || []).map(async (order: any) => {
             const beneficiary = await User.findById(order.beneficiaryUserId).select('pseudo').lean();
             return {

@@ -22,7 +22,6 @@ import {
   Eye,
   EyeOff,
   Link as LinkIcon,
-  GraduationCap,
 } from "lucide-react";
 import Logo from "@/components/Common/Logo";
 import { createPlayerStep1, createPlayerStep2 } from "@/actions/signup.actions";
@@ -82,15 +81,9 @@ const PLAYER_TYPES: {
   },
 ];
 
-const STATUT_OPTIONS: { value: Statut; label: string; icon: string }[] = [
-  { value: "ELEVE", label: "Élève", icon: "🎒" },
-  { value: "ETUDIANT", label: "Étudiant", icon: "🎓" },
-  { value: "INDEPENDANT", label: "Ni l'un, ni l'autre", icon: "💼" },
-];
-
 const STEP_LABELS = ["Choix du compte", "Identités", "Sécurité"];
 const STEP_DESCRIPTIONS = [
-  "Choisis ton profil de départ pour personnaliser ton expérience.",
+  "Choisis ton profil, ton statut et ton établissement.",
   "Ajoute les informations qui permettront d'identifier ton compte.",
   "Sécurise ton compte avec un mot de passe.",
 ];
@@ -125,6 +118,10 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
   const validateStep1 = (): boolean => {
     if (!statut) {
       toast.error("Veuillez sélectionner votre statut.");
+      return false;
+    }
+    if (!school.trim()) {
+      toast.error("Veuillez renseigner votre établissement.");
       return false;
     }
     return true;
@@ -470,31 +467,13 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
                       </div>
                     )}
 
-                    {/* Statut personnel */}
                     <div className="mb-6">
-                      <label className="mb-3 flex items-center gap-2 text-sm font-medium text-black dark:text-white">
-                        <GraduationCap className="h-4 w-4 text-primary" />
-                        Statut
-                      </label>
-                      <div className="grid grid-cols-3 gap-3">
-                        {STATUT_OPTIONS.map((opt) => (
-                          <button
-                            key={opt.value}
-                            type="button"
-                            onClick={() => setStatut(opt.value)}
-                            className={`flex flex-col items-center gap-1 rounded-xl border-2 p-3 text-center transition-all duration-200 ${
-                              statut === opt.value
-                                ? "border-primary bg-primary/5 shadow-lg"
-                                : "border-stroke dark:border-strokedark hover:border-primary/50"
-                            }`}
-                          >
-                            <span className="text-xl">{opt.icon}</span>
-                            <span className={`text-xs font-medium ${statut === opt.value ? "text-black dark:text-white" : "text-waterloo"}`}>
-                              {opt.label}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
+                      <EtablissementSelector
+                        statut={statut}
+                        etablissement={school}
+                        onStatutChange={(s) => setStatut(s)}
+                        onEtablissementChange={(v) => setSchool(v)}
+                      />
                     </div>
 
                     <button
@@ -548,14 +527,6 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
                         </label>
                         <input type="email" placeholder="votre@email.com" value={email} onChange={(e) => setEmail(e.target.value)} required
                           className="w-full rounded-xl border border-stroke bg-transparent px-5 py-3 text-black outline-hidden transition-all duration-200 focus:border-primary focus:shadow-[0_0_0_3px_rgba(0,107,255,0.1)] dark:border-strokedark dark:text-white dark:focus:border-primary" />
-                      </div>
-                      <div>
-                        <EtablissementSelector
-                          statut={statut}
-                          etablissement={school}
-                          onStatutChange={(s) => setStatut(s)}
-                          onEtablissementChange={(v) => setSchool(v)}
-                        />
                       </div>
                     </div>
 

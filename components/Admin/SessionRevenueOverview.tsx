@@ -148,7 +148,7 @@ export default function SessionRevenueOverview() {
           type="button"
           onClick={async () => {
             setLoading(true);
-            const res = await getSessionRevenueOverviewAction();
+            const res = await getSessionRevenueOverviewAction(selectedSessionId || undefined);
             if (res.success && res.data) {
               setSessions(res.data.sessions || []);
               setSelectedSessionId(res.data.selectedSessionId || res.data.sessions?.[0]?.sessionId || null);

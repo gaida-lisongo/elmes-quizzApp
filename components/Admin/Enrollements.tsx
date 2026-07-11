@@ -5,14 +5,19 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Calendar, Plus, X, Trash2, Edit3, Loader2,
   Users, CheckCircle, AlertCircle, ChevronRight,
-  ArrowLeft, Search, BookOpen, FileText,
+  ArrowLeft, Search, BookOpen, FileText, RefreshCw, Mail, ShieldCheck,
 } from "lucide-react";
+import toast from "react-hot-toast";
 import {
   getActiveSessionsAction, getAllSessionsAction,
   createSessionAction, deleteSessionAction,
   updateSessionRessourcesAction, getAvailableRessourcesAction,
   getEnrollementsByRessourceAction,
   updateSessionStatusAction,
+  verifyEnrollmentPaymentByManagerAction,
+  manuallyConfirmEnrollmentByManagerAction,
+  resendEnrollmentEmailByManagerAction,
+  deleteEnrollmentByManagerAction,
 } from "@/actions/enrollment.actions";
 
 /* ================================================================
@@ -27,6 +32,16 @@ interface SessionItem {
   startDate: string;
   endDate: string;
   ressources?: { type: "Parcours" | "Competition"; refId: any }[];
+  enrollmentFeeCDF?: number;
+  totalValidatedEnrollments?: number;
+  totalCollectedCDF?: number;
+  platformAmountCDF?: number;
+  scholarshipInitialAmountCDF?: number;
+  scholarshipDistributedAmountCDF?: number;
+  scholarshipRemainingAmountCDF?: number;
+  totalGrantedGames?: number;
+  unitRewardPerWonGameCDF?: number;
+  gamesPerEnrollment?: number;
 }
 
 interface RessourceItem {
@@ -39,11 +54,14 @@ interface RessourceItem {
 
 interface EnrolledItem {
   _id: string;
-  playerId?: { _id: string; userId?: { pseudo: string; telephone: string } };
-  equipeId?: { _id: string; designation: string };
+  playerId?: { _id: string; userId?: { pseudo: string; telephone: string; email?: string } };
+  equipeId?: { _id: string; designation: string; chefId?: { userId?: { email?: string; pseudo?: string; telephone?: string } } };
   code: string;
+  orderNumber?: string;
   status: "PENDING" | "CONFIRMED" | "CANCELLED";
   parties: number;
+  remainingGames?: number;
+  transactions?: Array<{ orderNumber: string; status: string; montant: number; currency?: "CDF" | "USD" }>;
   createdAt: string;
 }
 
@@ -316,6 +334,7 @@ export default function Enrollements() {
   const [enrolledList, setEnrolledList] = useState<EnrolledItem[]>([]);
   const [ressourcesLoading, setRessourcesLoading] = useState(false);
   const [enrolledLoading, setEnrolledLoading] = useState(false);
+  const [busyEnrollmentId, setBusyEnrollmentId] = useState<string | null>(null);
 
   const fetchSessions = useCallback(async () => {
     setLoading(true);
@@ -378,8 +397,44 @@ export default function Enrollements() {
     setEnrolledLoading(false);
   };
 
+  const reloadEnrolled = async () => {
+    if (!selectedSession || !selectedRessource) return;
+    setEnrolledLoading(true);
+    const res = await getEnrollementsByRessourceAction(selectedRessource.type, selectedRessource.refId, selectedSession._id);
+    if (res.success) setEnrolledList(res.enrollements);
+    else toast.error(res.error || "Chargement des enrollements impossible.");
+    setEnrolledLoading(false);
+  };
+
+  const handleEnrollmentAction = async (
+    enrollmentId: string,
+    action: "verify" | "manual" | "mail" | "delete",
+  ) => {
+    if (action === "delete" && !confirm("Supprimer définitivement cet enrollement ?")) return;
+
+    setBusyEnrollmentId(enrollmentId);
+    const res =
+      action === "verify"
+        ? await verifyEnrollmentPaymentByManagerAction(enrollmentId)
+        : action === "manual"
+          ? await manuallyConfirmEnrollmentByManagerAction(enrollmentId)
+          : action === "mail"
+            ? await resendEnrollmentEmailByManagerAction(enrollmentId)
+            : await deleteEnrollmentByManagerAction(enrollmentId);
+
+    if (res.success) {
+      toast.success(res.message || "Action effectuée.");
+      await reloadEnrolled();
+    } else {
+      toast.error(res.error || "Action impossible.");
+    }
+    setBusyEnrollmentId(null);
+  };
+
   const formatDate = (d: string) =>
     new Date(d).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+
+  const formatCDF = (value?: number) => `${Math.floor(Number(value || 0)).toLocaleString("fr-FR")} FC`;
 
   const statusBadge = (status: string) => {
     const styles: Record<string, string> = {
@@ -480,6 +535,21 @@ export default function Enrollements() {
                       </button>
                     ))}
                   </div>
+                  {getSessionType(session) === "competition" && (
+                    <div className="mt-4 rounded-lg border border-stroke bg-alabaster p-3 text-[11px] text-waterloo dark:border-strokedark dark:bg-strokedark">
+                      <p className="mb-2 font-semibold text-black dark:text-white">Bourse d'Excellence Academique</p>
+                      <div className="grid grid-cols-2 gap-2">
+                        <span>Total encaisse CDF : {formatCDF(session.totalCollectedCDF)}</span>
+                        <span>Part plateforme : {formatCDF(session.platformAmountCDF)}</span>
+                        <span>Bourse initiale : {formatCDF(session.scholarshipInitialAmountCDF)}</span>
+                        <span>Bourse distribuee : {formatCDF(session.scholarshipDistributedAmountCDF)}</span>
+                        <span>Bourse restante : {formatCDF(session.scholarshipRemainingAmountCDF)}</span>
+                        <span>Enrolements valides : {session.totalValidatedEnrollments || 0}</span>
+                        <span>Parties accordees : {session.totalGrantedGames || 0}</span>
+                        <span>Valeur partie gagnee : {formatCDF(session.unitRewardPerWonGameCDF)}</span>
+                      </div>
+                    </div>
+                  )}
                 </motion.div>
               ))}
             </div>
@@ -570,7 +640,12 @@ export default function Enrollements() {
             </div>
           </div>
 
-          {filteredEnrolled.length === 0 ? (
+          {enrolledLoading ? (
+            <div className="flex flex-col items-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="mt-3 text-sm text-waterloo">Chargement des enrollements...</p>
+            </div>
+          ) : filteredEnrolled.length === 0 ? (
             <div className="flex flex-col items-center py-12 text-center">
               <Users className="h-12 w-12 text-waterloo/40" />
               <p className="mt-4 font-medium text-black dark:text-white">Aucun inscrit</p>
@@ -604,7 +679,53 @@ export default function Enrollements() {
                     <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${statusBadge(enr.status)}`}>
                       {enr.status === "CONFIRMED" ? "Confirmé" : enr.status === "PENDING" ? "En attente" : "Annulé"}
                     </span>
-                    <p className="mt-1 text-xs text-waterloo">{enr.parties} partie(s)</p>
+                    <p className="mt-1 text-xs text-waterloo">{enr.remainingGames ?? enr.parties} partie(s)</p>
+                    {selectedRessource?.type === "Competition" && (
+                      <div className="mt-2 space-y-0.5 text-xs text-waterloo">
+                        <p>PayÃ© : {(enr.transactions?.[0]?.montant || 0).toLocaleString("fr-FR")} {enr.transactions?.[0]?.currency || "CDF"}</p>
+                        <p>RÃ©f. CDF Bourse : {formatCDF(selectedSession?.enrollmentFeeCDF)}</p>
+                        <p>Contribution Bourse : {formatCDF((selectedSession?.enrollmentFeeCDF || 0) * 0.65)}</p>
+                        <p>Contribution plateforme : {formatCDF((selectedSession?.enrollmentFeeCDF || 0) * 0.35)}</p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleEnrollmentAction(enr._id, "verify")}
+                      disabled={busyEnrollmentId === enr._id || !enr.orderNumber}
+                      className="inline-flex items-center gap-1 rounded-lg border border-stroke px-2.5 py-1.5 text-xs font-medium text-black transition hover:border-primary hover:text-primary disabled:opacity-50 dark:border-strokedark dark:text-white"
+                    >
+                      {busyEnrollmentId === enr._id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
+                      Vérifier
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleEnrollmentAction(enr._id, "manual")}
+                      disabled={busyEnrollmentId === enr._id || enr.status === "CONFIRMED"}
+                      className="inline-flex items-center gap-1 rounded-lg border border-emerald-200 px-2.5 py-1.5 text-xs font-medium text-emerald-700 transition hover:bg-emerald-50 disabled:opacity-50"
+                    >
+                      <ShieldCheck className="h-3.5 w-3.5" />
+                      Valider
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleEnrollmentAction(enr._id, "mail")}
+                      disabled={busyEnrollmentId === enr._id}
+                      className="inline-flex items-center gap-1 rounded-lg border border-stroke px-2.5 py-1.5 text-xs font-medium text-black transition hover:border-primary hover:text-primary disabled:opacity-50 dark:border-strokedark dark:text-white"
+                    >
+                      <Mail className="h-3.5 w-3.5" />
+                      Mail
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleEnrollmentAction(enr._id, "delete")}
+                      disabled={busyEnrollmentId === enr._id}
+                      className="inline-flex items-center gap-1 rounded-lg border border-red-200 px-2.5 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-50 disabled:opacity-50"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      Supprimer
+                    </button>
                   </div>
                 </div>
               ))}

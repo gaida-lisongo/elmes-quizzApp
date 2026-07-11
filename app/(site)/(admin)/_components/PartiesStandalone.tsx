@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { getAvailableCategoriesAction, startStandalonePartieAction, getPartieEnCoursAction } from "@/actions/partie.actions";
 import type { PartieActiveData } from "@/actions/partie.actions";
+import { getPlayerMetricsAction } from "@/actions/player.metrics.actions";
 import GamePlayer from "@/components/Gaming/GamePlayer";
 import toast from "react-hot-toast";
 
@@ -15,14 +16,17 @@ export default function StandaloneParties() {
   const [loading, setLoading] = useState(true);
   const [partie, setPartie] = useState<PartieActiveData | null>(null);
   const [starting, setStarting] = useState<string | null>(null);
+  const [remainingParties, setRemainingParties] = useState(0);
 
   const load = async () => {
     setLoading(true);
-    const [catRes, partieRes] = await Promise.all([
+    const [catRes, partieRes, metricsRes] = await Promise.all([
       getAvailableCategoriesAction(),
       getPartieEnCoursAction(),
+      getPlayerMetricsAction(),
     ]);
     if (catRes.success) setCategories(catRes.categories || []);
+    if (metricsRes.success) setRemainingParties(metricsRes.data?.stats.partiesDisponibles || 0);
     if (partieRes.success && partieRes.data) {
       // Reprendre la partie en cours
       toast("Vous avez une partie en cours !");
@@ -52,8 +56,15 @@ export default function StandaloneParties() {
     return (
       <GamePlayer
         partie={partie}
-        onFinish={() => {}}
-        onCancel={() => setPartie(null)}
+        onFinish={(resultat) => {
+          if (typeof resultat?.partiesRestantes === "number") {
+            setRemainingParties(resultat.partiesRestantes);
+          }
+        }}
+        onCancel={() => {
+          setPartie(null);
+          load();
+        }}
       />
     );
   }
@@ -77,6 +88,11 @@ export default function StandaloneParties() {
         <h2 className="text-xl font-semibold text-black dark:text-white">Choisissez une catégorie</h2>
       </div>
 
+      <div className="mb-4 rounded-lg border border-primary/20 bg-primary/5 p-4">
+        <p className="text-sm text-waterloo">Parties restantes</p>
+        <p className="mt-1 text-2xl font-bold text-black dark:text-white">{remainingParties}</p>
+      </div>
+
       <div className="mb-6 rounded-lg border border-stroke bg-alabaster p-4 text-sm text-waterloo dark:border-strokedark dark:bg-strokedark">
         <p className="font-medium text-black dark:text-white">Règlement</p>
         <ul className="mt-2 space-y-1 text-xs">
@@ -88,7 +104,12 @@ export default function StandaloneParties() {
         </ul>
       </div>
 
-      {categories.length === 0 ? (
+      {remainingParties <= 0 ? (
+        <div className="flex flex-col items-center py-10 text-center">
+          <AlertCircle className="mb-3 h-10 w-10 text-waterloo/40" />
+          <p className="text-waterloo">Vous n'avez plus de parties disponibles. Veuillez recharger.</p>
+        </div>
+      ) : categories.length === 0 ? (
         <div className="flex flex-col items-center py-10 text-center">
           <AlertCircle className="mb-3 h-10 w-10 text-waterloo/40" />
           <p className="text-waterloo">Aucune catégorie disponible pour le moment.</p>
@@ -99,7 +120,7 @@ export default function StandaloneParties() {
             <button
               key={cat._id}
               onClick={() => handleStart(cat._id)}
-              disabled={starting === cat._id}
+              disabled={starting === cat._id || remainingParties <= 0}
               className="group flex items-center gap-3 rounded-xl border border-stroke bg-white p-4 text-left transition-all hover:border-primary hover:shadow-md dark:border-strokedark dark:bg-blacksection"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">

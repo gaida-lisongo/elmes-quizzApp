@@ -131,7 +131,7 @@ export default function VipDashboard() {
     { label: "Questions OK / Total", value: `${data.averages.questions.ok}/${data.averages.questions.total}`, icon: <Target className="h-5 w-5" />, color: "text-emerald-500", bg: "bg-emerald-50 dark:bg-emerald-500/10" },
     { label: "Score total", value: `${data.stats.scoreTotal} pts`, icon: <TrendingUp className="h-5 w-5" />, color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-500/10" },
     { label: "Précision", value: `${data.stats.precision}%`, icon: <Crown className="h-5 w-5" />, color: "text-yellow-500", bg: "bg-yellow-50 dark:bg-yellow-500/10" },
-    { label: "Équipe", value: data.team ? data.team.designation : "Aucune", icon: <Users className="h-5 w-5" />, color: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-500/10" },
+    { label: "Gains de votre équipe", value: data.team ? `${(data.team.soldeCDF || 0).toLocaleString("fr-FR")} FC` : "0 FC", icon: <Users className="h-5 w-5" />, color: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-500/10" },
   ] : [];
 
   return (

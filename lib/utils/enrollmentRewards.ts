@@ -90,6 +90,11 @@ export async function distributeParcoursSessionRewards(sessionId: string) {
 export async function distributeCompetitionSessionRewards(sessionId: string) {
   const session = await Session.findById(sessionId);
   if (!session) return { success: false, error: 'Session introuvable' };
+  return {
+    success: false,
+    skipped: true,
+    message: 'Distribution competition legacy desactivee : les gains sont credites progressivement en CDF via la Bourse.',
+  };
   if (session.rewardsDistributed) {
     return { success: true, skipped: true, message: 'Récompenses déjà distribuées pour cette session.' };
   }

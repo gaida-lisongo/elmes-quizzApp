@@ -3,6 +3,7 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 export interface IEquipeMetrics {
   competitions: number;
   soldeUsd: number;
+  soldeCDF: number; // Solde Bourse d'Excellence Académique en CDF
   matchsWin: number;
 }
 
@@ -75,6 +76,7 @@ const EquipeSchema: Schema<IEquipe> = new Schema(
     metriques: {
       competitions: { type: Number, default: 0 },
       soldeUsd: { type: Number, default: 0 },
+      soldeCDF: { type: Number, default: 0 },
       matchsWin: { type: Number, default: 0 },
     },
   },

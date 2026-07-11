@@ -6,6 +6,7 @@ export interface ITransaction {
   status: 'PENDING' | 'PAID' | 'FAILED';
   orderNumber: string;
   phone: string;
+  currency?: 'CDF' | 'USD';
   createdAt: Date;
 }
 
@@ -30,6 +31,21 @@ export interface ISession extends Document {
     reason: string;
     createdAt: Date;
   }[];
+  // ── Bourse d'Excellence Académique (CDF uniquement) ──
+  enrollmentFeeCDF?: number;               // Frais d'enrôlement en CDF pour cette session
+  platformRate?: number;                   // Taux part plateforme (ex: 0.35)
+  scholarshipRate?: number;                // Taux Bourse (ex: 0.65)
+  gamesPerEnrollment?: number;             // Parties accordées par enrôlement (ex: 250)
+  totalValidatedEnrollments?: number;      // Nombre d'enrôlements validés
+  totalCollectedCDF?: number;              // Total encaissé CDF
+  platformAmountCDF?: number;              // Part plateforme CDF
+  scholarshipInitialAmountCDF?: number;    // Bourse initiale CDF
+  scholarshipDistributedAmountCDF?: number;// Bourse déjà distribuée CDF
+  scholarshipRemainingAmountCDF?: number;  // Bourse restante CDF
+  totalGrantedGames?: number;              // Total parties accordées
+  unitRewardPerWonGameCDF?: number;        // Valeur unitaire d'une partie gagnée CDF
+  lastScholarshipComputedAt?: Date;        // Dernier recalcul
+  scholarshipFullyDistributedAt?: Date;     // Date d'épuisement total
   createdAt: Date;
   updatedAt: Date;
 }
@@ -78,6 +94,21 @@ const SessionSchema: Schema<ISession> = new Schema(
       type: { type: String, enum: ['Parcours', 'Competition'], required: true },
       refId: { type: Schema.Types.ObjectId, required: true, refPath: 'ressources.type' },
     }],
+    // ── Bourse d'Excellence Académique (CDF) ──
+    enrollmentFeeCDF: { type: Number, default: null },
+    platformRate: { type: Number, default: 0.35 },
+    scholarshipRate: { type: Number, default: 0.65 },
+    gamesPerEnrollment: { type: Number, default: 250 },
+    totalValidatedEnrollments: { type: Number, default: 0 },
+    totalCollectedCDF: { type: Number, default: 0 },
+    platformAmountCDF: { type: Number, default: 0 },
+    scholarshipInitialAmountCDF: { type: Number, default: 0 },
+    scholarshipDistributedAmountCDF: { type: Number, default: 0 },
+    scholarshipRemainingAmountCDF: { type: Number, default: 0 },
+    totalGrantedGames: { type: Number, default: 0 },
+    unitRewardPerWonGameCDF: { type: Number, default: 0 },
+    lastScholarshipComputedAt: { type: Date },
+    scholarshipFullyDistributedAt: { type: Date },
   },
   { timestamps: true }
 );
@@ -113,6 +144,7 @@ const EnrollementSchema: Schema<IEnrollement> = new Schema(
         },
         orderNumber: { type: String, required: true },
         phone: { type: String, required: true },
+        currency: { type: String, enum: ['CDF', 'USD'] },
         createdAt: { type: Date, default: Date.now }
       }
     ]
