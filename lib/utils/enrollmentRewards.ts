@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
 import User from '@/lib/models/User';
 import Player from '@/lib/models/Player';
-import Equipe from '@/lib/models/Equipe';
-import { Competition, Critere } from '@/lib/models/Competition';
+import { Critere } from '@/lib/models/Competition';
 import EnrollementModule from '@/lib/models/Enrollement';
 import { sendMail } from '@/lib/utils/mail';
 
@@ -95,6 +94,7 @@ export async function distributeCompetitionSessionRewards(sessionId: string) {
     skipped: true,
     message: 'Distribution competition legacy desactivee : les gains sont credites progressivement en CDF via la Bourse.',
   };
+  /*
   if (session.rewardsDistributed) {
     return { success: true, skipped: true, message: 'Récompenses déjà distribuées pour cette session.' };
   }
@@ -151,4 +151,5 @@ export async function distributeCompetitionSessionRewards(sessionId: string) {
   await session.save();
 
   return { success: true, distributed: rewardTransactions.length, distributedTotal };
+  */
 }
