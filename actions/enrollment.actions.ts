@@ -105,7 +105,7 @@ async function applyEnrollmentConfirmation(enrollment: any, orderNumber: string,
     if (isCompetition && enrollment.sessionId?._id) {
       try {
         const freshSession = await Session.findById(enrollment.sessionId._id).lean();
-        if (freshSession && freshSession.scholarshipInitialAmountCDF > 0) {
+        if (freshSession && (freshSession.scholarshipInitialAmountCDF ?? 0) > 0) {
           scholarshipInfo = {
             enrollmentFeeCDF: freshSession.enrollmentFeeCDF ?? 0,
             totalEnrolledTeams: freshSession.totalValidatedEnrollments ?? 0,
@@ -596,7 +596,7 @@ export async function confirmCompetitionEnrollmentPaymentAction(
     let scholarshipInfo = null;
     try {
       const freshSession = await Session.findById(enrollment.sessionId._id).lean();
-      if (freshSession && freshSession.scholarshipInitialAmountCDF > 0) {
+      if (freshSession && (freshSession.scholarshipInitialAmountCDF ?? 0) > 0) {
         scholarshipInfo = {
           enrollmentFeeCDF: freshSession.enrollmentFeeCDF ?? 0,
           totalEnrolledTeams: freshSession.totalValidatedEnrollments ?? 0,
@@ -1020,7 +1020,7 @@ export async function resendEnrollmentEmailByManagerAction(enrollmentId: string)
     if (isCompetition && enrollment.sessionId?._id) {
       try {
         const freshSession = await Session.findById(enrollment.sessionId._id).lean();
-        if (freshSession && freshSession.scholarshipInitialAmountCDF > 0) {
+        if (freshSession && (freshSession.scholarshipInitialAmountCDF ?? 0) > 0) {
           scholarshipInfo = {
             enrollmentFeeCDF: freshSession.enrollmentFeeCDF ?? 0,
             totalEnrolledTeams: freshSession.totalValidatedEnrollments ?? 0,
