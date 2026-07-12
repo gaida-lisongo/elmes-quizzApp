@@ -97,6 +97,7 @@ async function applyEnrollmentConfirmation(enrollment: any, orderNumber: string,
       console.error('[applyEnrollmentConfirmation] Erreur recalcul Bourse:', error);
     }
   }
+  
 
   if (sendEmail) {
     // Récupérer les infos Bourse pour les compétitions
