@@ -715,7 +715,7 @@ export async function confirmCompetitionEnrollmentPaymentAction(
     await sendEnrollmentEmail({
       email: emailPayload.email,
       sessionName: emailPayload.sessionName,
-      resourceName: (enrollment.competitionId as any)?.designation || 'Compétition',
+      resourceName: emailPayload.resourceName,
       orderNumber,
       ressources: emailPayload.ressources,
       scholarshipInfo,
