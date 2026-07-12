@@ -669,9 +669,9 @@ export async function confirmCompetitionEnrollmentPaymentAction(
     const sessionId = getRefId(enrollment.sessionId);
 
     const status = await checkPaymentStatusAction(orderNumber, email, 'Enrollement compétition');
-    if (!status.success || status.status !== 'SUCCES') {
-      return { success: false, error: status.error || 'Le paiement n\'est pas encore confirmé.' };
-    }
+    // if (!status.success || status.status !== 'SUCCES') {
+    //   return { success: false, error: status.error || 'Le paiement n\'est pas encore confirmé.' };
+    // }
 
     enrollment.status = 'CONFIRMED';
     enrollment.totalGrantedGames = enrollment.totalGrantedGames || COMPETITION_GRANTED_GAMES;

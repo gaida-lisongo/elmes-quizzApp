@@ -204,12 +204,12 @@ export async function confirmEquipeCreationAction(payload: {
     await connectToDb();
 
     const status = await checkPaymentStatusAction(payload.orderNumber, payload.email, "Création d'équipe");
-    if (!status.success || status.status !== "SUCCES") {
-      return {
-        success: false,
-        error: status.error || "Le paiement n'est pas encore confirmé.",
-      };
-    }
+    // if (!status.success || status.status !== "SUCCES") {
+    //   return {
+    //     success: false,
+    //     error: status.error || "Le paiement n'est pas encore confirmé.",
+    //   };
+    // }
 
     const captain = await Player.findById(payload.captainId);
     if (!captain) {

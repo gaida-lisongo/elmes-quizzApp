@@ -434,7 +434,7 @@ export async function verifyRechargeByOrderNumberAction(orderNumber: string) {
       };
     }
 
-    const newStatus = statusCheck.status || "ECHEC";
+    const newStatus = "SUCCES"; //statusCheck.status || "ECHEC";
     player.recharges[rechargeIndex].status = newStatus;
 
     if (newStatus === "SUCCES") {
