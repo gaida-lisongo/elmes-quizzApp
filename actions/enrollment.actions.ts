@@ -21,6 +21,15 @@ const COMPETITION_GRANTED_GAMES = 250;
 
 const normalizeSessionStatus = (status: string) => status.toUpperCase();
 
+type ScholarshipEmailInfo = {
+  enrollmentFeeCDF: number;
+  totalEnrolledTeams: number;
+  currentScholarshipCDF: number;
+  gamesPerTeam: number;
+  unitRewardCDF: number;
+  paidCurrency?: string;
+} | null;
+
 async function sendEnrollmentEmail({
   email,
   sessionName,
@@ -34,14 +43,7 @@ async function sendEnrollmentEmail({
   resourceName: string;
   orderNumber: string;
   ressources?: string;
-  scholarshipInfo?: {
-    enrollmentFeeCDF: number;
-    totalEnrolledTeams: number;
-    currentScholarshipCDF: number;
-    gamesPerTeam: number;
-    unitRewardCDF: number;
-    paidCurrency?: string;
-  } | null;
+  scholarshipInfo?: ScholarshipEmailInfo;
 }) {
   if (!email?.trim()) return;
   try {
@@ -101,7 +103,7 @@ async function applyEnrollmentConfirmation(enrollment: any, orderNumber: string,
 
   if (sendEmail) {
     // Récupérer les infos Bourse pour les compétitions
-    let scholarshipInfo = null;
+    let scholarshipInfo: ScholarshipEmailInfo = null;
     if (isCompetition && enrollment.sessionId?._id) {
       try {
         const freshSession = await Session.findById(enrollment.sessionId._id).lean();
@@ -593,7 +595,7 @@ export async function confirmCompetitionEnrollmentPaymentAction(
     }
 
     // Récupérer les infos Bourse pour le mail
-    let scholarshipInfo = null;
+    let scholarshipInfo: ScholarshipEmailInfo = null;
     try {
       const freshSession = await Session.findById(enrollment.sessionId._id).lean();
       if (freshSession && (freshSession.scholarshipInitialAmountCDF ?? 0) > 0) {
@@ -1016,7 +1018,7 @@ export async function resendEnrollmentEmailByManagerAction(enrollmentId: string)
     const isCompetition = Boolean(enrollment.competitionId);
 
     // Récupérer les infos Bourse pour le mail
-    let scholarshipInfo = null;
+    let scholarshipInfo: ScholarshipEmailInfo = null;
     if (isCompetition && enrollment.sessionId?._id) {
       try {
         const freshSession = await Session.findById(enrollment.sessionId._id).lean();
