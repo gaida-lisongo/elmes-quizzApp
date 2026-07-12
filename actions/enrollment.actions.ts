@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import connectToDb from "@/lib/utils/db";
 import { getSession } from "@/lib/utils/auth";
 import EnrollementModule from "@/lib/models/Enrollement";
+import type { IEnrollement, ISession } from "@/lib/models/Enrollement";
 import Partie from "@/lib/models/Partie";
 import Player from "@/lib/models/Player";
 import Equipe from "@/lib/models/Equipe";
@@ -20,6 +21,100 @@ const PARCOURS_GRANTED_GAMES = 180;
 const COMPETITION_GRANTED_GAMES = 250;
 
 const normalizeSessionStatus = (status: string) => status.toUpperCase();
+
+type PopulatedUserContact = {
+  _id?: mongoose.Types.ObjectId;
+  email?: string;
+  pseudo?: string;
+  telephone?: string;
+};
+
+type PopulatedPlayerContact = {
+  _id?: mongoose.Types.ObjectId;
+  userId?: mongoose.Types.ObjectId | PopulatedUserContact | null;
+  level?: number;
+};
+
+type PopulatedEquipeContact = {
+  _id?: mongoose.Types.ObjectId;
+  designation?: string;
+  logo?: string;
+  chefId?: mongoose.Types.ObjectId | PopulatedPlayerContact | null;
+};
+
+type PopulatedResource = {
+  _id?: mongoose.Types.ObjectId;
+  designation?: string;
+  ressources?: string;
+};
+
+type PopulatedSession = Pick<
+  ISession,
+  | 'designation'
+  | 'enrollmentFeeCDF'
+  | 'totalValidatedEnrollments'
+  | 'scholarshipInitialAmountCDF'
+  | 'gamesPerEnrollment'
+  | 'unitRewardPerWonGameCDF'
+> & {
+  _id?: mongoose.Types.ObjectId;
+};
+
+type PopulatedEnrollment = Omit<IEnrollement, 'sessionId' | 'playerId' | 'equipeId' | 'competitionId' | 'parcoursId'> & {
+  sessionId?: mongoose.Types.ObjectId | PopulatedSession | null;
+  playerId?: mongoose.Types.ObjectId | PopulatedPlayerContact | null;
+  equipeId?: mongoose.Types.ObjectId | PopulatedEquipeContact | null;
+  competitionId?: mongoose.Types.ObjectId | PopulatedResource | null;
+  parcoursId?: mongoose.Types.ObjectId | PopulatedResource | null;
+};
+
+const isObjectId = (value: unknown): value is mongoose.Types.ObjectId =>
+  value instanceof mongoose.Types.ObjectId;
+
+const getRefId = (value?: mongoose.Types.ObjectId | { _id?: mongoose.Types.ObjectId } | null) => {
+  if (!value) return null;
+  return isObjectId(value) ? value : value._id ?? null;
+};
+
+const asPopulatedSession = (value?: PopulatedEnrollment['sessionId']) =>
+  value && !isObjectId(value) ? value : null;
+
+const asPopulatedResource = (value?: PopulatedEnrollment['competitionId'] | PopulatedEnrollment['parcoursId']) =>
+  value && !isObjectId(value) ? value : null;
+
+const asPopulatedPlayer = (value?: PopulatedEnrollment['playerId']) =>
+  value && !isObjectId(value) ? value : null;
+
+const asPopulatedEquipe = (value?: PopulatedEnrollment['equipeId']) =>
+  value && !isObjectId(value) ? value : null;
+
+const asPopulatedUser = (value?: PopulatedPlayerContact['userId']) =>
+  value && !isObjectId(value) ? value : null;
+
+const getEnrollmentContactEmail = (enrollment: PopulatedEnrollment, isCompetition: boolean) => {
+  if (isCompetition) {
+    const equipe = asPopulatedEquipe(enrollment.equipeId);
+    const chef = equipe ? asPopulatedPlayer(equipe.chefId) : null;
+    return chef ? asPopulatedUser(chef.userId)?.email : undefined;
+  }
+
+  const player = asPopulatedPlayer(enrollment.playerId);
+  return player ? asPopulatedUser(player.userId)?.email : undefined;
+};
+
+const getEnrollmentEmailPayload = (enrollment: PopulatedEnrollment, isCompetition: boolean) => {
+  const session = asPopulatedSession(enrollment.sessionId);
+  const resource = isCompetition
+    ? asPopulatedResource(enrollment.competitionId)
+    : asPopulatedResource(enrollment.parcoursId);
+
+  return {
+    email: getEnrollmentContactEmail(enrollment, isCompetition),
+    sessionName: session?.designation || 'Session',
+    resourceName: resource?.designation || 'Ressource',
+    ressources: resource?.ressources,
+  };
+};
 
 type ScholarshipEmailInfo = {
   enrollmentFeeCDF: number;
@@ -77,9 +172,10 @@ async function sendEnrollmentEmail({
   }
 }
 
-async function applyEnrollmentConfirmation(enrollment: any, orderNumber: string, sendEmail = true) {
+async function applyEnrollmentConfirmation(enrollment: PopulatedEnrollment, orderNumber: string, sendEmail = true) {
   const isCompetition = Boolean(enrollment.competitionId);
   const grantedGames = isCompetition ? COMPETITION_GRANTED_GAMES : PARCOURS_GRANTED_GAMES;
+  const sessionId = getRefId(enrollment.sessionId);
 
   enrollment.status = 'CONFIRMED';
   enrollment.totalGrantedGames = enrollment.totalGrantedGames || grantedGames;
@@ -92,9 +188,9 @@ async function applyEnrollmentConfirmation(enrollment: any, orderNumber: string,
   });
   await enrollment.save();
 
-  if (isCompetition && enrollment.sessionId?._id) {
+  if (isCompetition && sessionId) {
     try {
-      await recomputeCompetitionScholarship(enrollment.sessionId._id.toString());
+      await recomputeCompetitionScholarship(sessionId.toString());
     } catch (error) {
       console.error('[applyEnrollmentConfirmation] Erreur recalcul Bourse:', error);
     }
@@ -104,9 +200,9 @@ async function applyEnrollmentConfirmation(enrollment: any, orderNumber: string,
   if (sendEmail) {
     // Récupérer les infos Bourse pour les compétitions
     let scholarshipInfo: ScholarshipEmailInfo = null;
-    if (isCompetition && enrollment.sessionId?._id) {
+    if (isCompetition && sessionId) {
       try {
-        const freshSession = await Session.findById(enrollment.sessionId._id).lean();
+        const freshSession = await Session.findById(sessionId).lean();
         if (freshSession && (freshSession.scholarshipInitialAmountCDF ?? 0) > 0) {
           scholarshipInfo = {
             enrollmentFeeCDF: freshSession.enrollmentFeeCDF ?? 0,
@@ -122,14 +218,13 @@ async function applyEnrollmentConfirmation(enrollment: any, orderNumber: string,
       }
     }
 
+    const emailPayload = getEnrollmentEmailPayload(enrollment, isCompetition);
     await sendEnrollmentEmail({
-      email: isCompetition
-        ? enrollment.equipeId?.chefId?.userId?.email
-        : enrollment.playerId?.userId?.email,
-      sessionName: enrollment.sessionId?.designation || 'Session',
-      resourceName: enrollment.competitionId?.designation || enrollment.parcoursId?.designation || 'Ressource',
+      email: emailPayload.email,
+      sessionName: emailPayload.sessionName,
+      resourceName: emailPayload.resourceName,
       orderNumber: orderNumber || enrollment.orderNumber,
-      ressources: enrollment.competitionId?.ressources || enrollment.parcoursId?.ressources,
+      ressources: emailPayload.ressources,
       scholarshipInfo,
     });
   }
@@ -139,12 +234,13 @@ async function applyEnrollmentConfirmation(enrollment: any, orderNumber: string,
 
 async function findManageableEnrollment(enrollmentId: string) {
   if (!mongoose.Types.ObjectId.isValid(enrollmentId)) return null;
-  return Enrollement.findById(enrollmentId)
+  const enrollment = await Enrollement.findById(enrollmentId)
     .populate('sessionId', 'designation')
     .populate('parcoursId', 'designation ressources')
     .populate('competitionId', 'designation ressources')
     .populate({ path: 'playerId', populate: { path: 'userId', select: 'email pseudo telephone' } })
     .populate({ path: 'equipeId', populate: { path: 'chefId', populate: { path: 'userId', select: 'email pseudo telephone' } } });
+  return enrollment as PopulatedEnrollment | null;
 }
 
 async function ensureStaffSession() {
@@ -565,11 +661,12 @@ export async function confirmCompetitionEnrollmentPaymentAction(
       .populate({
         path: 'equipeId',
         populate: { path: 'chefId', populate: { path: 'userId', select: 'email' } },
-      });
+      }) as PopulatedEnrollment | null;
     if (!enrollment) return { success: false, error: 'Enrollement introuvable' };
     if (enrollment.orderNumber !== orderNumber) {
       return { success: false, error: 'Commande invalide pour cet enrollement' };
     }
+    const sessionId = getRefId(enrollment.sessionId);
 
     const status = await checkPaymentStatusAction(orderNumber, email, 'Enrollement compétition');
     // if (!status.success || status.status !== 'SUCCES') {
@@ -588,35 +685,39 @@ export async function confirmCompetitionEnrollmentPaymentAction(
     await enrollment.save();
 
     // Recalculer la Bourse après confirmation de paiement
-    try {
-      await recomputeCompetitionScholarship(enrollment.sessionId._id.toString());
-    } catch (error) {
-      console.error('[confirmCompetitionEnrollmentPaymentAction] Erreur recalcul Bourse:', error);
+    if (sessionId) {
+      try {
+        await recomputeCompetitionScholarship(sessionId.toString());
+      } catch (error) {
+        console.error('[confirmCompetitionEnrollmentPaymentAction] Erreur recalcul Bourse:', error);
+      }
     }
 
     // Récupérer les infos Bourse pour le mail
     let scholarshipInfo: ScholarshipEmailInfo = null;
-    try {
-      const freshSession = await Session.findById(enrollment.sessionId._id).lean();
-      if (freshSession && (freshSession.scholarshipInitialAmountCDF ?? 0) > 0) {
-        scholarshipInfo = {
-          enrollmentFeeCDF: freshSession.enrollmentFeeCDF ?? 0,
-          totalEnrolledTeams: freshSession.totalValidatedEnrollments ?? 0,
-          currentScholarshipCDF: freshSession.scholarshipInitialAmountCDF ?? 0,
-          gamesPerTeam: freshSession.gamesPerEnrollment ?? 250,
-          unitRewardCDF: freshSession.unitRewardPerWonGameCDF ?? 0,
-        };
+    if (sessionId) {
+      try {
+        const freshSession = await Session.findById(sessionId).lean();
+        if (freshSession && (freshSession.scholarshipInitialAmountCDF ?? 0) > 0) {
+          scholarshipInfo = {
+            enrollmentFeeCDF: freshSession.enrollmentFeeCDF ?? 0,
+            totalEnrolledTeams: freshSession.totalValidatedEnrollments ?? 0,
+            currentScholarshipCDF: freshSession.scholarshipInitialAmountCDF ?? 0,
+            gamesPerTeam: freshSession.gamesPerEnrollment ?? 250,
+            unitRewardCDF: freshSession.unitRewardPerWonGameCDF ?? 0,
+          };
+        }
+      } catch (e) {
+        console.error('[confirmCompetitionEnrollmentPaymentAction] Erreur chargement Bourse:', e);
       }
-    } catch (e) {
-      console.error('[confirmCompetitionEnrollmentPaymentAction] Erreur chargement Bourse:', e);
     }
-
+    const emailPayload = getEnrollmentEmailPayload(enrollment, true);
     await sendEnrollmentEmail({
-      email: (enrollment.equipeId as any)?.chefId?.userId?.email,
-      sessionName: (enrollment.sessionId as any)?.designation || 'Session',
+      email: emailPayload.email,
+      sessionName: emailPayload.sessionName,
       resourceName: (enrollment.competitionId as any)?.designation || 'Compétition',
       orderNumber,
-      ressources: (enrollment.competitionId as any)?.ressources,
+      ressources: emailPayload.ressources,
       scholarshipInfo,
     });
 
@@ -1016,12 +1117,13 @@ export async function resendEnrollmentEmailByManagerAction(enrollmentId: string)
     if (!enrollment) return { success: false, error: 'Enrollement introuvable' };
 
     const isCompetition = Boolean(enrollment.competitionId);
+    const sessionId = getRefId(enrollment.sessionId);
 
     // Récupérer les infos Bourse pour le mail
     let scholarshipInfo: ScholarshipEmailInfo = null;
-    if (isCompetition && enrollment.sessionId?._id) {
+    if (isCompetition && sessionId) {
       try {
-        const freshSession = await Session.findById(enrollment.sessionId._id).lean();
+        const freshSession = await Session.findById(sessionId).lean();
         if (freshSession && (freshSession.scholarshipInitialAmountCDF ?? 0) > 0) {
           scholarshipInfo = {
             enrollmentFeeCDF: freshSession.enrollmentFeeCDF ?? 0,
@@ -1036,14 +1138,13 @@ export async function resendEnrollmentEmailByManagerAction(enrollmentId: string)
       }
     }
 
+    const emailPayload = getEnrollmentEmailPayload(enrollment, isCompetition);
     await sendEnrollmentEmail({
-      email: isCompetition
-        ? enrollment.equipeId?.chefId?.userId?.email
-        : enrollment.playerId?.userId?.email,
-      sessionName: enrollment.sessionId?.designation || 'Session',
-      resourceName: enrollment.competitionId?.designation || enrollment.parcoursId?.designation || 'Ressource',
+      email: emailPayload.email,
+      sessionName: emailPayload.sessionName,
+      resourceName: emailPayload.resourceName,
       orderNumber: enrollment.orderNumber,
-      ressources: enrollment.competitionId?.ressources || enrollment.parcoursId?.ressources,
+      ressources: emailPayload.ressources,
       scholarshipInfo,
     });
 
