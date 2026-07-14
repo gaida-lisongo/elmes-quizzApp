@@ -1124,15 +1124,15 @@ export async function verifyEnrollmentPaymentByManagerAction(enrollmentId: strin
       return { success: true, status: statusCheck.status, message: 'Paiement confirmé et mail envoyé.' };
     }
 
-    if (statusCheck.status === 'ECHEC') {
-      enrollment.status = 'CANCELLED';
-      enrollment.transactions = (enrollment.transactions || []).map((transaction: any) => {
-        if (transaction.orderNumber === enrollment.orderNumber) transaction.status = 'FAILED';
-        return transaction;
-      });
-      await enrollment.save();
-      return { success: true, status: statusCheck.status, message: 'Paiement échoué chez FlexPay.' };
-    }
+    // if (statusCheck.status === 'ECHEC') {
+    //   enrollment.status = 'CANCELLED';
+    //   enrollment.transactions = (enrollment.transactions || []).map((transaction: any) => {
+    //     if (transaction.orderNumber === enrollment.orderNumber) transaction.status = 'FAILED';
+    //     return transaction;
+    //   });
+    //   await enrollment.save();
+    //   return { success: true, status: statusCheck.status, message: 'Paiement échoué chez FlexPay.' };
+    // }
 
     return { success: true, status: statusCheck.status, message: 'Paiement encore en attente chez FlexPay.' };
   } catch (error: any) {
