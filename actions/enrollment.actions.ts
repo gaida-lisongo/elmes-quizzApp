@@ -1154,6 +1154,48 @@ export async function manuallyConfirmEnrollmentByManagerAction(enrollmentId: str
   }
 }
 
+export async function updateEnrollmentStatusByManagerAction(
+  enrollmentId: string,
+  nextStatus: 'PENDING' | 'CONFIRMED' | 'CANCELLED',
+) {
+  try {
+    const staff = await ensureStaffSession();
+    if (!staff) return { success: false, error: 'Non autorisé' };
+
+    await connectToDb();
+    const enrollment = await findManageableEnrollment(enrollmentId);
+    if (!enrollment) return { success: false, error: 'Enrollement introuvable' };
+
+    if (nextStatus === 'CONFIRMED') {
+      await applyEnrollmentConfirmation(enrollment, enrollment.orderNumber, true);
+      return { success: true, message: 'Enrollement validé manuellement.' };
+    }
+
+    const hasConsumedGames =
+      Boolean(enrollment.gamesGranted || enrollment.gamesGrantedAt)
+      || Number(enrollment.usedGames || 0) > 0
+      || Number(enrollment.parties || 0) > 0;
+    if (hasConsumedGames) {
+      return {
+        success: false,
+        error: 'Statut non modifiable : des parties ont déjà été accordées ou consommées.',
+      };
+    }
+
+    enrollment.status = nextStatus;
+    enrollment.paymentStatus = nextStatus === 'CANCELLED' ? 'FAILED' : 'PENDING';
+    enrollment.transactions = (enrollment.transactions || []).map((transaction: any) => ({
+      ...transaction,
+      status: nextStatus === 'CANCELLED' ? 'FAILED' : 'PENDING',
+    }));
+    await enrollment.save();
+
+    return { success: true, message: "Statut de l'enrollement mis a jour." };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'Changement de statut impossible.' };
+  }
+}
+
 export async function resendEnrollmentEmailByManagerAction(enrollmentId: string) {
   try {
     const staff = await ensureStaffSession();
@@ -1207,8 +1249,21 @@ export async function deleteEnrollmentByManagerAction(enrollmentId: string) {
     if (!staff) return { success: false, error: 'Non autorisé' };
 
     await connectToDb();
-    const deleted = await Enrollement.findByIdAndDelete(enrollmentId).lean();
-    if (!deleted) return { success: false, error: 'Enrollement introuvable' };
+    const enrollment = await findManageableEnrollment(enrollmentId);
+    if (!enrollment) return { success: false, error: 'Enrollement introuvable' };
+
+    const hasConsumedGames =
+      Boolean(enrollment.gamesGranted || enrollment.gamesGrantedAt)
+      || Number(enrollment.usedGames || 0) > 0
+      || Number(enrollment.parties || 0) > 0;
+    if (hasConsumedGames) {
+      return {
+        success: false,
+        error: 'Suppression impossible : des parties ont déjà été accordées ou consommées.',
+      };
+    }
+
+    await Enrollement.findByIdAndDelete(enrollment._id);
 
     return { success: true, message: 'Enrollement supprimé.' };
   } catch (error: any) {

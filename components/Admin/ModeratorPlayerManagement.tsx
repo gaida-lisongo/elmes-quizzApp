@@ -11,8 +11,16 @@ import {
   RefreshCw,
   Sparkles,
   CheckCircle2,
+  ShieldCheck,
+  Trash2,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import {
+  deleteEnrollmentByManagerAction,
+  manuallyConfirmEnrollmentByManagerAction,
+  updateEnrollmentStatusByManagerAction,
+  verifyEnrollmentPaymentByManagerAction,
+} from "@/actions/enrollment.actions";
 import {
   getModeratorPlayerDetailAction,
   grantPlayerBonusPartiesAction,
@@ -31,6 +39,7 @@ export default function ModeratorPlayerManagement() {
   const [bonusCount, setBonusCount] = useState(3);
   const [bonusReason, setBonusReason] = useState("");
   const [grantingBonus, setGrantingBonus] = useState(false);
+  const [busyEnrollmentId, setBusyEnrollmentId] = useState<string | null>(null);
 
   const selectedSummary = useMemo(
     () => players.find((player) => player.playerId === selectedPlayerId || player._id === selectedPlayerId) || null,
@@ -104,6 +113,46 @@ export default function ModeratorPlayerManagement() {
       toast.error(res.error || "Attribution impossible.");
     }
     setGrantingBonus(false);
+  };
+
+  const refreshDetail = async () => {
+    if (!selectedPlayerId) return;
+    const refreshed = await getModeratorPlayerDetailAction(selectedPlayerId);
+    if (refreshed.success) setDetail(refreshed.data || null);
+  };
+
+  const handleEnrollmentAction = async (
+    enrollmentId: string,
+    action: "verify" | "validate" | "delete",
+  ) => {
+    if (action === "delete" && !confirm("Supprimer définitivement cet enrôlement ?")) return;
+    setBusyEnrollmentId(enrollmentId);
+    const res =
+      action === "verify"
+        ? await verifyEnrollmentPaymentByManagerAction(enrollmentId)
+        : action === "validate"
+          ? await manuallyConfirmEnrollmentByManagerAction(enrollmentId)
+          : await deleteEnrollmentByManagerAction(enrollmentId);
+
+    if (res.success) {
+      toast.success(res.message || "Action effectuée.");
+      await refreshDetail();
+    } else {
+      toast.error(res.error || "Action impossible.");
+    }
+    setBusyEnrollmentId(null);
+  };
+
+  const handleEnrollmentStatus = async (enrollmentId: string, status: "PENDING" | "CONFIRMED" | "CANCELLED") => {
+    setBusyEnrollmentId(enrollmentId);
+    const res = await updateEnrollmentStatusByManagerAction(enrollmentId, status);
+    if (res.success) {
+      toast.success(res.message || "Statut mis à jour.");
+      await refreshDetail();
+    } else {
+      toast.error(res.error || "Changement de statut impossible.");
+    }
+    setBusyEnrollmentId(null);
   };
 
   return (
@@ -314,8 +363,46 @@ export default function ModeratorPlayerManagement() {
                         <p className="font-medium text-black dark:text-white">{enrollment.resource}</p>
                         <p className="text-xs text-waterloo">{enrollment.session}</p>
                         <p className="mt-2 text-xs text-waterloo">
-                          {enrollment.points} pts • {enrollment.remainingGames} parties restantes
+                          {enrollment.points} pts - {enrollment.remainingGames} parties restantes - {enrollment.status}
                         </p>
+                        <div className="mt-3 grid gap-2">
+                          <select
+                            value={enrollment.status}
+                            onChange={(event) => handleEnrollmentStatus(enrollment._id, event.target.value as "PENDING" | "CONFIRMED" | "CANCELLED")}
+                            disabled={busyEnrollmentId === enrollment._id}
+                            className="w-full rounded-lg border border-stroke bg-white px-2 py-1.5 text-xs text-black outline-none dark:border-strokedark dark:bg-black dark:text-white"
+                          >
+                            <option value="PENDING">PENDING</option>
+                            <option value="CONFIRMED">CONFIRMED</option>
+                            <option value="CANCELLED">CANCELLED</option>
+                          </select>
+                          <div className="flex flex-wrap gap-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleEnrollmentAction(enrollment._id, "verify")}
+                              disabled={busyEnrollmentId === enrollment._id}
+                              className="inline-flex items-center gap-1 rounded-md border border-stroke px-2 py-1 text-xs text-black disabled:opacity-50 dark:border-strokedark dark:text-white"
+                            >
+                              <RefreshCw className="h-3 w-3" /> Verifier
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleEnrollmentAction(enrollment._id, "validate")}
+                              disabled={busyEnrollmentId === enrollment._id || enrollment.status === "CONFIRMED"}
+                              className="inline-flex items-center gap-1 rounded-md border border-emerald-200 px-2 py-1 text-xs text-emerald-700 disabled:opacity-50"
+                            >
+                              <ShieldCheck className="h-3 w-3" /> Valider
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleEnrollmentAction(enrollment._id, "delete")}
+                              disabled={busyEnrollmentId === enrollment._id}
+                              className="inline-flex items-center gap-1 rounded-md border border-red-200 px-2 py-1 text-xs text-red-600 disabled:opacity-50"
+                            >
+                              <Trash2 className="h-3 w-3" /> Supprimer
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -336,3 +423,4 @@ export default function ModeratorPlayerManagement() {
     </motion.section>
   );
 }
+
