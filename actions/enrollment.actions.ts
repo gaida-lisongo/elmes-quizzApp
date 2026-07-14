@@ -23,8 +23,6 @@ import { randomUUID } from "crypto";
 const { Enrollement, Session } = EnrollementModule;
 const PARCOURS_GRANTED_GAMES = SESSION_GAMES_PER_VALIDATED_ENROLLMENT;
 const COMPETITION_GRANTED_GAMES = SESSION_GAMES_PER_VALIDATED_ENROLLMENT;
-const DEFAULT_PARCOURS_ENROLLMENT_FEE_CDF = 15000;
-const DEFAULT_PARCOURS_ENROLLMENT_FEE_USD = 5;
 
 const normalizeSessionStatus = (status: string) => status.toUpperCase();
 
@@ -461,7 +459,10 @@ export async function enrollToParcoursAction(
     if (!payment?.phone?.trim()) {
       return { success: false, error: 'Le numéro Mobile Money est requis' };
     }
-    const enrollmentAmountCDF = Number((sessionDoc as any).enrollmentFeeCDF || 0) || DEFAULT_PARCOURS_ENROLLMENT_FEE_CDF;
+    const enrollmentAmountCDF = Number((sessionDoc as any).enrollmentFeeCDF || 0);
+    if (enrollmentAmountCDF <= 0) {
+      return { success: false, error: 'Montant d enrollement parcours non configure pour cette session.' };
+    }
 
     // Vérifier que le joueur n'est pas déjà inscrit à ce parcours pour cette session
     const existing = await Enrollement.findOne({
@@ -486,7 +487,6 @@ export async function enrollToParcoursAction(
         id: parcoursId,
         name: 'Enrollement parcours',
         amountCDF: enrollmentAmountCDF,
-        amountUSD: DEFAULT_PARCOURS_ENROLLMENT_FEE_USD,
         type: 'PARCOURS',
         metadata: { parcoursId, sessionId },
       },
@@ -507,7 +507,6 @@ export async function enrollToParcoursAction(
       status: 'PENDING',
       paymentStatus: 'PENDING',
       amountCDF: enrollmentAmountCDF,
-      amountUSD: DEFAULT_PARCOURS_ENROLLMENT_FEE_USD,
       paidAmount: payment.amount,
       paidCurrency: payment.currency,
       maxParties: 0,
@@ -718,6 +717,9 @@ export async function confirmCompetitionEnrollmentPaymentAction(
     //   return { success: false, error: status.error || 'Le paiement n\'est pas encore confirmé.' };
     // }
 
+    if (!status.success || status.status !== 'SUCCES') {
+      return { success: false, error: status.error || 'Le paiement n est pas encore confirme.' };
+    }
 
     enrollment.status = 'CONFIRMED';
     enrollment.paymentStatus = 'PAID';
@@ -1111,28 +1113,24 @@ export async function verifyEnrollmentPaymentByManagerAction(enrollmentId: strin
     if (!enrollment.orderNumber) return { success: false, error: 'Aucune commande liée à cet enrollement.' };
 
     const statusCheck = await checkStatus(enrollment.orderNumber);
-    // if (!statusCheck.success) {
-    //   return { success: false, error: statusCheck.error || 'Vérification FlexPay impossible.' };
-    // }
+    if (!statusCheck.success) {
+      return { success: false, error: statusCheck.error || 'Vérification FlexPay impossible.' };
+    }
 
-    // if (statusCheck.status === 'SUCCES') {
-    //   await applyEnrollmentConfirmation(enrollment, enrollment.orderNumber, true);
-    //   return { success: true, status: statusCheck.status, message: 'Paiement confirmé et mail envoyé.' };
-    // }
-    if (true) {
+    if (statusCheck.status === 'SUCCES') {
       await applyEnrollmentConfirmation(enrollment, enrollment.orderNumber, true);
       return { success: true, status: statusCheck.status, message: 'Paiement confirmé et mail envoyé.' };
     }
 
-    // if (statusCheck.status === 'ECHEC') {
-    //   enrollment.status = 'CANCELLED';
-    //   enrollment.transactions = (enrollment.transactions || []).map((transaction: any) => {
-    //     if (transaction.orderNumber === enrollment.orderNumber) transaction.status = 'FAILED';
-    //     return transaction;
-    //   });
-    //   await enrollment.save();
-    //   return { success: true, status: statusCheck.status, message: 'Paiement échoué chez FlexPay.' };
-    // }
+    if (statusCheck.status === 'ECHEC') {
+      enrollment.status = 'CANCELLED';
+      enrollment.transactions = (enrollment.transactions || []).map((transaction: any) => {
+        if (transaction.orderNumber === enrollment.orderNumber) transaction.status = 'FAILED';
+        return transaction;
+      });
+      await enrollment.save();
+      return { success: true, status: statusCheck.status, message: 'Paiement échoué chez FlexPay.' };
+    }
 
     return { success: true, status: statusCheck.status, message: 'Paiement encore en attente chez FlexPay.' };
   } catch (error: any) {
