@@ -414,6 +414,13 @@ export async function getSessionsByRessourceAction(
 export async function enrollToParcoursAction(
   parcoursId: string,
   sessionId: string,
+  payment: {
+    phone: string;
+    email?: string;
+    currency: 'CDF' | 'USD';
+    amount: number;
+    method?: PaymentMethod;
+  },
 ) {
   try {
     const userSession = await getSession();
@@ -449,6 +456,13 @@ export async function enrollToParcoursAction(
 
     const parcours = await Parcours.findById(parcoursId).select('designation ressources').lean();
     if (!parcours) return { success: false, error: 'Parcours introuvable' };
+    if (!payment?.phone?.trim()) {
+      return { success: false, error: 'Le numéro Mobile Money est requis' };
+    }
+    const enrollmentAmountCDF = Number((sessionDoc as any).enrollmentFeeCDF || 0);
+    if (enrollmentAmountCDF <= 0) {
+      return { success: false, error: 'Montant d enrollement parcours non configure pour cette session.' };
+    }
 
     // Vérifier que le joueur n'est pas déjà inscrit à ce parcours pour cette session
     const existing = await Enrollement.findOne({
@@ -464,7 +478,25 @@ export async function enrollToParcoursAction(
 
     // Générer un code unique
     const code = randomUUID();
-    const orderNumber = `ORD-${Date.now()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+    const paymentRes = await initiatePaymentAction(
+      player._id.toString(),
+      payment.phone.trim(),
+      payment.amount,
+      payment.currency,
+      {
+        id: parcoursId,
+        name: 'Enrollement parcours',
+        amountCDF: enrollmentAmountCDF,
+        type: 'PARCOURS',
+        metadata: { parcoursId, sessionId },
+      },
+      payment.email?.trim(),
+      payment.method || "MOBILE_MONEY",
+    );
+    if (!paymentRes.success || !paymentRes.orderNumber) {
+      return { success: false, error: paymentRes.error || 'Echec de l initiation du paiement' };
+    }
+    const orderNumber = paymentRes.orderNumber;
 
     const enrollment = await Enrollement.create({
       playerId: new mongoose.Types.ObjectId(playerId),
@@ -474,21 +506,31 @@ export async function enrollToParcoursAction(
       orderNumber,
       status: 'PENDING',
       paymentStatus: 'PENDING',
+      amountCDF: enrollmentAmountCDF,
+      paidAmount: payment.amount,
+      paidCurrency: payment.currency,
       maxParties: 0,
       totalGrantedGames: 0,
       usedGames: 0,
       remainingGames: 0,
       points: 0,
       parties: 0,
-      transactions: [],
+      transactions: [{
+        membre: player._id,
+        montant: payment.amount,
+        currency: payment.currency,
+        status: 'PENDING',
+        orderNumber,
+        phone: payment.phone.trim(),
+      }],
     });
-
-    // TODO: brancher ici le paiement d'enrollement parcours si le produit de paiement Advanced est active.
-    // Le gestionnaire peut valider manuellement l'enrollement via le workflow existant.
 
     return {
       success: true,
       enrollment: JSON.parse(JSON.stringify(enrollment)),
+      orderNumber,
+      redirectUrl: paymentRes.redirectUrl,
+      paymentMethod: payment.method || "MOBILE_MONEY",
     };
   } catch (error: any) {
     return { success: false, error: error.message };

@@ -251,12 +251,6 @@ export async function startParcoursPartieAction(enrollmentId: string) {
       return { success: false, error: 'Les parties de cette session sont épuisées.' };
     }
 
-    // VÃ©rifier partie en cours
-    const existing = await Partie.findOne({ playerId: player._id, status: 'EN_COURS' }).lean();
-    if (existing) {
-      return { success: false, error: 'Vous avez dÃ©jÃ  une partie en cours.' };
-    }
-
     const questions = await tirerQuestions(
       parcours.categories.map((c: any) => c.toString()),
       player.level || 0,
@@ -393,12 +387,6 @@ export async function startMatchPartieAction(enrollmentId: string) {
 
     if (remainingGames <= 0) {
       return { success: false, error: 'Les parties de cette session sont épuisées.' };
-    }
-
-    // VÃ©rifier partie en cours
-    const existing = await Partie.findOne({ playerId: player._id, status: 'EN_COURS' }).lean();
-    if (existing) {
-      return { success: false, error: 'Vous avez dÃ©jÃ  une partie en cours.' };
     }
 
     const questions = await tirerQuestions(
@@ -626,3 +614,4 @@ export async function getPartieEnCoursAction() {
     return { success: false, error: error.message };
   }
 }
+

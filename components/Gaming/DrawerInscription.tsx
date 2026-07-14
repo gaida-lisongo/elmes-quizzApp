@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Loader2, CheckCircle, AlertCircle, Calendar, User, Users, Target, ChevronRight, ArrowLeft, DollarSign, CreditCard } from "lucide-react";
 import { getSessionsByRessourceAction, enrollToParcoursAction, enrollToCompetitionAction, confirmCompetitionEnrollmentPaymentAction } from "@/actions/enrollment.actions";
+import { verifyPersistedPaymentAction } from "@/actions/payment.actions";
 import type { EnrollmentInfo } from "./index";
 
 interface ISessionItem {
@@ -12,6 +13,7 @@ interface ISessionItem {
   designation: string;
   startDate: string;
   endDate: string;
+  enrollmentFeeCDF?: number;
 }
 
 interface DrawerInscriptionProps {
@@ -93,84 +95,76 @@ export default function DrawerInscription({
   const handleSelectSession = (session: ISessionItem) => {
     if (!canEnroll()) return;
     setSelectedSession(session);
-    setStep("confirm");
+    setStep("payment");
   };
+
+  const getEnrollmentAmountCDF = () => Number(selectedSession?.enrollmentFeeCDF || amount || 0);
 
   const handleConfirm = async () => {
     if (!selectedSession) return;
-    if (type === "competition") {
-      setStep("payment");
-      return;
-    }
-
-    setStep("processing");
-    setErrorMsg("");
-
-    try {
-      const res = await enrollToParcoursAction(targetId, selectedSession._id);
-
-      if (!res.success) {
-        setErrorMsg(res.error || "Échec de l'inscription");
-        setStep("error");
-        return;
-      }
-
-      setUniqueCode(res.enrollment?.code || "");
-      setStep("success");
-    } catch (err: any) {
-      setErrorMsg(err.message || "Une erreur est survenue");
-      setStep("error");
-    }
+    setStep("confirm");
   };
 
-  const handlePayCompetition = async () => {
+  const handlePayEnrollment = async () => {
     if (!selectedSession) return;
     if (!phone.trim()) {
-      setErrorMsg("Le numéro Mobile Money est requis.");
+      setErrorMsg("Le numero Mobile Money est requis.");
+      return;
+    }
+    const enrollmentAmountCDF = getEnrollmentAmountCDF();
+    if (enrollmentAmountCDF <= 0) {
+      setErrorMsg(type === "parcours"
+        ? "Montant d'enrolement parcours non configure pour cette session."
+        : "Montant d'enrolement indisponible.");
       return;
     }
 
     setStep("processing");
     setErrorMsg("");
 
-    const amountConvert = currency === "CDF" ? amount : (amount / TAUX);
-    const res = await enrollToCompetitionAction(targetId, selectedSession._id, {
+    const amountConvert = currency === "CDF" ? enrollmentAmountCDF : (enrollmentAmountCDF / TAUX);
+    const payload = {
       phone,
       email,
       currency,
       amount: amountConvert,
       method: paymentMethod,
-    });
+    };
+    const res = type === "parcours"
+      ? await enrollToParcoursAction(targetId, selectedSession._id, payload)
+      : await enrollToCompetitionAction(targetId, selectedSession._id, payload);
 
     if (!res.success || !res.enrollment || !res.orderNumber) {
-      setErrorMsg(res.error || "Échec de l'initiation du paiement");
+      setErrorMsg(res.error || "Echec de l'initiation du paiement");
       setStep("error");
       return;
     }
 
     setEnrollmentId(res.enrollment._id);
+    setUniqueCode(res.enrollment.code || "");
     setOrderNumber(res.orderNumber);
     if (paymentMethod === "CARD" && res.redirectUrl) {
       window.location.href = res.redirectUrl;
       return;
     }
-    setStep("payment");
+    setStep("confirm");
   };
-
   const handleConfirmPayment = async () => {
     if (!enrollmentId || !orderNumber) return;
 
     setStep("processing");
     setErrorMsg("");
 
-    const res = await confirmCompetitionEnrollmentPaymentAction(enrollmentId, orderNumber, email);
-    // if (!res.success) {
-    //   setErrorMsg(res.error || "Le paiement n'est pas encore confirmé.");
-    //   setStep("payment");
-    //   return;
-    // }
+    const res = type === "parcours"
+      ? await verifyPersistedPaymentAction({ orderNumber, resourceType: "PARCOURS" })
+      : await confirmCompetitionEnrollmentPaymentAction(enrollmentId, orderNumber, email);
+    if (!res.success || (type === "parcours" && (res as any).status !== "SUCCES")) {
+      setErrorMsg(res.error || "Le paiement n'est pas encore confirme.");
+      setStep("payment");
+      return;
+    }
 
-    setUniqueCode(res.code || "");
+    if ((res as any).code) setUniqueCode((res as any).code || "");
     setStep("success");
   };
 
@@ -230,14 +224,11 @@ export default function DrawerInscription({
               {/* Stepper */}
               {["sessions", "confirm", "payment"].includes(step) && (
                 <div className="mb-6 flex items-center gap-2">
-                  {(type === "competition" ? [
+                  {[
                     { key: "sessions", num: 1, label: "Session" },
-                    { key: "confirm", num: 2, label: "Confirmer" },
-                    { key: "payment", num: 3, label: "Paiement" },
-                  ] : [
-                    { key: "sessions", num: 1, label: "Session" },
-                    { key: "confirm", num: 2, label: "Confirmer" },
-                  ]).map((s, i, steps) => (
+                    { key: "payment", num: 2, label: "Paiement" },
+                    { key: "confirm", num: 3, label: "Confirmation" },
+                  ].map((s, i, steps) => (
                     <div key={s.key} className="flex items-center gap-2">
                       <div
                         className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${
@@ -342,7 +333,7 @@ export default function DrawerInscription({
                     <div className="flex items-center gap-2 text-waterloo">
                       <CheckCircle className="h-4 w-4" />
                       <h4 className="font-medium text-black dark:text-white">
-                        Confirmez votre inscription
+                        Confirmation du paiement
                       </h4>
                     </div>
 
@@ -358,6 +349,10 @@ export default function DrawerInscription({
                           <span className="font-medium text-black dark:text-white">
                             {selectedSession.designation}
                           </span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-waterloo">Commande</span>
+                          <span className="font-medium text-primary">{orderNumber || "-"}</span>
                         </div>
                         <div className="flex justify-between text-sm">
                           <span className="text-waterloo">Début</span>
@@ -389,7 +384,7 @@ export default function DrawerInscription({
                     <div className="flex gap-3">
                       <button
                         onClick={() => {
-                          setStep("sessions");
+                          setStep("payment");
                           setErrorMsg("");
                         }}
                         className="flex items-center gap-2 rounded-xl border border-stroke px-6 py-3 text-sm text-black transition hover:bg-stroke dark:text-white dark:hover:bg-strokedark"
@@ -397,10 +392,10 @@ export default function DrawerInscription({
                         <ArrowLeft className="h-4 w-4" /> Retour
                       </button>
                       <button
-                        onClick={handleConfirm}
+                        onClick={handleConfirmPayment}
                         className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-3 font-medium text-white transition hover:bg-primaryho"
                       >
-                        Confirmer l'inscription <ChevronRight className="h-4 w-4" />
+                        Vérifier le paiement <ChevronRight className="h-4 w-4" />
                       </button>
                     </div>
                   </motion.div>
@@ -422,11 +417,11 @@ export default function DrawerInscription({
                     <div className="rounded-xl border border-stroke p-4 dark:border-strokedark">
                       <div className="flex justify-between text-sm">
                         <span className="text-waterloo">Montant</span>
-                        <span className="font-bold text-primary">{amount} CDF</span>
+                        <span className="font-bold text-primary">{getEnrollmentAmountCDF().toLocaleString("fr-FR")} CDF</span>
                       </div>
                       <div className="mt-2 flex justify-between text-sm">
-                        <span className="text-waterloo">Equipe</span>
-                        <span className="font-medium text-black dark:text-white">{enrollmentInfo.designation}</span>
+                        <span className="text-waterloo">{enrollmentInfo.type === "equipe" ? "Equipe" : "Profil"}</span>
+                        <span className="font-medium text-black dark:text-white">{enrollmentInfo.type === "equipe" ? enrollmentInfo.designation : enrollmentInfo.pseudo}</span>
                       </div>
                       <div className="mt-2 flex justify-between text-sm">
                         <span className="text-waterloo">Session</span>
@@ -453,7 +448,7 @@ export default function DrawerInscription({
                                 : "border-stroke text-waterloo hover:border-primary dark:border-strokedark"
                             }`}
                           >
-                            {item === "CDF" ? `${amount} CDF` : `${(amount / TAUX).toFixed()} USD`}
+                            {item === "CDF" ? `${getEnrollmentAmountCDF().toLocaleString("fr-FR")} CDF` : `${(getEnrollmentAmountCDF() / TAUX).toFixed()} USD`}
                           </button>
                         ))}
                       </div>
@@ -517,7 +512,7 @@ export default function DrawerInscription({
                     <div className="flex gap-3">
                       <button
                         onClick={() => {
-                          setStep("confirm");
+                          setStep("sessions");
                           setErrorMsg("");
                         }}
                         className="flex items-center gap-2 rounded-xl border border-stroke px-6 py-3 text-sm text-black transition hover:bg-stroke dark:text-white dark:hover:bg-strokedark"
@@ -525,10 +520,10 @@ export default function DrawerInscription({
                         <ArrowLeft className="h-4 w-4" /> Retour
                       </button>
                       <button
-                        onClick={orderNumber ? handleConfirmPayment : handlePayCompetition}
+                        onClick={handlePayEnrollment}
                         className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-3 font-medium text-white transition hover:bg-primaryho"
                       >
-                        {orderNumber ? "Vérifier le paiement" : "Payer"} <ChevronRight className="h-4 w-4" />
+                        Payer <ChevronRight className="h-4 w-4" />
                       </button>
                     </div>
                   </motion.div>
@@ -626,3 +621,6 @@ export default function DrawerInscription({
     </AnimatePresence>
   );
 }
+
+
+

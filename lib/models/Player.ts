@@ -8,7 +8,7 @@ export interface IRecharge {
   targetLevel: number;
   creditedParties?: number;
   creditedAt?: Date;
-  productType?: 'TRAINING_PASS' | 'COMPETITION' | 'EQUIPE';
+  productType?: 'TRAINING_PASS' | 'PARCOURS' | 'COMPETITION' | 'EQUIPE';
   resourceId?: string;
   metadata?: Record<string, any>;
   currency?: 'CDF' | 'USD';
@@ -72,7 +72,7 @@ const PlayerSchema: Schema<IPlayer> = new Schema(
         targetLevel: { type: Number, required: true },
         creditedParties: { type: Number, default: 0 },
         creditedAt: { type: Date },
-        productType: { type: String, enum: ['TRAINING_PASS', 'COMPETITION', 'EQUIPE'] },
+        productType: { type: String, enum: ['TRAINING_PASS', 'PARCOURS', 'COMPETITION', 'EQUIPE'] },
         resourceId: { type: String },
         metadata: { type: Schema.Types.Mixed, default: {} },
         currency: { type: String, enum: ['CDF', 'USD'], default: 'CDF' },

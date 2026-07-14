@@ -19,7 +19,7 @@ export type ProductPayload = {
   name: string;
   amountCDF: number;
   amountUSD?: number;
-  type: 'TRAINING_PASS' | 'COMPETITION' | 'EQUIPE';
+  type: 'TRAINING_PASS' | 'PARCOURS' | 'COMPETITION' | 'EQUIPE';
   metadata?: Record<string, any>;
 };
 
@@ -604,7 +604,7 @@ export async function verifyPersistedPaymentAction(params: {
         }
       }
 
-      if (resourceType === "COMPETITION") {
+      if (resourceType === "PARCOURS" || resourceType === "COMPETITION") {
         const metadata: any = recharge.metadata || {};
         const enrollmentConditions: any[] = [
           { orderNumber: providerOrderNumber },
@@ -622,7 +622,7 @@ export async function verifyPersistedPaymentAction(params: {
           });
           await enrollment.save();
           await grantSessionGamesAfterEnrollmentValidation(enrollment._id.toString());
-          if (enrollment.sessionId) {
+          if (enrollment.competitionId && enrollment.sessionId) {
             await recomputeCompetitionScholarship(enrollment.sessionId.toString());
           }
         }
