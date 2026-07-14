@@ -49,7 +49,7 @@ export interface PlayerMetricsData {
   chart: Array<{ label: string; value: number; detail: string }>;
   sessions: Array<{ label: string; count: number }>;
   leaderboard?: Array<{ _id: string; pseudo: string; score: number; parties: number; precision: number; rank: number; level: number }>;
-  recharges?: Array<{ _id: string; index: number; amount: number; status: string; targetLevel: number; creditedParties: number; createdAt: string; providerTxId: string; reference?: string }>;
+  recharges?: Array<{ _id: string; index: number; amount: number; status: string; targetLevel: number; creditedParties: number; creditedAt?: string; createdAt: string; providerTxId: string; reference?: string }>;
   rewards?: Array<{ _id: string; parcours: string; session: string; rank: number; amount: number; status: string; reference: string; createdAt: string }>;
   team?: {
     _id: string;
@@ -294,7 +294,8 @@ export async function getPlayerMetricsAction(): Promise<{ success: boolean; data
           amount: recharge.amount || 0,
           status: recharge.status || 'EN_ATTENTE',
           targetLevel: recharge.targetLevel || 0,
-          creditedParties: getTrainingPassParties(recharge.amount || 0, recharge.targetLevel || 0),
+          creditedParties: recharge.creditedParties || getTrainingPassParties(recharge.amount || 0, recharge.targetLevel || 0),
+          creditedAt: recharge.creditedAt?.toISOString?.(),
           createdAt: recharge.createdAt?.toISOString?.() || '',
           providerTxId: recharge.providerTxId || '',
           reference: recharge.reference || '',

@@ -362,7 +362,7 @@ export async function createPurchaseOrderAction(beneficiaryPlayerId: string, amo
 
     const numericAmount = Number(amount);
     if (!Number.isFinite(numericAmount) || numericAmount <= 0) return { success: false, error: "Montant invalide." };
-    if ((equipe.metriques?.soldeUsd || 0) < numericAmount) return { success: false, error: "Solde d'équipe insuffisant." };
+    if ((equipe.metriques?.soldeCDF || 0) < numericAmount) return { success: false, error: "Solde d'équipe insuffisant." };
 
     const isBeneficiaryMember = equipe.chefId.toString() === beneficiaryPlayerId
       || equipe.membres.some((member) => member.player.toString() === beneficiaryPlayerId && member.status);
@@ -401,7 +401,7 @@ export async function approvePurchaseOrderAction(orderId: string) {
     const order: any = (equipe.purchaseOrders as any).id(orderId);
     if (!order) return { success: false, error: "Bon introuvable." };
     if (order.status !== "pending" || order.creditedAt) return { success: false, error: "Ce bon a déjà été traité." };
-    if ((equipe.metriques?.soldeUsd || 0) < order.amount) return { success: false, error: "Solde d'équipe insuffisant." };
+    if ((equipe.metriques?.soldeCDF || 0) < order.amount) return { success: false, error: "Solde d'équipe insuffisant." };
 
     const isBeneficiaryMember = equipe.chefId.toString() === order.beneficiaryPlayerId.toString()
       || equipe.membres.some((member) => member.player.toString() === order.beneficiaryPlayerId.toString() && member.status);
@@ -409,7 +409,7 @@ export async function approvePurchaseOrderAction(orderId: string) {
 
     // TODO: créer une transaction interne dédiée si un modèle Transaction global est ajouté au projet.
     await User.findByIdAndUpdate(order.beneficiaryUserId, { $inc: { solde: order.amount } });
-    equipe.metriques.soldeUsd = Math.max(0, (equipe.metriques.soldeUsd || 0) - order.amount);
+    equipe.metriques.soldeCDF = Math.max(0, (equipe.metriques.soldeCDF || 0) - order.amount);
     order.status = "approved";
     order.approvedBy = currentPlayer._id;
     order.approvedAt = new Date();

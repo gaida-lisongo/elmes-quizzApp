@@ -12,6 +12,7 @@ import type { PipelineStage } from "mongoose";
 import type { IRetrait } from "@/lib/models/Player";
 import { sendMail } from "@/lib/utils/mail";
 import { recomputeCompetitionScholarship } from "@/lib/utils/scholarship.service";
+import { grantSessionGamesAfterEnrollmentValidation } from "@/lib/utils/enrollmentGames";
 
 export type ProductPayload = {
   id: string;
@@ -434,13 +435,15 @@ export async function verifyRechargeByOrderNumberAction(orderNumber: string) {
       };
     }
 
-    const newStatus = "SUCCES"; //statusCheck.status || "ECHEC";
+    const newStatus = statusCheck.status || "ECHEC";
     player.recharges[rechargeIndex].status = newStatus;
 
-    if (newStatus === "SUCCES") {
+    if (newStatus === "SUCCES" && !recharge.creditedAt) {
       const parties = getTrainingPassParties(recharge.amount, recharge.targetLevel);
       if (parties > 0) {
         player.parties += parties;
+        player.recharges[rechargeIndex].creditedParties = parties;
+        player.recharges[rechargeIndex].creditedAt = new Date();
       }
     }
 
@@ -520,16 +523,15 @@ export async function verifyPersistedPaymentAction(params: {
 
       if (statusCheck.status === "SUCCES") {
         enrollment.status = "CONFIRMED";
-        enrollment.totalGrantedGames = enrollment.totalGrantedGames || 250;
-        enrollment.usedGames = enrollment.usedGames || enrollment.parties || 0;
-        enrollment.remainingGames = Math.max(0, (enrollment.totalGrantedGames || 250) - (enrollment.usedGames || 0));
-        enrollment.maxParties = enrollment.totalGrantedGames || 250;
+        enrollment.paymentStatus = "PAID";
+        enrollment.validatedAt = enrollment.validatedAt || new Date();
         enrollment.transactions = (enrollment.transactions || []).map((transaction: any) => {
           if (transaction.orderNumber === enrollment.orderNumber) transaction.status = "PAID";
           return transaction;
         });
         await enrollment.save();
-        if (enrollment.sessionId) {
+        await grantSessionGamesAfterEnrollmentValidation(enrollment._id.toString());
+        if (enrollment.competitionId && enrollment.sessionId) {
           await recomputeCompetitionScholarship(enrollment.sessionId.toString());
         }
       }
@@ -567,9 +569,13 @@ export async function verifyPersistedPaymentAction(params: {
     player.recharges[rechargeIndex].status = statusCheck.status || "ECHEC";
 
     if (statusCheck.status === "SUCCES") {
-      if (resourceType === "TRAINING_PASS") {
+      if (resourceType === "TRAINING_PASS" && !recharge.creditedAt) {
         const parties = getTrainingPassParties(recharge.amount, recharge.targetLevel);
-        if (parties > 0) player.parties += parties;
+        if (parties > 0) {
+          player.parties += parties;
+          player.recharges[rechargeIndex].creditedParties = parties;
+          player.recharges[rechargeIndex].creditedAt = new Date();
+        }
       }
 
       if (resourceType === "EQUIPE") {
@@ -608,15 +614,14 @@ export async function verifyPersistedPaymentAction(params: {
         const enrollment = await Enrollement.findOne({ $or: enrollmentConditions });
         if (enrollment && enrollment.status !== "CONFIRMED") {
           enrollment.status = "CONFIRMED";
-          enrollment.totalGrantedGames = enrollment.totalGrantedGames || 250;
-          enrollment.usedGames = enrollment.usedGames || enrollment.parties || 0;
-          enrollment.remainingGames = Math.max(0, (enrollment.totalGrantedGames || 250) - (enrollment.usedGames || 0));
-          enrollment.maxParties = enrollment.totalGrantedGames || 250;
+          enrollment.paymentStatus = "PAID";
+          enrollment.validatedAt = enrollment.validatedAt || new Date();
           enrollment.transactions = (enrollment.transactions || []).map((transaction: any) => {
             if (transaction.orderNumber === providerOrderNumber) transaction.status = "PAID";
             return transaction;
           });
           await enrollment.save();
+          await grantSessionGamesAfterEnrollmentValidation(enrollment._id.toString());
           if (enrollment.sessionId) {
             await recomputeCompetitionScholarship(enrollment.sessionId.toString());
           }

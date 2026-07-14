@@ -59,10 +59,18 @@ export interface IEnrollement extends Document {
   code: string; // Code unique pour l'enrôlement;
   orderNumber: string;
   status: 'PENDING' | 'CONFIRMED' | 'CANCELLED';
+  paymentStatus?: 'PENDING' | 'PAID' | 'FAILED';
+  amountCDF?: number;
+  amountUSD?: number;
+  paidAmount?: number;
+  paidCurrency?: 'CDF' | 'USD';
   maxParties: number;
   totalGrantedGames: number;
   usedGames: number;
   remainingGames: number;
+  gamesGranted: boolean;
+  gamesGrantedAt?: Date;
+  validatedAt?: Date;
   points: number;
   parties: number; // Parties jouées par l'équipe dans cette compétition
   transactions: ITransaction[];
@@ -127,10 +135,18 @@ const EnrollementSchema: Schema<IEnrollement> = new Schema(
       enum: ['PENDING', 'CONFIRMED', 'CANCELLED'], 
       default: 'PENDING' 
     },
+    paymentStatus: { type: String, enum: ['PENDING', 'PAID', 'FAILED'], default: 'PENDING' },
+    amountCDF: { type: Number, default: 0 },
+    amountUSD: { type: Number, default: 0 },
+    paidAmount: { type: Number, default: 0 },
+    paidCurrency: { type: String, enum: ['CDF', 'USD'] },
     maxParties: { type: Number, default: 0 },
     totalGrantedGames: { type: Number, default: 0 },
     usedGames: { type: Number, default: 0 },
     remainingGames: { type: Number, default: 0 },
+    gamesGranted: { type: Boolean, default: false },
+    gamesGrantedAt: { type: Date },
+    validatedAt: { type: Date },
     points: { type: Number, default: 0},
     parties: { type: Number, default: 0 },
     transactions: [

@@ -93,11 +93,12 @@ export default function AdvancedParcours() {
               const session = enr.sessionId || {};
               const maxParties = enr.totalGrantedGames || enr.maxParties || 0;
               const remainingGames = enr.remainingGames ?? Math.max(0, maxParties - (enr.parties || 0));
+              const isValidated = enr.status === "CONFIRMED";
               return (
                 <button
                   key={enr._id}
                   onClick={() => handleStart(enr._id)}
-                  disabled={starting === enr._id || remainingGames <= 0 || session.status !== "ACTIVE"}
+                  disabled={starting === enr._id || !isValidated || remainingGames <= 0 || session.status !== "ACTIVE"}
                   className="group flex items-center gap-3 rounded-xl border border-stroke bg-white p-4 text-left transition-all hover:border-primary hover:shadow-md dark:border-strokedark dark:bg-blacksection disabled:opacity-50"
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-500/10">
@@ -107,6 +108,11 @@ export default function AdvancedParcours() {
                     <p className="font-medium text-black dark:text-white truncate">{parcours.designation || "Parcours"}</p>
                     <p className="text-xs text-waterloo">
                       {session.designation || "Session"} — {enr.parties || 0}/{maxParties} parties
+                    </p>
+                    <p className={`mt-1 text-xs font-medium ${isValidated ? "text-green-600" : "text-yellow-600"}`}>
+                      {isValidated
+                        ? "Votre enrôlement est validé. Vos parties de session sont disponibles."
+                        : "Votre enrôlement est en attente de validation. Les parties seront disponibles après confirmation."}
                     </p>
                   </div>
                   {starting === enr._id ? (

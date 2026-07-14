@@ -130,7 +130,7 @@ export default function PlayerRecentActivity() {
       <div className="space-y-4">
         <div className="rounded-lg border border-stroke bg-alabaster p-3 text-sm dark:border-strokedark dark:bg-strokedark">
           <p className="font-medium text-black dark:text-white">{team.designation}</p>
-          <p className="text-xs text-waterloo">Rôle : {team.role} - Solde équipe : {team.soldeUsd.toLocaleString("fr-FR")}</p>
+          <p className="text-xs text-waterloo">Rôle : {team.role} - Solde équipe : {team.soldeCDF.toLocaleString("fr-FR")} FC</p>
         </div>
 
         {team.isSecretary ? (
@@ -141,7 +141,7 @@ export default function PlayerRecentActivity() {
                 <option key={member._id} value={member._id}>{member.pseudo}</option>
               ))}
             </select>
-            <input value={amount} onChange={(event) => setAmount(event.target.value)} type="number" min="1" placeholder="Montant" className="w-full rounded-lg border border-stroke bg-transparent px-3 py-2 text-sm dark:border-strokedark" />
+            <input value={amount} onChange={(event) => setAmount(event.target.value)} type="number" min="1" max={team.soldeCDF || undefined} placeholder="Montant" className="w-full rounded-lg border border-stroke bg-transparent px-3 py-2 text-sm dark:border-strokedark" />
             <input value={reason} onChange={(event) => setReason(event.target.value)} placeholder="Motif" className="w-full rounded-lg border border-stroke bg-transparent px-3 py-2 text-sm dark:border-strokedark" />
             <button onClick={createOrder} disabled={busy === "create-order"} className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-xs font-medium text-white disabled:opacity-60">
               {busy === "create-order" ? <Loader2 className="h-3 w-3 animate-spin" /> : <Send className="h-3 w-3" />}

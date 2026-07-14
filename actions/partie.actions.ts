@@ -14,7 +14,7 @@ import { Competition, Parcours } from '@/lib/models/Competition';
 import { creditScholarshipForWonGame } from '@/lib/utils/scholarship.service';
 
 const { Enrollement } = EnrollementModule;
-const PARCOURS_GRANTED_GAMES = 180;
+const PARCOURS_GRANTED_GAMES = 250;
 const COMPETITION_GRANTED_GAMES = 250;
 
 // â”€â”€ CONSTANTES DE JEU â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -223,7 +223,7 @@ export async function startParcoursPartieAction(enrollmentId: string) {
       .lean();
     if (!enrollment) return { success: false, error: 'Inscription introuvable' };
     if (enrollment.status !== 'CONFIRMED') {
-      return { success: false, error: 'Cet enrollement n’est pas confirmé.' };
+      return { success: false, error: 'Vous devez finaliser votre enrôlement avant de jouer cette session.' };
     }
     if (enrollment.playerId?.toString() !== player._id.toString()) {
       return { success: false, error: 'Cet enrollement ne vous appartient pas.' };
@@ -248,7 +248,7 @@ export async function startParcoursPartieAction(enrollmentId: string) {
       : Math.max(0, totalGrantedGames - usedGames);
 
     if (remainingGames <= 0) {
-      return { success: false, error: 'Vous avez atteint le nombre maximum de parties pour ce parcours.' };
+      return { success: false, error: 'Les parties de cette session sont épuisées.' };
     }
 
     // VÃ©rifier partie en cours
@@ -289,7 +289,7 @@ export async function startParcoursPartieAction(enrollmentId: string) {
       { new: true },
     ).lean();
     if (!consumedEnrollment) {
-      return { success: false, error: 'Aucune partie restante sur cet enrollement.' };
+      return { success: false, error: 'Les parties de cette session sont épuisées.' };
     }
 
     const partie = await Partie.create({
@@ -348,7 +348,7 @@ export async function startMatchPartieAction(enrollmentId: string) {
       .lean();
     if (!enrollment) return { success: false, error: 'Inscription introuvable' };
     if (enrollment.status !== 'CONFIRMED') {
-      return { success: false, error: 'Cet enrollement n\'est pas confirmé.' };
+      return { success: false, error: 'Vous devez finaliser votre enrôlement avant de jouer cette session.' };
     }
 
     const sessionDoc = enrollment.sessionId as any;
@@ -392,7 +392,7 @@ export async function startMatchPartieAction(enrollmentId: string) {
       : Math.max(0, totalGrantedGames - usedGames);
 
     if (remainingGames <= 0) {
-      return { success: false, error: 'Votre equipe a atteint le nombre maximum de parties pour cet enrollement.' };
+      return { success: false, error: 'Les parties de cette session sont épuisées.' };
     }
 
     // VÃ©rifier partie en cours
@@ -432,7 +432,7 @@ export async function startMatchPartieAction(enrollmentId: string) {
       { new: true },
     ).lean();
     if (!enrollementData) {
-      return { success: false, error: 'Aucune partie restante sur cet enrollement.' };
+      return { success: false, error: 'Les parties de cette session sont épuisées.' };
     }
 
     const partie = await Partie.create({

@@ -14,11 +14,15 @@ import { initiatePaymentAction, checkPaymentStatusAction, type PaymentMethod } f
 import { checkStatus } from "@/lib/utils/payment.service";
 import { distributeParcoursSessionRewards } from "@/lib/utils/enrollmentRewards";
 import { recomputeCompetitionScholarship } from "@/lib/utils/scholarship.service";
+import {
+  SESSION_GAMES_PER_VALIDATED_ENROLLMENT,
+  grantSessionGamesAfterEnrollmentValidation,
+} from "@/lib/utils/enrollmentGames";
 import { randomUUID } from "crypto";
 
 const { Enrollement, Session } = EnrollementModule;
-const PARCOURS_GRANTED_GAMES = 180;
-const COMPETITION_GRANTED_GAMES = 250;
+const PARCOURS_GRANTED_GAMES = SESSION_GAMES_PER_VALIDATED_ENROLLMENT;
+const COMPETITION_GRANTED_GAMES = SESSION_GAMES_PER_VALIDATED_ENROLLMENT;
 
 const normalizeSessionStatus = (status: string) => status.toUpperCase();
 
@@ -174,19 +178,17 @@ async function sendEnrollmentEmail({
 
 async function applyEnrollmentConfirmation(enrollment: PopulatedEnrollment, orderNumber: string, sendEmail = true) {
   const isCompetition = Boolean(enrollment.competitionId);
-  const grantedGames = isCompetition ? COMPETITION_GRANTED_GAMES : PARCOURS_GRANTED_GAMES;
   const sessionId = getRefId(enrollment.sessionId);
 
   enrollment.status = 'CONFIRMED';
-  enrollment.totalGrantedGames = enrollment.totalGrantedGames || grantedGames;
-  enrollment.usedGames = enrollment.usedGames || enrollment.parties || 0;
-  enrollment.remainingGames = Math.max(0, (enrollment.totalGrantedGames || grantedGames) - (enrollment.usedGames || 0));
-  enrollment.maxParties = enrollment.totalGrantedGames || grantedGames;
+  enrollment.paymentStatus = 'PAID';
+  enrollment.validatedAt = enrollment.validatedAt || new Date();
   enrollment.transactions = (enrollment.transactions || []).map((transaction: any) => {
     if (!orderNumber || transaction.orderNumber === orderNumber) transaction.status = 'PAID';
     return transaction;
   });
   await enrollment.save();
+  await grantSessionGamesAfterEnrollmentValidation(enrollment._id.toString());
 
   if (isCompetition && sessionId) {
     try {
@@ -470,24 +472,19 @@ export async function enrollToParcoursAction(
       sessionId: new mongoose.Types.ObjectId(sessionId),
       code,
       orderNumber,
-      status: 'CONFIRMED',
-      maxParties: PARCOURS_GRANTED_GAMES,
-      totalGrantedGames: PARCOURS_GRANTED_GAMES,
+      status: 'PENDING',
+      paymentStatus: 'PENDING',
+      maxParties: 0,
+      totalGrantedGames: 0,
       usedGames: 0,
-      remainingGames: PARCOURS_GRANTED_GAMES,
+      remainingGames: 0,
       points: 0,
       parties: 0,
       transactions: [],
     });
 
-    // TODO: brancher ici le paiement d'enrollement parcours si le produit de paiement Advanced est activé.
-    await sendEnrollmentEmail({
-      email: (player.userId as any)?.email,
-      sessionName: (sessionDoc as any).designation,
-      resourceName: (parcours as any).designation,
-      orderNumber,
-      ressources: (parcours as any).ressources,
-    });
+    // TODO: brancher ici le paiement d'enrollement parcours si le produit de paiement Advanced est active.
+    // Le gestionnaire peut valider manuellement l'enrollement via le workflow existant.
 
     return {
       success: true,
@@ -610,10 +607,15 @@ export async function enrollToCompetitionAction(
       code,
       orderNumber,
       status: 'PENDING',
-      maxParties: COMPETITION_GRANTED_GAMES,
-      totalGrantedGames: COMPETITION_GRANTED_GAMES,
+      paymentStatus: 'PENDING',
+      amountCDF: enrollmentAmountCDF,
+      amountUSD: 5,
+      paidAmount: payment.amount,
+      paidCurrency: payment.currency,
+      maxParties: 0,
+      totalGrantedGames: 0,
       usedGames: 0,
-      remainingGames: COMPETITION_GRANTED_GAMES,
+      remainingGames: 0,
       points: 0,
       parties: 0,
       transactions: [{
@@ -673,16 +675,19 @@ export async function confirmCompetitionEnrollmentPaymentAction(
     //   return { success: false, error: status.error || 'Le paiement n\'est pas encore confirmé.' };
     // }
 
+    if (!status.success || status.status !== 'SUCCES') {
+      return { success: false, error: status.error || 'Le paiement n est pas encore confirme.' };
+    }
+
     enrollment.status = 'CONFIRMED';
-    enrollment.totalGrantedGames = enrollment.totalGrantedGames || COMPETITION_GRANTED_GAMES;
-    enrollment.usedGames = enrollment.usedGames || enrollment.parties || 0;
-    enrollment.remainingGames = Math.max(0, (enrollment.totalGrantedGames || COMPETITION_GRANTED_GAMES) - (enrollment.usedGames || 0));
-    enrollment.maxParties = enrollment.totalGrantedGames || COMPETITION_GRANTED_GAMES;
+    enrollment.paymentStatus = 'PAID';
+    enrollment.validatedAt = enrollment.validatedAt || new Date();
     enrollment.transactions = (enrollment.transactions || []).map((transaction: any) => {
       if (transaction.orderNumber === orderNumber) transaction.status = 'PAID';
       return transaction;
     });
     await enrollment.save();
+    await grantSessionGamesAfterEnrollmentValidation(enrollment._id.toString());
 
     // Recalculer la Bourse après confirmation de paiement
     if (sessionId) {
