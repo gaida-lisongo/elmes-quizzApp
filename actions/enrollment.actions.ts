@@ -23,6 +23,8 @@ import { randomUUID } from "crypto";
 const { Enrollement, Session } = EnrollementModule;
 const PARCOURS_GRANTED_GAMES = SESSION_GAMES_PER_VALIDATED_ENROLLMENT;
 const COMPETITION_GRANTED_GAMES = SESSION_GAMES_PER_VALIDATED_ENROLLMENT;
+const DEFAULT_PARCOURS_ENROLLMENT_FEE_CDF = 15000;
+const DEFAULT_PARCOURS_ENROLLMENT_FEE_USD = 5;
 
 const normalizeSessionStatus = (status: string) => status.toUpperCase();
 
@@ -459,10 +461,7 @@ export async function enrollToParcoursAction(
     if (!payment?.phone?.trim()) {
       return { success: false, error: 'Le numéro Mobile Money est requis' };
     }
-    const enrollmentAmountCDF = Number((sessionDoc as any).enrollmentFeeCDF || 0);
-    if (enrollmentAmountCDF <= 0) {
-      return { success: false, error: 'Montant d enrollement parcours non configure pour cette session.' };
-    }
+    const enrollmentAmountCDF = Number((sessionDoc as any).enrollmentFeeCDF || 0) || DEFAULT_PARCOURS_ENROLLMENT_FEE_CDF;
 
     // Vérifier que le joueur n'est pas déjà inscrit à ce parcours pour cette session
     const existing = await Enrollement.findOne({
@@ -487,6 +486,7 @@ export async function enrollToParcoursAction(
         id: parcoursId,
         name: 'Enrollement parcours',
         amountCDF: enrollmentAmountCDF,
+        amountUSD: DEFAULT_PARCOURS_ENROLLMENT_FEE_USD,
         type: 'PARCOURS',
         metadata: { parcoursId, sessionId },
       },
@@ -507,6 +507,7 @@ export async function enrollToParcoursAction(
       status: 'PENDING',
       paymentStatus: 'PENDING',
       amountCDF: enrollmentAmountCDF,
+      amountUSD: DEFAULT_PARCOURS_ENROLLMENT_FEE_USD,
       paidAmount: payment.amount,
       paidCurrency: payment.currency,
       maxParties: 0,

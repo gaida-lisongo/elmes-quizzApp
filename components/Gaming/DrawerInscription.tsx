@@ -29,6 +29,7 @@ interface DrawerInscriptionProps {
 type Step = "sessions" | "confirm" | "payment" | "processing" | "success" | "error";
 
 const TAUX = Number(process.env.NEXT_PUBLIC_TAUX) || 2850;
+const DEFAULT_PARCOURS_ENROLLMENT_FEE_CDF = 15000;
 
 export default function DrawerInscription({
   open,
@@ -98,7 +99,11 @@ export default function DrawerInscription({
     setStep("payment");
   };
 
-  const getEnrollmentAmountCDF = () => Number(selectedSession?.enrollmentFeeCDF || amount || 0);
+  const getEnrollmentAmountCDF = () => {
+    const configuredAmount = Number(selectedSession?.enrollmentFeeCDF || amount || 0);
+    if (configuredAmount > 0) return configuredAmount;
+    return type === "parcours" ? DEFAULT_PARCOURS_ENROLLMENT_FEE_CDF : 0;
+  };
 
   const handleConfirm = async () => {
     if (!selectedSession) return;
@@ -113,9 +118,7 @@ export default function DrawerInscription({
     }
     const enrollmentAmountCDF = getEnrollmentAmountCDF();
     if (enrollmentAmountCDF <= 0) {
-      setErrorMsg(type === "parcours"
-        ? "Montant d'enrolement parcours non configure pour cette session."
-        : "Montant d'enrolement indisponible.");
+      setErrorMsg("Montant d'enrolement indisponible.");
       return;
     }
 
