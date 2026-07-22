@@ -459,8 +459,9 @@ export async function enrollToParcoursAction(
     if (!payment?.phone?.trim()) {
       return { success: false, error: 'Le numéro Mobile Money est requis' };
     }
-    const enrollmentAmountCDF = Number((sessionDoc as any).enrollmentFeeCDF || 0) <= 0 ? Number((sessionDoc as any).enrollmentFeeCDF || 0): 15000;
-    if (enrollmentAmountCDF <= 0) {
+    const enrollmentAmountCDF = Number((sessionDoc as any).enrollmentFeeCDF || 0) <= 0 ? Number((sessionDoc as any).enrollmentFeeCDF || 0) : 15000;
+    console.log("Enrollement : ", enrollmentAmountCDF)
+    if (enrollmentAmountCDF) {
       return { success: false, error: 'Montant d enrollement parcours non configure pour cette session.' };
     }
 
