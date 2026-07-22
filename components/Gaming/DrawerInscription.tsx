@@ -102,7 +102,7 @@ export default function DrawerInscription({
   const getEnrollmentAmountCDF = () => {
     const configuredAmount = Number(selectedSession?.enrollmentFeeCDF || amount || 0);
     if (configuredAmount > 0) return configuredAmount;
-    return type === "parcours" ? DEFAULT_PARCOURS_ENROLLMENT_FEE_CDF : 0;
+    return type === "parcours" ? DEFAULT_PARCOURS_ENROLLMENT_FEE_CDF : 15000;
   };
 
   const handleConfirm = async () => {
