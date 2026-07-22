@@ -137,6 +137,8 @@ export default function DrawerInscription({
       ? await enrollToParcoursAction(targetId, selectedSession._id, payload)
       : await enrollToCompetitionAction(targetId, selectedSession._id, payload);
 
+    console.log("Res from provider : ", res)
+
     if (!res.success || !res.enrollment || !res.orderNumber) {
       setErrorMsg(res.error || "Echec de l'initiation du paiement");
       setStep("error");
