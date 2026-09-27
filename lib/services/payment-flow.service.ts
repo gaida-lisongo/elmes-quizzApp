@@ -9,6 +9,7 @@ import EnrollementModule from '@/lib/models/Enrollement';
 import { initiateCollection, initialCard, checkStatus } from '@/lib/utils/payment.service';
 import { sendMail } from '@/lib/utils/mail';
 import { escapeHtml } from '@/lib/utils/security';
+import { publicAppUrl } from '@/lib/utils/appUrl';
 import { tx, withTransaction } from '@/lib/utils/transaction';
 import { getTrainingPass, type Currency, type ProductType } from '@/lib/payments/pricing';
 import { cancelPendingEnrollment, confirmEnrollment } from '@/lib/services/enrollment.service';
@@ -40,9 +41,7 @@ const buildVerificationUrl = (orderNumber: string) => {
   const baseUrl =
     process.env.PAYMENT_VERIFICATION_URL ||
     process.env.NEXT_PUBLIC_PAYMENT_VERIFICATION_URL ||
-    process.env.NEXT_PUBLIC_APP_URL ||
-    process.env.APP_URL ||
-    'https://elmes-quiz.com';
+    publicAppUrl();
   const search = new URLSearchParams({ type: 'email', orderNumber });
   return `${baseUrl.replace(/\/$/, '')}/payment/verification?${search.toString()}`;
 };

@@ -1,3 +1,5 @@
+import { paymentCallbackUrl, publicAppUrl } from "./appUrl";
+
 export interface FlexPayProps {
     type: 'card' | 'mobile' | 'whithdraw',
     phone: string,
@@ -32,8 +34,6 @@ const OUT = {
     balance: process.env.FLEX_BALANCE || ''
 }
 
-const SERVER = process.env.HOST || 'http://localhost:3000';
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || SERVER;
 
 class FlexPay {
     orderNumber: string = "";
@@ -68,7 +68,7 @@ class FlexPay {
                 Object.entries(verificationParams).forEach(([key, value]) => {
                     if (value !== undefined && value !== "") params.set(key, String(value));
                 });
-                return `${APP_URL.replace(/\/$/, "")}/payment/verification?${params.toString()}`;
+                return `${publicAppUrl()}/payment/verification?${params.toString()}`;
             };
 
             // Nettoyer le token (enlever "Bearer " s'il est déjà présent car on l'ajoute dans le header)
@@ -83,7 +83,7 @@ class FlexPay {
                 currency: currency.toUpperCase(),
                 language: "fr",
                 description: `[ELMES-QUIZ] Phone: ${phone}`,
-                callback_url: `${SERVER.replace(/\/$/, "")}/api/flexpay`,
+                callback_url: paymentCallbackUrl(),
                 approve_url: buildReturnUrl("approve"),
                 cancel_url: buildReturnUrl("cancel"),
                 decline_url: buildReturnUrl("decline"),
