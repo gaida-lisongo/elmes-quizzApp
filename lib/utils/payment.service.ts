@@ -69,8 +69,20 @@ async function request<T>(
     body: body ? JSON.stringify(body) : undefined,
   });
 
-  const {data} = await res.json();
-  return { ok: res.ok, data, status: res.status };
+  // Réponse non JSON ou sans champ `data` : on renvoie un objet vide plutôt que de planter
+  // sur `data.code` avec un message incompréhensible pour le joueur.
+  const text = await res.text();
+  let data: any = {};
+  try {
+    const json = JSON.parse(text);
+    data = json?.data ?? json ?? {};
+  } catch {
+    data = {};
+  }
+  if (!res.ok || !text) {
+    console.warn('[payment] passerelle', JSON.stringify({ method, path: path.split('?')[0], http: res.status, body: text.slice(0, 300).replace(/\+?\d{9,15}/g, '***') }));
+  }
+  return { ok: res.ok, data: data as T, status: res.status };
 }
 
 // ── Méthodes publiques ─────────────────────────────────────────────
@@ -137,8 +149,8 @@ export async function initiateCollection(
     }
 
     return {
-      success: status == 0,
-      error: data.message || data.error || 'Échec de l’initiation de la collecte.',
+      success: false,
+      error: data.message || data.error || `Échec de l’initiation de la collecte (HTTP ${status}).`,
       raw: data,
     };
   } catch (error: any) {

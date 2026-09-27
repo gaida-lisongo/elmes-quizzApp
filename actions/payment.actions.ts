@@ -143,6 +143,26 @@ export async function initiatePaymentAction(input: {
   method?: PaymentMethod;
   beneficiaryUserId?: string;
 }) {
+  const result = await initiatePaymentInner(input);
+  if (!result.success) {
+    // Diagnostic sans donnée personnelle : le motif du refus n'apparaissait qu'à l'écran.
+    console.info('[payment] refused ' + JSON.stringify({
+      productId: input?.productId,
+      currency: input?.currency,
+      method: input?.method,
+      error: 'error' in result ? result.error : undefined,
+    }));
+  }
+  return result;
+}
+
+async function initiatePaymentInner(input: {
+  productId: string;
+  currency: 'CDF' | 'USD';
+  phone: string;
+  method?: PaymentMethod;
+  beneficiaryUserId?: string;
+}) {
   try {
     const guard = await guardPlayer();
     if (!guard.ok) return { success: false, error: guard.error };
@@ -196,6 +216,7 @@ export async function initiatePaymentAction(input: {
         : 'Paiement initié. En attente de confirmation.',
     };
   } catch (error: any) {
+    console.error('[initiatePaymentAction]', error?.message);
     return { success: false, error: error.message || 'Erreur serveur.' };
   }
 }
@@ -225,6 +246,7 @@ export async function verifyMyPaymentAction(orderNumber: string): Promise<Verify
     if (!guard.ok) return { success: false, error: guard.error };
     return await verifyAndApplyPayment(String(orderNumber || ''), { ownerPlayerId: guard.player._id.toString() });
   } catch (error: any) {
+    console.error("[verifyMyPaymentAction]", error?.message);
     return { success: false, error: error.message || "Erreur de vérification." };
   }
 }
@@ -241,6 +263,7 @@ export async function verifyMyRechargeAction(rechargeIndex: number): Promise<Ver
       ownerPlayerId: guard.player._id.toString(),
     });
   } catch (error: any) {
+    console.error("[verifyMyRechargeAction]", error?.message);
     return { success: false, error: error.message || "Erreur de vérification." };
   }
 }

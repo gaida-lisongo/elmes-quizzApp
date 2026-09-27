@@ -94,6 +94,15 @@ export async function notifyPaymentByEmail(params: {
 //  INITIATION
 // ═══════════════════════════════════════════════════════════════════
 
+/**
+ * Journal de diagnostic des paiements, sans donnée personnelle (ni téléphone, ni e-mail) :
+ * uniquement références, montants, statuts et messages du fournisseur.
+ */
+function logPayment(event: string, fields: Record<string, unknown>) {
+  const safe = JSON.stringify(fields).replace(/\+?\d{9,15}/g, (m) => (/^\+?(243|0)\d{8,9}$/.test(m) ? '***' : m));
+  console.info(`[payment] ${event} ${safe}`);
+}
+
 export interface StartPaymentParams {
   payer: IPlayer;                   // Joueur de la session (jamais un identifiant client)
   productType: ProductType;
@@ -135,6 +144,18 @@ export async function startPayment(params: StartPaymentParams): Promise<
     reference,
     currency: params.currency,
     verificationParams: { reference },
+  });
+
+  logPayment('start', {
+    reference,
+    productType: params.productType,
+    method: params.method,
+    currency: params.currency,
+    amount: params.amount,
+    ok: collection.success && Boolean(collection.orderNumber),
+    orderNumber: collection.orderNumber,
+    providerCode: collection.raw?.code,
+    providerMessage: collection.error || collection.message,
   });
 
   if (!collection.success || !collection.orderNumber) {
@@ -318,6 +339,18 @@ export async function verifyAndApplyPayment(
   }
 
   const statusCheck = await checkStatus(orderNumber);
+  logPayment('verify', {
+    orderNumber,
+    reference: recharge.reference,
+    productType: recharge.productType,
+    expected: `${recharge.amount} ${recharge.currency || ''}`.trim(),
+    ok: statusCheck.success,
+    providerStatus: statusCheck.status,
+    providerCode: statusCheck.raw?.code,
+    providerAmount: statusCheck.raw?.amount,
+    providerCurrency: statusCheck.raw?.currency,
+    providerMessage: statusCheck.error || statusCheck.message,
+  });
   if (!statusCheck.success) {
     return { success: false, ...base, error: statusCheck.error || 'Impossible de vérifier le statut.' };
   }
@@ -366,6 +399,7 @@ export async function verifyAndApplyPayment(
   let effect: { enrollmentId?: string; enrollmentConfirmed?: boolean } = {};
   let applied = false;
   await withTransaction(async (dbSession) => {
+    try {
     // Verrou : EN_ATTENTE → SUCCES + appliedAt, posé une seule fois.
     const locked = await Player.findOneAndUpdate(
       { _id: player._id, recharges: { $elemMatch: { _id: recharge._id, status: 'EN_ATTENTE', appliedAt: { $exists: false } } } },
@@ -381,7 +415,12 @@ export async function verifyAndApplyPayment(
     applied = Boolean(locked);
     if (!locked) return;
     effect = await applyPaymentEffect(locked, recharge, dbSession);
+    } catch (error: any) {
+      logPayment('apply-error', { orderNumber, productType: recharge.productType, error: error?.message });
+      throw error;
+    }
   });
+  logPayment('applied', { orderNumber, productType: recharge.productType, applied, enrollmentConfirmed: effect.enrollmentConfirmed });
 
   if (!applied) {
     return { success: true, status: 'SUCCES', ...base, message: 'Transaction déjà validée.' };
