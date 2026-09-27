@@ -22,6 +22,7 @@ import {
 import { getAvailableCategoriesAction } from "@/actions/partie.actions";
 import type { PartieActiveData } from "@/actions/partie.actions";
 import GamePlayer from "@/components/Gaming/GamePlayer";
+import { useResumePartie } from "@/components/Gaming/useResumePartie";
 import ShareLink from "@/components/Common/ShareLink";
 
 export default function Parrainages() {
@@ -54,6 +55,7 @@ export default function Parrainages() {
   useEffect(() => {
     load();
   }, []);
+  useResumePartie(setPartie);
 
   useEffect(() => {
     if (!referralUrl) return;
@@ -67,6 +69,7 @@ export default function Parrainages() {
     try {
       const res = await startAffiliateTrainingPartieAction(categorieId);
       if (res.success && res.data) {
+        if (res.resumed) toast("Partie en cours reprise.");
         setPartie(res.data);
       } else {
         toast.error(res.error || "Impossible de lancer la partie d'affiliation.");
@@ -85,7 +88,10 @@ export default function Parrainages() {
         onFinish={async () => {
           await load();
         }}
-        onCancel={() => setPartie(null)}
+        onCancel={() => {
+          setPartie(null);
+          load();
+        }}
       />
     );
   }

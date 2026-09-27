@@ -5,9 +5,10 @@ import { motion } from "framer-motion";
 import {
   Route, Clock, Loader2, Play, ChevronRight, AlertCircle, BookOpen,
 } from "lucide-react";
-import { getMyParcoursEnrollmentsAction, startParcoursPartieAction, getPartieEnCoursAction } from "@/actions/partie.actions";
+import { getMyParcoursEnrollmentsAction, startParcoursPartieAction } from "@/actions/partie.actions";
 import type { PartieActiveData } from "@/actions/partie.actions";
 import GamePlayer from "@/components/Gaming/GamePlayer";
+import { useResumePartie } from "@/components/Gaming/useResumePartie";
 import toast from "react-hot-toast";
 
 export default function AdvancedParcours() {
@@ -24,12 +25,14 @@ export default function AdvancedParcours() {
   };
 
   useEffect(() => { load(); }, []);
+  useResumePartie(setPartie);
 
   const handleStart = async (enrollmentId: string) => {
     setStarting(enrollmentId);
     try {
       const res = await startParcoursPartieAction(enrollmentId);
       if (res.success && res.data) {
+        if (res.resumed) toast("Partie en cours reprise.");
         setPartie(res.data);
       } else {
         toast.error(res.error || "Impossible de démarrer.");
@@ -46,7 +49,10 @@ export default function AdvancedParcours() {
       <GamePlayer
         partie={partie}
         onFinish={() => {}}
-        onCancel={() => setPartie(null)}
+        onCancel={() => {
+          setPartie(null);
+          load(); // Mettre à jour les parties restantes
+        }}
       />
     );
   }

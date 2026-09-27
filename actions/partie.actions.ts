@@ -4,55 +4,73 @@ import connectToDb from '@/lib/utils/db';
 import { getSession } from '@/lib/utils/auth';
 import mongoose from 'mongoose';
 import Player from '@/lib/models/Player';
-import User from '@/lib/models/User';
 import Partie from '@/lib/models/Partie';
-import Quiz from '@/lib/models/Quiz';
 import Categorie from '@/lib/models/Categorie';
 import EnrollementModule from '@/lib/models/Enrollement';
 import Equipe from '@/lib/models/Equipe';
-import { Competition, Parcours } from '@/lib/models/Competition';
-import { creditScholarshipForWonGame } from '@/lib/utils/scholarship.service';
+import { guardPlayer } from '@/lib/utils/guards';
+import { isValidObjectId } from '@/lib/utils/security';
+import { tx } from '@/lib/utils/transaction';
+import { grantSessionGamesAfterEnrollmentValidation } from '@/lib/utils/enrollmentGames';
+import {
+  GameError,
+  NB_QUESTIONS,
+  createPartie,
+  finalizePartie,
+  resumeOrExpirePartie,
+  submitReponse,
+  tirerQuestions,
+  type SubmitResult,
+} from '@/lib/services/partie.service';
+
+export type { QuestionJeu, PartieActiveData, PartieResultat } from '@/lib/services/partie.service';
 
 const { Enrollement } = EnrollementModule;
-const PARCOURS_GRANTED_GAMES = 250;
-const COMPETITION_GRANTED_GAMES = 250;
+const SESSION_GRANTED_GAMES = 250;
 
-// â”€â”€ CONSTANTES DE JEU â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+const gameError = (error: any) =>
+  ({ success: false as const, error: error instanceof GameError ? error.message : error?.message || 'Erreur de jeu.' });
 
-const NB_QUESTIONS: Record<string, number> = {
-  STANDALONE: 3,
-  ADVANCED: 3,
-  VIP: 5,
+/**
+ * Avant tout lancement : une partie encore valide est reprise, une partie expirée est clôturée
+ * en échec (D-01). Renvoie les données de reprise, ou null si l'on peut lancer une nouvelle partie.
+ */
+async function resumeIfPossible(playerId: mongoose.Types.ObjectId) {
+  const { resumed } = await resumeOrExpirePartie(playerId);
+  return resumed;
+}
+
+/**
+ * Enrôlement historique sans compteur remainingGames : normalisation avant le décompte atomique.
+ */
+async function normalizeEnrollmentCounters(enrollment: any) {
+  if (enrollment.status === 'CONFIRMED' && !enrollment.gamesGranted && !enrollment.gamesGrantedAt) {
+    await grantSessionGamesAfterEnrollmentValidation(enrollment._id.toString());
+  }
+  const total = enrollment.totalGrantedGames || enrollment.maxParties || SESSION_GRANTED_GAMES;
+  const used = enrollment.usedGames ?? enrollment.parties ?? 0;
+  await Enrollement.updateOne(
+    { _id: enrollment._id, remainingGames: { $exists: false } },
+    { $set: { totalGrantedGames: total, maxParties: total, remainingGames: Math.max(0, total - used) } },
+  );
+}
+
+/** Décompte atomique d'une partie de session (Parcours ou Match VIP). */
+const consumeEnrollmentGame = (enrollmentId: string) => async (dbSession: mongoose.ClientSession | null) => {
+  const updated = await Enrollement.findOneAndUpdate(
+    { _id: enrollmentId, status: 'CONFIRMED', remainingGames: { $gt: 0 } },
+    { $inc: { remainingGames: -1, usedGames: 1, parties: 1 } },
+    { new: true, ...tx(dbSession) },
+  ).lean();
+  return updated ? updated.remainingGames || 0 : null;
 };
-const TEMPS_PAR_QUESTION = 15_000; // 15 secondes
-const POINTS_PAR_BONNE_REPONSE = 1;
-const LEVEL_THRESHOLDS = [25, 60, 150]; // seuils Ã— 3 pts
 
-export interface QuestionJeu {
-  _id: string;
-  enonce: string;
-  assertions: string[];
-  type: 'QCM' | 'VRAI_FAUX';
-  level: number;
-}
-
-export interface PartieActiveData {
-  partieId: string;
-  questions: QuestionJeu[];
-  questionIndex: number;
-  notes: number;
-  playerId: string;
-  credits?: number;
-  parties?: number;
-  mode: string;
-}
-
-// â”€â”€ CATÃ‰GORIES DISPONIBLES (STANDALONE) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── CATÉGORIES DISPONIBLES (STANDALONE) ────────────────────────────
 
 export async function getAvailableCategoriesAction() {
   try {
     const session = await getSession();
-    if (!session) return { success: false, error: 'Non connectÃ©' };
+    if (!session) return { success: false, error: 'Non connecté' };
     await connectToDb();
     const categories = await Categorie.find({ status: true })
       .sort({ designation: 1 })
@@ -63,12 +81,12 @@ export async function getAvailableCategoriesAction() {
   }
 }
 
-// â”€â”€ ENROLLEMENTS PARCOURS (ADVANCED) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── ENROLLEMENTS PARCOURS (ADVANCED) ───────────────────────────────
 
 export async function getMyParcoursEnrollmentsAction() {
   try {
     const session = await getSession();
-    if (!session) return { success: false, error: 'Non connectÃ©' };
+    if (!session) return { success: false, error: 'Non connecté' };
     await connectToDb();
     const player = await Player.findOne({ userId: session.userId }).lean();
     if (!player) return { success: false, error: 'Profil joueur introuvable' };
@@ -89,18 +107,18 @@ export async function getMyParcoursEnrollmentsAction() {
   }
 }
 
-// â”€â”€ ENROLLEMENTS Ã‰QUIPE / COMPÃ‰TITION (VIP) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── ENROLLEMENTS ÉQUIPE / COMPÉTITION (VIP) ────────────────────────
 
 export async function getMyEquipeEnrollmentsAction() {
   try {
     const session = await getSession();
-    if (!session) return { success: false, error: 'Non connectÃ©' };
+    if (!session) return { success: false, error: 'Non connecté' };
     await connectToDb();
     const player = await Player.findOne({ userId: session.userId }).lean();
     if (!player) return { success: false, error: 'Profil joueur introuvable' };
 
     const equipe = await Equipe.findOne({ membres: { $elemMatch: { player: player._id, status: true } } }).lean();
-    if (!equipe) return { success: false, error: 'Aucune Ã©quipe trouvÃ©e' };
+    if (!equipe) return { success: false, error: 'Aucune équipe trouvée' };
 
     const enrollments = await Enrollement.find({
       equipeId: equipe._id,
@@ -118,90 +136,50 @@ export async function getMyEquipeEnrollmentsAction() {
   }
 }
 
-// â”€â”€ LANCER UNE PARTIE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── LANCER UNE PARTIE ──────────────────────────────────────────────
 
 /**
- * Tire au hasard N questions depuis les catÃ©gories cibles, filtrÃ©es par level du joueur.
- */
-async function tirerQuestions(
-  categorieIds: string[],
-  playerLevel: number,
-  nb: number,
-): Promise<any[]> {
-  // Ne tirer que les questions du niveau exact du joueur
-  const quizLevel = Math.max(0, Math.min(3, playerLevel));
-
-  const objectIds = categorieIds.map(id => new mongoose.Types.ObjectId(id));
-
-  // AgrÃ©gation MongoDB : Ã©chantillonnage alÃ©atoire performant via $sample
-  const quizzes = await Quiz.aggregate([
-    { $match: { categorieId: { $in: objectIds }, level: quizLevel, status: true } },
-    { $sample: { size: nb } },
-  ]);
-
-  return quizzes;
-}
-
-/**
- * Lancer une partie STANDALONE (par catÃ©gorie)
+ * Lancer une partie STANDALONE (par catégorie).
+ * La partie est décomptée au lancement (JEU-08) ; un abandon ne la rend pas.
  */
 export async function startStandalonePartieAction(categorieId: string) {
   try {
-    const session = await getSession();
-    if (!session) return { success: false, error: 'Non connectÃ©' };
-    await connectToDb();
+    const guard = await guardPlayer();
+    if (!guard.ok) return { success: false, error: guard.error };
+    const player = guard.player;
 
-    const player = await Player.findOne({ userId: session.userId }).lean();
-    if (!player) return { success: false, error: 'Profil joueur introuvable' };
-    if (player.parties !== undefined && player.parties <= 0) {
+    const resumed = await resumeIfPossible(player._id as mongoose.Types.ObjectId);
+    if (resumed) return { success: true, resumed: true, data: resumed };
+
+    if (!isValidObjectId(categorieId)) return { success: false, error: 'Catégorie invalide.' };
+    // JEU-16 : la catégorie doit exister et être active.
+    const categorie = await Categorie.exists({ _id: categorieId, status: true });
+    if (!categorie) return { success: false, error: 'Catégorie introuvable ou inactive.' };
+
+    if ((player.parties || 0) <= 0) {
       return { success: false, error: 'Vous n\'avez plus de parties disponibles. Veuillez recharger.' };
     }
 
-    // VÃ©rifier qu'il n'y a pas de partie EN_COURS
-    const existing = await Partie.findOne({ playerId: player._id, status: 'EN_COURS' }).lean();
-    if (existing) {
-      return { success: false, error: 'Vous avez dÃ©jÃ  une partie en cours. Terminez-la avant d\'en commencer une nouvelle.' };
-    }
-
     const questions = await tirerQuestions([categorieId], player.level || 0, NB_QUESTIONS.STANDALONE);
-    if (questions.length === 0) {
-      return { success: false, error: 'Aucune question disponible pour cette catÃ©gorie Ã  votre niveau.' };
-    }
-
-    const partie = await Partie.create({
-      playerId: player._id,
-      categorieId: new mongoose.Types.ObjectId(categorieId),
+    const data = await createPartie({
+      player,
       mode: 'STANDALONE',
       gameSource: 'standard',
-      levelPlayed: player.level || 0,
-      reponses: [],
-      note: 0,
-      status: 'EN_COURS',
-      questionExpiresAt: new Date(Date.now() + TEMPS_PAR_QUESTION),
+      categorieIds: [categorieId],
+      questions,
+      consume: async (dbSession) => {
+        const updated = await Player.findOneAndUpdate(
+          { _id: player._id, parties: { $gt: 0 } },
+          { $inc: { parties: -1 } },
+          { new: true, ...tx(dbSession) },
+        ).lean();
+        return updated ? updated.parties || 0 : null;
+      },
     });
 
-    const questionJeu: QuestionJeu[] = questions.map((q: any) => ({
-      _id: q._id.toString(),
-      enonce: q.enonce,
-      assertions: q.assertions,
-      type: q.type,
-      level: q.level,
-    }));
-
-    return {
-      success: true,
-      data: {
-        partieId: partie._id.toString(),
-        questions: questionJeu,
-        questionIndex: 0,
-        notes: 0,
-        playerId: player._id.toString(),
-        parties: player.parties || 0,
-        mode: 'STANDALONE',
-      } as PartieActiveData,
-    };
+    return { success: true, resumed: false, data };
   } catch (error: any) {
-    return { success: false, error: error.message };
+    return gameError(error);
   }
 }
 
@@ -210,13 +188,14 @@ export async function startStandalonePartieAction(categorieId: string) {
  */
 export async function startParcoursPartieAction(enrollmentId: string) {
   try {
-    const session = await getSession();
-    if (!session) return { success: false, error: 'Non connectÃ©' };
-    await connectToDb();
+    const guard = await guardPlayer();
+    if (!guard.ok) return { success: false, error: guard.error };
+    const player = guard.player;
 
-    const player = await Player.findOne({ userId: session.userId }).lean();
-    if (!player) return { success: false, error: 'Profil joueur introuvable' };
+    const resumed = await resumeIfPossible(player._id as mongoose.Types.ObjectId);
+    if (resumed) return { success: true, resumed: true, data: resumed };
 
+    if (!isValidObjectId(enrollmentId)) return { success: false, error: 'Inscription introuvable' };
     const enrollment = await Enrollement.findById(enrollmentId)
       .populate('parcoursId')
       .populate('sessionId', 'status type')
@@ -226,7 +205,7 @@ export async function startParcoursPartieAction(enrollmentId: string) {
       return { success: false, error: 'Vous devez finaliser votre enrôlement avant de jouer cette session.' };
     }
     if (enrollment.playerId?.toString() !== player._id.toString()) {
-      return { success: false, error: 'Cet enrollement ne vous appartient pas.' };
+      return { success: false, error: 'Cet enrôlement ne vous appartient pas.' };
     }
 
     const sessionDoc = enrollment.sessionId as any;
@@ -240,87 +219,24 @@ export async function startParcoursPartieAction(enrollmentId: string) {
     const parcours = enrollment.parcoursId as any;
     if (!parcours) return { success: false, error: 'Parcours introuvable' };
 
-    // VÃ©rifier le nombre max de parties
-    const totalGrantedGames = enrollment.totalGrantedGames || enrollment.maxParties || PARCOURS_GRANTED_GAMES;
-    const usedGames = enrollment.usedGames ?? enrollment.parties ?? 0;
-    const remainingGames = enrollment.remainingGames && enrollment.remainingGames > 0
-      ? enrollment.remainingGames
-      : Math.max(0, totalGrantedGames - usedGames);
+    await normalizeEnrollmentCounters(enrollment);
 
-    if (remainingGames <= 0) {
-      return { success: false, error: 'Les parties de cette session sont épuisées.' };
-    }
-
-    const questions = await tirerQuestions(
-      parcours.categories.map((c: any) => c.toString()),
-      player.level || 0,
-      NB_QUESTIONS.ADVANCED,
-    );
-    if (questions.length === 0) {
-      return { success: false, error: 'Aucune question disponible pour ce parcours Ã  votre niveau.' };
-    }
-
-    // IncrÃ©menter le compteur de parties de l'enrollment
-    const consumedEnrollment = await Enrollement.findOneAndUpdate(
-      {
-        _id: enrollmentId,
-        status: 'CONFIRMED',
-        $or: [
-          { remainingGames: { $gt: 0 } },
-          { totalGrantedGames: { $exists: false } },
-          { totalGrantedGames: 0 },
-          { $expr: { $lt: ['$usedGames', '$totalGrantedGames'] } },
-        ],
-      },
-      {
-        $set: {
-          totalGrantedGames,
-          maxParties: totalGrantedGames,
-          remainingGames: Math.max(0, remainingGames - 1),
-        },
-        $inc: { parties: 1, usedGames: 1 },
-      },
-      { new: true },
-    ).lean();
-    if (!consumedEnrollment) {
-      return { success: false, error: 'Les parties de cette session sont épuisées.' };
-    }
-
-    const partie = await Partie.create({
-      playerId: player._id,
-      enrollmentId: enrollment._id,
-      categorieId: parcours.categories[0], // premiÃ¨re catÃ©gorie du parcours
+    // JEU-13 : toutes les catégories du parcours sont enregistrées dans la partie.
+    const categorieIds = (parcours.categories || []).map((c: any) => c.toString());
+    const questions = await tirerQuestions(categorieIds, player.level || 0, NB_QUESTIONS.ADVANCED);
+    const data = await createPartie({
+      player,
       mode: 'ADVANCED',
       gameSource: 'parcours',
-      levelPlayed: player.level || 0,
-      reponses: [],
-      note: 0,
-      status: 'EN_COURS',
-      questionExpiresAt: new Date(Date.now() + TEMPS_PAR_QUESTION),
+      categorieIds,
+      enrollmentId,
+      questions,
+      consume: consumeEnrollmentGame(enrollmentId),
     });
 
-    const questionJeu: QuestionJeu[] = questions.map((q: any) => ({
-      _id: q._id.toString(),
-      enonce: q.enonce,
-      assertions: q.assertions,
-      type: q.type,
-      level: q.level,
-    }));
-
-    return {
-      success: true,
-      data: {
-        partieId: partie._id.toString(),
-        questions: questionJeu,
-        questionIndex: 0,
-        notes: 0,
-        playerId: player._id.toString(),
-        mode: 'ADVANCED',
-        parties: consumedEnrollment.remainingGames,
-      } as PartieActiveData,
-    };
+    return { success: true, resumed: false, data };
   } catch (error: any) {
-    return { success: false, error: error.message };
+    return gameError(error);
   }
 }
 
@@ -329,13 +245,14 @@ export async function startParcoursPartieAction(enrollmentId: string) {
  */
 export async function startMatchPartieAction(enrollmentId: string) {
   try {
-    const session = await getSession();
-    if (!session) return { success: false, error: 'Non connectÃ©' };
-    await connectToDb();
+    const guard = await guardPlayer();
+    if (!guard.ok) return { success: false, error: guard.error };
+    const player = guard.player;
 
-    const player = await Player.findOne({ userId: session.userId }).lean();
-    if (!player) return { success: false, error: 'Profil joueur introuvable' };
+    const resumed = await resumeIfPossible(player._id as mongoose.Types.ObjectId);
+    if (resumed) return { success: true, resumed: true, data: resumed };
 
+    if (!isValidObjectId(enrollmentId)) return { success: false, error: 'Inscription introuvable' };
     const enrollment = await Enrollement.findById(enrollmentId)
       .populate('competitionId')
       .populate('sessionId', 'status type scholarshipRemainingAmountCDF')
@@ -346,11 +263,9 @@ export async function startMatchPartieAction(enrollmentId: string) {
     }
 
     const sessionDoc = enrollment.sessionId as any;
+    const inactiveMessage = 'La session est inactive : la Bourse d\'Excellence Académique disponible a été entièrement distribuée ou suspendue par la gestion.';
     if (sessionDoc?.status === 'INACTIVE') {
-      return {
-        success: false,
-        error: 'La session est inactive : la Bourse d\'Excellence AcadÃ©mique disponible a Ã©tÃ© entiÃ¨rement distribuÃ©e ou suspendue par la gestion.',
-      };
+      return { success: false, error: inactiveMessage };
     }
     if (!sessionDoc || sessionDoc.status !== 'COMPLETED') {
       return { success: false, error: 'Les matchs ne sont pas ouverts pour cette session.' };
@@ -358,14 +273,8 @@ export async function startMatchPartieAction(enrollmentId: string) {
     if (sessionDoc.type && sessionDoc.type !== 'competition') {
       return { success: false, error: 'Session de compétition invalide.' };
     }
-
-    // Vérifier la Bourse d'Excellence Académique restante
-    const scholarshipRemaining = sessionDoc.scholarshipRemainingAmountCDF ?? 0;
-    if (scholarshipRemaining <= 0) {
-      return {
-        success: false,
-        error: 'La session est inactive : la Bourse d\'Excellence Académique disponible a été entièrement distribuée ou suspendue par la gestion.',
-      };
+    if ((sessionDoc.scholarshipRemainingAmountCDF ?? 0) <= 0) {
+      return { success: false, error: inactiveMessage };
     }
 
     const equipe = await Equipe.findOne({
@@ -373,245 +282,107 @@ export async function startMatchPartieAction(enrollmentId: string) {
       membres: { $elemMatch: { player: player._id, status: true } },
     }).lean();
     if (!equipe) {
-      return { success: false, error: 'Vous devez ÃƒÂªtre membre actif de cette ÃƒÂ©quipe pour jouer ce match.' };
+      return { success: false, error: 'Vous devez être membre actif de cette équipe pour jouer ce match.' };
     }
 
     const competition = enrollment.competitionId as any;
-    if (!competition) return { success: false, error: 'CompÃ©tition introuvable' };
+    if (!competition) return { success: false, error: 'Compétition introuvable' };
 
-    const totalGrantedGames = enrollment.totalGrantedGames || enrollment.maxParties || COMPETITION_GRANTED_GAMES;
-    const usedGames = enrollment.usedGames ?? enrollment.parties ?? 0;
-    const remainingGames = enrollment.remainingGames && enrollment.remainingGames > 0
-      ? enrollment.remainingGames
-      : Math.max(0, totalGrantedGames - usedGames);
+    await normalizeEnrollmentCounters(enrollment);
 
-    if (remainingGames <= 0) {
-      return { success: false, error: 'Les parties de cette session sont épuisées.' };
-    }
-
-    const questions = await tirerQuestions(
-      competition.categories.map((c: any) => c.toString()),
-      player.level || 0,
-      NB_QUESTIONS.VIP,
-    );
-    if (questions.length === 0) {
-      return { success: false, error: 'Aucune question disponible pour cette compÃ©tition Ã  votre niveau.' };
-    }
-
-    const enrollementData = await Enrollement.findOneAndUpdate(
-      {
-        _id: enrollmentId,
-        status: 'CONFIRMED',
-        $or: [
-          { remainingGames: { $gt: 0 } },
-          { totalGrantedGames: { $exists: false } },
-          { totalGrantedGames: 0 },
-          { $expr: { $lt: ['$usedGames', '$totalGrantedGames'] } },
-        ],
-      },
-      {
-        $set: {
-          totalGrantedGames,
-          maxParties: totalGrantedGames,
-          remainingGames: Math.max(0, remainingGames - 1),
-        },
-        $inc: { parties: 1, usedGames: 1 },
-      },
-      { new: true },
-    ).lean();
-    if (!enrollementData) {
-      return { success: false, error: 'Les parties de cette session sont épuisées.' };
-    }
-
-    const partie = await Partie.create({
-      playerId: player._id,
-      enrollmentId: enrollment._id,
-      categorieId: competition.categories[0],
+    const categorieIds = (competition.categories || []).map((c: any) => c.toString());
+    const questions = await tirerQuestions(categorieIds, player.level || 0, NB_QUESTIONS.VIP);
+    const data = await createPartie({
+      player,
       mode: 'VIP',
       gameSource: 'competition',
-      levelPlayed: player.level || 0,
-      reponses: [],
-      note: 0,
-      status: 'EN_COURS',
-      questionExpiresAt: new Date(Date.now() + TEMPS_PAR_QUESTION),
+      categorieIds,
+      enrollmentId,
+      questions,
+      consume: consumeEnrollmentGame(enrollmentId),
     });
 
-    const questionJeu: QuestionJeu[] = questions.map((q: any) => ({
-      _id: q._id.toString(),
-      enonce: q.enonce,
-      assertions: q.assertions,
-      type: q.type,
-      level: q.level,
-    }));
-
-    return {
-      success: true,
-      data: {
-        partieId: partie._id.toString(),
-        questions: questionJeu,
-        questionIndex: 0,
-        notes: 0,
-        playerId: player._id.toString(),
-        mode: 'VIP',
-        parties : enrollementData.remainingGames
-      } as PartieActiveData,
-    };
+    return { success: true, resumed: false, data };
   } catch (error: any) {
-    return { success: false, error: error.message };
+    return gameError(error);
   }
 }
 
-// â”€â”€ SOUMETTRE UNE RÃ‰PONSE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
-export async function submitReponseAction(
-  partieId: string,
-  quizId: string,
-  reponseDonnee: string,
-) {
-  try {
-    await connectToDb();
-    const quiz = await Quiz.findById(quizId).lean();
-    if (!quiz) return { success: false, error: 'Question introuvable' };
-
-    const estCorrecte = quiz.reponse.trim().toLowerCase() === reponseDonnee.trim().toLowerCase();
-
-    await Partie.findByIdAndUpdate(partieId, {
-      $push: { reponses: { quizId, reponseDonnee, estCorrecte } },
-      $inc: { note: estCorrecte ? POINTS_PAR_BONNE_REPONSE : 0 },
-      questionExpiresAt: new Date(Date.now() + TEMPS_PAR_QUESTION),
-    });
-
-    return {
-      success: true,
-      estCorrecte,
-      correction: estCorrecte ? undefined : quiz.reponse,
-    };
-  } catch (error: any) {
-    return { success: false, error: error.message };
-  }
-}
-
-// â”€â”€ TERMINER UNE PARTIE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── SOUMETTRE UNE RÉPONSE ──────────────────────────────────────────
 
 /**
- * Termine la partie et met Ã  jour les mÃ©triques du joueur.
- * GÃ¨re la progression de niveau.
+ * Réponse à la question courante. Le client n'envoie plus l'identifiant de la question :
+ * le serveur répond à quizIds[currentIndex], contrôle le délai et clôt la partie lui-même.
  */
-export async function terminerPartieAction(partieId: string, credits: number) {
+export async function submitReponseAction(
+  partieId: string,
+  reponseDonnee: string,
+): Promise<{ success: boolean; error?: string } & Partial<SubmitResult>> {
   try {
-    await connectToDb();
-    const partie = await Partie.findById(partieId).lean();
+    const guard = await guardPlayer();
+    if (!guard.ok) return { success: false, error: guard.error };
+
+    const result = await submitReponse(guard.player._id as mongoose.Types.ObjectId, partieId, reponseDonnee);
+    return { success: true, ...result };
+  } catch (error: any) {
+    return gameError(error);
+  }
+}
+
+// ── TERMINER / ABANDONNER UNE PARTIE ───────────────────────────────
+
+/**
+ * Adaptateur de compatibilité : clôt la partie du joueur connecté via finalizePartie (idempotent).
+ * Une partie encore en cours est clôturée comme abandonnée (jamais gagnée sans réponses).
+ */
+export async function terminerPartieAction(partieId: string) {
+  try {
+    const guard = await guardPlayer();
+    if (!guard.ok) return { success: false, error: guard.error };
+    if (!isValidObjectId(partieId)) return { success: false, error: 'Partie introuvable' };
+
+    const partie = await Partie.findOne({ _id: partieId, playerId: guard.player._id }).select('_id endReason').lean();
     if (!partie) return { success: false, error: 'Partie introuvable' };
 
-    const player = await Player.findById(partie.playerId);
-    if (!player) return { success: false, error: 'Joueur introuvable' };
-
-    // Marquer comme terminÃ©e
-    await Partie.findByIdAndUpdate(partieId, { status: 'TERMINE' });
-
-    // Mettre Ã  jour les mÃ©triques du joueur
-    const note = partie.note || 0;
-    const allCorrect = partie.reponses?.every((r: any) => r.estCorrecte) ?? false;
-
-    // Mise Ã  jour metrics
-    const partiesJouees = (player.metrics?.partiesJouees || 0) + 1;
-    const partiesGagnees = (player.metrics?.partiesGagnees || 0) + (allCorrect ? 1 : 0);
-    const totalScore = (player.metrics?.totalScore || 0) + note;
-
-    // VÃ©rifier le niveau atteint
-    let newLevel = player.level || 0;
-    for (let i = LEVEL_THRESHOLDS.length - 1; i >= 0; i--) {
-      if (totalScore >= LEVEL_THRESHOLDS[i] * 3 && i + 1 > newLevel) {
-        newLevel = i + 1;
-      }
-    }
-    if (newLevel > 3) newLevel = 3;
-
-    // DÃ©duire une partie du solde (sauf si partiesInfinity)
-    const partiesRestantes = partie.mode === 'STANDALONE'
-      ? Math.max(0, (player.parties || 0) - 1)
-      : (player.parties || 0);
-
-    await Player.findByIdAndUpdate(player._id, {
-      $set: {
-        level: newLevel,
-        'metrics.totalScore': totalScore,
-        'metrics.partiesJouees': partiesJouees,
-        'metrics.partiesGagnees': partiesGagnees,
-        parties: partiesRestantes,
-      },
-    });
-
-    let equipeCredit = 0;
-    if (partie.enrollmentId) {
-      const enrollment = await Enrollement.findByIdAndUpdate(
-        partie.enrollmentId,
-        { $inc: { points: note } },
-        { new: true },
-      ).lean();
-
-      if (partie.mode === 'VIP' && allCorrect && enrollment?.equipeId) {
-        await Equipe.findByIdAndUpdate(enrollment.equipeId, {
-          $inc: {
-            'metriques.matchsWin': 1,
-          },
-        });
-
-        // Créditer la Bourse d'Excellence Académique pour cette partie gagnée
-        try {
-          const scholarshipRes = await creditScholarshipForWonGame(partieId, partie.enrollmentId.toString());
-          if (scholarshipRes.success && scholarshipRes.rewardCDF) {
-            equipeCredit = scholarshipRes.rewardCDF;
-          }
-        } catch (error) {
-          console.error('[terminerPartieAction] Erreur crédit Bourse:', error);
-        }
-      }
-    }
-
-    return {
-      success: true,
-      resultat: {
-        note,
-        totalScore,
-        allCorrect,
-        newLevel,
-        niveauMonte: newLevel > (player.level || 0),
-        partiesRestantes,
-        equipeCredit,
-      },
-    };
+    const resultat = await finalizePartie(partieId, (partie.endReason || 'ABANDONED') as any);
+    return { success: true, resultat };
   } catch (error: any) {
-    return { success: false, error: error.message };
+    return gameError(error);
   }
 }
 
-// â”€â”€ VÃ‰RIFIER PARTIE EN COURS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+/**
+ * Abandon volontaire : la partie est clôturée en échec (ABANDONED), déjà décomptée.
+ */
+export async function abandonnerPartieAction() {
+  try {
+    const guard = await guardPlayer();
+    if (!guard.ok) return { success: false, error: guard.error };
 
+    const partie = await Partie.findOne({ playerId: guard.player._id, status: 'EN_COURS' }).select('_id').lean();
+    if (!partie) return { success: true, resultat: null };
+
+    const resultat = await finalizePartie(partie._id.toString(), 'ABANDONED');
+    return { success: true, resultat };
+  } catch (error: any) {
+    return gameError(error);
+  }
+}
+
+// ── VÉRIFIER PARTIE EN COURS ───────────────────────────────────────
+
+/**
+ * Partie en cours du joueur connecté : reprise si la question courante n'est pas expirée,
+ * sinon clôture en échec (EXPIRED) et `data: null`.
+ */
 export async function getPartieEnCoursAction() {
   try {
-    const session = await getSession();
-    if (!session) return { success: false, error: 'Non connectÃ©' };
-    await connectToDb();
-    const player = await Player.findOne({ userId: session.userId }).lean();
-    if (!player) return { success: false, error: 'Profil joueur introuvable' };
+    const guard = await guardPlayer();
+    if (!guard.ok) return { success: false, error: guard.error, data: null };
 
-    const partie = await Partie.findOne({ playerId: player._id, status: 'EN_COURS' })
-      .populate('categorieId', 'designation')
-      .lean();
-
-    if (!partie) return { success: false, data: null };
-
-    return {
-      success: true,
-      data: {
-        partieId: partie._id.toString(),
-        categorie: (partie.categorieId as any)?.designation || 'CatÃ©gorie',
-        status: 'EN_COURS',
-      },
-    };
+    const { resumed, expired } = await resumeOrExpirePartie(guard.player._id as mongoose.Types.ObjectId);
+    return { success: true, data: resumed, expired: expired || null };
   } catch (error: any) {
-    return { success: false, error: error.message };
+    return { ...gameError(error), data: null };
   }
 }
-
