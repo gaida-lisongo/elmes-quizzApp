@@ -163,8 +163,8 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
 
   // ── Validation étape 3 ───────────────────────────────────────
   const validateStep3 = (): boolean => {
-    if (!password || password.length < 4) {
-      toast.error("Le mot de passe doit contenir au moins 4 caractères.");
+    if (!password || password.length < 8) {
+      toast.error("Le mot de passe doit contenir au moins 8 caractères.");
       return false;
     }
     if (password !== confirmPassword) {
@@ -575,7 +575,7 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
                           <Lock className="h-4 w-4 text-primary" /> Mot de passe
                         </label>
                         <div className="relative">
-                          <input type={showPassword ? "text" : "password"} placeholder="Minimum 4 caractères"
+                          <input type={showPassword ? "text" : "password"} placeholder="Minimum 8 caractères"
                             value={password} onChange={(e) => setPassword(e.target.value)} required
                             className="w-full rounded-xl border border-stroke bg-transparent px-5 py-3 pr-12 text-black outline-hidden transition-all duration-200 focus:border-primary focus:shadow-[0_0_0_3px_rgba(0,107,255,0.1)] dark:border-strokedark dark:text-white dark:focus:border-primary" />
                           <button type="button" onClick={() => setShowPassword(!showPassword)}
@@ -607,7 +607,7 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
                           ))}
                         </div>
                         <p className="text-xs text-waterloo">
-                          {password.length === 0 ? "" : password.length < 4 ? "Trop court" : password.length < 8 ? "Moyen" : "Fort"}
+                          {password.length === 0 ? "" : password.length < 8 ? "Trop court" : password.length < 12 ? "Moyen" : "Fort"}
                         </p>
                       </div>
                     )}

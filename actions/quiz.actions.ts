@@ -2,6 +2,8 @@
 
 import connectToDb from "@/lib/utils/db";
 import { getSession } from "@/lib/utils/auth";
+import { guardStaff } from "@/lib/utils/guards";
+import { isValidObjectId } from "@/lib/utils/security";
 import Categorie from "@/lib/models/Categorie";
 import Quiz from "@/lib/models/Quiz";
 
@@ -92,8 +94,12 @@ export async function deleteCategorieAction(id: string) {
    QUIZ – CRUD
    ================================================================ */
 
+// Réservé au staff : ces lectures renvoient le champ `reponse` (EX-SEC-04).
 export async function getQuizzesByCategorieAction(categorieId: string) {
   try {
+    const guard = await guardStaff();
+    if (!guard.ok) return { success: false, error: guard.error };
+    if (!isValidObjectId(categorieId)) return { success: false, error: 'Catégorie invalide' };
     await connectToDb();
     const quizzes = await Quiz.find({ categorieId })
       .sort({ level: 1, createdAt: -1 })
@@ -106,6 +112,9 @@ export async function getQuizzesByCategorieAction(categorieId: string) {
 
 export async function getQuizByIdAction(id: string) {
   try {
+    const guard = await guardStaff();
+    if (!guard.ok) return { success: false, error: guard.error };
+    if (!isValidObjectId(id)) return { success: false, error: 'Question introuvable' };
     await connectToDb();
     const quiz = await Quiz.findById(id).populate('categorieId', 'designation').lean();
     if (!quiz) return { success: false, error: 'Question introuvable' };

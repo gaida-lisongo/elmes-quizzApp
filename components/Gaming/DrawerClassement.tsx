@@ -12,7 +12,7 @@ interface ClassementItem {
   meilleurScore: number;
   pseudo: string;
   photo?: string;
-  telephone: string;
+  telephone?: string;
   type: string;
   level: number;
 }

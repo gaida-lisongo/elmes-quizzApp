@@ -1,6 +1,7 @@
 "use server";
 
 import { v2 as cloudinary } from "cloudinary";
+import { guardSession } from "@/lib/utils/guards";
 
 // Configuration de Cloudinary avec les variables d'environnement
 cloudinary.config({
@@ -27,6 +28,9 @@ export async function uploadProfileImageToCloudinary(
   formData: FormData
 ): Promise<{ success: true; url: string; publicId: string } | { success: false; error: string }> {
   try {
+    const guard = await guardSession();
+    if (!guard.ok) return { success: false, error: guard.error };
+
     const file = formData.get("file") as File;
 
     if (!file || file.size === 0) {

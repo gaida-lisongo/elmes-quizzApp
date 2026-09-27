@@ -1,12 +1,41 @@
 export const dynamic = "force-dynamic";
 
 import { mailService } from "@/lib/utils/mail";
+import { consumeRateLimit } from "@/lib/utils/rateLimit";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { name, email, subject, phone, message } = body;
+    // Limitation de débit : 5 envois par heure et par adresse IP (EX-SEC-06).
+    const ip =
+      request.headers.get("x-real-ip") ||
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      "unknown";
+    const rate = await consumeRateLimit(`contact:${ip}`, 5, 60 * 60 * 1000);
+    if (!rate.allowed) {
+      return NextResponse.json(
+        { error: "Too many messages. Please try again later." },
+        { status: 429 }
+      );
+    }
+
+    const body = await request.json().catch(() => null);
+    if (!body || typeof body !== "object") {
+      return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+    }
+
+    // Champ piège : invisible pour un humain, rempli par les robots.
+    if (typeof body.website === "string" && body.website.trim()) {
+      return NextResponse.json({ success: true });
+    }
+
+    const field = (value: unknown, max: number) =>
+      typeof value === "string" ? value.trim().slice(0, max) : "";
+    const name = field(body.name, 100);
+    const email = field(body.email, 200);
+    const subject = field(body.subject, 200);
+    const phone = field(body.phone, 30);
+    const message = field(body.message, 5000);
 
     // Validation
     if (!name || !email || !message) {

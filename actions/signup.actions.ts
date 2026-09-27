@@ -6,15 +6,16 @@ import mongoose from 'mongoose';
 import connectToDb from '../lib/utils/db';
 import User from '../lib/models/User';
 import Player from '../lib/models/Player';
-import { hashPassword } from './user.actions';
+import { hashPassword, validateNewPassword } from '../lib/utils/password';
 import { generateReferralCode } from '../lib/utils/referral';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'genie_quiz_secret_key_ultra_secure_2026';
-const COOKIE_NAME = 'genie_session';
+import { getJwtSecret, setSessionCookie } from '../lib/utils/auth';
 
 export type PlayerType = 'STANDALONE' | 'ADVANCED' | 'VIP';
 
 export type Statut = 'ELEVE' | 'ETUDIANT' | 'INDEPENDANT';
+
+const VALID_PLAYER_TYPES: PlayerType[] = ['STANDALONE', 'ADVANCED', 'VIP'];
+const VALID_STATUTS: Statut[] = ['ELEVE', 'ETUDIANT', 'INDEPENDANT'];
 
 export interface SignupStep1Data {
   pseudo: string;
@@ -38,6 +39,27 @@ async function generateUniqueReferralCode(pseudo: string) {
   return code;
 }
 
+// Cookie d'inscription chiffré en AES-256-GCM : IV aléatoire et tag d'authentification (EX-SEC-05).
+function signupKey() {
+  return crypto.createHash('sha256').update(`signup-cookie:${getJwtSecret()}`).digest();
+}
+
+function encryptSignupPayload(payload: string) {
+  const iv = crypto.randomBytes(12);
+  const cipher = crypto.createCipheriv('aes-256-gcm', signupKey(), iv);
+  const encrypted = Buffer.concat([cipher.update(payload, 'utf8'), cipher.final()]);
+  const tag = cipher.getAuthTag();
+  return [iv, tag, encrypted].map((part) => part.toString('base64url')).join('.');
+}
+
+function decryptSignupPayload(value: string) {
+  const [ivPart, tagPart, dataPart] = value.split('.');
+  if (!ivPart || !tagPart || !dataPart) throw new Error('Cookie d’inscription invalide.');
+  const decipher = crypto.createDecipheriv('aes-256-gcm', signupKey(), Buffer.from(ivPart, 'base64url'));
+  decipher.setAuthTag(Buffer.from(tagPart, 'base64url'));
+  return Buffer.concat([decipher.update(Buffer.from(dataPart, 'base64url')), decipher.final()]).toString('utf8');
+}
+
 /**
  * Parse l'URL pour extraire le type de joueur et le code d'affiliation.
  * Exemples :
@@ -47,11 +69,9 @@ async function generateUniqueReferralCode(pseudo: string) {
  */
 export async function parseSignupUrl(hash: string, searchParams: string) {
   // Le hash vient sous la forme "#standalone" ou "#vip?code=AB-1234"
-  const cleanHash = hash.replace(/^#/, '');
+  const cleanHash = String(hash || '').replace(/^#/, '');
   const [typePart, queryString] = cleanHash.split('?');
 
-  // Valider le type de joueur
-  const validTypes: PlayerType[] = ['STANDALONE', 'ADVANCED', 'VIP'];
   const typeMap: Record<string, PlayerType> = {
     standalone: 'STANDALONE',
     advanced: 'ADVANCED',
@@ -83,14 +103,14 @@ export async function parseSignupUrl(hash: string, searchParams: string) {
 }
 
 /**
- * Valide le code d'affiliation et retourne le Player parrain si valide
+ * Valide le code d'affiliation. Ne renvoie qu'un booléen (aucune donnée du parrain).
  */
 export async function validateReferralCode(code: string) {
   try {
     await connectToDb();
-    const parrain = await Player.findOne({ code: code.trim().toUpperCase() });
-    if (!parrain) return { success: false, error: 'Code d\'affiliation invalide.' };
-    return { success: true, data: JSON.parse(JSON.stringify(parrain)) };
+    const exists = await Player.exists({ code: String(code || '').trim().toUpperCase() });
+    if (!exists) return { success: false, error: 'Code d\'affiliation invalide.' };
+    return { success: true };
   } catch (error: any) {
     return { success: false, error: error.message };
   }
@@ -103,11 +123,21 @@ export async function validateReferralCode(code: string) {
 export async function createPlayerStep1(data: SignupStep1Data) {
   await connectToDb();
 
-  const { pseudo, telephone, email, statut, school, playerType, referralCode } = data;
+  const pseudo = typeof data?.pseudo === 'string' ? data.pseudo : '';
+  const telephone = typeof data?.telephone === 'string' ? data.telephone : '';
+  const email = typeof data?.email === 'string' ? data.email : '';
+  const school = typeof data?.school === 'string' ? data.school : '';
+  const referralCode = typeof data?.referralCode === 'string' ? data.referralCode : undefined;
 
-  if (!pseudo?.trim() || !telephone?.trim() || !email?.trim() || !school?.trim()) {
+  if (!pseudo.trim() || !telephone.trim() || !email.trim() || !school.trim()) {
     return { success: false, error: 'Tous les champs sont obligatoires.' };
   }
+
+  // Le type de joueur et le statut sont validés côté serveur (jamais pris tels quels du client).
+  if (!VALID_PLAYER_TYPES.includes(data.playerType)) {
+    return { success: false, error: 'Type de joueur invalide.' };
+  }
+  const statut: Statut = VALID_STATUTS.includes(data.statut) ? data.statut : 'ELEVE';
 
   try {
     const normalizedEmail = email.trim().toLowerCase();
@@ -123,7 +153,7 @@ export async function createPlayerStep1(data: SignupStep1Data) {
     if (referralCode) {
       const parrain = await Player.findOne({ code: referralCode.trim().toUpperCase() });
       if (parrain) {
-        referedBy = parrain._id;
+        referedBy = parrain._id as mongoose.Types.ObjectId;
       } else {
         return { success: false, error: "Code d'affiliation invalide." };
       }
@@ -135,24 +165,15 @@ export async function createPlayerStep1(data: SignupStep1Data) {
       pseudo: pseudo.trim(),
       telephone: telephone.trim(),
       email: normalizedEmail,
-      statut: statut || 'ELEVE',
+      statut,
       school: school.trim(),
-      playerType,
+      playerType: data.playerType,
       referedBy: referedBy?.toString() || null,
       tempToken,
       expiresAt: Date.now() + 30 * 60 * 1000, // 30 minutes
     });
 
-    // Chiffrer le payload pour le cookie temporaire
-    const cipher = crypto.createCipheriv(
-      'aes-256-cbc',
-      crypto.createHash('sha256').update(JWT_SECRET).digest('hex').slice(0, 32),
-      crypto.createHash('md5').update(JWT_SECRET).digest('hex').slice(0, 16)
-    );
-    let encrypted = cipher.update(tempPayload, 'utf8', 'hex');
-    encrypted += cipher.final('hex');
-
-    (await cookies()).set('signup_temp', encrypted, {
+    (await cookies()).set('signup_temp', encryptSignupPayload(tempPayload), {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
@@ -176,10 +197,10 @@ export async function createPlayerStep1(data: SignupStep1Data) {
 export async function createPlayerStep2(data: SignupStep2Data) {
   await connectToDb();
 
-  const { password } = data;
-
-  if (!password || password.length < 4) {
-    return { success: false, error: 'Le mot de passe doit contenir au moins 4 caractères.' };
+  const password = data?.password;
+  const passwordError = validateNewPassword(password);
+  if (passwordError) {
+    return { success: false, error: passwordError };
   }
 
   try {
@@ -189,16 +210,13 @@ export async function createPlayerStep2(data: SignupStep2Data) {
       return { success: false, error: 'Session expirée. Veuillez recommencer l\'inscription.' };
     }
 
-    // Déchiffrer le payload
-    const decipher = crypto.createDecipheriv(
-      'aes-256-cbc',
-      crypto.createHash('sha256').update(JWT_SECRET).digest('hex').slice(0, 32),
-      crypto.createHash('md5').update(JWT_SECRET).digest('hex').slice(0, 16)
-    );
-    let decrypted = decipher.update(encryptedCookie, 'hex', 'utf8');
-    decrypted += decipher.final('utf8');
-
-    const tempData = JSON.parse(decrypted);
+    let tempData: any;
+    try {
+      tempData = JSON.parse(decryptSignupPayload(encryptedCookie));
+    } catch {
+      (await cookies()).set('signup_temp', '', { httpOnly: true, expires: new Date(0), path: '/' });
+      return { success: false, error: 'Session expirée. Veuillez recommencer l\'inscription.' };
+    }
 
     // Vérifier l'expiration
     if (Date.now() > tempData.expiresAt) {
@@ -206,7 +224,8 @@ export async function createPlayerStep2(data: SignupStep2Data) {
       return { success: false, error: 'Session expirée. Veuillez recommencer l\'inscription.' };
     }
 
-    const { pseudo, telephone, email, statut, school, playerType, referedBy } = tempData;
+    const { pseudo, telephone, email, statut, school, referedBy } = tempData;
+    const playerType: PlayerType = VALID_PLAYER_TYPES.includes(tempData.playerType) ? tempData.playerType : 'STANDALONE';
 
     // Vérifier que l'utilisateur n'a pas été créé entre-temps
     const existingUser = await User.findOne({ $or: [{ telephone }, { email }] });
@@ -232,7 +251,7 @@ export async function createPlayerStep2(data: SignupStep2Data) {
     const referralCode = await generateUniqueReferralCode(pseudo);
 
     // Convertir referedBy en ObjectId si c'est une string (vient du cookie)
-    const referedByObjectId = referedBy && referedBy !== 'null'
+    const referedByObjectId = referedBy && referedBy !== 'null' && mongoose.Types.ObjectId.isValid(referedBy)
       ? new mongoose.Types.ObjectId(referedBy)
       : undefined;
 
@@ -242,7 +261,7 @@ export async function createPlayerStep2(data: SignupStep2Data) {
       referedBy: referedByObjectId,
       level: 0,
       type: playerType,
-      statut: statut || 'ELEVE',
+      statut: VALID_STATUTS.includes(statut) ? statut : 'ELEVE',
       school,
       parties: 10, // 10 parties de bienvenue
       code: referralCode,
@@ -255,14 +274,7 @@ export async function createPlayerStep2(data: SignupStep2Data) {
     (await cookies()).set('signup_temp', '', { httpOnly: true, expires: new Date(0), path: '/' });
 
     // Générer le token de session et connecter l'utilisateur
-    const token = generateToken(newUser._id.toString(), newUser.role);
-    (await cookies()).set(COOKIE_NAME, token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60,
-      path: '/',
-    });
+    await setSessionCookie(newUser._id.toString(), newUser.role, newUser.sessionVersion ?? 0);
 
     // Cookie non-httpOnly pour que le Header lise le type côté client
     (await cookies()).set('player_type', playerType, {
@@ -289,12 +301,4 @@ export async function createPlayerStep2(data: SignupStep2Data) {
   } catch (error: any) {
     return { success: false, error: error.message || "Erreur lors de la finalisation de l'inscription." };
   }
-}
-
-// Fonction utilitaire pour générer un token (copiée depuis auth.actions.ts)
-function generateToken(userId: string, role: string): string {
-  const timestamp = Date.now();
-  const payload = `${userId}:${role}:${timestamp}`;
-  const signature = crypto.createHmac('sha256', JWT_SECRET).update(payload).digest('hex');
-  return `${payload}|${signature}`;
 }
