@@ -5,9 +5,10 @@ import { motion } from "framer-motion";
 import {
   Swords, Trophy, Clock, Loader2, Play, ChevronRight, AlertCircle, Users,
 } from "lucide-react";
-import { getMyEquipeEnrollmentsAction, startMatchPartieAction, getPartieEnCoursAction } from "@/actions/partie.actions";
+import { getMyEquipeEnrollmentsAction, startMatchPartieAction } from "@/actions/partie.actions";
 import type { PartieActiveData } from "@/actions/partie.actions";
 import GamePlayer from "@/components/Gaming/GamePlayer";
+import { useResumePartie } from "@/components/Gaming/useResumePartie";
 import toast from "react-hot-toast";
 
 export default function VipMatchs() {
@@ -24,6 +25,7 @@ export default function VipMatchs() {
   };
 
   useEffect(() => { load(); }, []);
+  useResumePartie(setPartie);
 
   const formatCDF = (value: number) => `${Math.floor(Number(value || 0)).toLocaleString("fr-FR")} FC`;
 
@@ -32,6 +34,7 @@ export default function VipMatchs() {
     try {
       const res = await startMatchPartieAction(enrollmentId);
       if (res.success && res.data) {
+        if (res.resumed) toast("Partie en cours reprise.");
         setPartie({...res.data, credits: amount});
         // Mettre à jour les parties restantes dans la liste des enrollments
         setEnrollments(prev => prev.map(enr => 
@@ -54,8 +57,7 @@ export default function VipMatchs() {
       <GamePlayer
         partie={partie}
         onFinish={() => {
-          setPartie(null);
-          load(); // Recharger les enrollments pour mettre à jour les parties restantes
+          // JEU-11 : l'écran de résultat (score, Bourse créditée) reste affiché jusqu'à « Retour au menu ».
         }}
         onCancel={() => {
           setPartie(null);

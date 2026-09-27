@@ -5,10 +5,11 @@ import { motion } from "framer-motion";
 import {
   BookOpen, Clock, Loader2, Play, ChevronRight, AlertCircle,
 } from "lucide-react";
-import { getAvailableCategoriesAction, startStandalonePartieAction, getPartieEnCoursAction } from "@/actions/partie.actions";
+import { getAvailableCategoriesAction, startStandalonePartieAction } from "@/actions/partie.actions";
 import type { PartieActiveData } from "@/actions/partie.actions";
 import { getPlayerMetricsAction } from "@/actions/player.metrics.actions";
 import GamePlayer from "@/components/Gaming/GamePlayer";
+import { useResumePartie } from "@/components/Gaming/useResumePartie";
 import toast from "react-hot-toast";
 
 export default function StandaloneParties() {
@@ -20,27 +21,25 @@ export default function StandaloneParties() {
 
   const load = async () => {
     setLoading(true);
-    const [catRes, partieRes, metricsRes] = await Promise.all([
+    const [catRes, metricsRes] = await Promise.all([
       getAvailableCategoriesAction(),
-      getPartieEnCoursAction(),
       getPlayerMetricsAction(),
     ]);
     if (catRes.success) setCategories(catRes.categories || []);
     if (metricsRes.success) setRemainingParties(metricsRes.data?.stats.partiesDisponibles || 0);
-    if (partieRes.success && partieRes.data) {
-      // Reprendre la partie en cours
-      toast("Vous avez une partie en cours !");
-    }
     setLoading(false);
   };
 
   useEffect(() => { load(); }, []);
+  // Reprise d'une partie interrompue (réseau, onglet, rafraîchissement)
+  useResumePartie(setPartie);
 
   const handleStart = async (categorieId: string) => {
     setStarting(categorieId);
     try {
       const res = await startStandalonePartieAction(categorieId);
       if (res.success && res.data) {
+        if (res.resumed) toast("Partie en cours reprise.");
         setPartie(res.data);
       } else {
         toast.error(res.error || "Impossible de démarrer la partie.");

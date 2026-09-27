@@ -1,17 +1,20 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import crypto from 'crypto';
 import mongoose from 'mongoose';
 import connectToDb from '../lib/utils/db';
 import User from '../lib/models/User';
 import Player from '../lib/models/Player';
 import Agent from '../lib/models/Agent';
-import { hashPassword } from './user.actions';
+import { hashPassword, validateNewPassword, verifyPassword } from '../lib/utils/password';
 import { generateReferralCode } from '../lib/utils/referral';
+import { COOKIE_NAME, getSession, setSessionCookie } from '../lib/utils/auth';
+import { consumeRateLimit, getClientIp, isRateLimited, resetRateLimit } from '../lib/utils/rateLimit';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'genie_quiz_secret_key_ultra_secure_2026';
-const COOKIE_NAME = 'genie_session';
+// Limitation des tentatives de connexion (EX-SEC-05) : 5 échecs par tranche de 15 minutes,
+// par téléphone et par adresse IP.
+const LOGIN_MAX_FAILURES = 5;
+const LOGIN_WINDOW_MS = 15 * 60 * 1000;
 
 async function generateUniqueReferralCode(pseudo: string) {
   let code = generateReferralCode(pseudo);
@@ -21,33 +24,23 @@ async function generateUniqueReferralCode(pseudo: string) {
   return code;
 }
 
-// Fonctions utilitaires internes pour le jeton : userId:role:timestamp|signature
-function generateToken(userId: string, role: string): string {
-  const timestamp = Date.now();
-  const payload = `${userId}:${role}:${timestamp}`;
-  const signature = crypto.createHmac('sha256', JWT_SECRET).update(payload).digest('hex');
-  return `${payload}|${signature}`;
-}
-
-// export async function hashPassword(password: string): Promise<string> {
-//   return crypto.createHash('sha256').update(password).digest('hex');
-// }
-
 /**
  * 1. INSCRIPTION ÉLÈVE
  */
 export async function registerPlayer(formData: FormData) {
   await connectToDb();
 
-  const pseudo = formData.get('pseudo') as string;
-  const telephone = formData.get('telephone') as string;
-  const school = formData.get('school') as string;
-  const password = formData.get('password') as string;
-  const ref = formData.get('ref') as string | null;
+  const pseudo = String(formData.get('pseudo') || '');
+  const telephone = String(formData.get('telephone') || '');
+  const school = String(formData.get('school') || '');
+  const password = String(formData.get('password') || '');
+  const ref = formData.get('ref') ? String(formData.get('ref')) : null;
 
   if (!pseudo || !telephone || !school || !password) {
     return { success: false, error: 'Tous les champs sont obligatoires.' };
   }
+  const passwordError = validateNewPassword(password);
+  if (passwordError) return { success: false, error: passwordError };
 
   try {
     // Vérifier si le téléphone existe déjà
@@ -56,11 +49,14 @@ export async function registerPlayer(formData: FormData) {
       return { success: false, error: 'Ce numéro de téléphone est déjà utilisé.' };
     }
 
+    // Résoudre le parrain (code d'affiliation)
+    let referedBy: mongoose.Types.ObjectId | undefined = undefined;
     if (ref) {
-      const parrainExists = await Player.exists({ code: ref.trim().toUpperCase() });
-      if (!parrainExists) {
+      const parrain = await Player.findOne({ code: ref.trim().toUpperCase() });
+      if (!parrain) {
         return { success: false, error: "Code d'affiliation invalide." };
       }
+      referedBy = parrain._id as mongoose.Types.ObjectId;
     }
 
     const hashedPassword = await hashPassword(password);
@@ -74,19 +70,7 @@ export async function registerPlayer(formData: FormData) {
       secure: hashedPassword,
     });
 
-    // Résoudre le parrain (ref = pseudo du joueur parrain)
-    let referedBy: mongoose.Types.ObjectId | undefined = undefined;
-    if (ref) {
-      const parrain = await Player.findOne({ code: ref.trim().toUpperCase() });
-      if (parrain) {
-        referedBy = parrain._id;
-      } else {
-        return { success: false, error: "Code d'affiliation invalide." };
-      }
-    }
-
     // Création du profil Player associé (10 parties de bienvenue offertes)
-    // Générer un code de parrainage lisible pour le nouveau joueur
     const referralCode = await generateUniqueReferralCode(pseudo);
 
     await Player.create({
@@ -103,15 +87,7 @@ export async function registerPlayer(formData: FormData) {
     });
 
     // Génération et injection du cookie de session (7 jours)
-    const token = generateToken(newUser._id.toString(), newUser.role);
-    
-    (await cookies()).set(COOKIE_NAME, token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60, // 7 jours
-      path: '/',
-    });
+    await setSessionCookie(newUser._id.toString(), newUser.role, newUser.sessionVersion ?? 0);
 
     // Cookie non-httpOnly pour le Header côté client
     (await cookies()).set('player_type', 'STANDALONE', {
@@ -132,44 +108,48 @@ export async function registerPlayer(formData: FormData) {
  * 2. CONNEXION UTILISATEUR (Élève, Modérateur ou Admin)
  */
 export async function loginUser(formData: FormData) {
-  await connectToDb();
-
-  const telephone = formData.get('telephone') as string;
-  const password = formData.get('password') as string;
-
-  console.log('loginUser called with:', { telephone, password });
+  const telephone = String(formData.get('telephone') || '').trim();
+  const password = String(formData.get('password') || '');
 
   if (!telephone || !password) {
-    console.log('Missing telephone or password');
     return { success: false, error: 'Téléphone et mot de passe requis.' };
   }
 
+  const ip = await getClientIp();
+  const phoneKey = `login:phone:${telephone}`;
+  const ipKey = `login:ip:${ip}`;
+  if ((await isRateLimited(phoneKey, LOGIN_MAX_FAILURES)) || (await isRateLimited(ipKey, LOGIN_MAX_FAILURES * 4))) {
+    return { success: false, error: 'Trop de tentatives. Réessayez dans 15 minutes.' };
+  }
+
+  const registerFailure = async () => {
+    await consumeRateLimit(phoneKey, LOGIN_MAX_FAILURES, LOGIN_WINDOW_MS);
+    await consumeRateLimit(ipKey, LOGIN_MAX_FAILURES * 4, LOGIN_WINDOW_MS);
+    return { success: false, error: 'Identifiants incorrects.' };
+  };
+
   try {
+    await connectToDb();
+
     // Récupérer l'utilisateur avec le champ 'secure' masqué par défaut
-    const user = await User.findOne({ telephone: telephone.trim() }).select('+secure');
-    console.log('User found:', user ? 'yes' : 'no');
+    const user = await User.findOne({ telephone }).select('+secure');
     if (!user || !user.secure) {
-      console.log('User not found or no secure field');
-      return { success: false, error: 'Identifiants incorrects.' };
+      return registerFailure();
     }
 
-    const hashedPassword = await hashPassword(password);
-    console.log('Password comparison:', { stored: user.secure, provided: hashedPassword });
-    if (user.secure !== hashedPassword) {
-      console.log('Password mismatch');
-      return { success: false, error: 'Identifiants incorrects.' };
+    const { valid, needsRehash } = await verifyPassword(password, user.secure);
+    if (!valid) {
+      return registerFailure();
     }
+
+    // Migration transparente de l'ancienne empreinte SHA-256 vers scrypt
+    if (needsRehash) {
+      await User.updateOne({ _id: user._id }, { $set: { secure: await hashPassword(password) } });
+    }
+    await resetRateLimit(phoneKey);
 
     // Génération et injection du cookie
-    const token = generateToken(user._id.toString(), user.role);
-    
-    (await cookies()).set(COOKIE_NAME, token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60,
-      path: '/',
-    });
+    await setSessionCookie(user._id.toString(), user.role, user.sessionVersion ?? 0);
 
     // Déterminer la redirection selon le rôle
     let redirectTo = '/dashboard';
@@ -192,31 +172,19 @@ export async function loginUser(formData: FormData) {
       }
     }
 
-    // Stocker le type de joueur dans un cookie léger (accessible côté client)
-    if (playerTypeForCookie) {
-      (await cookies()).set('player_type', playerTypeForCookie, {
-        httpOnly: false,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 7 * 24 * 60 * 60,
-        path: '/',
-      });
-    } else {
-      // Agent/Admin → stocker le rôle
-      (await cookies()).set('player_type', user.role, {
-        httpOnly: false,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 7 * 24 * 60 * 60,
-        path: '/',
-      });
-    }
+    // Stocker le type de joueur (ou le rôle staff) dans un cookie léger (accessible côté client)
+    (await cookies()).set('player_type', playerTypeForCookie || user.role, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60,
+      path: '/',
+    });
 
-    console.log('Login successful, token set');
     return { success: true, role: user.role, redirectTo };
   } catch (error: any) {
-    console.error('Login error:', error);
-    return { success: false, error: error.message || 'Erreur lors de la connexion.' };
+    console.error('[loginUser] Erreur de connexion :', error?.message);
+    return { success: false, error: 'Erreur lors de la connexion.' };
   }
 }
 
@@ -233,14 +201,13 @@ export async function logoutUser() {
 
 /** 4. RÉCUPÉRER L'UTILISATEUR CONNECTÉ DÉTAILLÉ */
 export async function getCurrentUserDetailed() {
-  const { getSession } = await import('../lib/utils/auth');
   const session = await getSession();
   if (!session) return null;
 
   await connectToDb();
 
   try {
-    const user = await User.findById(session.userId).select('+secure').lean();
+    const user = await User.findById(session.userId).lean();
     if (!user) return null;
 
     const base = {
@@ -250,6 +217,7 @@ export async function getCurrentUserDetailed() {
       email: user.email || null,
       photo: user.photo || null,
       solde: user.solde,
+      soldeBloque: user.soldeBloque || 0,
       role: user.role,
       playerType: null as string | null,
     };

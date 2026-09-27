@@ -6,8 +6,13 @@ import Equipe from "@/lib/models/Equipe";
 import Player from "@/lib/models/Player";
 import User from "@/lib/models/User";
 import EnrollementModule from "@/lib/models/Enrollement";
-import { initiatePaymentAction, checkPaymentStatusAction, type PaymentMethod } from "@/actions/payment.actions";
+import type { PaymentMethod } from "@/actions/payment.actions";
 import { getSession } from "@/lib/utils/auth";
+import { guardPlayer } from "@/lib/utils/guards";
+import { escapeRegex, exactMatchRegex, isValidObjectId } from "@/lib/utils/security";
+import { tx, withTransaction } from "@/lib/utils/transaction";
+import { TEAM_CREATION_PRICE, isCurrency, resolveCharge } from "@/lib/payments/pricing";
+import { startPayment, verifyAndApplyPayment } from "@/lib/services/payment-flow.service";
 
 const { Enrollement } = EnrollementModule;
 
@@ -21,7 +26,6 @@ export type EquipeSummary = {
     userId?: {
       _id: string;
       pseudo: string;
-      telephone: string;
       photo?: string;
     };
   };
@@ -81,7 +85,6 @@ const serializeEquipe = (equipe: any) => {
             ? {
                 _id: equipe.chefId.userId._id.toString(),
                 pseudo: equipe.chefId.userId.pseudo,
-                telephone: equipe.chefId.userId.telephone,
                 photo: typeof equipe.chefId.userId.photo === "string" ? equipe.chefId.userId.photo : "",
               }
             : undefined,
@@ -110,7 +113,7 @@ export async function getEquipesAction() {
       .sort({ createdAt: -1 })
       .populate({
         path: "chefId",
-        populate: { path: "userId", select: "pseudo photo telephone" },
+        populate: { path: "userId", select: "pseudo photo" },
       })
       .lean();
 
@@ -123,60 +126,88 @@ export async function getEquipesAction() {
   }
 }
 
+/**
+ * Vérifie que le joueur connecté peut créer une équipe (VIP, sans équipe) et renvoie son pseudo.
+ */
+export async function getCaptainCandidateAction() {
+  try {
+    const guard = await guardPlayer();
+    if (!guard.ok) return { success: false, error: "Connectez-vous avec votre compte VIP pour créer une équipe." };
+    if (guard.player.type !== "VIP") {
+      return { success: false, error: "Seuls les joueurs de type VIP peuvent créer une équipe." };
+    }
+    const alreadyInTeam = await Equipe.exists({
+      $or: [{ chefId: guard.player._id }, { membres: { $elemMatch: { player: guard.player._id } } }],
+    });
+    if (alreadyInTeam) return { success: false, error: "Vous faites déjà partie d'une équipe." };
+
+    const user = await User.findById(guard.session.userId).select("pseudo telephone").lean();
+    return { success: true, captain: { pseudo: user?.pseudo || "Joueur", telephone: user?.telephone || "" } };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Erreur serveur." };
+  }
+}
+
+/**
+ * Initie le paiement de création d'équipe (EX-SEC-03, EX-PAY-01) :
+ * le capitaine est le joueur de la session, le montant vient du catalogue serveur (2 500 CDF).
+ */
 export async function initiateEquipeCreationAction(
-  captainId: string,
   designation: string,
   description: string,
   logo: string,
   phone: string,
-  email?: string,
   paymentMethod: PaymentMethod = "MOBILE_MONEY",
+  currency: "CDF" | "USD" = "CDF",
 ) {
   try {
-    await connectToDb();
-
-    const captain = await Player.findById(captainId);
-    if (!captain) {
-      return { success: false, error: "Le capitaine n'existe pas." };
-    }
+    const guard = await guardPlayer();
+    if (!guard.ok) return { success: false, error: guard.error };
+    const captain = guard.player;
 
     if (captain.type !== "VIP") {
       return { success: false, error: "Seuls les joueurs de type VIP peuvent créer une équipe." };
     }
 
-    const cleanDesignation = designation.trim();
-    const cleanDescription = description.trim();
-    const cleanLogo = logo.trim();
+    const cleanDesignation = String(designation ?? "").trim().slice(0, 80);
+    const cleanDescription = String(description ?? "").trim().slice(0, 500);
+    const cleanLogo = String(logo ?? "").trim().slice(0, 500);
 
     if (!cleanDesignation || !cleanDescription) {
       return { success: false, error: "La désignation et la description sont obligatoires." };
     }
 
-    const payment = await initiatePaymentAction(
-      captainId,
+    const alreadyInTeam = await Equipe.exists({
+      $or: [{ chefId: captain._id }, { membres: { $elemMatch: { player: captain._id } } }],
+    });
+    if (alreadyInTeam) return { success: false, error: "Vous faites déjà partie d'une équipe." };
+
+    const existingEquipe = await Equipe.exists({ designation: exactMatchRegex(cleanDesignation) });
+    if (existingEquipe) {
+      return { success: false, error: "Une équipe portant cette désignation existe déjà." };
+    }
+
+    const method: PaymentMethod = paymentMethod === "CARD" ? "CARD" : "MOBILE_MONEY";
+    const charge = resolveCharge(TEAM_CREATION_PRICE, isCurrency(currency) ? currency : "CDF");
+    const payment = await startPayment({
+      payer: captain,
+      productType: "EQUIPE",
+      productId: "team-creation",
+      productName: "Création d'équipe",
+      amount: charge.amount,
+      currency: charge.currency,
+      amountCDF: charge.amountCDF,
+      fxRate: charge.fxRate,
       phone,
-      2500,
-      "CDF",
-      {
-        id: `team-${Date.now()}`,
-        name: "Création d'équipe",
-        amountCDF: 2500,
-        amountUSD: 1,
-        type: "EQUIPE",
-        metadata: {
-          captainId,
-          designation: cleanDesignation,
-          description: cleanDescription,
-          logo: cleanLogo,
-        },
+      method,
+      metadata: {
+        designation: cleanDesignation,
+        description: cleanDescription,
+        logo: cleanLogo,
       },
-      email?.trim(),
-      paymentMethod,
-    );
+    });
 
-    console.log("Payment initiation result:", payment);
-
-    if (!payment.success || !payment.orderNumber) {
+    if (!payment.success) {
       return { success: false, error: payment.error || "Échec de l'initiation du paiement." };
     }
 
@@ -184,7 +215,7 @@ export async function initiateEquipeCreationAction(
       success: true,
       orderNumber: payment.orderNumber,
       redirectUrl: payment.redirectUrl,
-      paymentMethod,
+      paymentMethod: method,
       message: "Paiement initié. Vérifiez ensuite la confirmation pour finaliser l'équipe.",
     };
   } catch (error: any) {
@@ -192,68 +223,31 @@ export async function initiateEquipeCreationAction(
   }
 }
 
+/**
+ * Confirmation de création d'équipe (PAY-04) : le paiement est réellement vérifié, et l'équipe est
+ * créée une seule fois, par le flux de paiement (verifyAndApplyPayment), au nom du joueur de la session.
+ */
 export async function confirmEquipeCreationAction(payload: {
-  captainId: string;
-  designation: string;
-  description: string;
-  logo: string;
   orderNumber: string;
-  email?: string;
 }): Promise<{ success: true; equipe: EquipeSummary } | { success: false; error: string }> {
   try {
-    await connectToDb();
+    const guard = await guardPlayer();
+    if (!guard.ok) return { success: false, error: guard.error };
 
-    const status = await checkPaymentStatusAction(payload.orderNumber, payload.email, "Création d'équipe");
-    // if (!status.success || status.status !== "SUCCES") {
-    //   return {
-    //     success: false,
-    //     error: status.error || "Le paiement n'est pas encore confirmé.",
-    //   };
-    // }
+    const orderNumber = String(payload?.orderNumber || "").trim();
+    const recharge = (guard.player.recharges || []).find(
+      (item) => item.productType === "EQUIPE" && (item.providerTxId === orderNumber || item.reference === orderNumber),
+    );
+    if (!recharge) return { success: false, error: "Paiement de création d'équipe introuvable." };
 
-    const captain = await Player.findById(payload.captainId);
-    if (!captain) {
-      return { success: false, error: "Le capitaine n'existe pas." };
+    const verification = await verifyAndApplyPayment(orderNumber, { ownerPlayerId: guard.player._id.toString() });
+    if (!verification.success) return { success: false, error: verification.error || "Vérification impossible." };
+    if (verification.status !== "SUCCES") {
+      return { success: false, error: verification.message || "Le paiement n'est pas encore confirmé." };
     }
 
-    if (captain.type !== "VIP") {
-      return { success: false, error: "Seuls les joueurs de type VIP peuvent créer une équipe." };
-    }
-
-    const existingEquipe = await Equipe.findOne({
-      designation: new RegExp(`^${payload.designation.trim()}$`, "i"),
-    });
-
-    if (existingEquipe) {
-      return { success: false, error: "Une équipe portant cette désignation existe déjà." };
-    }
-
-    const equipe = await Equipe.create({
-      chefId: payload.captainId,
-      designation: payload.designation.trim(),
-      description: [payload.description.trim()],
-      logo: payload.logo.trim(),
-      payment: [
-        {
-          orderNumber: payload.orderNumber,
-          status: "CONFIRMED",
-          providerText: "Mobile Money",
-        },
-      ],
-      membres: [{ player: payload.captainId, status: true, isSecretary: true }],
-      metriques: {
-        competitions: 0,
-        soldeUsd: 0,
-        soldeCDF: 0,
-        matchsWin: 0,
-      },
-    });
-
-    const latestRecharge = captain.recharges?.slice(-1)[0];
-    if (latestRecharge?.providerTxId === payload.orderNumber) {
-      latestRecharge.status = "SUCCES";
-      await captain.save();
-    }
+    const equipe = await Equipe.findOne({ "payment.orderNumber": recharge.providerTxId });
+    if (!equipe) return { success: false, error: "Paiement confirmé, mais l'équipe n'a pas pu être créée. Contactez le support." };
 
     return {
       success: true,
@@ -305,16 +299,14 @@ export async function searchInvitableVipPlayersAction(query: string) {
 
     if (!query || query.trim().length < 2) return { success: true, players: [] };
 
-    const searchRegex = new RegExp(query.trim(), "i");
-    const users = await User.find({
-      $or: [{ pseudo: searchRegex }, { telephone: searchRegex }, { email: searchRegex }],
-    }).select("pseudo telephone email photo").limit(12).lean();
+    const searchRegex = new RegExp(escapeRegex(String(query).trim().slice(0, 50)), "i");
+    const users = await User.find({ pseudo: searchRegex, role: "PLAYER" }).select("pseudo photo").limit(12).lean();
 
     const vipPlayers = await Player.find({
       userId: { $in: users.map((user: any) => user._id) },
       type: "VIP",
       _id: { $ne: currentPlayer._id },
-    }).populate("userId", "pseudo telephone email photo").lean();
+    }).populate("userId", "pseudo photo").lean();
 
     const playerIds = vipPlayers.map((player: any) => player._id);
     const unavailableTeams = await Equipe.find({
@@ -339,8 +331,6 @@ export async function searchInvitableVipPlayersAction(query: string) {
         .map((player: any) => ({
           _id: player._id.toString(),
           pseudo: player.userId?.pseudo || "Joueur",
-          telephone: player.userId?.telephone || "",
-          email: player.userId?.email || "",
           photo: player.userId?.photo || "",
         })),
     };
@@ -351,6 +341,7 @@ export async function searchInvitableVipPlayersAction(query: string) {
 
 export async function createPurchaseOrderAction(beneficiaryPlayerId: string, amount: number, reason: string) {
   try {
+    if (!isValidObjectId(beneficiaryPlayerId)) return { success: false, error: "Bénéficiaire invalide." };
     await connectToDb();
     const currentPlayer = await getCurrentPlayer();
     if (!currentPlayer) return { success: false, error: "Profil joueur introuvable." };
@@ -377,7 +368,7 @@ export async function createPurchaseOrderAction(beneficiaryPlayerId: string, amo
       beneficiaryUserId: beneficiaryPlayer.userId,
       beneficiaryPlayerId: beneficiaryPlayer._id,
       amount: numericAmount,
-      reason: reason?.trim() || "Bon de commande équipe",
+      reason: String(reason ?? "").trim().slice(0, 200) || "Bon de commande équipe",
       status: "pending",
       createdAt: new Date(),
     });
@@ -389,33 +380,56 @@ export async function createPurchaseOrderAction(beneficiaryPlayerId: string, amo
   }
 }
 
+/**
+ * Validation d'un bon de commande par le capitaine (EX-PAY-03, PAY-19) : dans une transaction,
+ * passage atomique pending → approved conditionné au solde de la caisse, débit de la caisse et
+ * crédit du solde du membre. Un double clic ne crédite qu'une fois.
+ */
 export async function approvePurchaseOrderAction(orderId: string) {
   try {
+    if (!isValidObjectId(orderId)) return { success: false, error: "Bon introuvable." };
     await connectToDb();
     const currentPlayer = await getCurrentPlayer();
     if (!currentPlayer) return { success: false, error: "Profil joueur introuvable." };
 
-    const equipe = await Equipe.findOne({ chefId: currentPlayer._id, "purchaseOrders._id": orderId });
+    const equipe = await Equipe.findOne({ chefId: currentPlayer._id, "purchaseOrders._id": orderId }).lean();
     if (!equipe) return { success: false, error: "Seul le capitaine peut valider ce bon." };
 
-    const order: any = (equipe.purchaseOrders as any).id(orderId);
+    const order: any = (equipe.purchaseOrders || []).find((item: any) => item._id?.toString() === orderId);
     if (!order) return { success: false, error: "Bon introuvable." };
     if (order.status !== "pending" || order.creditedAt) return { success: false, error: "Ce bon a déjà été traité." };
     if ((equipe.metriques?.soldeCDF || 0) < order.amount) return { success: false, error: "Solde d'équipe insuffisant." };
 
     const isBeneficiaryMember = equipe.chefId.toString() === order.beneficiaryPlayerId.toString()
-      || equipe.membres.some((member) => member.player.toString() === order.beneficiaryPlayerId.toString() && member.status);
+      || equipe.membres.some((member: any) => member.player.toString() === order.beneficiaryPlayerId.toString() && member.status);
     if (!isBeneficiaryMember) return { success: false, error: "Le bénéficiaire n'est plus membre actif de l'équipe." };
 
-    // TODO: créer une transaction interne dédiée si un modèle Transaction global est ajouté au projet.
-    await User.findByIdAndUpdate(order.beneficiaryUserId, { $inc: { solde: order.amount } });
-    equipe.metriques.soldeCDF = Math.max(0, (equipe.metriques.soldeCDF || 0) - order.amount);
-    order.status = "approved";
-    order.approvedBy = currentPlayer._id;
-    order.approvedAt = new Date();
-    order.creditedAt = new Date();
-    await equipe.save();
+    const approved = await withTransaction(async (dbSession) => {
+      const now = new Date();
+      const claimed = await Equipe.updateOne(
+        {
+          _id: equipe._id,
+          chefId: currentPlayer._id,
+          "metriques.soldeCDF": { $gte: order.amount },
+          purchaseOrders: { $elemMatch: { _id: orderId, status: "pending", creditedAt: { $exists: false } } },
+        },
+        {
+          $inc: { "metriques.soldeCDF": -order.amount },
+          $set: {
+            "purchaseOrders.$.status": "approved",
+            "purchaseOrders.$.approvedBy": currentPlayer._id,
+            "purchaseOrders.$.approvedAt": now,
+            "purchaseOrders.$.creditedAt": now,
+          },
+        },
+        tx(dbSession),
+      );
+      if (!claimed.modifiedCount) return false;
+      await User.updateOne({ _id: order.beneficiaryUserId }, { $inc: { solde: order.amount } }, tx(dbSession));
+      return true;
+    });
 
+    if (!approved) return { success: false, error: "Ce bon a déjà été traité ou le solde d'équipe est insuffisant." };
     return { success: true, message: "Bon validé et solde membre crédité." };
   } catch (error: any) {
     return { success: false, error: error.message || "Erreur validation bon." };
@@ -424,21 +438,19 @@ export async function approvePurchaseOrderAction(orderId: string) {
 
 export async function rejectPurchaseOrderAction(orderId: string) {
   try {
+    if (!isValidObjectId(orderId)) return { success: false, error: "Bon introuvable." };
     await connectToDb();
     const currentPlayer = await getCurrentPlayer();
     if (!currentPlayer) return { success: false, error: "Profil joueur introuvable." };
 
-    const equipe = await Equipe.findOne({ chefId: currentPlayer._id, "purchaseOrders._id": orderId });
+    const equipe = await Equipe.exists({ chefId: currentPlayer._id, "purchaseOrders._id": orderId });
     if (!equipe) return { success: false, error: "Seul le capitaine peut refuser ce bon." };
 
-    const order: any = (equipe.purchaseOrders as any).id(orderId);
-    if (!order) return { success: false, error: "Bon introuvable." };
-    if (order.status !== "pending" || order.creditedAt) return { success: false, error: "Ce bon a déjà été traité." };
-
-    order.status = "rejected";
-    order.approvedBy = currentPlayer._id;
-    order.approvedAt = new Date();
-    await equipe.save();
+    const res = await Equipe.updateOne(
+      { chefId: currentPlayer._id, purchaseOrders: { $elemMatch: { _id: orderId, status: "pending", creditedAt: { $exists: false } } } },
+      { $set: { "purchaseOrders.$.status": "rejected", "purchaseOrders.$.approvedBy": currentPlayer._id, "purchaseOrders.$.approvedAt": new Date() } },
+    );
+    if (!res.modifiedCount) return { success: false, error: "Ce bon a déjà été traité." };
 
     return { success: true, message: "Bon refusé." };
   } catch (error: any) {
@@ -448,6 +460,7 @@ export async function rejectPurchaseOrderAction(orderId: string) {
 
 export async function inviteMemberAction(equipeId: string, playerId: string) {
   try {
+    if (!isValidObjectId(equipeId) || !isValidObjectId(playerId)) return { success: false, error: 'Paramètres invalides.' };
     await connectToDb();
 
     const equipe = await Equipe.findById(equipeId);
@@ -462,7 +475,7 @@ export async function inviteMemberAction(equipeId: string, playerId: string) {
 
     const player = await Player.findById(playerId);
     if (player && player.type !== 'VIP') {
-      return { success: false, error: 'Seuls les joueurs VIP peuvent rejoindre une Ã©quipe.' };
+      return { success: false, error: 'Seuls les joueurs VIP peuvent rejoindre une équipe.' };
     }
     if (player) {
       const alreadyInTeam = await Equipe.findOne({
@@ -599,11 +612,17 @@ export async function updateMemberRoleAction(
 /**
  * Récupère l'équipe d'un joueur avec tous les détails des membres.
  */
-export async function getMyEquipeDetailAction(playerId: string) {
+/**
+ * Récupère l'équipe du joueur connecté (EX-SEC-03) : l'argument historique est ignoré,
+ * le joueur est résolu depuis la session.
+ */
+export async function getMyEquipeDetailAction(_ignoredPlayerId?: string) {
   try {
-    await connectToDb();
+    const guard = await guardPlayer();
+    if (!guard.ok) return { success: false, error: guard.error };
+    const playerId = guard.player._id.toString();
 
-    const equipe = await Equipe.findOne({ membres: { $elemMatch: { player: playerId } } })
+    const equipe = await Equipe.findOne({ membres: { $elemMatch: { player: guard.player._id } } })
       .populate({
         path: 'membres.player',
         populate: { path: 'userId', select: 'pseudo photo telephone' },
@@ -687,7 +706,7 @@ export async function getTeamsAdminAction(query: string = "") {
     const search = query.trim();
     const filter: any = {};
     if (search.length >= 2) {
-      filter.designation = new RegExp(search, "i");
+      filter.designation = new RegExp(escapeRegex(search.slice(0, 50)), "i");
     }
 
     const equipes = await Equipe.find(filter)

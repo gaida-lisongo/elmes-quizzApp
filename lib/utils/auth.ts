@@ -1,54 +1,50 @@
+import 'server-only';
+import { cache } from 'react';
 import { cookies } from 'next/headers';
-import crypto from 'crypto';
+import connectToDb from './db';
+import User from '../models/User';
+import { COOKIE_NAME, SESSION_MAX_AGE_S, generateToken, verifyToken } from './token';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'genie_quiz_secret_key_ultra_secure_2026';
-const COOKIE_NAME = 'genie_session';
+export { COOKIE_NAME, SESSION_MAX_AGE_S, generateToken, verifyToken, getJwtSecret } from './token';
 
 export interface Session {
   userId: string;
   role: string;
 }
 
+export async function setSessionCookie(userId: string, role: string, sessionVersion = 0) {
+  (await cookies()).set(COOKIE_NAME, generateToken(userId, role, sessionVersion), {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: SESSION_MAX_AGE_S,
+    path: '/',
+  });
+}
+
 /**
- * Récupère et valide la session depuis le cookie 'genie_session'.
- * Retourne l'objet session { userId, role } ou null si absent/invalide.
+ * Récupère la session depuis le cookie 'genie_session'.
+ * - signature et expiration (7 jours) vérifiées côté serveur ;
+ * - rôle et version de session relus en base : un changement de rôle ou de mot de passe
+ *   révoque les jetons existants dès la requête suivante.
+ * Mis en cache pour la durée de la requête.
  */
-export async function getSession(): Promise<Session | null> {
+export const getSession = cache(async (): Promise<Session | null> => {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get(COOKIE_NAME)?.value;
-
+    const token = verifyToken(cookieStore.get(COOKIE_NAME)?.value);
     if (!token) return null;
 
-    const parts = token.split('|');
-    if (parts.length !== 2) return null;
+    await connectToDb();
+    const user = await User.findById(token.userId).select('role sessionVersion').lean();
+    if (!user) return null;
+    if ((user.sessionVersion ?? 0) !== token.sessionVersion) return null;
 
-    const [payload, incomingSignature] = parts;
-    const [userId, role, timestamp] = payload.split(':');
-
-    if (!userId || !role || !timestamp) return null;
-
-    // Recalculer la signature HMAC-SHA256 côté Node.js (synchrone)
-    const expectedSignature = crypto
-      .createHmac('sha256', JWT_SECRET)
-      .update(payload)
-      .digest('hex');
-
-    // Comparaison en temps constant pour éviter les attaques temporelles
-    if (expectedSignature.length !== incomingSignature.length) return null;
-
-    const valid = crypto.timingSafeEqual(
-      Buffer.from(expectedSignature),
-      Buffer.from(incomingSignature)
-    );
-
-    if (!valid) return null;
-
-    return { userId, role };
+    return { userId: String(user._id), role: user.role };
   } catch {
     return null;
   }
-}
+});
 
 /**
  * Vérifie que l'utilisateur possède au moins un des rôles requis.

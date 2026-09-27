@@ -22,7 +22,9 @@ export interface ISession extends Document {
   }[];
   status: 'ACTIVE' | 'INACTIVE' | 'COMPLETED' | 'PAYMENT'
   rewardsDistributed: boolean;
+  rewardsDistributionStartedAt?: Date;     // Verrou de distribution des récompenses (PAY-18)
   paymentProcessedAt?: Date;
+  matchesOpenedAt?: Date;                  // Première ouverture des matchs (COMPLETED) : plus de retour à ACTIVE (Q-05)
   rewardTransactions: {
     beneficiaryType: 'PLAYER' | 'EQUIPE';
     beneficiaryId: mongoose.Types.ObjectId;
@@ -33,6 +35,9 @@ export interface ISession extends Document {
   }[];
   // ── Bourse d'Excellence Académique (CDF uniquement) ──
   enrollmentFeeCDF?: number;               // Frais d'enrôlement en CDF pour cette session
+  enrollmentFeeUSD?: number;               // Frais d'enrôlement en USD (grille fixe, Q-02)
+  paymentCommissionRate?: number;          // Commission du fournisseur retenue pour le calcul net (Q-01)
+  netCollectedCDF?: number;                // Total encaissé net de commission
   platformRate?: number;                   // Taux part plateforme (ex: 0.35)
   scholarshipRate?: number;                // Taux Bourse (ex: 0.65)
   gamesPerEnrollment?: number;             // Parties accordées par enrôlement (ex: 250)
@@ -64,6 +69,8 @@ export interface IEnrollement extends Document {
   amountUSD?: number;
   paidAmount?: number;
   paidCurrency?: 'CDF' | 'USD';
+  paidAmountCDF?: number; // Équivalent CDF réellement encaissé (EX-PAY-05)
+  fxRate?: number;
   maxParties: number;
   totalGrantedGames: number;
   usedGames: number;
@@ -87,7 +94,9 @@ const SessionSchema: Schema<ISession> = new Schema(
     endDate: { type: Date, required: true },
     status: { type: String, enum: ['ACTIVE', 'INACTIVE', 'COMPLETED', 'PAYMENT'], default: 'ACTIVE' },
     rewardsDistributed: { type: Boolean, default: false },
+    rewardsDistributionStartedAt: { type: Date },
     paymentProcessedAt: { type: Date },
+    matchesOpenedAt: { type: Date },
     rewardTransactions: [
       {
         beneficiaryType: { type: String, enum: ['PLAYER', 'EQUIPE'], required: true },
@@ -104,6 +113,9 @@ const SessionSchema: Schema<ISession> = new Schema(
     }],
     // ── Bourse d'Excellence Académique (CDF) ──
     enrollmentFeeCDF: { type: Number, default: null },
+    enrollmentFeeUSD: { type: Number, default: null },
+    paymentCommissionRate: { type: Number },
+    netCollectedCDF: { type: Number, default: 0 },
     platformRate: { type: Number, default: 0.35 },
     scholarshipRate: { type: Number, default: 0.65 },
     gamesPerEnrollment: { type: Number, default: 250 },
@@ -140,6 +152,8 @@ const EnrollementSchema: Schema<IEnrollement> = new Schema(
     amountUSD: { type: Number, default: 0 },
     paidAmount: { type: Number, default: 0 },
     paidCurrency: { type: String, enum: ['CDF', 'USD'] },
+    paidAmountCDF: { type: Number },
+    fxRate: { type: Number },
     maxParties: { type: Number, default: 0 },
     totalGrantedGames: { type: Number, default: 0 },
     usedGames: { type: Number, default: 0 },
@@ -168,14 +182,19 @@ const EnrollementSchema: Schema<IEnrollement> = new Schema(
   { timestamps: true }
 );
 
+// Unicité limitée aux enrôlements PENDING et CONFIRMED (PAY-20) : un enrôlement annulé
+// (paiement échoué) n'empêche plus de réessayer. Nouveaux noms d'index : les anciens index
+// (sans filtre de statut) doivent être supprimés en base, voir scripts/migrations/.
 EnrollementSchema.index(
   { playerId: 1, parcoursId: 1, sessionId: 1 },
   {
+    name: 'uniq_active_player_parcours_session',
     unique: true,
     partialFilterExpression: {
       playerId: { $exists: true },
       parcoursId: { $exists: true },
       sessionId: { $exists: true },
+      status: { $in: ['PENDING', 'CONFIRMED'] },
     },
   },
 );
@@ -183,11 +202,13 @@ EnrollementSchema.index(
 EnrollementSchema.index(
   { equipeId: 1, competitionId: 1, sessionId: 1 },
   {
+    name: 'uniq_active_equipe_competition_session',
     unique: true,
     partialFilterExpression: {
       equipeId: { $exists: true },
       competitionId: { $exists: true },
       sessionId: { $exists: true },
+      status: { $in: ['PENDING', 'CONFIRMED'] },
     },
   },
 );

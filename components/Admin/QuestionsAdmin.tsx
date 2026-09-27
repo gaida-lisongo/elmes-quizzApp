@@ -129,7 +129,7 @@ const CategorieModal = ({
    ================================================================ */
 export default function QuestionsAdmin() {
   const [categories, setCategories] = useState<CategorieItem[]>([]);
-  const [catStats, setCatStats] = useState<Record<string, { ok: number; no: number; total: number; percent: number }>>({});
+  const [catStats, setCatStats] = useState<Record<string, { ok: number; no: number; total: number; percent: number; niveauxInsuffisants?: number[] }>>({});
   const [loading, setLoading] = useState(true);
   const [step, setStep] = useState<Step>("list");
   const [selectedCat, setSelectedCat] = useState<CategorieItem | null>(null);
@@ -152,7 +152,7 @@ export default function QuestionsAdmin() {
     ]);
     if (catRes.success) setCategories(catRes.categories);
     if (statsRes.success) {
-      const map: Record<string, { ok: number; no: number; total: number; percent: number }> = {};
+      const map: Record<string, { ok: number; no: number; total: number; percent: number; niveauxInsuffisants?: number[] }> = {};
       for (const cat of (statsRes.categories || [])) {
         map[cat.label] = cat;
       }
@@ -242,6 +242,12 @@ export default function QuestionsAdmin() {
                   </div>
                   <h3 className="mb-1 font-semibold text-black dark:text-white">{cat.designation}</h3>
                   {cat.description && <p className="text-xs text-waterloo line-clamp-2">{cat.description}</p>}
+                  {/* JEU-12 : alerte si la banque de questions ne permet pas de jouer à certains niveaux */}
+                  {cat.status && (catStats[cat.designation]?.niveauxInsuffisants?.length || 0) > 0 && (
+                    <p className="mt-2 rounded-md bg-amber-50 px-2 py-1 text-[11px] text-amber-700 dark:bg-amber-900/20 dark:text-amber-400">
+                      Moins de 5 questions au(x) niveau(x) {catStats[cat.designation].niveauxInsuffisants!.join(", ")} : questions de niveau inférieur servies, voire partie impossible.
+                    </p>
+                  )}
                   {/* Métrique de la catégorie */}
                   {catStats[cat.designation] && catStats[cat.designation].total > 0 && (
                     <div className="mt-2">

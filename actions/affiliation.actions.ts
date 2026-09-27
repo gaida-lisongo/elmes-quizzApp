@@ -4,16 +4,13 @@ import connectToDb from '@/lib/utils/db';
 import { getSession } from '@/lib/utils/auth';
 import Player from '@/lib/models/Player';
 import User from '@/lib/models/User';
-import Partie from '@/lib/models/Partie';
 import Categorie from '@/lib/models/Categorie';
-import Quiz from '@/lib/models/Quiz';
 import mongoose from 'mongoose';
 import { generateReferralCode } from '@/lib/utils/referral';
-import type { PartieActiveData, QuestionJeu } from '@/actions/partie.actions';
+import { tx } from '@/lib/utils/transaction';
+import { GameError, NB_QUESTIONS, createPartie, resumeOrExpirePartie, tirerQuestions } from '@/lib/services/partie.service';
 
 const AFFILIATE_GAMES_PER_VALID_USER = 10;
-const AFFILIATE_QUESTIONS_PER_GAME = 3;
-const TEMPS_PAR_QUESTION = 15_000;
 
 async function ensureUniquePlayerCode(player: any, pseudo: string) {
   if (player.code?.trim()) return player.code.trim().toUpperCase();
@@ -117,11 +114,16 @@ export async function startAffiliateTrainingPartieAction(categorieId: string) {
     const current = await getCurrentPlayerWithUser();
     if ('error' in current) return { success: false, error: current.error };
 
-    if (!mongoose.Types.ObjectId.isValid(categorieId)) {
+    const { player } = current;
+
+    // Reprise d'une partie encore valide, ou clôture en échec d'une partie expirée (D-01).
+    const { resumed } = await resumeOrExpirePartie(player._id);
+    if (resumed) return { success: true, resumed: true, data: resumed };
+
+    if (typeof categorieId !== 'string' || !mongoose.Types.ObjectId.isValid(categorieId)) {
       return { success: false, error: 'Catégorie invalide.' };
     }
 
-    const { player } = current;
     const validAffiliatesCount = await Player.countDocuments({
       referedBy: player._id,
       _id: { $ne: player._id },
@@ -137,74 +139,30 @@ export async function startAffiliateTrainingPartieAction(categorieId: string) {
     const categorie = await Categorie.findOne({ _id: categorieId, status: true }).lean();
     if (!categorie) return { success: false, error: 'Catégorie introuvable ou inactive.' };
 
-    const existing = await Partie.findOne({ playerId: player._id, status: 'EN_COURS' }).lean();
-    if (existing) {
-      return { success: false, error: 'Vous avez déjà une partie en cours.' };
-    }
-
-    // Ne tirer que les questions du niveau exact du joueur
-    const quizLevel = Math.max(0, Math.min(3, player.level || 0));
-    const questions = await Quiz.aggregate([
-      {
-        $match: {
-          categorieId: new mongoose.Types.ObjectId(categorieId),
-          level: quizLevel,
-          status: true,
-        },
-      },
-      { $sample: { size: AFFILIATE_QUESTIONS_PER_GAME } },
-    ]);
-
-    if (questions.length === 0) {
-      return { success: false, error: 'Aucune question disponible pour cette catégorie à votre niveau.' };
-    }
-
-    const consumed = await Player.findOneAndUpdate(
-      {
-        _id: player._id,
-        $expr: { $lt: [{ $ifNull: ['$usedAffiliateGames', 0] }, totalGrantedAffiliateGames] },
-      },
-      { $inc: { usedAffiliateGames: 1 } },
-      { new: true },
-    ).lean();
-
-    if (!consumed) {
-      return { success: false, error: "Aucune partie d'affiliation restante." };
-    }
-
-    const partie = await Partie.create({
-      playerId: player._id,
-      categorieId: new mongoose.Types.ObjectId(categorieId),
+    const questions = await tirerQuestions([categorieId], player.level || 0, NB_QUESTIONS.AFFILIATION);
+    const data = await createPartie({
+      player,
       mode: 'AFFILIATION',
       gameSource: 'affiliation',
-      levelPlayed: player.level || 0,
-      reponses: [],
-      note: 0,
-      status: 'EN_COURS',
-      questionExpiresAt: new Date(Date.now() + TEMPS_PAR_QUESTION),
+      categorieIds: [categorieId],
+      questions,
+      // Décompte atomique au lancement, dans la transaction de création de la partie.
+      consume: async (dbSession) => {
+        const consumed = await Player.findOneAndUpdate(
+          {
+            _id: player._id,
+            $expr: { $lt: [{ $ifNull: ['$usedAffiliateGames', 0] }, totalGrantedAffiliateGames] },
+          },
+          { $inc: { usedAffiliateGames: 1 } },
+          { new: true, ...tx(dbSession) },
+        ).lean();
+        return consumed ? Math.max(0, totalGrantedAffiliateGames - (consumed.usedAffiliateGames || 0)) : null;
+      },
     });
 
-    const questionJeu: QuestionJeu[] = questions.map((q: any) => ({
-      _id: q._id.toString(),
-      enonce: q.enonce,
-      assertions: q.assertions,
-      type: q.type,
-      level: q.level,
-    }));
-
-    return {
-      success: true,
-      data: {
-        partieId: partie._id.toString(),
-        questions: questionJeu,
-        questionIndex: 0,
-        notes: 0,
-        playerId: player._id.toString(),
-        mode: 'AFFILIATION',
-        parties: Math.max(0, totalGrantedAffiliateGames - (consumed.usedAffiliateGames || 0)),
-      } as PartieActiveData,
-    };
+    return { success: true, resumed: false, data };
   } catch (error: any) {
+    if (error instanceof GameError) return { success: false, error: error.message };
     return { success: false, error: error.message || "Erreur lors du lancement de la partie d'affiliation." };
   }
 }

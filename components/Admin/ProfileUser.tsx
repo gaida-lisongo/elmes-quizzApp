@@ -10,7 +10,7 @@ import {
 import ShareLink from "@/components/Common/ShareLink";
 import QRCode from "qrcode";
 import { getCurrentUserDetailed } from "@/actions/auth.actions";
-import { updateUser } from "@/actions/user.actions";
+import { updateMyAccountAction } from "@/actions/profile.actions";
 import { uploadToCloudinary } from "@/actions/cloudinary.actions";
 import { logoutUser } from "@/actions/auth.actions";
 
@@ -94,20 +94,25 @@ const ProfileDrawer = ({
     try {
       // Validation mot de passe si on est sur le tab 2
       if (tab === 1) {
-        if (newPassword && newPassword.length < 6) {
-          throw new Error("Le mot de passe doit contenir au moins 6 caractères.");
+        if (newPassword && newPassword.length < 8) {
+          throw new Error("Le mot de passe doit contenir au moins 8 caractères.");
         }
         if (newPassword !== confirmPassword) {
           throw new Error("Les mots de passe ne correspondent pas.");
         }
+        if (newPassword && !currentPassword) {
+          throw new Error("Saisissez votre mot de passe actuel.");
+        }
       }
 
-      const result = await updateUser(user._id, {
+      // Le rôle n'est jamais envoyé : il ne se modifie que par un ADMIN (écran Agents).
+      const result = await updateMyAccountAction({
         pseudo: pseudo || undefined,
         telephone: telephone || undefined,
         email: email || undefined,
-        secure: newPassword || undefined,
-        role: role as "PLAYER" | "MOD" | "ADMIN",
+        photo: photo || undefined,
+        currentPassword: currentPassword || undefined,
+        newPassword: newPassword || undefined,
       });
 
       if (!result.success) throw new Error(result.error);
@@ -305,13 +310,26 @@ const ProfileDrawer = ({
 
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-black dark:text-white">
+                    Mot de passe actuel
+                  </label>
+                  <input
+                    type="password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    placeholder="Requis pour changer de mot de passe"
+                    className="w-full rounded-lg border border-stroke bg-transparent px-4 py-2.5 text-sm text-black outline-none transition focus:border-primary dark:border-strokedark dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-black dark:text-white">
                     Nouveau mot de passe
                   </label>
                   <input
                     type="password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Minimum 6 caractères"
+                    placeholder="Minimum 8 caractères"
                     className="w-full rounded-lg border border-stroke bg-transparent px-4 py-2.5 text-sm text-black outline-none transition focus:border-primary dark:border-strokedark dark:text-white"
                   />
                 </div>

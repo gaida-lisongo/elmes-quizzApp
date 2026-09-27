@@ -22,7 +22,6 @@ export default async function RootLayout({
   // Session côté serveur (instantanée, pas de flickering)
   const userData = await getCurrentUserDetailed();
 
-  console.log("User data in RootLayout:", userData);
 
   // Données pour le footer
   const [parcours, competitions] = await Promise.all([

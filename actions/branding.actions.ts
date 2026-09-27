@@ -2,7 +2,11 @@
 
 import { LandingPage } from "@/lib/models/Landing";
 import connectToDb from "@/lib/utils/db";
-import { getSession } from "@/lib/utils/auth";
+import { guardPermission } from "@/lib/utils/guards";
+
+// Liens CTA : chemin relatif du site ou URL https (pas de javascript:, data:, http: …).
+const isSafeCtaUrl = (url: unknown) =>
+  typeof url === "string" && (/^\/(?!\/)/.test(url.trim()) || /^https:\/\/\S+$/i.test(url.trim()));
 
 /**
  * Récupère toutes les promesses de la landing page
@@ -28,10 +32,9 @@ export async function addPromesse(data: {
   imageUrl: string;
 }) {
   try {
-    const session = await getSession();
-    // if (!session || session.role !== "ADMIN") {
-    //   return { success: false, error: "Non autorisé" };
-    // }
+    const guard = await guardPermission("HOME");
+    if (!guard.ok) return { success: false, error: guard.error };
+    if (!isSafeCtaUrl(data?.ctaUrl)) return { success: false, error: "Lien du bouton invalide (chemin du site ou URL https)." };
 
     await connectToDb();
 
@@ -74,10 +77,9 @@ export async function updatePromesse(
   }
 ) {
   try {
-    const session = await getSession();
-    // if (!session || session.role !== "ADMIN") {
-    //   return { success: false, error: "Non autorisé" };
-    // }
+    const guard = await guardPermission("HOME");
+    if (!guard.ok) return { success: false, error: guard.error };
+    if (!isSafeCtaUrl(data?.ctaUrl)) return { success: false, error: "Lien du bouton invalide (chemin du site ou URL https)." };
 
     await connectToDb();
 
@@ -115,10 +117,8 @@ export async function updatePromesse(
  */
 export async function deletePromesse(index: number) {
   try {
-    const session = await getSession();
-    // if (!session || session.role !== "ADMIN") {
-    //   return { success: false, error: "Non autorisé" };
-    // }
+    const guard = await guardPermission("HOME");
+    if (!guard.ok) return { success: false, error: guard.error };
 
     await connectToDb();
 
@@ -168,6 +168,9 @@ export async function addValeur(data: {
   imageUrl: string;
 }) {
   try {
+    const guard = await guardPermission("ABOUT");
+    if (!guard.ok) return { success: false, error: guard.error };
+
     await connectToDb();
 
     let landing = await LandingPage.findOne();
@@ -203,6 +206,9 @@ export async function updateValeur(
   }
 ) {
   try {
+    const guard = await guardPermission("ABOUT");
+    if (!guard.ok) return { success: false, error: guard.error };
+
     await connectToDb();
 
     const landing = await LandingPage.findOne();
@@ -235,6 +241,9 @@ export async function updateValeur(
  */
 export async function deleteValeur(index: number) {
   try {
+    const guard = await guardPermission("ABOUT");
+    if (!guard.ok) return { success: false, error: guard.error };
+
     await connectToDb();
 
     const landing = await LandingPage.findOne();
@@ -284,6 +293,9 @@ export async function addTeamMember(data: {
   bio: string;
 }) {
   try {
+    const guard = await guardPermission("ABOUT");
+    if (!guard.ok) return { success: false, error: guard.error };
+
     await connectToDb();
 
     let landing = await LandingPage.findOne();
@@ -321,6 +333,9 @@ export async function updateTeamMember(
   }
 ) {
   try {
+    const guard = await guardPermission("ABOUT");
+    if (!guard.ok) return { success: false, error: guard.error };
+
     await connectToDb();
 
     const landing = await LandingPage.findOne();
@@ -354,6 +369,9 @@ export async function updateTeamMember(
  */
 export async function deleteTeamMember(index: number) {
   try {
+    const guard = await guardPermission("ABOUT");
+    if (!guard.ok) return { success: false, error: guard.error };
+
     await connectToDb();
 
     const landing = await LandingPage.findOne();

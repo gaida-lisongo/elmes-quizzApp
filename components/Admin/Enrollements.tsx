@@ -354,6 +354,10 @@ export default function Enrollements() {
     fetchSessions();
   };
 
+  // Q-05 : COMPLETED signifie « matchs ouverts » (renommage d'affichage, sans migration de données).
+  const statusLabel = (status?: string) =>
+    ({ ACTIVE: "ACTIVE", INACTIVE: "INACTIVE", COMPLETED: "MATCHS OUVERTS", PAYMENT: "PAYMENT" } as Record<string, string>)[status || "ACTIVE"] || status;
+
   const handleUpdateStatus = async (session: SessionItem, status: "ACTIVE" | "INACTIVE" | "COMPLETED" | "PAYMENT", e: React.MouseEvent) => {
     e.stopPropagation();
     const res = await updateSessionStatusAction(session._id, status);
@@ -519,7 +523,7 @@ export default function Enrollements() {
                       {getSessionType(session) === "parcours" ? "Parcours" : "CompÃ©tition"}
                     </span>
                     <span className="rounded-full bg-stroke px-2.5 py-1 font-medium text-black dark:bg-strokedark dark:text-white">
-                      {session.status || "ACTIVE"}
+                      {statusLabel(session.status)}
                     </span>
                   </div>
                   <div className="mt-3 flex flex-wrap gap-1.5">
@@ -531,7 +535,7 @@ export default function Enrollements() {
                         disabled={(session.status || "ACTIVE") === status}
                         className="rounded-md border border-stroke px-2 py-1 text-[11px] font-medium text-waterloo transition hover:border-primary hover:text-primary disabled:cursor-default disabled:border-primary disabled:bg-primary/10 disabled:text-primary dark:border-strokedark"
                       >
-                        {status}
+                        {statusLabel(status)}
                       </button>
                     ))}
                   </div>

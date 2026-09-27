@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Loader2, CheckCircle, AlertCircle, Calendar, User, Users, Target, ChevronRight, ArrowLeft, DollarSign, CreditCard } from "lucide-react";
-import { getSessionsByRessourceAction, enrollToParcoursAction, enrollToCompetitionAction, confirmCompetitionEnrollmentPaymentAction } from "@/actions/enrollment.actions";
-import { verifyPersistedPaymentAction } from "@/actions/payment.actions";
+import { getSessionsByRessourceAction, enrollToParcoursAction, enrollToCompetitionAction, confirmCompetitionEnrollmentPaymentAction, getEnrollmentPriceAction } from "@/actions/enrollment.actions";
+import { verifyMyPaymentAction } from "@/actions/payment.actions";
 import type { EnrollmentInfo } from "./index";
 
 interface ISessionItem {
@@ -28,7 +28,6 @@ interface DrawerInscriptionProps {
 
 type Step = "sessions" | "confirm" | "payment" | "processing" | "success" | "error";
 
-const TAUX = Number(process.env.NEXT_PUBLIC_TAUX) || 2850;
 const DEFAULT_PARCOURS_ENROLLMENT_FEE_CDF = 15000;
 
 export default function DrawerInscription({
@@ -52,6 +51,8 @@ export default function DrawerInscription({
   const [orderNumber, setOrderNumber] = useState("");
   const [enrollmentId, setEnrollmentId] = useState("");
   const [uniqueCode, setUniqueCode] = useState("");
+  // Prix officiel renvoyé par le serveur (grille CDF / USD), utilisé pour l'affichage.
+  const [price, setPrice] = useState<{ amountCDF: number; amountUSD: number } | null>(null);
 
   // Charger les sessions disponibles
   useEffect(() => {
@@ -96,10 +97,15 @@ export default function DrawerInscription({
   const handleSelectSession = (session: ISessionItem) => {
     if (!canEnroll()) return;
     setSelectedSession(session);
+    setPrice(null);
+    getEnrollmentPriceAction(type === "parcours" ? "Parcours" : "Competition", targetId, session._id)
+      .then((res) => { if (res.success && res.price) setPrice(res.price); })
+      .catch(() => undefined);
     setStep("payment");
   };
 
   const getEnrollmentAmountCDF = () => {
+    if (price?.amountCDF) return price.amountCDF;
     const configuredAmount = Number(selectedSession?.enrollmentFeeCDF || amount || 0);
     if (configuredAmount > 0) return configuredAmount;
     return type === "parcours" ? DEFAULT_PARCOURS_ENROLLMENT_FEE_CDF : 15000;
@@ -125,19 +131,16 @@ export default function DrawerInscription({
     setStep("processing");
     setErrorMsg("");
 
-    const amountConvert = currency === "CDF" ? enrollmentAmountCDF : (enrollmentAmountCDF / TAUX);
+    // Le montant est fixé par le serveur (frais de la session ou de la compétition) :
+    // seuls le téléphone, la devise et le canal sont envoyés.
     const payload = {
       phone,
-      email,
       currency,
-      amount: amountConvert,
       method: paymentMethod,
     };
     const res = type === "parcours"
       ? await enrollToParcoursAction(targetId, selectedSession._id, payload)
       : await enrollToCompetitionAction(targetId, selectedSession._id, payload);
-
-    console.log("Res from provider : ", res)
 
     if (!res.success || !res.enrollment || !res.orderNumber) {
       setErrorMsg(res.error || "Echec de l'initiation du paiement");
@@ -161,8 +164,8 @@ export default function DrawerInscription({
     setErrorMsg("");
 
     const res = type === "parcours"
-      ? await verifyPersistedPaymentAction({ orderNumber, resourceType: "PARCOURS" })
-      : await confirmCompetitionEnrollmentPaymentAction(enrollmentId, orderNumber, email);
+      ? await verifyMyPaymentAction(orderNumber)
+      : await confirmCompetitionEnrollmentPaymentAction(enrollmentId, orderNumber);
     if (!res.success || (type === "parcours" && (res as any).status !== "SUCCES")) {
       setErrorMsg(res.error || "Le paiement n'est pas encore confirme.");
       setStep("payment");
@@ -453,7 +456,7 @@ export default function DrawerInscription({
                                 : "border-stroke text-waterloo hover:border-primary dark:border-strokedark"
                             }`}
                           >
-                            {item === "CDF" ? `${getEnrollmentAmountCDF().toLocaleString("fr-FR")} CDF` : `${(getEnrollmentAmountCDF() / TAUX).toFixed()} USD`}
+                            {item === "CDF" ? `${getEnrollmentAmountCDF().toLocaleString("fr-FR")} CDF` : `${price?.amountUSD ?? "…"} USD`}
                           </button>
                         ))}
                       </div>
@@ -497,16 +500,7 @@ export default function DrawerInscription({
                       />
                     </div>
 
-                    <div>
-                      <label className="mb-1.5 block text-sm font-medium text-black dark:text-white">Email de réception</label>
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
-                        placeholder="prenom.nom@email.com"
-                        className="w-full rounded-lg border border-stroke bg-white px-4 py-2.5 text-sm text-black outline-hidden transition focus:border-primary dark:border-strokedark dark:bg-black dark:text-white"
-                      />
-                    </div>
+                    <p className="text-xs text-waterloo">La confirmation est envoyée à l&apos;adresse e-mail de votre compte.</p>
 
                     {errorMsg && (
                       <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600 dark:border-red-800 dark:bg-red-900/20">

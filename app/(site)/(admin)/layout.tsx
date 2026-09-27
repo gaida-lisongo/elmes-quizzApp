@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
 import { getSession } from "@/lib/utils/auth";
 import User from "@/lib/models/User";
 import Player from "@/lib/models/Player";
@@ -11,14 +12,14 @@ import AdminLayoutClient, {
 async function getUserRoleAndType(): Promise<{
   role: UserRole;
   playerType: PlayerType | null;
-}> {
+} | null> {
   try {
     const session = await getSession();
-    if (!session) return { role: "PLAYER", playerType: null };
+    if (!session) return null;
 
     await connectToDb();
     const user = await User.findById(session.userId).lean();
-    if (!user) return { role: "PLAYER", playerType: null };
+    if (!user) return null;
 
     const role = user.role as UserRole;
 
@@ -34,7 +35,7 @@ async function getUserRoleAndType(): Promise<{
     // ADMIN ou MOD
     return { role, playerType: null };
   } catch {
-    return { role: "PLAYER", playerType: null };
+    return null;
   }
 }
 
@@ -49,7 +50,10 @@ export default async function AdminLayout({
   metriques?: React.ReactNode;
   enrollements?: React.ReactNode;
 }) {
-  const { role, playerType } = await getUserRoleAndType();
+  const identity = await getUserRoleAndType();
+  // EX-SEC-06 : pas de tableau de bord sans session valide.
+  if (!identity) redirect("/auth/signin");
+  const { role, playerType } = identity;
 
   return (
     <Suspense fallback={<div className="flex h-screen items-center justify-center"><div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div></div>}>

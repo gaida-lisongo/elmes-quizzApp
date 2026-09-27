@@ -5,16 +5,12 @@ import { Loader2, Search, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { searchUsers } from "@/actions/payment.actions";
 
+// Résultat de recherche sans données personnelles (pas de téléphone ni d'e-mail, EX-SEC-04).
 export interface SearchUserResult {
   _id: string;
   pseudo: string;
-  telephone: string;
-  email?: string;
   photo?: string;
-  role: string;
   playerType: string | null;
-  level: number | null;
-  parties: number | null;
   playerId?: string;
 }
 
@@ -99,13 +95,12 @@ export default function SearchUserInput({
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-black dark:text-white">{user.pseudo}</p>
                   <p className="truncate text-xs text-waterloo">
-                    {user.telephone}
-                    {user.email ? ` · ${user.email}` : ""}
+                    Joueur
                   </p>
                 </div>
                 <div className="shrink-0 text-right">
                   <span className="inline-block rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
-                    {user.playerType || user.role}
+                    {user.playerType || "PLAYER"}
                   </span>
                 </div>
               </button>

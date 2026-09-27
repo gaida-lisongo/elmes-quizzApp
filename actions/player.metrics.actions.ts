@@ -3,6 +3,7 @@
 import mongoose from 'mongoose';
 import connectToDb from '@/lib/utils/db';
 import { getSession } from '@/lib/utils/auth';
+import { escapeRegex, isValidObjectId } from '@/lib/utils/security';
 import Player from '@/lib/models/Player';
 import User from '@/lib/models/User';
 import Partie from '@/lib/models/Partie';
@@ -49,7 +50,7 @@ export interface PlayerMetricsData {
   chart: Array<{ label: string; value: number; detail: string }>;
   sessions: Array<{ label: string; count: number }>;
   leaderboard?: Array<{ _id: string; pseudo: string; score: number; parties: number; precision: number; rank: number; level: number }>;
-  recharges?: Array<{ _id: string; index: number; amount: number; status: string; targetLevel: number; creditedParties: number; creditedAt?: string; createdAt: string; providerTxId: string; reference?: string }>;
+  recharges?: Array<{ _id: string; index: number; amount: number; currency?: 'CDF' | 'USD'; status: string; targetLevel: number; creditedParties: number; creditedAt?: string; createdAt: string; providerTxId: string; reference?: string }>;
   rewards?: Array<{ _id: string; parcours: string; session: string; rank: number; amount: number; status: string; reference: string; createdAt: string }>;
   team?: {
     _id: string;
@@ -72,6 +73,8 @@ const getTrainingPassParties = (amountCDF: number, targetLevel: number) => {
   return 0;
 };
 
+const MAX_BONUS_PARTIES = 500;
+
 async function ensureStaffAccess() {
   const session = await getSession();
   if (!isStaffSession(session)) return null;
@@ -88,14 +91,33 @@ export async function getPlayerMetricsAction(): Promise<{ success: boolean; data
     const player = await Player.findOne({ userId: session.userId }).lean();
     if (!player) return { success: false, error: 'Profil joueur introuvable' };
 
-    const [parties, categories, enrolments] = await Promise.all([
+    const [parties, categories, enrolments, answerTotals] = await Promise.all([
       Partie.find({ playerId: player._id }).populate('categorieId', 'designation').sort({ createdAt: -1 }).limit(8).lean(),
       Categorie.find({ status: true }).lean(),
       Enrollement.find({ playerId: player._id }).populate('sessionId', 'designation').lean(),
+      // JEU-17 : précision calculée sur toutes les parties terminées, pas seulement les 8 dernières.
+      Partie.aggregate([
+        { $match: { playerId: player._id, status: 'TERMINE' } },
+        {
+          $group: {
+            _id: null,
+            total: { $sum: { $size: { $ifNull: ['$reponses', []] } } },
+            ok: {
+              $sum: {
+                $size: {
+                  $filter: { input: { $ifNull: ['$reponses', []] }, as: 'r', cond: { $eq: ['$$r.estCorrecte', true] } },
+                },
+              },
+            },
+          },
+        },
+      ]),
     ]);
 
-    const totalQuestions = parties.reduce((acc, p: any) => acc + (p.reponses?.length || 0), 0);
-    const correctAnswers = parties.reduce((acc, p: any) => acc + (p.reponses?.filter((r: any) => r.estCorrecte).length || 0), 0);
+    const totalQuestions = Number(answerTotals?.[0]?.total || 0);
+    const correctAnswers = Number(answerTotals?.[0]?.ok || 0);
+    // Cumul réel des parties jouées (Player.metrics), et non le nombre de parties récentes chargées.
+    const partiesJoueesCumul = player.metrics?.partiesJouees || 0;
 
     const categoryMap = new Map<string, { categorie: string; parties: number; ok: number }>();
     for (const cat of categories) {
@@ -134,7 +156,7 @@ export async function getPlayerMetricsAction(): Promise<{ success: boolean; data
     const playedCategoriesCount = playedCategories.size;
 
     const balancedParties = player.parties || 0;
-    const partyPercent = balancedParties > 0 ? Math.round((parties.length / balancedParties) * 100) : 0;
+    const partyPercent = balancedParties > 0 ? Math.round((partiesJoueesCumul / balancedParties) * 100) : 0;
 
     const leaderboard = await Player.find({ type: 'STANDALONE' })
       .populate('userId', 'pseudo')
@@ -233,7 +255,7 @@ export async function getPlayerMetricsAction(): Promise<{ success: boolean; data
       data: {
         playerType: player.type,
         stats: {
-          partiesJouees: parties.length,
+          partiesJouees: partiesJoueesCumul,
           scoreTotal: player.metrics?.totalScore || 0,
           precision: totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0,
           level: player.level || 0,
@@ -251,7 +273,7 @@ export async function getPlayerMetricsAction(): Promise<{ success: boolean; data
             percent: totalCategories > 0 ? Math.round((playedCategoriesCount / totalCategories) * 100) : 0,
           },
           parties: {
-            ok: parties.length,
+            ok: partiesJoueesCumul,
             total: balancedParties || 0,
             percent: partyPercent,
           },
@@ -292,9 +314,10 @@ export async function getPlayerMetricsAction(): Promise<{ success: boolean; data
           _id: recharge.providerTxId || `${recharge.amount}-${recharge.createdAt}`,
           index,
           amount: recharge.amount || 0,
+          currency: recharge.currency || 'CDF',
           status: recharge.status || 'EN_ATTENTE',
           targetLevel: recharge.targetLevel || 0,
-          creditedParties: recharge.creditedParties || getTrainingPassParties(recharge.amount || 0, recharge.targetLevel || 0),
+          creditedParties: recharge.creditedParties || getTrainingPassParties(recharge.amountCDF ?? recharge.amount ?? 0, recharge.targetLevel || 0),
           creditedAt: recharge.creditedAt?.toISOString?.(),
           createdAt: recharge.createdAt?.toISOString?.() || '',
           providerTxId: recharge.providerTxId || '',
@@ -329,11 +352,11 @@ export async function searchModeratorPlayersAction(query: string): Promise<{
     const session = await ensureStaffAccess();
     if (!session) return { success: false, error: 'Non autorisé' };
 
-    const search = query.trim();
+    const search = String(query || '').trim().slice(0, 50);
     if (search.length < 2) return { success: true, players: [] };
 
     await connectToDb();
-    const regex = new RegExp(search, 'i');
+    const regex = new RegExp(escapeRegex(search), 'i');
     const objectId = mongoose.isValidObjectId(search) ? new mongoose.Types.ObjectId(search) : null;
     const numericLevel = Number(search);
     const levelMatch = Number.isInteger(numericLevel) ? [{ level: numericLevel }] : [];
@@ -532,13 +555,16 @@ export async function grantPlayerBonusPartiesAction(playerId: string, bonusCount
     if (!Number.isInteger(numericBonus) || numericBonus <= 0) {
       return { success: false, error: 'Le nombre de bonus doit être positif.' };
     }
+    // TODO: plafond à confirmer par le propriétaire (garde-fou contre une saisie erronée).
+    if (numericBonus > MAX_BONUS_PARTIES) {
+      return { success: false, error: `Le bonus est limité à ${MAX_BONUS_PARTIES} parties par attribution.` };
+    }
+    if (!isValidObjectId(playerId)) return { success: false, error: 'Joueur introuvable.' };
 
     await connectToDb();
-    const player = await Player.findById(playerId);
+    // Incrément atomique (EX-PAY-03) : plus de lecture-modification-écriture sur Player.
+    const player = await Player.findByIdAndUpdate(playerId, { $inc: { parties: numericBonus } }, { new: true }).lean();
     if (!player) return { success: false, error: 'Joueur introuvable.' };
-
-    player.parties = (player.parties || 0) + numericBonus;
-    await player.save();
 
     // TODO: tracer l'attribution dans un modèle d'audit ou de transaction si l'application en expose un.
     return {

@@ -1,253 +1,32 @@
 'use server';
 
 import mongoose from 'mongoose';
+import { randomUUID } from "crypto";
 import connectToDb from "@/lib/utils/db";
 import { getSession } from "@/lib/utils/auth";
 import EnrollementModule from "@/lib/models/Enrollement";
-import type { IEnrollement, ISession } from "@/lib/models/Enrollement";
 import Partie from "@/lib/models/Partie";
 import Player from "@/lib/models/Player";
 import Equipe from "@/lib/models/Equipe";
 import { Competition, Parcours } from "@/lib/models/Competition";
-import { sendMail } from "@/lib/utils/mail";
-import { initiatePaymentAction, checkPaymentStatusAction, type PaymentMethod } from "@/actions/payment.actions";
-import { checkStatus } from "@/lib/utils/payment.service";
+import type { PaymentMethod } from "@/actions/payment.actions";
 import { distributeParcoursSessionRewards } from "@/lib/utils/enrollmentRewards";
 import { recomputeCompetitionScholarship } from "@/lib/utils/scholarship.service";
-import {
-  SESSION_GAMES_PER_VALIDATED_ENROLLMENT,
-  grantSessionGamesAfterEnrollmentValidation,
-} from "@/lib/utils/enrollmentGames";
-import { randomUUID } from "crypto";
+import { guardPermission, guardPlayer, guardStaff, hasPermission } from "@/lib/utils/guards";
+import { isValidObjectId } from "@/lib/utils/security";
+import { withTransaction } from "@/lib/utils/transaction";
+import { getCompetitionEnrollmentPrice, getParcoursEnrollmentPrice, isCurrency, resolveCharge, type Price } from "@/lib/payments/pricing";
+import { startPayment, verifyAndApplyPayment } from "@/lib/services/payment-flow.service";
+import { confirmEnrollment } from "@/lib/services/enrollment.service";
+import { sendEnrollmentConfirmationEmail } from "@/lib/services/enrollment-mail.service";
 
 const { Enrollement, Session } = EnrollementModule;
-const PARCOURS_GRANTED_GAMES = SESSION_GAMES_PER_VALIDATED_ENROLLMENT;
-const COMPETITION_GRANTED_GAMES = SESSION_GAMES_PER_VALIDATED_ENROLLMENT;
 
-const normalizeSessionStatus = (status: string) => status.toUpperCase();
-
-type PopulatedUserContact = {
-  _id?: mongoose.Types.ObjectId;
-  email?: string;
-  pseudo?: string;
-  telephone?: string;
-};
-
-type PopulatedPlayerContact = {
-  _id?: mongoose.Types.ObjectId;
-  userId?: mongoose.Types.ObjectId | PopulatedUserContact | null;
-  level?: number;
-};
-
-type PopulatedEquipeContact = {
-  _id?: mongoose.Types.ObjectId;
-  designation?: string;
-  logo?: string;
-  chefId?: mongoose.Types.ObjectId | PopulatedPlayerContact | null;
-};
-
-type PopulatedResource = {
-  _id?: mongoose.Types.ObjectId;
-  designation?: string;
-  ressources?: string;
-};
-
-type PopulatedSession = Pick<
-  ISession,
-  | 'designation'
-  | 'enrollmentFeeCDF'
-  | 'totalValidatedEnrollments'
-  | 'scholarshipInitialAmountCDF'
-  | 'gamesPerEnrollment'
-  | 'unitRewardPerWonGameCDF'
-> & {
-  _id?: mongoose.Types.ObjectId;
-};
-
-type PopulatedEnrollment = Omit<IEnrollement, 'sessionId' | 'playerId' | 'equipeId' | 'competitionId' | 'parcoursId'> & {
-  sessionId?: mongoose.Types.ObjectId | PopulatedSession | null;
-  playerId?: mongoose.Types.ObjectId | PopulatedPlayerContact | null;
-  equipeId?: mongoose.Types.ObjectId | PopulatedEquipeContact | null;
-  competitionId?: mongoose.Types.ObjectId | PopulatedResource | null;
-  parcoursId?: mongoose.Types.ObjectId | PopulatedResource | null;
-};
-
-const isObjectId = (value: unknown): value is mongoose.Types.ObjectId =>
-  value instanceof mongoose.Types.ObjectId;
-
-const getRefId = (value?: mongoose.Types.ObjectId | { _id?: mongoose.Types.ObjectId } | null) => {
-  if (!value) return null;
-  return isObjectId(value) ? value : value._id ?? null;
-};
-
-const asPopulatedSession = (value?: PopulatedEnrollment['sessionId']) =>
-  value && !isObjectId(value) ? value : null;
-
-const asPopulatedResource = (value?: PopulatedEnrollment['competitionId'] | PopulatedEnrollment['parcoursId']) =>
-  value && !isObjectId(value) ? value : null;
-
-const asPopulatedPlayer = (value?: PopulatedEnrollment['playerId']) =>
-  value && !isObjectId(value) ? value : null;
-
-const asPopulatedEquipe = (value?: PopulatedEnrollment['equipeId']) =>
-  value && !isObjectId(value) ? value : null;
-
-const asPopulatedUser = (value?: PopulatedPlayerContact['userId']) =>
-  value && !isObjectId(value) ? value : null;
-
-const getEnrollmentContactEmail = (enrollment: PopulatedEnrollment, isCompetition: boolean) => {
-  if (isCompetition) {
-    const equipe = asPopulatedEquipe(enrollment.equipeId);
-    const chef = equipe ? asPopulatedPlayer(equipe.chefId) : null;
-    return chef ? asPopulatedUser(chef.userId)?.email : undefined;
-  }
-
-  const player = asPopulatedPlayer(enrollment.playerId);
-  return player ? asPopulatedUser(player.userId)?.email : undefined;
-};
-
-const getEnrollmentEmailPayload = (enrollment: PopulatedEnrollment, isCompetition: boolean) => {
-  const session = asPopulatedSession(enrollment.sessionId);
-  const resource = isCompetition
-    ? asPopulatedResource(enrollment.competitionId)
-    : asPopulatedResource(enrollment.parcoursId);
-
-  return {
-    email: getEnrollmentContactEmail(enrollment, isCompetition),
-    sessionName: session?.designation || 'Session',
-    resourceName: resource?.designation || 'Ressource',
-    ressources: resource?.ressources,
-  };
-};
-
-type ScholarshipEmailInfo = {
-  enrollmentFeeCDF: number;
-  totalEnrolledTeams: number;
-  currentScholarshipCDF: number;
-  gamesPerTeam: number;
-  unitRewardCDF: number;
-  paidCurrency?: string;
-} | null;
-
-async function sendEnrollmentEmail({
-  email,
-  sessionName,
-  resourceName,
-  orderNumber,
-  ressources,
-  scholarshipInfo,
-}: {
-  email?: string;
-  sessionName: string;
-  resourceName: string;
-  orderNumber: string;
-  ressources?: string;
-  scholarshipInfo?: ScholarshipEmailInfo;
-}) {
-  if (!email?.trim()) return;
-  try {
-    await sendMail({
-      to: email,
-      subject: 'ELMES-QUIZ - Confirmation d’enrollement',
-      html: `
-        <div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;background:#f7f9fc;border-radius:16px;">
-          <h2 style="margin:0 0 12px;color:#0f172a;">Enrollement confirmé</h2>
-          <p style="margin:0 0 12px;color:#334155;">Votre enrollement à la session <strong>${sessionName}</strong> est confirmé.</p>
-          <p style="margin:0 0 12px;color:#334155;"><strong>Ressource :</strong> ${resourceName}</p>
-          <p style="margin:0 0 12px;color:#334155;"><strong>Commande / facture :</strong> ${orderNumber}</p>
-          ${scholarshipInfo ? `
-            <div style="margin:16px 0;padding:14px;border:1px solid #dbe3ef;border-radius:12px;background:#fff;">
-              <p style="margin:0 0 8px;color:#0f172a;font-weight:700;">Bourse d'Excellence AcadÃ©mique</p>
-              <p style="margin:0 0 6px;color:#334155;"><strong>Frais d'enrÃ´lement CDF :</strong> ${scholarshipInfo.enrollmentFeeCDF.toLocaleString('fr-FR')} FC</p>
-              ${scholarshipInfo.paidCurrency ? `<p style="margin:0 0 6px;color:#334155;"><strong>Devise payÃ©e :</strong> ${scholarshipInfo.paidCurrency}</p>` : ''}
-              <p style="margin:0 0 6px;color:#334155;"><strong>Ã‰quipes validÃ©es :</strong> ${scholarshipInfo.totalEnrolledTeams}</p>
-              <p style="margin:0 0 6px;color:#334155;"><strong>Bourse actuelle :</strong> ${scholarshipInfo.currentScholarshipCDF.toLocaleString('fr-FR')} FC</p>
-              <p style="margin:0 0 6px;color:#334155;"><strong>Parties accordÃ©es Ã  l'Ã©quipe :</strong> ${scholarshipInfo.gamesPerTeam}</p>
-              <p style="margin:0;color:#334155;"><strong>Valeur actuelle d'une partie gagnÃ©e :</strong> ${scholarshipInfo.unitRewardCDF.toLocaleString('fr-FR')} FC</p>
-            </div>
-            <p style="margin:0 0 12px;color:#334155;">La Bourse actuelle Ã©volue selon les enrÃ´lements validÃ©s et les performances.</p>
-          ` : ''}
-          <p style="margin:0;color:#334155;"><strong>À préparer :</strong> ${ressources?.trim() || 'Ressource à consulter dans votre espace joueur.'}</p>
-        </div>
-      `,
-    });
-  } catch (error) {
-    console.error('[sendEnrollmentEmail]', error);
-  }
-}
-
-async function applyEnrollmentConfirmation(enrollment: PopulatedEnrollment, orderNumber: string, sendEmail = true) {
-  const isCompetition = Boolean(enrollment.competitionId);
-  const sessionId = getRefId(enrollment.sessionId);
-
-  enrollment.status = 'CONFIRMED';
-  enrollment.paymentStatus = 'PAID';
-  enrollment.validatedAt = enrollment.validatedAt || new Date();
-  enrollment.transactions = (enrollment.transactions || []).map((transaction: any) => {
-    if (!orderNumber || transaction.orderNumber === orderNumber) transaction.status = 'PAID';
-    return transaction;
-  });
-  await enrollment.save();
-  await grantSessionGamesAfterEnrollmentValidation(enrollment._id.toString());
-
-  if (isCompetition && sessionId) {
-    try {
-      await recomputeCompetitionScholarship(sessionId.toString());
-    } catch (error) {
-      console.error('[applyEnrollmentConfirmation] Erreur recalcul Bourse:', error);
-    }
-  }
-  
-
-  if (sendEmail) {
-    // Récupérer les infos Bourse pour les compétitions
-    let scholarshipInfo: ScholarshipEmailInfo = null;
-    if (isCompetition && sessionId) {
-      try {
-        const freshSession = await Session.findById(sessionId).lean();
-        if (freshSession && (freshSession.scholarshipInitialAmountCDF ?? 0) > 0) {
-          scholarshipInfo = {
-            enrollmentFeeCDF: freshSession.enrollmentFeeCDF ?? 0,
-            totalEnrolledTeams: freshSession.totalValidatedEnrollments ?? 0,
-            currentScholarshipCDF: freshSession.scholarshipInitialAmountCDF ?? 0,
-            gamesPerTeam: freshSession.gamesPerEnrollment ?? 250,
-            unitRewardCDF: freshSession.unitRewardPerWonGameCDF ?? 0,
-            paidCurrency: enrollment.transactions?.find((t: any) => t.orderNumber === orderNumber)?.currency,
-          };
-        }
-      } catch (e) {
-        console.error('[applyEnrollmentConfirmation] Erreur chargement Bourse:', e);
-      }
-    }
-
-    const emailPayload = getEnrollmentEmailPayload(enrollment, isCompetition);
-    await sendEnrollmentEmail({
-      email: emailPayload.email,
-      sessionName: emailPayload.sessionName,
-      resourceName: emailPayload.resourceName,
-      orderNumber: orderNumber || enrollment.orderNumber,
-      ressources: emailPayload.ressources,
-      scholarshipInfo,
-    });
-  }
-
-  // Recalculer la Bourse si c'est un enrôlement de compétition
-}
-
-async function findManageableEnrollment(enrollmentId: string) {
-  if (!mongoose.Types.ObjectId.isValid(enrollmentId)) return null;
-  const enrollment = await Enrollement.findById(enrollmentId)
-    .populate('sessionId', 'designation')
-    .populate('parcoursId', 'designation ressources')
-    .populate('competitionId', 'designation ressources')
-    .populate({ path: 'playerId', populate: { path: 'userId', select: 'email pseudo telephone' } })
-    .populate({ path: 'equipeId', populate: { path: 'chefId', populate: { path: 'userId', select: 'email pseudo telephone' } } });
-  return enrollment as PopulatedEnrollment | null;
-}
+const normalizeSessionStatus = (status: string) => String(status || '').toUpperCase();
 
 async function ensureStaffSession() {
-  const session = await getSession();
-  return session && ['ADMIN', 'MOD'].includes(session.role || '') ? session : null;
+  const guard = await guardStaff();
+  return guard.ok ? guard.session : null;
 }
 
 // ── INFOS JOUEUR / ÉQUIPE CONNECTÉ(E) ──────────────────────────────
@@ -411,33 +190,169 @@ export async function getSessionsByRessourceAction(
   }
 }
 
+type EnrollmentResult = {
+  success: boolean;
+  error?: string;
+  enrollment?: any;
+  orderNumber?: string;
+  redirectUrl?: string;
+  paymentMethod?: PaymentMethod;
+  amount?: number;
+  currency?: 'CDF' | 'USD';
+};
+
+type EnrollmentPaymentInput = {
+  phone: string;
+  currency: 'CDF' | 'USD';
+  method?: PaymentMethod;
+  // Champs historiques ignorés : le montant vient du catalogue serveur (EX-PAY-01).
+  amount?: number;
+  email?: string;
+};
+
+/**
+ * Enrôlement payant commun (EX-PAY-01, PAY-20) :
+ * 1. l'enrôlement est créé PENDING avant le paiement (l'index unique empêche les doublons) ;
+ * 2. le paiement est initié au montant serveur, avec l'identifiant de l'enrôlement ;
+ * 3. l'enrôlement reçoit le numéro de commande, ou est annulé si l'initiation échoue.
+ */
+async function createEnrollmentAndStartPayment(params: {
+  payer: any;
+  productType: 'PARCOURS' | 'COMPETITION';
+  productName: string;
+  resourceId: string;
+  price: Price;
+  payment: EnrollmentPaymentInput;
+  enrollmentFields: Record<string, unknown>;
+  metadata: Record<string, unknown>;
+}): Promise<EnrollmentResult> {
+  const { payment } = params;
+  if (!isCurrency(payment?.currency)) return { success: false, error: 'Devise invalide.' };
+  const method: PaymentMethod = payment?.method === 'CARD' ? 'CARD' : 'MOBILE_MONEY';
+  const phone = String(payment?.phone || '').trim();
+  if (!phone) return { success: false, error: 'Le numéro Mobile Money est requis' };
+
+  const charge = resolveCharge(params.price, payment.currency);
+  const placeholderOrder = `PENDING-${randomUUID()}`;
+
+  let enrollment;
+  try {
+    enrollment = await Enrollement.create({
+      ...params.enrollmentFields,
+      code: randomUUID(),
+      orderNumber: placeholderOrder,
+      status: 'PENDING',
+      paymentStatus: 'PENDING',
+      amountCDF: params.price.amountCDF,
+      amountUSD: params.price.amountUSD,
+      paidAmount: charge.amount,
+      paidCurrency: charge.currency,
+      paidAmountCDF: charge.amountCDF,
+      fxRate: charge.fxRate,
+      maxParties: 0,
+      totalGrantedGames: 0,
+      usedGames: 0,
+      remainingGames: 0,
+      points: 0,
+      parties: 0,
+      transactions: [],
+    });
+  } catch (error: any) {
+    if (error?.code === 11000) {
+      return { success: false, error: 'Un enrôlement est déjà en cours ou confirmé pour cette session.' };
+    }
+    throw error;
+  }
+
+  const paymentRes = await startPayment({
+    payer: params.payer,
+    productType: params.productType,
+    productId: params.resourceId,
+    productName: params.productName,
+    amount: charge.amount,
+    currency: charge.currency,
+    amountCDF: charge.amountCDF,
+    fxRate: charge.fxRate,
+    phone,
+    method,
+    metadata: { ...params.metadata, enrollmentId: enrollment._id.toString() },
+  });
+
+  if (!paymentRes.success) {
+    await Enrollement.updateOne(
+      { _id: enrollment._id, status: 'PENDING' },
+      { $set: { status: 'CANCELLED', paymentStatus: 'FAILED' } },
+    );
+    return { success: false, error: paymentRes.error || 'Échec de l’initiation du paiement' };
+  }
+
+  const updated = await Enrollement.findByIdAndUpdate(
+    enrollment._id,
+    {
+      $set: { orderNumber: paymentRes.orderNumber },
+      $push: {
+        transactions: {
+          membre: params.payer._id,
+          montant: charge.amount,
+          currency: charge.currency,
+          status: 'PENDING',
+          orderNumber: paymentRes.orderNumber,
+          phone,
+        },
+      },
+    },
+    { new: true },
+  ).lean();
+
+  return {
+    success: true,
+    enrollment: JSON.parse(JSON.stringify(updated)),
+    orderNumber: paymentRes.orderNumber,
+    redirectUrl: paymentRes.redirectUrl,
+    paymentMethod: method,
+    amount: charge.amount,
+    currency: charge.currency,
+  };
+}
+
+/**
+ * Un enrôlement PENDING existant : on revérifie d'abord son paiement (il peut avoir échoué
+ * ou réussi entre-temps) avant de bloquer une nouvelle tentative.
+ */
+async function resolveExistingPendingEnrollment(filter: Record<string, unknown>) {
+  const existing = await Enrollement.findOne({ ...filter, status: { $in: ['PENDING', 'CONFIRMED'] } }).lean();
+  if (!existing) return null;
+  if (existing.status === 'PENDING' && existing.orderNumber && !existing.orderNumber.startsWith('PENDING-')) {
+    await verifyAndApplyPayment(existing.orderNumber);
+    const refreshed = await Enrollement.findById(existing._id).select('status orderNumber').lean();
+    if (refreshed?.status === 'CANCELLED') return null;
+    if (refreshed?.status === 'PENDING') {
+      return { error: `Un paiement est déjà en attente pour cet enrôlement (commande ${refreshed.orderNumber}). Validez-le sur votre téléphone, ou réessayez dans quelques minutes.` };
+    }
+  }
+  return { error: 'already' };
+}
+
+/**
+ * Inscription d'un joueur ADVANCED à un parcours.
+ * Le joueur est résolu depuis la session ; le frais vient de la session (sinon 15 000 CDF).
+ */
 export async function enrollToParcoursAction(
   parcoursId: string,
   sessionId: string,
-  payment: {
-    phone: string;
-    email?: string;
-    currency: 'CDF' | 'USD';
-    amount: number;
-    method?: PaymentMethod;
-  },
-) {
+  payment: EnrollmentPaymentInput,
+): Promise<EnrollmentResult> {
   try {
-    const userSession = await getSession();
-    if (!userSession) return { success: false, error: 'Non connecté' };
+    const guard = await guardPlayer();
+    if (!guard.ok) return { success: false, error: guard.error };
+    const player = guard.player;
 
-    await connectToDb();
-
-    // Résoudre le Player depuis le userId de la session
-    const player = await Player.findOne({ userId: new mongoose.Types.ObjectId(userSession.userId) })
-      .populate('userId', 'email')
-      .lean();
-    if (!player) return { success: false, error: 'Profil joueur introuvable' };
     if (player.type !== 'ADVANCED') {
       return { success: false, error: 'Seuls les profils ADVANCED peuvent s\'inscrire à un parcours' };
     }
-
-    const playerId = player._id.toString();
+    if (!isValidObjectId(parcoursId) || !isValidObjectId(sessionId)) {
+      return { success: false, error: 'Paramètres invalides' };
+    }
 
     const sessionDoc = await Session.findOne({
       _id: new mongoose.Types.ObjectId(sessionId),
@@ -451,88 +366,38 @@ export async function enrollToParcoursAction(
       },
     }).lean();
     if (!sessionDoc) {
-      return { success: false, error: 'Cette session de parcours n’est pas ouverte aux enrollements' };
+      return { success: false, error: 'Cette session de parcours n’est pas ouverte aux enrôlements' };
     }
 
     const parcours = await Parcours.findById(parcoursId).select('designation ressources').lean();
     if (!parcours) return { success: false, error: 'Parcours introuvable' };
-    if (!payment?.phone?.trim()) {
-      return { success: false, error: 'Le numéro Mobile Money est requis' };
-    }
-    const enrollmentAmountCDF = Number((sessionDoc as any).enrollmentFeeCDF || 0) <= 0 ? Number((sessionDoc as any).enrollmentFeeCDF || 0) : 15000;
-    console.log("Enrollement : ", enrollmentAmountCDF)
-    if (enrollmentAmountCDF) {
-      return { success: false, error: 'Montant d enrollement parcours non configure pour cette session.' };
-    }
 
-    // Vérifier que le joueur n'est pas déjà inscrit à ce parcours pour cette session
-    const existing = await Enrollement.findOne({
-      playerId: new mongoose.Types.ObjectId(playerId),
+    const existing = await resolveExistingPendingEnrollment({
+      playerId: player._id,
       parcoursId: new mongoose.Types.ObjectId(parcoursId),
       sessionId: new mongoose.Types.ObjectId(sessionId),
-      status: { $in: ['PENDING', 'CONFIRMED'] },
-    }).lean();
-
-    if (existing) {
-      return { success: false, error: 'Vous êtes déjà inscrit à ce parcours pour cette session' };
-    }
-
-    // Générer un code unique
-    const code = randomUUID();
-    const paymentRes = await initiatePaymentAction(
-      player._id.toString(),
-      payment.phone.trim(),
-      payment.amount,
-      payment.currency,
-      {
-        id: parcoursId,
-        name: 'Enrollement parcours',
-        amountCDF: enrollmentAmountCDF,
-        type: 'PARCOURS',
-        metadata: { parcoursId, sessionId },
-      },
-      payment.email?.trim(),
-      payment.method || "MOBILE_MONEY",
-    );
-    if (!paymentRes.success || !paymentRes.orderNumber) {
-      return { success: false, error: paymentRes.error || 'Echec de l initiation du paiement' };
-    }
-    const orderNumber = paymentRes.orderNumber;
-
-    const enrollment = await Enrollement.create({
-      playerId: new mongoose.Types.ObjectId(playerId),
-      parcoursId: new mongoose.Types.ObjectId(parcoursId),
-      sessionId: new mongoose.Types.ObjectId(sessionId),
-      code,
-      orderNumber,
-      status: 'PENDING',
-      paymentStatus: 'PENDING',
-      amountCDF: enrollmentAmountCDF,
-      paidAmount: payment.amount,
-      paidCurrency: payment.currency,
-      maxParties: 0,
-      totalGrantedGames: 0,
-      usedGames: 0,
-      remainingGames: 0,
-      points: 0,
-      parties: 0,
-      transactions: [{
-        membre: player._id,
-        montant: payment.amount,
-        currency: payment.currency,
-        status: 'PENDING',
-        orderNumber,
-        phone: payment.phone.trim(),
-      }],
     });
+    if (existing) {
+      return { success: false, error: existing.error === 'already' ? 'Vous êtes déjà inscrit à ce parcours pour cette session' : existing.error };
+    }
 
-    return {
-      success: true,
-      enrollment: JSON.parse(JSON.stringify(enrollment)),
-      orderNumber,
-      redirectUrl: paymentRes.redirectUrl,
-      paymentMethod: payment.method || "MOBILE_MONEY",
-    };
+    // PAY-05 corrigé : frais de la session s'il est configuré, sinon 15 000 CDF par défaut.
+    const price = getParcoursEnrollmentPrice(sessionDoc as any);
+
+    return await createEnrollmentAndStartPayment({
+      payer: player,
+      productType: 'PARCOURS',
+      productName: 'Enrôlement parcours',
+      resourceId: parcoursId,
+      price,
+      payment,
+      enrollmentFields: {
+        playerId: player._id,
+        parcoursId: new mongoose.Types.ObjectId(parcoursId),
+        sessionId: new mongoose.Types.ObjectId(sessionId),
+      },
+      metadata: { parcoursId, sessionId },
+    });
   } catch (error: any) {
     return { success: false, error: error.message };
   }
@@ -541,35 +406,25 @@ export async function enrollToParcoursAction(
 // ── ENROLLEMENT (COMPÉTITION – équipe VIP) ─────────────────────────
 
 /**
- * Inscription d'une équipe VIP à une compétition
- * Le joueur connecté doit être le chef d'une équipe.
+ * Inscription d'une équipe VIP à une compétition.
+ * Le joueur connecté doit être le chef d'une équipe ; le frais vient de Competition.amount.
  */
 export async function enrollToCompetitionAction(
   competitionId: string,
   sessionId: string,
-  payment: {
-    phone: string;
-    email?: string;
-    currency: 'CDF' | 'USD';
-    amount: number;
-    method?: PaymentMethod;
-  },
-) {
+  payment: EnrollmentPaymentInput,
+): Promise<EnrollmentResult> {
   try {
-    const userSession = await getSession();
-    if (!userSession) return { success: false, error: 'Non connecté' };
-
-    await connectToDb();
-
-    // Résoudre le Player depuis la session
-    const player = await Player.findOne({ userId: new mongoose.Types.ObjectId(userSession.userId) })
-      .populate('userId', 'email')
-      .lean();
-    if (!player) return { success: false, error: 'Profil joueur introuvable' };
+    const guard = await guardPlayer();
+    if (!guard.ok) return { success: false, error: guard.error };
+    const player = guard.player;
 
     // Vérifier que le joueur est VIP
     if (player.type !== 'VIP') {
       return { success: false, error: 'Seuls les profils VIP peuvent inscrire une équipe à une compétition' };
+    }
+    if (!isValidObjectId(competitionId) || !isValidObjectId(sessionId)) {
+      return { success: false, error: 'Paramètres invalides' };
     }
 
     // Trouver l'équipe dont ce joueur est le chef
@@ -577,8 +432,6 @@ export async function enrollToCompetitionAction(
     if (!equipe) {
       return { success: false, error: 'Vous devez être chef d\'une équipe pour l\'inscrire à une compétition' };
     }
-
-    const equipeId = equipe._id.toString();
 
     const sessionDoc = await Session.findOne({
       _id: new mongoose.Types.ObjectId(sessionId),
@@ -592,192 +445,109 @@ export async function enrollToCompetitionAction(
       },
     }).lean();
     if (!sessionDoc) {
-      return { success: false, error: 'Cette session de compétition n’est pas ouverte aux enrollements' };
+      return { success: false, error: 'Cette session de compétition n’est pas ouverte aux enrôlements' };
     }
 
-    const competition = await Competition.findById(competitionId).select('designation ressources amount').lean();
+    const competition = await Competition.findById(competitionId).select('designation ressources amount amountUSD').lean();
     if (!competition) return { success: false, error: 'Compétition introuvable' };
 
-    // Vérifier que l'équipe n'est pas déjà inscrite
-    const existing = await Enrollement.findOne({
-      equipeId: new mongoose.Types.ObjectId(equipeId),
+    const price = getCompetitionEnrollmentPrice(competition as any);
+    if (!price) {
+      return { success: false, error: 'Montant CDF de référence indisponible pour cette compétition.' };
+    }
+
+    const existing = await resolveExistingPendingEnrollment({
+      equipeId: equipe._id,
       competitionId: new mongoose.Types.ObjectId(competitionId),
       sessionId: new mongoose.Types.ObjectId(sessionId),
-      status: { $in: ['PENDING', 'CONFIRMED'] },
-    }).lean();
-
-    if (existing) {
-      return { success: false, error: 'Votre équipe est déjà inscrite à cette compétition' };
-    }
-
-    if (!payment?.phone?.trim()) {
-      return { success: false, error: 'Le numéro Mobile Money est requis' };
-    }
-
-    const enrollmentAmountCDF = Number((competition as any).amount || 0);
-    if (enrollmentAmountCDF <= 0) {
-      return { success: false, error: 'Montant CDF de reference indisponible pour cette competition.' };
-    }
-
-    const paymentRes = await initiatePaymentAction(
-      player._id.toString(),
-      payment.phone.trim(),
-      payment.amount,
-      payment.currency,
-      {
-        id: competitionId,
-        name: 'Enrollement compétition',
-        amountCDF: enrollmentAmountCDF,
-        amountUSD: 5,
-        type: 'COMPETITION',
-        metadata: { competitionId, sessionId, equipeId },
-      },
-      payment.email?.trim(),
-      payment.method || "MOBILE_MONEY",
-    );
-
-    if (!paymentRes.success || !paymentRes.orderNumber) {
-      return { success: false, error: paymentRes.error || 'Échec de l\'initiation du paiement' };
-    }
-
-    const code = randomUUID();
-    const orderNumber = paymentRes.orderNumber;
-
-    const enrollment = await Enrollement.create({
-      equipeId: new mongoose.Types.ObjectId(equipeId),
-      competitionId: new mongoose.Types.ObjectId(competitionId),
-      sessionId: new mongoose.Types.ObjectId(sessionId),
-      code,
-      orderNumber,
-      status: 'PENDING',
-      paymentStatus: 'PENDING',
-      amountCDF: enrollmentAmountCDF,
-      amountUSD: 5,
-      paidAmount: payment.amount,
-      paidCurrency: payment.currency,
-      maxParties: 0,
-      totalGrantedGames: 0,
-      usedGames: 0,
-      remainingGames: 0,
-      points: 0,
-      parties: 0,
-      transactions: [{
-        membre: player._id,
-        montant: payment.amount,
-        currency: payment.currency,
-        status: 'PENDING',
-        orderNumber,
-        phone: payment.phone.trim(),
-      }],
     });
+    if (existing) {
+      return { success: false, error: existing.error === 'already' ? 'Votre équipe est déjà inscrite à cette compétition' : existing.error };
+    }
 
+    return await createEnrollmentAndStartPayment({
+      payer: player,
+      productType: 'COMPETITION',
+      productName: 'Enrôlement compétition',
+      resourceId: competitionId,
+      price,
+      payment,
+      enrollmentFields: {
+        equipeId: equipe._id,
+        competitionId: new mongoose.Types.ObjectId(competitionId),
+        sessionId: new mongoose.Types.ObjectId(sessionId),
+      },
+      metadata: { competitionId, sessionId, equipeId: equipe._id.toString() },
+    });
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Confirmation du paiement d'enrôlement d'une équipe, par son capitaine uniquement.
+ * Délègue au flux unique de vérification (idempotent).
+ */
+export async function confirmCompetitionEnrollmentPaymentAction(
+  enrollmentId: string,
+  orderNumber: string,
+  _email?: string,
+) {
+  try {
+    const guard = await guardPlayer();
+    if (!guard.ok) return { success: false, error: guard.error };
+    if (!isValidObjectId(enrollmentId)) return { success: false, error: 'Enrôlement introuvable' };
+
+    const enrollment = await Enrollement.findById(enrollmentId).lean();
+    if (!enrollment) return { success: false, error: 'Enrôlement introuvable' };
+    if (enrollment.orderNumber !== orderNumber) {
+      return { success: false, error: 'Commande invalide pour cet enrôlement' };
+    }
+
+    const isCaptain = await Equipe.exists({ _id: enrollment.equipeId, chefId: guard.player._id });
+    if (!isCaptain) return { success: false, error: 'Seul le capitaine de l’équipe peut confirmer ce paiement.' };
+
+    const result = await verifyAndApplyPayment(orderNumber, { ownerPlayerId: guard.player._id.toString() });
+    if (!result.success || result.status !== 'SUCCES') {
+      return { success: false, error: result.error || result.message || 'Le paiement n’est pas encore confirmé.' };
+    }
+
+    const confirmed = await Enrollement.findById(enrollmentId).lean();
     return {
       success: true,
-      enrollment: JSON.parse(JSON.stringify(enrollment)),
-      orderNumber,
-      redirectUrl: paymentRes.redirectUrl,
-      paymentMethod: payment.method || "MOBILE_MONEY",
+      code: confirmed?.code,
+      enrollment: JSON.parse(JSON.stringify(confirmed)),
     };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Prix officiel d'un enrôlement (affichage) : même calcul que le serveur au moment du paiement.
+ */
+export async function getEnrollmentPriceAction(
+  type: 'Parcours' | 'Competition',
+  refId: string,
+  sessionId: string,
+): Promise<{ success: boolean; price?: Price; error?: string }> {
+  try {
+    if (!isValidObjectId(refId) || !isValidObjectId(sessionId)) return { success: false, error: 'Paramètres invalides' };
+    await connectToDb();
+    if (type === 'Competition') {
+      const competition = await Competition.findById(refId).select('amount amountUSD').lean();
+      const price = competition ? getCompetitionEnrollmentPrice(competition as any) : null;
+      return price ? { success: true, price } : { success: false, error: 'Montant indisponible.' };
+    }
+    const session = await Session.findById(sessionId).select('enrollmentFeeCDF enrollmentFeeUSD').lean();
+    if (!session) return { success: false, error: 'Session introuvable' };
+    return { success: true, price: getParcoursEnrollmentPrice(session as any) };
   } catch (error: any) {
     return { success: false, error: error.message };
   }
 }
 
 // ── CLASSEMENT ─────────────────────────────────────────────────────
-
-/**
- * Récupère le top 5 des joueurs pour un parcours / compétition.
- * Agrège les parties (Partie) par joueur et calcule le score total.
- */
-export async function confirmCompetitionEnrollmentPaymentAction(
-  enrollmentId: string,
-  orderNumber: string,
-  email?: string,
-) {
-  try {
-    const userSession = await getSession();
-    if (!userSession) return { success: false, error: 'Non connecté' };
-
-    await connectToDb();
-
-    const enrollment = await Enrollement.findById(enrollmentId)
-      .populate('sessionId', 'designation')
-      .populate('competitionId', 'designation ressources')
-      .populate({
-        path: 'equipeId',
-        populate: { path: 'chefId', populate: { path: 'userId', select: 'email' } },
-      }) as PopulatedEnrollment | null;
-    if (!enrollment) return { success: false, error: 'Enrollement introuvable' };
-    if (enrollment.orderNumber !== orderNumber) {
-      return { success: false, error: 'Commande invalide pour cet enrollement' };
-    }
-    const sessionId = getRefId(enrollment.sessionId);
-
-    const status = await checkPaymentStatusAction(orderNumber, email, 'Enrollement compétition');
-    // if (!status.success || status.status !== 'SUCCES') {
-    //   return { success: false, error: status.error || 'Le paiement n\'est pas encore confirmé.' };
-    // }
-
-    if (!status.success || status.status !== 'SUCCES') {
-      return { success: false, error: status.error || 'Le paiement n est pas encore confirme.' };
-    }
-
-    enrollment.status = 'CONFIRMED';
-    enrollment.paymentStatus = 'PAID';
-    enrollment.validatedAt = enrollment.validatedAt || new Date();
-    enrollment.transactions = (enrollment.transactions || []).map((transaction: any) => {
-      if (transaction.orderNumber === orderNumber) transaction.status = 'PAID';
-      return transaction;
-    });
-    await enrollment.save();
-    await grantSessionGamesAfterEnrollmentValidation(enrollment._id.toString());
-
-    // Recalculer la Bourse après confirmation de paiement
-    if (sessionId) {
-      try {
-        await recomputeCompetitionScholarship(sessionId.toString());
-      } catch (error) {
-        console.error('[confirmCompetitionEnrollmentPaymentAction] Erreur recalcul Bourse:', error);
-      }
-    }
-
-    // Récupérer les infos Bourse pour le mail
-    let scholarshipInfo: ScholarshipEmailInfo = null;
-    if (sessionId) {
-      try {
-        const freshSession = await Session.findById(sessionId).lean();
-        if (freshSession && (freshSession.scholarshipInitialAmountCDF ?? 0) > 0) {
-          scholarshipInfo = {
-            enrollmentFeeCDF: freshSession.enrollmentFeeCDF ?? 0,
-            totalEnrolledTeams: freshSession.totalValidatedEnrollments ?? 0,
-            currentScholarshipCDF: freshSession.scholarshipInitialAmountCDF ?? 0,
-            gamesPerTeam: freshSession.gamesPerEnrollment ?? 250,
-            unitRewardCDF: freshSession.unitRewardPerWonGameCDF ?? 0,
-          };
-        }
-      } catch (e) {
-        console.error('[confirmCompetitionEnrollmentPaymentAction] Erreur chargement Bourse:', e);
-      }
-    }
-    const emailPayload = getEnrollmentEmailPayload(enrollment, true);
-    await sendEnrollmentEmail({
-      email: emailPayload.email,
-      sessionName: emailPayload.sessionName,
-      resourceName: emailPayload.resourceName,
-      orderNumber,
-      ressources: emailPayload.ressources,
-      scholarshipInfo,
-    });
-
-    return {
-      success: true,
-      code: enrollment.code,
-      enrollment: JSON.parse(JSON.stringify(enrollment)),
-    };
-  } catch (error: any) {
-    return { success: false, error: error.message };
-  }
-}
 
 export async function getClassementAction(
   type?: 'Parcours' | 'Competition',
@@ -797,7 +567,7 @@ export async function getClassementAction(
         .populate('sessionId', 'designation startDate endDate')
         .populate({
           path: 'playerId',
-          populate: { path: 'userId', select: 'pseudo telephone photo' },
+          populate: { path: 'userId', select: 'pseudo photo' },
         })
         .populate('equipeId', 'designation logo')
         .sort({ points: -1, updatedAt: 1 })
@@ -813,7 +583,6 @@ export async function getClassementAction(
           ? item.equipeId?.designation || 'Équipe'
           : item.playerId?.userId?.pseudo || 'Joueur',
         photo: type === 'Competition' ? item.equipeId?.logo : item.playerId?.userId?.photo,
-        telephone: item.playerId?.userId?.telephone || '',
         type,
         level: item.playerId?.level || 0,
         code: item.code,
@@ -865,7 +634,6 @@ export async function getClassementAction(
           meilleurScore: 1,
           pseudo: '$user.pseudo',
           photo: '$user.photo',
-          telephone: '$user.telephone',
           type: '$player.type',
           level: '$player.level',
         },
@@ -976,15 +744,32 @@ export async function updateSessionRessourcesAction(
   }
 }
 
+/**
+ * Transitions de statut autorisées (Q-05, PAY-21) :
+ * - parcours : ACTIVE → PAYMENT (clôture et paiement du top 3), sans retour ;
+ * - compétition : ACTIVE → COMPLETED (« matchs ouverts ») → INACTIVE, INACTIVE → COMPLETED (reprise),
+ *   ACTIVE ↔ INACTIVE tant que les matchs n'ont jamais été ouverts ; plus de retour à ACTIVE ensuite.
+ */
+const SESSION_TRANSITIONS: Record<string, Record<string, string[]>> = {
+  parcours: {
+    ACTIVE: ['PAYMENT'],
+    PAYMENT: [],
+  },
+  competition: {
+    ACTIVE: ['COMPLETED', 'INACTIVE'],
+    COMPLETED: ['INACTIVE'],
+    INACTIVE: ['COMPLETED', 'ACTIVE'],
+  },
+};
+
 export async function updateSessionStatusAction(
   sessionId: string,
   nextStatus: 'ACTIVE' | 'INACTIVE' | 'COMPLETED' | 'PAYMENT' | 'active' | 'inactive' | 'completed' | 'payment',
 ) {
   try {
-    const userSession = await getSession();
-    if (!userSession || !['ADMIN', 'MOD'].includes(userSession.role)) {
-      return { success: false, error: 'Non autorisé' };
-    }
+    const guard = await guardStaff();
+    if (!guard.ok) return { success: false, error: guard.error };
+    if (!isValidObjectId(sessionId)) return { success: false, error: 'Session introuvable' };
     await connectToDb();
 
     const normalizedStatus = normalizeSessionStatus(nextStatus);
@@ -992,25 +777,48 @@ export async function updateSessionStatusAction(
     if (!session) return { success: false, error: 'Session introuvable' };
 
     const sessionType = session.type || ((session.ressources || []).some((item: any) => item.type === 'Competition') ? 'competition' : 'parcours');
-    const allowedByType: Record<string, string[]> = {
-      parcours: ['ACTIVE', 'PAYMENT'],
-      competition: ['ACTIVE', 'INACTIVE', 'COMPLETED'],
-    };
-    if (!allowedByType[sessionType]?.includes(normalizedStatus)) {
-      return { success: false, error: `Statut ${normalizedStatus} invalide pour une session ${sessionType}` };
+    const currentStatus = normalizeSessionStatus(session.status || 'ACTIVE');
+    if (currentStatus === normalizedStatus) {
+      return { success: false, error: `La session est déjà au statut ${normalizedStatus}.` };
     }
 
-    session.type = sessionType as any;
-    session.status = normalizedStatus as any;
-    await session.save();
+    const allowed = SESSION_TRANSITIONS[sessionType]?.[currentStatus] || [];
+    if (!allowed.includes(normalizedStatus)) {
+      return { success: false, error: `Transition ${currentStatus} → ${normalizedStatus} interdite pour une session ${sessionType}.` };
+    }
+    if (sessionType === 'competition' && normalizedStatus === 'ACTIVE' && session.matchesOpenedAt) {
+      return { success: false, error: 'Les matchs ont déjà été ouverts : la session ne peut plus revenir aux inscriptions.' };
+    }
+    if (sessionType === 'competition' && normalizedStatus === 'COMPLETED' && currentStatus === 'INACTIVE'
+      && session.matchesOpenedAt && (session.scholarshipRemainingAmountCDF ?? 0) <= 0) {
+      return { success: false, error: 'La Bourse est épuisée : les matchs ne peuvent pas être rouverts.' };
+    }
+    // La clôture d'un parcours déclenche le paiement du top 3 : permission FINANCE pour un MOD (Q-08).
+    if (normalizedStatus === 'PAYMENT' && !(await hasPermission(guard.session, 'FINANCE'))) {
+      return { success: false, error: 'Permission FINANCE requise pour clôturer et payer une session.' };
+    }
+
+    // Transition atomique depuis le statut lu (deux gestionnaires ne déclenchent pas deux fois le workflow).
+    const transitioned = await Session.updateOne(
+      { _id: session._id, status: session.status },
+      {
+        $set: {
+          type: sessionType,
+          status: normalizedStatus,
+          ...(normalizedStatus === 'COMPLETED' && !session.matchesOpenedAt ? { matchesOpenedAt: new Date() } : {}),
+        },
+      },
+    );
+    if (!transitioned.modifiedCount) {
+      return { success: false, error: 'Le statut de la session vient de changer. Rechargez la page.' };
+    }
 
     let workflowResult: any = null;
-    if (session.type === 'parcours' && normalizedStatus === 'PAYMENT') {
+    if (sessionType === 'parcours' && normalizedStatus === 'PAYMENT') {
       workflowResult = await distributeParcoursSessionRewards(sessionId);
     }
-    // Dans ce code existant, COMPLETED correspond à l'ouverture effective des matchs VIP.
-    // La distribution proportionnelle est tentée ici et reste idempotente si elle a déjà été faite.
-    if (session.type === 'competition' && normalizedStatus === 'COMPLETED') {
+    // COMPLETED correspond à l'ouverture effective des matchs VIP : la Bourse est (re)calculée.
+    if (sessionType === 'competition' && normalizedStatus === 'COMPLETED') {
       workflowResult = await recomputeCompetitionScholarship(sessionId);
     }
 
@@ -1072,6 +880,13 @@ export async function getEnrollementsByRessourceAction(
   sessionId: string,
 ) {
   try {
+    // Renvoie téléphones et e-mails des inscrits : réservé au staff (EX-SEC-04).
+    const staff = await ensureStaffSession();
+    if (!staff) return { success: false, error: 'Non autorisé' };
+    if (!mongoose.Types.ObjectId.isValid(String(refId)) || !mongoose.Types.ObjectId.isValid(String(sessionId))) {
+      return { success: false, error: 'Paramètres invalides' };
+    }
+
     await connectToDb();
 
     const filter: any = { sessionId };
@@ -1103,53 +918,65 @@ export async function getEnrollementsByRessourceAction(
   }
 }
 
+const hasConsumedGames = (enrollment: any) =>
+  Boolean(enrollment.gamesGranted || enrollment.gamesGrantedAt)
+  || Number(enrollment.usedGames || 0) > 0
+  || Number(enrollment.parties || 0) > 0;
+
+/**
+ * Vérification du paiement d'un enrôlement par un gestionnaire : même flux unique et idempotent
+ * que le callback et le bouton du joueur (EX-PAY-02).
+ */
 export async function verifyEnrollmentPaymentByManagerAction(enrollmentId: string) {
   try {
     const staff = await ensureStaffSession();
     if (!staff) return { success: false, error: 'Non autorisé' };
+    if (!isValidObjectId(enrollmentId)) return { success: false, error: 'Enrôlement introuvable' };
 
     await connectToDb();
-    const enrollment = await findManageableEnrollment(enrollmentId);
-    if (!enrollment) return { success: false, error: 'Enrollement introuvable' };
-    if (!enrollment.orderNumber) return { success: false, error: 'Aucune commande liée à cet enrollement.' };
-
-    const statusCheck = await checkStatus(enrollment.orderNumber);
-    if (!statusCheck.success) {
-      return { success: false, error: statusCheck.error || 'Vérification FlexPay impossible.' };
+    const enrollment = await Enrollement.findById(enrollmentId).select('orderNumber').lean();
+    if (!enrollment) return { success: false, error: 'Enrôlement introuvable' };
+    if (!enrollment.orderNumber || enrollment.orderNumber.startsWith('PENDING-')) {
+      return { success: false, error: 'Aucune commande liée à cet enrôlement.' };
     }
 
-    if (statusCheck.status === 'SUCCES') {
-      await applyEnrollmentConfirmation(enrollment, enrollment.orderNumber, true);
-      return { success: true, status: statusCheck.status, message: 'Paiement confirmé et mail envoyé.' };
-    }
+    const result = await verifyAndApplyPayment(enrollment.orderNumber);
+    if (!result.success) return { success: false, error: result.error || 'Vérification impossible.' };
 
-    if (statusCheck.status === 'ECHEC') {
-      enrollment.status = 'CANCELLED';
-      enrollment.transactions = (enrollment.transactions || []).map((transaction: any) => {
-        if (transaction.orderNumber === enrollment.orderNumber) transaction.status = 'FAILED';
-        return transaction;
-      });
-      await enrollment.save();
-      return { success: true, status: statusCheck.status, message: 'Paiement échoué chez FlexPay.' };
-    }
-
-    return { success: true, status: statusCheck.status, message: 'Paiement encore en attente chez FlexPay.' };
+    const messages: Record<string, string> = {
+      SUCCES: 'Paiement confirmé.',
+      ECHEC: 'Paiement échoué chez le fournisseur : enrôlement annulé.',
+      EN_ATTENTE: 'Paiement encore en attente chez le fournisseur.',
+      A_VERIFIER: 'Montant payé différent du montant attendu : vérification manuelle requise.',
+    };
+    return { success: true, status: result.status, message: messages[result.status || ''] || result.message };
   } catch (error: any) {
     return { success: false, error: error.message || 'Vérification impossible.' };
   }
 }
 
+/**
+ * Validation manuelle sans paiement vérifié : ADMIN, ou MOD avec la permission FINANCE (Q-08),
+ * car elle accorde des parties et alimente la Bourse.
+ */
 export async function manuallyConfirmEnrollmentByManagerAction(enrollmentId: string) {
   try {
-    const staff = await ensureStaffSession();
-    if (!staff) return { success: false, error: 'Non autorisé' };
+    const guard = await guardPermission('FINANCE');
+    if (!guard.ok) return { success: false, error: guard.error };
+    if (!isValidObjectId(enrollmentId)) return { success: false, error: 'Enrôlement introuvable' };
 
     await connectToDb();
-    const enrollment = await findManageableEnrollment(enrollmentId);
-    if (!enrollment) return { success: false, error: 'Enrollement introuvable' };
+    const enrollment = await Enrollement.findById(enrollmentId).select('orderNumber').lean();
+    if (!enrollment) return { success: false, error: 'Enrôlement introuvable' };
 
-    await applyEnrollmentConfirmation(enrollment, enrollment.orderNumber, true);
-    return { success: true, message: 'Enrollement validé manuellement et mail envoyé.' };
+    const result = await withTransaction((dbSession) =>
+      confirmEnrollment(enrollmentId, { orderNumber: enrollment.orderNumber }, dbSession),
+    );
+    if (result.confirmed) await sendEnrollmentConfirmationEmail(enrollmentId, enrollment.orderNumber);
+    return {
+      success: true,
+      message: result.confirmed ? 'Enrôlement validé manuellement et mail envoyé.' : 'Enrôlement déjà confirmé.',
+    };
   } catch (error: any) {
     return { success: false, error: error.message || 'Validation impossible.' };
   }
@@ -1160,38 +987,39 @@ export async function updateEnrollmentStatusByManagerAction(
   nextStatus: 'PENDING' | 'CONFIRMED' | 'CANCELLED',
 ) {
   try {
-    const staff = await ensureStaffSession();
-    if (!staff) return { success: false, error: 'Non autorisé' };
-
-    await connectToDb();
-    const enrollment = await findManageableEnrollment(enrollmentId);
-    if (!enrollment) return { success: false, error: 'Enrollement introuvable' };
-
     if (nextStatus === 'CONFIRMED') {
-      await applyEnrollmentConfirmation(enrollment, enrollment.orderNumber, true);
-      return { success: true, message: 'Enrollement validé manuellement.' };
+      return manuallyConfirmEnrollmentByManagerAction(enrollmentId);
     }
 
-    const hasConsumedGames =
-      Boolean(enrollment.gamesGranted || enrollment.gamesGrantedAt)
-      || Number(enrollment.usedGames || 0) > 0
-      || Number(enrollment.parties || 0) > 0;
-    if (hasConsumedGames) {
+    const staff = await ensureStaffSession();
+    if (!staff) return { success: false, error: 'Non autorisé' };
+    if (!isValidObjectId(enrollmentId)) return { success: false, error: 'Enrôlement introuvable' };
+    if (nextStatus !== 'PENDING' && nextStatus !== 'CANCELLED') return { success: false, error: 'Statut invalide.' };
+
+    await connectToDb();
+    const enrollment = await Enrollement.findById(enrollmentId).lean();
+    if (!enrollment) return { success: false, error: 'Enrôlement introuvable' };
+
+    if (hasConsumedGames(enrollment) || enrollment.status === 'CONFIRMED') {
       return {
         success: false,
-        error: 'Statut non modifiable : des parties ont déjà été accordées ou consommées.',
+        error: 'Statut non modifiable : l’enrôlement est confirmé ou des parties ont déjà été accordées.',
       };
     }
 
-    enrollment.status = nextStatus;
-    enrollment.paymentStatus = nextStatus === 'CANCELLED' ? 'FAILED' : 'PENDING';
-    enrollment.transactions = (enrollment.transactions || []).map((transaction: any) => ({
-      ...transaction,
-      status: nextStatus === 'CANCELLED' ? 'FAILED' : 'PENDING',
-    }));
-    await enrollment.save();
+    const transactionStatus = nextStatus === 'CANCELLED' ? 'FAILED' : 'PENDING';
+    await Enrollement.updateOne(
+      { _id: enrollmentId, status: { $ne: 'CONFIRMED' }, gamesGranted: { $ne: true } },
+      {
+        $set: {
+          status: nextStatus,
+          paymentStatus: nextStatus === 'CANCELLED' ? 'FAILED' : 'PENDING',
+          'transactions.$[].status': transactionStatus,
+        },
+      },
+    );
 
-    return { success: true, message: "Statut de l'enrollement mis a jour." };
+    return { success: true, message: "Statut de l'enrôlement mis à jour." };
   } catch (error: any) {
     return { success: false, error: error.message || 'Changement de statut impossible.' };
   }
@@ -1201,43 +1029,14 @@ export async function resendEnrollmentEmailByManagerAction(enrollmentId: string)
   try {
     const staff = await ensureStaffSession();
     if (!staff) return { success: false, error: 'Non autorisé' };
+    if (!isValidObjectId(enrollmentId)) return { success: false, error: 'Enrôlement introuvable' };
 
     await connectToDb();
-    const enrollment = await findManageableEnrollment(enrollmentId);
-    if (!enrollment) return { success: false, error: 'Enrollement introuvable' };
+    const enrollment = await Enrollement.findById(enrollmentId).select('orderNumber status').lean();
+    if (!enrollment) return { success: false, error: 'Enrôlement introuvable' };
+    if (enrollment.status !== 'CONFIRMED') return { success: false, error: 'Seul un enrôlement confirmé peut recevoir la confirmation.' };
 
-    const isCompetition = Boolean(enrollment.competitionId);
-    const sessionId = getRefId(enrollment.sessionId);
-
-    // Récupérer les infos Bourse pour le mail
-    let scholarshipInfo: ScholarshipEmailInfo = null;
-    if (isCompetition && sessionId) {
-      try {
-        const freshSession = await Session.findById(sessionId).lean();
-        if (freshSession && (freshSession.scholarshipInitialAmountCDF ?? 0) > 0) {
-          scholarshipInfo = {
-            enrollmentFeeCDF: freshSession.enrollmentFeeCDF ?? 0,
-            totalEnrolledTeams: freshSession.totalValidatedEnrollments ?? 0,
-            currentScholarshipCDF: freshSession.scholarshipInitialAmountCDF ?? 0,
-            gamesPerTeam: freshSession.gamesPerEnrollment ?? 250,
-            unitRewardCDF: freshSession.unitRewardPerWonGameCDF ?? 0,
-          };
-        }
-      } catch (e) {
-        console.error('[resendEnrollmentEmailByManagerAction] Erreur chargement Bourse:', e);
-      }
-    }
-
-    const emailPayload = getEnrollmentEmailPayload(enrollment, isCompetition);
-    await sendEnrollmentEmail({
-      email: emailPayload.email,
-      sessionName: emailPayload.sessionName,
-      resourceName: emailPayload.resourceName,
-      orderNumber: enrollment.orderNumber,
-      ressources: emailPayload.ressources,
-      scholarshipInfo,
-    });
-
+    await sendEnrollmentConfirmationEmail(enrollmentId, enrollment.orderNumber);
     return { success: true, message: 'Mail envoyé.' };
   } catch (error: any) {
     return { success: false, error: error.message || 'Envoi du mail impossible.' };
@@ -1248,25 +1047,22 @@ export async function deleteEnrollmentByManagerAction(enrollmentId: string) {
   try {
     const staff = await ensureStaffSession();
     if (!staff) return { success: false, error: 'Non autorisé' };
+    if (!isValidObjectId(enrollmentId)) return { success: false, error: 'Enrôlement introuvable' };
 
     await connectToDb();
-    const enrollment = await findManageableEnrollment(enrollmentId);
-    if (!enrollment) return { success: false, error: 'Enrollement introuvable' };
+    const enrollment = await Enrollement.findById(enrollmentId).lean();
+    if (!enrollment) return { success: false, error: 'Enrôlement introuvable' };
 
-    const hasConsumedGames =
-      Boolean(enrollment.gamesGranted || enrollment.gamesGrantedAt)
-      || Number(enrollment.usedGames || 0) > 0
-      || Number(enrollment.parties || 0) > 0;
-    if (hasConsumedGames) {
+    if (hasConsumedGames(enrollment) || enrollment.status === 'CONFIRMED') {
       return {
         success: false,
-        error: 'Suppression impossible : des parties ont déjà été accordées ou consommées.',
+        error: 'Suppression impossible : l’enrôlement est confirmé ou des parties ont déjà été accordées.',
       };
     }
 
-    await Enrollement.findByIdAndDelete(enrollment._id);
+    await Enrollement.deleteOne({ _id: enrollment._id, status: { $ne: 'CONFIRMED' }, gamesGranted: { $ne: true } });
 
-    return { success: true, message: 'Enrollement supprimé.' };
+    return { success: true, message: 'Enrôlement supprimé.' };
   } catch (error: any) {
     return { success: false, error: error.message || 'Suppression impossible.' };
   }

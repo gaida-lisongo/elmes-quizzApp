@@ -15,7 +15,8 @@ export interface IParcours extends Document {
 
 export interface ICompetition extends IParcours {
   cagnotte: number;
-  amount: number; // Montant de la cagnotte pour la compétition
+  amount: number; // Frais d'enrôlement d'une équipe, en CDF
+  amountUSD?: number; // Frais d'enrôlement en USD (grille fixe, Q-02) ; 5 USD par défaut
 }
 
 export interface ICritere extends Document {
@@ -56,6 +57,7 @@ const CompetitionSchema: Schema<ICompetition> = new Schema(
     ressources: { type: String, default: ''},
     cagnotte: { type: Number, required: true, default: 0 },
     amount: { type: Number, required: true, default: 0 },
+    amountUSD: { type: Number },
     categories: [{ type: Schema.Types.ObjectId, ref: 'Categorie', required: true }],
     questions: { type: Number, required: true, default: 1 },
     status: { 

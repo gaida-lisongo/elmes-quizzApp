@@ -63,14 +63,43 @@ async function request<T>(
   const url = `${BASE_URL.replace(/\/$/, '')}${path}`;
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
 
-  const res = await fetch(url, {
-    method,
-    headers,
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : undefined,
+      signal: AbortSignal.timeout(20000),
+    });
+  } catch (error: any) {
+    // « fetch failed » masque la cause réelle (DNS, connexion refusée, certificat, délai).
+    const cause = error?.cause;
+    let host = '?';
+    try { host = new URL(url).host; } catch { /* URL invalide */ }
+    console.error('[payment] passerelle injoignable', JSON.stringify({
+      method,
+      host,
+      path: path.split('?')[0],
+      error: error?.name === 'TimeoutError' ? 'timeout 20s' : error?.message,
+      cause: cause?.code || cause?.message,
+    }));
+    throw new Error('Le service de paiement est momentanément injoignable. Réessayez dans quelques minutes.');
+  }
 
-  const {data} = await res.json();
-  return { ok: res.ok, data, status: res.status };
+  // Réponse non JSON ou sans champ `data` : on renvoie un objet vide plutôt que de planter
+  // sur `data.code` avec un message incompréhensible pour le joueur.
+  const text = await res.text();
+  let data: any = {};
+  try {
+    const json = JSON.parse(text);
+    data = json?.data ?? json ?? {};
+  } catch {
+    data = {};
+  }
+  if (!res.ok || !text) {
+    console.warn('[payment] passerelle', JSON.stringify({ method, path: path.split('?')[0], http: res.status, body: text.slice(0, 300).replace(/\+?\d{9,15}/g, '***') }));
+  }
+  return { ok: res.ok, data: data as T, status: res.status };
 }
 
 // ── Méthodes publiques ─────────────────────────────────────────────
@@ -81,7 +110,6 @@ async function request<T>(
  */
 export async function initialCard(payload: CollectionPayload): Promise<PaymentResponse>{
   try {
-    console.log("Payload for initiateCollection:", payload);
     const flexCard = new FlexPay();
     const card = await flexCard.initCard(
       payload.phone,
@@ -119,8 +147,6 @@ export async function initiateCollection(
 ): Promise<PaymentResponse> {
   try {
 
-    console.log("Payload for initiateCollection:", payload);
-    
     const { data, status } = await request<any>('POST', '/collect', {
       channel: 'MOBILE_MONEY',
       amount: payload.amount,
@@ -128,7 +154,6 @@ export async function initiateCollection(
       reference: payload.reference,
       phone: payload.phone,
     });
-    console.log("[FLEX RESPONSE]", data.code == '0')
 
     // La réponse FlexPay retourne généralement data.code === "0" pour un succès
     if (data.code == '0' && data?.orderNumber) {
@@ -141,8 +166,8 @@ export async function initiateCollection(
     }
 
     return {
-      success: status == 0,
-      error: data.message || data.error || 'Échec de l’initiation de la collecte.',
+      success: false,
+      error: data.message || data.error || `Échec de l’initiation de la collecte (HTTP ${status}).`,
       raw: data,
     };
   } catch (error: any) {
@@ -167,8 +192,6 @@ export async function initiatePayout(
       phone: payload.phone,
       reference: payload.reference,
     });
-
-    console.log('PayOut', data)
 
     if (data.code === '0' && data?.orderNumber) {
       return {
@@ -206,8 +229,6 @@ export async function checkStatus(
       `/check?orderNumber=${encodeURIComponent(orderNumber)}`,
     );
 
-    console.log("[Payment Service Check]", data)
-
     const transaction = data?.transaction || data || {};
 
     // Adapter selon la forme de la réponse de l'Edge Function
@@ -217,10 +238,18 @@ export async function checkStatus(
       failed: 'ECHEC',
       cancelled: 'ECHEC',
     };
+    // Codes FlexPay : 0 = succès, 1 = échec, 2 = en attente.
+    const codeMap: Record<string, 'EN_ATTENTE' | 'SUCCES' | 'ECHEC'> = {
+      '0': 'SUCCES',
+      '1': 'ECHEC',
+      '2': 'EN_ATTENTE',
+    };
 
+    // Un statut inconnu reste EN_ATTENTE, jamais ECHEC définitif (PAY-12).
     const mappedStatus =
-      statusMap[data.status?.toLowerCase()] ||
-      (String(transaction.status) === '2' ? 'EN_ATTENTE' : (String(transaction.status) === '0' ? 'SUCCES' : 'ECHEC'));
+      statusMap[String(data?.status || '').toLowerCase()] ||
+      codeMap[String(transaction.status)] ||
+      'EN_ATTENTE';
 
     return {
       success: true,

@@ -3,6 +3,7 @@
 import mongoose from 'mongoose';
 import connectToDb from "@/lib/utils/db";
 import { getSession } from "@/lib/utils/auth";
+import { USD_CDF_RATE } from "@/lib/payments/pricing";
 import Categorie from "@/lib/models/Categorie";
 import Quiz from "@/lib/models/Quiz";
 import Partie from "@/lib/models/Partie";
@@ -83,12 +84,23 @@ export interface SessionRevenueOverviewRow {
   status: string;
   startDate: string;
   endDate: string;
-  totalRevenue: number;
+  totalRevenue: number; // Équivalent CDF (EX-PAY-05)
+  revenueCDF: number;   // Encaissé en CDF
+  revenueUSD: number;   // Encaissé en USD
+  usdCdfRate: number;   // Taux utilisé pour l'équivalent CDF des paiements USD sans taux enregistré
   totalEnrollments: number;
   validatedPayments: number;
   pendingPayments: number;
   failedPayments: number;
   distribution: SessionRevenueDistributionRow[];
+  scholarship?: {
+    netCollectedCDF: number;
+    platformAmountCDF: number;
+    scholarshipInitialAmountCDF: number;
+    scholarshipDistributedAmountCDF: number;
+    scholarshipRemainingAmountCDF: number;
+  };
+  teams: Array<{ _id: string; designation: string }>;
 }
 
 const VALID_PAYMENT_STATUSES = new Set(['PAID', 'SUCCES']);
@@ -108,10 +120,14 @@ async function buildSessionRevenueRow(sessionDoc: any): Promise<SessionRevenueOv
   const enrollments = await Enrollement.find({ sessionId: sessionDoc._id })
     .populate('parcoursId', 'designation slug')
     .populate('competitionId', 'designation slug')
+    .populate('equipeId', 'designation')
     .lean();
 
   const distribution = new Map<string, SessionRevenueDistributionRow>();
+  const teams = new Map<string, { _id: string; designation: string }>();
   let totalRevenue = 0;
+  let revenueCDF = 0;
+  let revenueUSD = 0;
   let totalEnrollments = 0;
   let validatedPayments = 0;
   let pendingPayments = 0;
@@ -136,8 +152,22 @@ async function buildSessionRevenueRow(sessionDoc: any): Promise<SessionRevenueOv
       || sessionDoc.designation
       || 'Ressource';
 
-    const amount = paidPayments.reduce((sum: number, transaction: any) => sum + Number(transaction.montant || 0), 0);
+    // CDF et USD ne sont plus additionnés tels quels : chaque paiement est converti en équivalent CDF
+    // (taux enregistré à l'enrôlement, sinon taux unique USD_CDF_RATE).
+    const amount = paidPayments.reduce((sum: number, transaction: any) => {
+      const montant = Number(transaction.montant || 0);
+      if ((transaction.currency || enrollment.paidCurrency) === 'USD') {
+        revenueUSD += montant;
+        return sum + Math.round(montant * Number(enrollment.fxRate > 1 ? enrollment.fxRate : USD_CDF_RATE));
+      }
+      revenueCDF += montant;
+      return sum + montant;
+    }, 0);
     totalRevenue += amount;
+    if (enrollment.equipeId && enrollment.status === 'CONFIRMED') {
+      const equipeId = enrollment.equipeId?._id?.toString?.() || enrollment.equipeId.toString();
+      teams.set(equipeId, { _id: equipeId, designation: enrollment.equipeId?.designation || 'Équipe' });
+    }
     validatedPayments += paidPayments.length;
     pendingPayments += pendingCount;
     failedPayments += failedCount;
@@ -166,11 +196,24 @@ async function buildSessionRevenueRow(sessionDoc: any): Promise<SessionRevenueOv
     startDate: sessionDoc.startDate?.toISOString?.() || '',
     endDate: sessionDoc.endDate?.toISOString?.() || '',
     totalRevenue,
+    revenueCDF,
+    revenueUSD,
+    usdCdfRate: USD_CDF_RATE,
     totalEnrollments,
     validatedPayments,
     pendingPayments,
     failedPayments,
     distribution: Array.from(distribution.values()).sort((a, b) => b.amount - a.amount),
+    scholarship: resolveSessionType(sessionDoc) === 'competition'
+      ? {
+          netCollectedCDF: sessionDoc.netCollectedCDF || 0,
+          platformAmountCDF: sessionDoc.platformAmountCDF || 0,
+          scholarshipInitialAmountCDF: sessionDoc.scholarshipInitialAmountCDF || 0,
+          scholarshipDistributedAmountCDF: sessionDoc.scholarshipDistributedAmountCDF || 0,
+          scholarshipRemainingAmountCDF: sessionDoc.scholarshipRemainingAmountCDF || 0,
+        }
+      : undefined,
+    teams: Array.from(teams.values()),
   };
 }
 
@@ -179,8 +222,10 @@ async function buildSessionRevenueRow(sessionDoc: any): Promise<SessionRevenueOv
    ================================================================ */
 export async function getMetricsAgentAction(): Promise<{ success: boolean; data?: MetricsAgentData; error?: string }> {
   try {
+    // Métriques financières globales et top joueurs : réservé au staff (EX-SEC-04).
     const session = await getSession();
     if (!session) return { success: false, error: 'Non connecté' };
+    if (!['ADMIN', 'MOD'].includes(session.role)) return { success: false, error: 'Non autorisé' };
 
     await connectToDb();
 

@@ -44,6 +44,7 @@ const PERMISSIONS_LIST = [
   { value: "COMPETITIONS", label: "Compétitions" },
   { value: "ABOUT", label: "À propos" },
   { value: "EQUIPES", label: "Équipes" },
+  { value: "FINANCE", label: "Finances (retraits, validations manuelles)" },
 ];
 
 /* ================================================================

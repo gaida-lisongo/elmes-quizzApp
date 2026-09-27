@@ -16,8 +16,8 @@ export default async function EquipeDetailPage({ params }: { params: Promise<{ i
 
   await connectToDb();
   const equipe = await Equipe.findById(id)
-    .populate({ path: "chefId", populate: { path: "userId", select: "pseudo photo telephone" } })
-    .populate({ path: "membres.player", populate: { path: "userId", select: "pseudo photo telephone" } })
+    .populate({ path: "chefId", populate: { path: "userId", select: "pseudo photo" } })
+    .populate({ path: "membres.player", populate: { path: "userId", select: "pseudo photo" } })
     .lean();
 
   if (!equipe) notFound();

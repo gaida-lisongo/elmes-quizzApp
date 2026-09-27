@@ -1,30 +1,35 @@
-import mongoose from 'mongoose';
+import mongoose, { type ClientSession } from 'mongoose';
 import connectToDb from '@/lib/utils/db';
 import EnrollementModule from '@/lib/models/Enrollement';
+import { tx } from '@/lib/utils/transaction';
 
 const { Enrollement } = EnrollementModule;
 
 export const SESSION_GAMES_PER_VALIDATED_ENROLLMENT = 250;
 
-export async function grantSessionGamesAfterEnrollmentValidation(enrollmentId: string) {
+export async function grantSessionGamesAfterEnrollmentValidation(
+  enrollmentId: string,
+  dbSession: ClientSession | null = null,
+) {
   await connectToDb();
 
   if (!mongoose.Types.ObjectId.isValid(enrollmentId)) {
     return { success: false, error: 'Enrollement invalide.' };
   }
 
-  const enrollment = await Enrollement.findById(enrollmentId);
+  const enrollment = await Enrollement.findById(enrollmentId).session(dbSession);
   if (!enrollment) return { success: false, error: 'Enrollement introuvable.' };
   if (enrollment.status !== 'CONFIRMED') {
-    return { success: false, error: 'Les parties ne peuvent etre accordees qu apres validation.' };
+    return { success: false, error: 'Les parties ne peuvent être accordées qu’après validation.' };
   }
   if (enrollment.gamesGranted || enrollment.gamesGrantedAt) {
-    return { success: true, skipped: true, message: 'Parties deja accordees.' };
+    return { success: true, skipped: true, message: 'Parties déjà accordées.' };
   }
 
   const usedGames = Math.max(0, Number(enrollment.usedGames || enrollment.parties || 0));
   const grantedGames = SESSION_GAMES_PER_VALIDATED_ENROLLMENT;
 
+  // Verrou gamesGranted : les parties ne sont accordées qu'une seule fois.
   const updated = await Enrollement.findOneAndUpdate(
     {
       _id: enrollment._id,
@@ -44,11 +49,11 @@ export async function grantSessionGamesAfterEnrollmentValidation(enrollmentId: s
         paymentStatus: 'PAID',
       },
     },
-    { new: true },
+    { new: true, ...tx(dbSession) },
   ).lean();
 
   if (!updated) {
-    return { success: true, skipped: true, message: 'Parties deja accordees.' };
+    return { success: true, skipped: true, message: 'Parties déjà accordées.' };
   }
 
   return {
