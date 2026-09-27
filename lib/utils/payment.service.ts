@@ -63,11 +63,28 @@ async function request<T>(
   const url = `${BASE_URL.replace(/\/$/, '')}${path}`;
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
 
-  const res = await fetch(url, {
-    method,
-    headers,
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : undefined,
+      signal: AbortSignal.timeout(20000),
+    });
+  } catch (error: any) {
+    // « fetch failed » masque la cause réelle (DNS, connexion refusée, certificat, délai).
+    const cause = error?.cause;
+    let host = '?';
+    try { host = new URL(url).host; } catch { /* URL invalide */ }
+    console.error('[payment] passerelle injoignable', JSON.stringify({
+      method,
+      host,
+      path: path.split('?')[0],
+      error: error?.name === 'TimeoutError' ? 'timeout 20s' : error?.message,
+      cause: cause?.code || cause?.message,
+    }));
+    throw new Error('Le service de paiement est momentanément injoignable. Réessayez dans quelques minutes.');
+  }
 
   // Réponse non JSON ou sans champ `data` : on renvoie un objet vide plutôt que de planter
   // sur `data.code` avec un message incompréhensible pour le joueur.
