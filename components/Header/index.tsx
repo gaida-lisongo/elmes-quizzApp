@@ -15,7 +15,6 @@ const Header = ({ session } : { session: { userId: string; role: string } | null
   const [stickyMenu, setStickyMenu] = useState(false);
   const { dashboardUrl, isAuthenticated } = useSession();
 
-  console.log("Header session prop:", session);
 
   const pathUrl = usePathname();
 
