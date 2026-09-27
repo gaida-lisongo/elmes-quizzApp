@@ -1,7 +1,6 @@
 'use client';
 
-import { confirmEquipeCreationAction, initiateEquipeCreationAction, type EquipeSummary } from "@/actions/equipe.actions";
-import SearchUserInput, { type SearchUserResult } from "@/components/Common/SearchUserInput";
+import { confirmEquipeCreationAction, getCaptainCandidateAction, initiateEquipeCreationAction, type EquipeSummary } from "@/actions/equipe.actions";
 import { motion } from "framer-motion";
 import { BadgeCheck, CreditCard, Search, Sparkles, Users } from "lucide-react";
 import Image from "next/image";
@@ -15,9 +14,9 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
   const [items, setItems] = useState(equipes);
   const [query, setQuery] = useState("");
   const [step, setStep] = useState(1);
-  const [captain, setCaptain] = useState<SearchUserResult | null>(null);
+  // Le capitaine est toujours le joueur connecté (EX-SEC-03).
+  const [captain, setCaptain] = useState<{ pseudo: string } | null>(null);
   const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
   const [design, setDesign] = useState("");
   const [description, setDescription] = useState("");
   const [logo, setLogo] = useState("");
@@ -36,10 +35,17 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
     });
   }, [items, query]);
 
-  const handleCaptainSelect = (user: SearchUserResult) => {
-    setCaptain(user);
-    setPhone(user.telephone);
+  const handleUseMyAccount = async () => {
+    setLoading(true);
     setError("");
+    const result = await getCaptainCandidateAction();
+    setLoading(false);
+    if (!result.success || !result.captain) {
+      setError(result.error || "Connectez-vous avec un compte VIP pour créer une équipe.");
+      return;
+    }
+    setCaptain({ pseudo: result.captain.pseudo });
+    setPhone(result.captain.telephone || "");
     setStep(2);
   };
 
@@ -55,12 +61,10 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
     setMessage("");
 
     const result = await initiateEquipeCreationAction(
-      captain.playerId || captain._id,
       design,
       description,
       logo || FALLBACK_LOGO,
       phone,
-      email,
       paymentMethod,
     );
 
@@ -87,14 +91,7 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
     setError("");
     setMessage("");
 
-    const result = await confirmEquipeCreationAction({
-      captainId: captain.playerId || captain._id,
-      designation: design,
-      description,
-      logo: logo || FALLBACK_LOGO,
-      orderNumber,
-      email,
-    });
+    const result = await confirmEquipeCreationAction({ orderNumber });
 
     if (!result.success) {
       setError(result.error || "La confirmation a échoué.");
@@ -109,7 +106,6 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
     setStep(1);
     setCaptain(null);
     setPhone("");
-    setEmail("");
     setDesign("");
     setDescription("");
     setLogo("");
@@ -265,21 +261,19 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
 
               {step === 1 && (
                 <div className="mt-6 space-y-4">
-                  <p className="text-sm text-waterloo">Commencez par trouver le capitaine à partir du compte joueur.</p>
-                  <SearchUserInput onSelect={handleCaptainSelect} label="Rechercher le capitaine" />
-                  {captain ? (
-                    <div className="rounded-xl border border-stroke bg-alabaster p-4 dark:border-strokedark dark:bg-strokedark">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-                          <Users className="h-5 w-5" />
-                        </div>
-                        <div>
-                          <p className="font-semibold text-black dark:text-white">{captain.pseudo}</p>
-                          <p className="text-sm text-waterloo">{captain.telephone}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ) : null}
+                  <p className="text-sm text-waterloo">Le capitaine est le joueur VIP connecté. Connectez-vous avec votre compte VIP, puis continuez.</p>
+                  <button
+                    type="button"
+                    disabled={loading}
+                    onClick={handleUseMyAccount}
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-70"
+                  >
+                    <Users className="h-4 w-4" />
+                    {loading ? "Vérification…" : "Je suis le capitaine"}
+                  </button>
+                  <Link href="/auth/signin" className="block text-center text-sm text-primary underline">
+                    Pas encore connecté ? Se connecter
+                  </Link>
                 </div>
               )}
 
@@ -318,23 +312,11 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
                   </div>
 
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-black dark:text-white">Téléphone du capitaine</label>
+                    <label className="mb-2 block text-sm font-medium text-black dark:text-white">Numéro Mobile Money du paiement</label>
                     <input
                       value={phone}
                       onChange={(event) => setPhone(event.target.value)}
                       placeholder="243XXXXXXXXX"
-                      className="w-full rounded-xl border border-stroke bg-transparent px-4 py-3 text-sm text-black outline-none focus:border-primary dark:border-strokedark dark:text-white"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="mb-2 block text-sm font-medium text-black dark:text-white">Email de réception</label>
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(event) => setEmail(event.target.value)}
-                      placeholder="prenom.nom@email.com"
                       className="w-full rounded-xl border border-stroke bg-transparent px-4 py-3 text-sm text-black outline-none focus:border-primary dark:border-strokedark dark:text-white"
                       required
                     />
@@ -398,7 +380,7 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
                 <div className="mt-6 rounded-xl border border-dashed border-stroke p-4 text-sm text-waterloo dark:border-strokedark">
                   <div className="flex items-center gap-2">
                     <BadgeCheck className="h-4 w-4 text-primary" />
-                    Le capitaine est recherché par pseudo ou téléphone avant l’inscription.
+                    L’équipe est créée au nom du joueur VIP connecté, une fois le paiement confirmé.
                   </div>
                 </div>
               ) : null}

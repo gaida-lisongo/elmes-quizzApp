@@ -8,6 +8,8 @@ import {
   getSessionRevenueOverviewAction,
   type SessionRevenueOverviewRow,
 } from "@/actions/metrics.actions";
+import { awardRemainingScholarshipToTeamAction } from "@/actions/scholarship.actions";
+import toast from "react-hot-toast";
 
 export default function SessionRevenueOverview() {
   const chartRef = useRef<HTMLDivElement | null>(null);
@@ -15,6 +17,41 @@ export default function SessionRevenueOverview() {
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // Attribution du reliquat de la Bourse (ADMIN)
+  const [awardTeamId, setAwardTeamId] = useState("");
+  const [awardAmount, setAwardAmount] = useState("");
+  const [awarding, setAwarding] = useState(false);
+
+  const reload = async (sessionId?: string) => {
+    const res = await getSessionRevenueOverviewAction(sessionId);
+    if (res.success && res.data) {
+      setSessions(res.data.sessions || []);
+      setSelectedSessionId(res.data.selectedSessionId || res.data.sessions?.[0]?.sessionId || null);
+      setError(null);
+    } else {
+      setError(res.error || "Impossible de charger les revenus de session.");
+    }
+  };
+
+  const handleAward = async () => {
+    if (!selectedSession || !awardTeamId) return;
+    const amount = awardAmount.trim() ? Number(awardAmount) : undefined;
+    if (amount !== undefined && (!Number.isFinite(amount) || amount <= 0)) {
+      toast.error("Montant invalide.");
+      return;
+    }
+    if (!window.confirm("Attribuer ce montant de la Bourse à l'équipe ? Cette opération est définitive.")) return;
+    setAwarding(true);
+    const res = await awardRemainingScholarshipToTeamAction(selectedSession.sessionId, awardTeamId, amount);
+    if (res.success) {
+      toast.success(`${Number(res.data?.awardAmount || 0).toLocaleString("fr-FR")} FC attribués à l'équipe.`);
+      setAwardAmount("");
+      await reload(selectedSession.sessionId);
+    } else {
+      toast.error(res.error || "Attribution impossible.");
+    }
+    setAwarding(false);
+  };
 
   const selectedSession = useMemo(
     () => sessions.find((session) => session.sessionId === selectedSessionId) || sessions[0] || null,
@@ -80,7 +117,7 @@ export default function SessionRevenueOverview() {
               total: {
                 show: true,
                 label: "Total encaissé",
-                formatter: () => `${selectedSession.totalRevenue.toLocaleString("fr-FR")} USD`,
+                formatter: () => `${selectedSession.totalRevenue.toLocaleString("fr-FR")} FC`,
               },
             },
           },
@@ -88,7 +125,7 @@ export default function SessionRevenueOverview() {
       },
       tooltip: {
         y: {
-          formatter: (value: number) => `${value.toLocaleString("fr-FR")} USD`,
+          formatter: (value: number) => `${value.toLocaleString("fr-FR")} FC`,
         },
       },
     });
@@ -188,7 +225,7 @@ export default function SessionRevenueOverview() {
                     </p>
                   </div>
                   <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                    {session.totalRevenue.toLocaleString("fr-FR")} USD
+                    {session.totalRevenue.toLocaleString("fr-FR")} FC
                   </span>
                 </div>
                 <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-waterloo">
@@ -212,7 +249,9 @@ export default function SessionRevenueOverview() {
             <>
               <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                 {[
-                  { label: "Total encaissé", value: `${selectedSession.totalRevenue.toLocaleString("fr-FR")} USD` },
+                  { label: "Total encaissé (équiv. FC)", value: `${selectedSession.totalRevenue.toLocaleString("fr-FR")} FC` },
+                  { label: "Encaissé en CDF", value: `${(selectedSession.revenueCDF || 0).toLocaleString("fr-FR")} FC` },
+                  { label: "Encaissé en USD", value: `${(selectedSession.revenueUSD || 0).toLocaleString("fr-FR")} $ (1 $ = ${selectedSession.usdCdfRate} FC)` },
                   { label: "Enrôlements", value: String(selectedSession.totalEnrollments) },
                   { label: "Paiements validés", value: String(selectedSession.validatedPayments) },
                   { label: "Paiements pending", value: String(selectedSession.pendingPayments) },
@@ -231,7 +270,7 @@ export default function SessionRevenueOverview() {
                     <p className="text-xs text-waterloo">Session sélectionnée : {selectedSession.name}</p>
                   </div>
                   <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                    {selectedSession.totalRevenue.toLocaleString("fr-FR")} USD
+                    {selectedSession.totalRevenue.toLocaleString("fr-FR")} FC
                   </span>
                 </div>
                 <div ref={chartRef} />
@@ -250,7 +289,7 @@ export default function SessionRevenueOverview() {
                           </p>
                         </div>
                         <span className="shrink-0 font-semibold text-primary">
-                          {row.amount.toLocaleString("fr-FR")} USD
+                          {row.amount.toLocaleString("fr-FR")} FC
                         </span>
                       </div>
                     ))}
@@ -259,6 +298,51 @@ export default function SessionRevenueOverview() {
                   <p className="text-sm text-waterloo">Aucune recette validée pour cette session.</p>
                 )}
               </div>
+
+              {selectedSession.scholarship ? (
+                <div className="rounded-xl border border-stroke p-4 dark:border-strokedark">
+                  <h3 className="mb-3 text-sm font-semibold uppercase text-waterloo">Bourse d&apos;Excellence Académique</h3>
+                  <div className="grid gap-2 text-sm sm:grid-cols-2">
+                    <span>Encaissé net : <strong>{selectedSession.scholarship.netCollectedCDF.toLocaleString("fr-FR")} FC</strong></span>
+                    <span>Part plateforme : <strong>{selectedSession.scholarship.platformAmountCDF.toLocaleString("fr-FR")} FC</strong></span>
+                    <span>Bourse initiale : <strong>{selectedSession.scholarship.scholarshipInitialAmountCDF.toLocaleString("fr-FR")} FC</strong></span>
+                    <span>Bourse distribuée : <strong>{selectedSession.scholarship.scholarshipDistributedAmountCDF.toLocaleString("fr-FR")} FC</strong></span>
+                    <span>Bourse restante : <strong className="text-primary">{selectedSession.scholarship.scholarshipRemainingAmountCDF.toLocaleString("fr-FR")} FC</strong></span>
+                  </div>
+
+                  {selectedSession.scholarship.scholarshipRemainingAmountCDF > 0 && selectedSession.teams.length > 0 ? (
+                    <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_140px_auto]">
+                      <select
+                        value={awardTeamId}
+                        onChange={(e) => setAwardTeamId(e.target.value)}
+                        className="rounded-lg border border-stroke bg-transparent px-3 py-2 text-sm dark:border-strokedark"
+                      >
+                        <option value="">Choisir une équipe…</option>
+                        {selectedSession.teams.map((team) => (
+                          <option key={team._id} value={team._id}>{team.designation}</option>
+                        ))}
+                      </select>
+                      <input
+                        type="number"
+                        min="1"
+                        value={awardAmount}
+                        onChange={(e) => setAwardAmount(e.target.value)}
+                        placeholder="Tout le reliquat"
+                        className="rounded-lg border border-stroke bg-transparent px-3 py-2 text-sm dark:border-strokedark"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAward}
+                        disabled={!awardTeamId || awarding}
+                        className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+                      >
+                        {awarding ? "Attribution…" : "Attribuer le reliquat"}
+                      </button>
+                      <p className="text-xs text-waterloo sm:col-span-3">Réservé à l&apos;administrateur. Laissez le montant vide pour attribuer tout le reliquat.</p>
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
             </>
           ) : (
             <div className="rounded-xl border border-stroke p-6 text-sm text-waterloo dark:border-strokedark">

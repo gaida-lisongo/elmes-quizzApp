@@ -4,6 +4,8 @@ import Player from '@/lib/models/Player';
 import { Critere } from '@/lib/models/Competition';
 import EnrollementModule from '@/lib/models/Enrollement';
 import { sendMail } from '@/lib/utils/mail';
+import { escapeHtml } from '@/lib/utils/security';
+import { tx, withTransaction } from '@/lib/utils/transaction';
 
 const { Enrollement, Session } = EnrollementModule;
 
@@ -18,7 +20,7 @@ async function notifyReward(to: string | undefined, subject: string, amount: num
       html: `
         <div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;background:#f7f9fc;border-radius:16px;">
           <h2 style="margin:0 0 12px;color:#0f172a;">Récompense créditée</h2>
-          <p style="margin:0 0 12px;color:#334155;">Votre récompense pour la session <strong>${sessionName}</strong> a été créditée.</p>
+          <p style="margin:0 0 12px;color:#334155;">Votre récompense pour la session <strong>${escapeHtml(sessionName)}</strong> a été créditée.</p>
           <p style="margin:0;color:#334155;"><strong>Montant :</strong> ${amount.toLocaleString('fr-FR')} CDF</p>
         </div>
       `,
@@ -28,62 +30,92 @@ async function notifyReward(to: string | undefined, subject: string, amount: num
   }
 }
 
+/**
+ * Paiement du top 3 d'une session de Parcours (PAY-18) :
+ * 1. verrou posé AVANT de distribuer (un seul appelant peut distribuer) ;
+ * 2. crédits des soldes et journal rewardTransactions dans une même transaction ;
+ * 3. e-mails envoyés après validation. En cas d'erreur, rien n'est crédité et le verrou est levé.
+ */
 export async function distributeParcoursSessionRewards(sessionId: string) {
-  const session = await Session.findById(sessionId);
-  if (!session) return { success: false, error: 'Session introuvable' };
-  if (session.rewardsDistributed) {
-    return { success: true, skipped: true, message: 'Récompenses déjà distribuées pour cette session.' };
+  const claimed = await Session.findOneAndUpdate(
+    { _id: sessionId, rewardsDistributed: { $ne: true }, rewardsDistributionStartedAt: { $exists: false } },
+    { $set: { rewardsDistributionStartedAt: new Date() } },
+    { new: true },
+  );
+  if (!claimed) {
+    const exists = await Session.exists({ _id: sessionId });
+    if (!exists) return { success: false, error: 'Session introuvable' };
+    return { success: true, skipped: true, message: 'Récompenses déjà distribuées (ou en cours) pour cette session.' };
   }
 
-  const critere = await Critere.findOne({ sessionId: new mongoose.Types.ObjectId(sessionId), status: true }).lean();
-  const winners = await Enrollement.find({
-    sessionId: new mongoose.Types.ObjectId(sessionId),
-    parcoursId: { $exists: true, $ne: null },
-    playerId: { $exists: true, $ne: null },
-    status: 'CONFIRMED',
-  })
-    .populate({
-      path: 'playerId',
-      populate: { path: 'userId', select: 'email solde' },
-    })
-    .sort({ points: -1, updatedAt: 1 })
-    .limit(3);
+  const notifications: Array<{ email?: string; amount: number }> = [];
+  try {
+    const distributed = await withTransaction(async (dbSession) => {
+      notifications.length = 0;
+      const critere = await Critere.findOne({ sessionId: new mongoose.Types.ObjectId(sessionId), status: true }).session(dbSession).lean();
+      const winners = await Enrollement.find({
+        sessionId: new mongoose.Types.ObjectId(sessionId),
+        parcoursId: { $exists: true, $ne: null },
+        playerId: { $exists: true, $ne: null },
+        status: 'CONFIRMED',
+      })
+        .populate({
+          path: 'playerId',
+          populate: { path: 'userId', select: 'email' },
+        })
+        .sort({ points: -1, updatedAt: 1 })
+        .limit(3)
+        .session(dbSession);
 
-  if (winners.length === 0) return { success: true, distributed: 0, message: 'Aucun joueur éligible.' };
+      const amounts = [
+        Number((critere as any)?.firstRecompense || 0),
+        Number((critere as any)?.secondRecompense || 0),
+        Number((critere as any)?.thirdRecompense || 0),
+      ];
 
-  const amounts = [
-    Number((critere as any)?.firstRecompense || 0),
-    Number((critere as any)?.secondRecompense || 0),
-    Number((critere as any)?.thirdRecompense || 0),
-  ];
+      const rewardTransactions: any[] = [];
+      for (let index = 0; index < winners.length; index += 1) {
+        const enrollment: any = winners[index];
+        const amount = roundAmount(amounts[index] || 0);
+        if (amount <= 0) continue;
 
-  const rewardTransactions: any[] = [];
-  for (let index = 0; index < winners.length; index += 1) {
-    const enrollment: any = winners[index];
-    const amount = roundAmount(amounts[index] || 0);
-    if (amount <= 0) continue;
+        const player: any = enrollment.playerId;
+        if (!player?.userId?._id) continue;
 
-    const player: any = enrollment.playerId;
-    if (!player?.userId?._id) continue;
+        await User.updateOne({ _id: player.userId._id }, { $inc: { solde: amount } }, tx(dbSession));
+        rewardTransactions.push({
+          beneficiaryType: 'PLAYER',
+          beneficiaryId: player._id,
+          enrollmentId: enrollment._id,
+          amount,
+          reason: `PARCOURS_TOP_${index + 1}`,
+          createdAt: new Date(),
+        });
+        notifications.push({ email: player.userId.email, amount });
+      }
 
-    await User.findByIdAndUpdate(player.userId._id, { $inc: { solde: amount } });
-    rewardTransactions.push({
-      beneficiaryType: 'PLAYER',
-      beneficiaryId: player._id,
-      enrollmentId: enrollment._id,
-      amount,
-      reason: `PARCOURS_TOP_${index + 1}`,
-      createdAt: new Date(),
+      await Session.updateOne(
+        { _id: sessionId },
+        {
+          $set: { rewardsDistributed: true, paymentProcessedAt: new Date() },
+          $push: { rewardTransactions: { $each: rewardTransactions } },
+        },
+        tx(dbSession),
+      );
+      return rewardTransactions.length;
     });
-    await notifyReward(player.userId.email, 'ELMES-QUIZ - Récompense parcours', amount, session.designation);
+
+    for (const notification of notifications) {
+      await notifyReward(notification.email, 'ELMES-QUIZ - Récompense parcours', notification.amount, claimed.designation);
+    }
+
+    if (distributed === 0) return { success: true, distributed: 0, message: 'Aucun joueur éligible.' };
+    return { success: true, distributed };
+  } catch (error: any) {
+    // Transaction annulée : aucun crédit n'a été appliqué, on lève le verrou pour permettre une reprise.
+    await Session.updateOne({ _id: sessionId, rewardsDistributed: { $ne: true } }, { $unset: { rewardsDistributionStartedAt: 1 } });
+    return { success: false, error: error.message || 'Distribution des récompenses impossible.' };
   }
-
-  session.rewardsDistributed = true;
-  session.paymentProcessedAt = new Date();
-  session.rewardTransactions = [...(session.rewardTransactions || []), ...rewardTransactions];
-  await session.save();
-
-  return { success: true, distributed: rewardTransactions.length };
 }
 
 export async function distributeCompetitionSessionRewards(sessionId: string) {

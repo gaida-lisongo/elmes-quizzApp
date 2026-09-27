@@ -81,7 +81,6 @@ async function request<T>(
  */
 export async function initialCard(payload: CollectionPayload): Promise<PaymentResponse>{
   try {
-    console.log("Payload for initiateCollection:", payload);
     const flexCard = new FlexPay();
     const card = await flexCard.initCard(
       payload.phone,
@@ -119,8 +118,6 @@ export async function initiateCollection(
 ): Promise<PaymentResponse> {
   try {
 
-    console.log("Payload for initiateCollection:", payload);
-    
     const { data, status } = await request<any>('POST', '/collect', {
       channel: 'MOBILE_MONEY',
       amount: payload.amount,
@@ -128,7 +125,6 @@ export async function initiateCollection(
       reference: payload.reference,
       phone: payload.phone,
     });
-    console.log("[FLEX RESPONSE]", data.code == '0')
 
     // La réponse FlexPay retourne généralement data.code === "0" pour un succès
     if (data.code == '0' && data?.orderNumber) {
@@ -168,8 +164,6 @@ export async function initiatePayout(
       reference: payload.reference,
     });
 
-    console.log('PayOut', data)
-
     if (data.code === '0' && data?.orderNumber) {
       return {
         success: true,
@@ -206,8 +200,6 @@ export async function checkStatus(
       `/check?orderNumber=${encodeURIComponent(orderNumber)}`,
     );
 
-    console.log("[Payment Service Check]", data)
-
     const transaction = data?.transaction || data || {};
 
     // Adapter selon la forme de la réponse de l'Edge Function
@@ -217,10 +209,18 @@ export async function checkStatus(
       failed: 'ECHEC',
       cancelled: 'ECHEC',
     };
+    // Codes FlexPay : 0 = succès, 1 = échec, 2 = en attente.
+    const codeMap: Record<string, 'EN_ATTENTE' | 'SUCCES' | 'ECHEC'> = {
+      '0': 'SUCCES',
+      '1': 'ECHEC',
+      '2': 'EN_ATTENTE',
+    };
 
+    // Un statut inconnu reste EN_ATTENTE, jamais ECHEC définitif (PAY-12).
     const mappedStatus =
-      statusMap[data.status?.toLowerCase()] ||
-      (String(transaction.status) === '2' ? 'EN_ATTENTE' : (String(transaction.status) === '0' ? 'SUCCES' : 'ECHEC'));
+      statusMap[String(data?.status || '').toLowerCase()] ||
+      codeMap[String(transaction.status)] ||
+      'EN_ATTENTE';
 
     return {
       success: true,

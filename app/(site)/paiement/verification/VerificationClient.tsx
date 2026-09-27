@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { AlertCircle, CheckCircle, Loader2 } from "lucide-react";
-import { verifyRechargeByOrderNumberAction } from "@/actions/payment.actions";
+import { useState } from "react";
+import { AlertCircle, CheckCircle, Clock, Loader2, XCircle } from "lucide-react";
+import { verifyPaymentByOrderNumberAction } from "@/actions/payment.actions";
 
 type VerificationResult = {
   success: boolean;
@@ -11,6 +11,9 @@ type VerificationResult = {
   error?: string;
 };
 
+/**
+ * La vérification est déclenchée par un bouton (requête POST), jamais au simple affichage de la page.
+ */
 export default function VerificationClient({
   orderNumber,
   type,
@@ -20,26 +23,35 @@ export default function VerificationClient({
   type?: string;
   status?: string;
 }) {
-  const [loading, setLoading] = useState(Boolean(orderNumber));
+  const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<VerificationResult | null>(null);
 
-  useEffect(() => {
+  const handleVerify = async () => {
     if (!orderNumber) return;
-
-    verifyRechargeByOrderNumberAction(orderNumber)
-      .then(setResult)
-      .finally(() => setLoading(false));
-  }, [orderNumber]);
+    setLoading(true);
+    try {
+      setResult(await verifyPaymentByOrderNumberAction(orderNumber));
+    } catch {
+      setResult({ success: false, error: "Vérification impossible pour le moment." });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const isSuccess = result?.success && result.status === "SUCCES";
-  const isPending = result?.success && result.status === "EN_ATTENTE";
+  const isPending = result?.success && (result.status === "EN_ATTENTE" || result.status === "A_VERIFIER");
+  const isFailed = result?.success && result.status === "ECHEC";
   const title = loading
-    ? "Verification en cours"
+    ? "Vérification en cours"
     : isSuccess
-      ? "Paiement valide"
+      ? "Paiement réussi"
       : isPending
         ? "Paiement en attente"
-        : "Verification du paiement";
+        : isFailed
+          ? "Paiement échoué"
+          : !orderNumber
+            ? "Retour paiement incomplet"
+            : "Vérification du paiement";
 
   return (
     <section className="min-h-[70vh] bg-alabaster py-20 dark:bg-blacksection lg:py-28">
@@ -50,6 +62,10 @@ export default function VerificationClient({
               <Loader2 className="h-8 w-8 animate-spin" />
             ) : isSuccess ? (
               <CheckCircle className="h-8 w-8 text-meta" />
+            ) : isPending ? (
+              <Clock className="h-8 w-8 text-primary" />
+            ) : isFailed ? (
+              <XCircle className="h-8 w-8 text-red-500" />
             ) : (
               <AlertCircle className="h-8 w-8 text-primary" />
             )}
@@ -59,20 +75,32 @@ export default function VerificationClient({
 
           <div className="mt-4 space-y-2 text-sm text-waterloo">
             {type ? <p>Source : {type}</p> : null}
-            {status ? <p>Retour FlexPay : {status}</p> : null}
+            {status ? <p>Retour du fournisseur : {status}</p> : null}
             {orderNumber ? (
               <p>
                 Commande : <span className="font-semibold text-primary">{orderNumber}</span>
               </p>
             ) : (
-              <p>Aucun numero de commande n'a ete fourni dans l'URL.</p>
+              <p>Aucun numéro de commande ni référence n&apos;a été fourni dans l&apos;URL.</p>
             )}
           </div>
 
           {result ? (
-            <p className={`mt-5 text-sm ${result.success ? "text-black dark:text-white" : "text-red-500"}`}>
+            <p className={`mt-5 text-sm ${result.success && !isFailed ? "text-black dark:text-white" : "text-red-500"}`}>
               {result.message || result.error}
             </p>
+          ) : null}
+
+          {orderNumber ? (
+            <button
+              type="button"
+              onClick={handleVerify}
+              disabled={loading}
+              className="mt-6 inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white disabled:opacity-60"
+            >
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+              {result ? "Vérifier à nouveau" : "Vérifier mon paiement"}
+            </button>
           ) : null}
         </div>
       </div>

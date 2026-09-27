@@ -29,8 +29,6 @@ interface PaymentDrawerProps {
   onSuccess: (data: { orderNumber: string; product: ProductInfo }) => void;
 }
 
-const TAUX = Number(process.env.NEXT_PUBLIC_TAUX) || 2350;
-
 // ─── SearchUser sub-component ───────────────────────────────────────
 
 // ─── Main PaymentDrawer ─────────────────────────────────────────────
@@ -39,28 +37,26 @@ const PaymentDrawer = ({ product, onClose, onSuccess }: PaymentDrawerProps) => {
   const [step, setStep] = useState<Step>("step1_search");
   const [currency, setCurrency] = useState<"CDF" | "USD">("CDF");
   const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
+  // Bénéficiaire : le joueur connecté (_id vide) ou un joueur existant choisi par pseudo (Q-07).
   const [selectedUser, setSelectedUser] = useState<SearchUserResult | null>(null);
   const [orderNumber, setOrderNumber] = useState<string>("");
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [cardMode, setCardMode] = useState(false);
 
-  const amountToPay = currency === "USD"
-    ? (product.amountUSD || Math.round(product.amountCDF / TAUX))
-    : product.amountCDF;
+  // Affichage seulement : le montant réellement demandé est fixé par le serveur (grille CDF / USD).
+  const amountToPay = currency === "USD" ? (product.amountUSD || 0) : product.amountCDF;
 
   const handleUserSelect = (user: SearchUserResult) => {
-    console.log("Selected user:", user);
     setSelectedUser(user);
-    setPhone(user.telephone);
-    setEmail(user.email || "");
+  };
+
+  const handleSelectMe = () => {
+    setSelectedUser({ _id: "", pseudo: "Moi (compte connecté)", playerType: null });
   };
 
   const handleConfirmUser = () => {
     if (!selectedUser) return;
-    if (!phone.trim()) { setErrorMsg("Le numéro de téléphone est requis."); return; }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email.trim() || !emailRegex.test(email.trim())) { setErrorMsg("Une adresse email valide est requise."); return; }
+    if (!phone.trim()) { setErrorMsg("Le numéro Mobile Money du payeur est requis."); return; }
     setErrorMsg("");
     setStep("step2_confirm");
   };
@@ -69,15 +65,14 @@ const PaymentDrawer = ({ product, onClose, onSuccess }: PaymentDrawerProps) => {
     if (!selectedUser) return;
     setStep("processing");
     setErrorMsg("");
-    const res = await initiatePaymentAction(
-      selectedUser?.playerId ?? "",
-      phone,
-      amountToPay,
+    // Le serveur fixe le montant à partir du catalogue : seul l'identifiant du produit est envoyé.
+    const res = await initiatePaymentAction({
+      productId: product.id,
       currency,
-      product,
-      email.trim(),
-      cardMode ? "CARD" : "MOBILE_MONEY",
-    );
+      phone,
+      method: cardMode ? "CARD" : "MOBILE_MONEY",
+      beneficiaryUserId: selectedUser._id || undefined,
+    });
     if (!res.success || !res.orderNumber) { setStep("error"); setErrorMsg(res.error || "Échec de l'initiation du paiement."); return; }
     setOrderNumber(res.orderNumber);
     if (cardMode && res.redirectUrl) {
@@ -146,9 +141,12 @@ const PaymentDrawer = ({ product, onClose, onSuccess }: PaymentDrawerProps) => {
                 <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-5">
                   <div className="flex items-center gap-2 text-waterloo">
                     <Users className="h-4 w-4" />
-                    <h4 className="font-medium text-black dark:text-white">Qui est le joueur ?</h4>
+                    <h4 className="font-medium text-black dark:text-white">Pour qui est ce pass ?</h4>
                   </div>
-                  <SearchUserInput onSelect={handleUserSelect} label="Rechercher un joueur" />
+                  <button onClick={handleSelectMe}
+                    className="flex w-full items-center justify-center gap-2 rounded-xl border border-primary/40 py-3 text-sm font-medium text-primary transition hover:bg-primary/5"
+                  ><User className="h-4 w-4" /> Pour moi</button>
+                  <SearchUserInput onSelect={handleUserSelect} label="Ou offrir à un joueur (pseudo)" placeholder="Pseudo du joueur…" />
                   {selectedUser && (
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
                       className="rounded-xl border border-primary/30 bg-primary/5 p-4"
@@ -158,28 +156,20 @@ const PaymentDrawer = ({ product, onClose, onSuccess }: PaymentDrawerProps) => {
                           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary"><User className="h-5 w-5" /></div>
                           <div>
                             <p className="font-semibold text-black dark:text-white">{selectedUser.pseudo}</p>
-                            <p className="text-xs text-waterloo">{selectedUser.telephone}</p>
                           </div>
                         </div>
-                        <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-medium text-primary">
-                          {selectedUser.playerType || selectedUser.role}
-                        </span>
+                        {selectedUser.playerType ? (
+                          <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-medium text-primary">
+                            {selectedUser.playerType}
+                          </span>
+                        ) : null}
                       </div>
                       <div className="mb-3">
                         <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-black dark:text-white">
-                          <Phone className="h-3.5 w-3.5 text-primary" /> Numéro de téléphone (Mobile Money)
+                          <Phone className="h-3.5 w-3.5 text-primary" /> Votre numéro Mobile Money (payeur)
                         </label>
                         <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)}
                           placeholder="243XXXXXXXXX"
-                          className="w-full rounded-lg border border-stroke bg-white px-4 py-2.5 text-sm text-black outline-hidden transition focus:border-primary dark:border-strokedark dark:bg-black dark:text-white"
-                        />
-                      </div>
-                      <div className="mb-3">
-                        <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-black dark:text-white">
-                          <User className="h-3.5 w-3.5 text-primary" /> Email de réception
-                        </label>
-                        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-                          placeholder="prenom.nom@email.com"
                           className="w-full rounded-lg border border-stroke bg-white px-4 py-2.5 text-sm text-black outline-hidden transition focus:border-primary dark:border-strokedark dark:bg-black dark:text-white"
                         />
                       </div>
@@ -231,7 +221,7 @@ const PaymentDrawer = ({ product, onClose, onSuccess }: PaymentDrawerProps) => {
                     {[
                       { label: "Produit", value: product.name },
                       { label: "Montant", value: currency === "CDF" ? `${amountToPay.toLocaleString()} FC` : `$${amountToPay}`, bold: true },
-                      { label: "Joueur", value: selectedUser.pseudo },
+                      { label: "Bénéficiaire", value: selectedUser.pseudo },
                       { label: "Téléphone", value: phone },
                     ].map((r) => (
                       <div key={r.label} className="flex justify-between text-sm mt-2 first:mt-0">

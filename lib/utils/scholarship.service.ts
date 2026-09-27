@@ -1,13 +1,15 @@
-'use server';
+import 'server-only';
 
-import mongoose from 'mongoose';
+// Plus de directive 'use server' (PAY-17) : ces fonctions de crédit ne sont jamais des points
+// d'entrée publics. Les contrôles d'accès se font dans les actions qui les appellent.
+
+import mongoose, { type ClientSession } from 'mongoose';
 import connectToDb from '@/lib/utils/db';
 import EnrollementModule from '@/lib/models/Enrollement';
 import Equipe from '@/lib/models/Equipe';
 import Partie from '@/lib/models/Partie';
 import ScholarshipMovement from '@/lib/models/ScholarshipMovement';
-import { getSession } from '@/lib/utils/auth';
-import { sendMail } from '@/lib/utils/mail';
+import { tx, withTransaction } from '@/lib/utils/transaction';
 
 const { Enrollement, Session } = EnrollementModule;
 
@@ -17,45 +19,44 @@ const DEFAULT_PLATFORM_RATE = 0.35;
 const DEFAULT_SCHOLARSHIP_RATE = 0.65;
 const DEFAULT_GAMES_PER_ENROLLMENT = 250;
 
+/**
+ * Commission du fournisseur de paiement, déduite avant la répartition 35 % / 65 % (Q-01 : calcul sur le net).
+ * D-02 : 3,5 % pour le SDK @elmes/payment-sdk.
+ * TODO(Q-01): confirmer le taux applicable tant que FlexPay reste en service ; surchargeable par PAYMENT_COMMISSION_RATE.
+ */
+export const PAYMENT_COMMISSION_RATE =
+  Number.isFinite(Number(process.env.PAYMENT_COMMISSION_RATE)) && process.env.PAYMENT_COMMISSION_RATE !== undefined
+    ? Number(process.env.PAYMENT_COMMISSION_RATE)
+    : 0.035;
+
 // ── UTILITAIRES ────────────────────────────────────────────────────
 
 const floorCDF = (value: number): number => Math.floor(Math.max(0, value));
 
 /**
- * Résout le montant CDF de référence pour un enrôlement.
- * Priorité : enrollment.transactions[].montant si PAID et en CDF,
- * sinon competition.amount, sinon 0.
+ * Montant CDF réellement encaissé pour un enrôlement (EX-PAY-06, PAY-15) :
+ * paidAmountCDF (équivalent CDF du paiement), sinon amountCDF (prix serveur à l'initiation),
+ * sinon Competition.amount pour les enrôlements historiques.
  */
-async function resolveEnrollmentAmountCDF(enrollment: any): Promise<number> {
-  // Chercher le montant CDF dans les transactions PAID
-  if (enrollment.competitionId?.amount !== undefined) {
-    return floorCDF(Number(enrollment.competitionId.amount) || 0);
-  }
-
-  // Sinon, prendre le montant de la compétition liée
-  if (enrollment.competitionId) {
-    const compId = enrollment.competitionId?._id || enrollment.competitionId;
-    try {
-      const { Competition } = await import('@/lib/models/Competition');
-      const competition = await Competition.findById(compId).lean();
-      if (competition) {
-        return floorCDF(Number(competition.amount) || 0);
-      }
-    } catch {
-      return 0;
-    }
-  }
-
-  return 0;
+function resolveEnrollmentCollectedCDF(enrollment: any): number {
+  const paid = Number(enrollment.paidAmountCDF || 0);
+  if (paid > 0) return floorCDF(paid);
+  const expected = Number(enrollment.amountCDF || 0);
+  if (expected > 0) return floorCDF(expected);
+  return floorCDF(Number(enrollment.competitionId?.amount || 0));
 }
 
 // ── RECALCUL DE LA BOURSE ─────────────────────────────────────────
 
 /**
  * Recalcule la Bourse d'Excellence Académique pour une session de compétition.
- * Appelé après chaque validation d'enrôlement.
+ * Appelé après chaque validation d'enrôlement. La Bourse restante est recalculée de façon atomique
+ * (Bourse initiale - Bourse déjà distribuée), sans écraser les crédits concurrents.
  */
-export async function recomputeCompetitionScholarship(sessionId: string): Promise<{
+export async function recomputeCompetitionScholarship(
+  sessionId: string,
+  dbSession: ClientSession | null = null,
+): Promise<{
   success: boolean;
   error?: string;
   data?: any;
@@ -63,7 +64,7 @@ export async function recomputeCompetitionScholarship(sessionId: string): Promis
   try {
     await connectToDb();
 
-    const session = await Session.findById(sessionId);
+    const session = await Session.findById(sessionId).session(dbSession);
     if (!session) return { success: false, error: 'Session introuvable' };
     if (session.type !== 'competition') return { success: false, error: 'Seules les sessions de compétition ont une Bourse' };
 
@@ -75,47 +76,23 @@ export async function recomputeCompetitionScholarship(sessionId: string): Promis
       status: 'CONFIRMED',
     })
       .populate('competitionId', 'amount')
+      .session(dbSession)
       .lean();
 
     if (validatedEnrollments.length === 0) {
       return { success: false, error: 'Aucun enrôlement validé pour cette session' };
     }
 
-    // Déterminer l'enrollmentFeeCDF depuis le premier enrôlement ou la compétition
     let enrollmentFeeCDF = 0;
     let totalCollectedCDF = 0;
     for (const enrollment of validatedEnrollments as any[]) {
-      const amount = await resolveEnrollmentAmountCDF(enrollment);
+      const amount = resolveEnrollmentCollectedCDF(enrollment);
       if (amount > 0) {
-        if (enrollmentFeeCDF <= 0) enrollmentFeeCDF = amount;
+        if (enrollmentFeeCDF <= 0) enrollmentFeeCDF = floorCDF(Number(enrollment.amountCDF || enrollment.competitionId?.amount || amount));
         totalCollectedCDF += amount;
       }
     }
 
-    // Si aucun montant trouvé via les transactions, prendre competition.amount
-    if (enrollmentFeeCDF <= 0) {
-      const comp = (validatedEnrollments[0] as any)?.competitionId;
-      enrollmentFeeCDF = Number(comp?.amount || 0);
-    }
-
-    // Fallback : si on a un competition.amount sur la session, l'utiliser
-    const competitionId = (validatedEnrollments[0] as any)?.competitionId?._id
-      || (validatedEnrollments[0] as any)?.competitionId;
-    if (enrollmentFeeCDF <= 0 && competitionId) {
-      try {
-        const { Competition } = await import('@/lib/models/Competition');
-        const comp = await Competition.findById(competitionId).lean();
-        enrollmentFeeCDF = Number(comp?.amount || 0);
-      } catch { /* ignore */ }
-    }
-
-    if (enrollmentFeeCDF <= 0) {
-      return { success: false, error: 'Impossible de déterminer le montant CDF de référence' };
-    }
-
-    if (totalCollectedCDF <= 0 && enrollmentFeeCDF > 0) {
-      totalCollectedCDF = validatedEnrollments.length * enrollmentFeeCDF;
-    }
     if (totalCollectedCDF <= 0) {
       return { success: false, error: 'Aucun montant CDF valide disponible pour calculer la Bourse' };
     }
@@ -124,48 +101,61 @@ export async function recomputeCompetitionScholarship(sessionId: string): Promis
     const platformRate = session.platformRate ?? DEFAULT_PLATFORM_RATE;
     const scholarshipRate = session.scholarshipRate ?? DEFAULT_SCHOLARSHIP_RATE;
     const gamesPerEnrollment = session.gamesPerEnrollment ?? DEFAULT_GAMES_PER_ENROLLMENT;
+    const commissionRate = Math.min(Math.max(PAYMENT_COMMISSION_RATE, 0), 1);
 
-    // totalCollectedCDF = somme des montants CDF
-    // Nouveaux montants théoriques
-    const platformAmountCDF = floorCDF(totalCollectedCDF * platformRate);
-    const scholarshipInitialAmountCDF = floorCDF(totalCollectedCDF * scholarshipRate);
+    // Q-01 : répartition 35 % / 65 % sur le net de la commission du fournisseur.
+    const netCollectedCDF = floorCDF(totalCollectedCDF * (1 - commissionRate));
+    const platformAmountCDF = floorCDF(netCollectedCDF * platformRate);
+    const scholarshipInitialAmountCDF = floorCDF(netCollectedCDF * scholarshipRate);
     const totalGrantedGames = totalValidatedEnrollments * gamesPerEnrollment;
     const unitRewardPerWonGameCDF = totalGrantedGames > 0
       ? floorCDF(scholarshipInitialAmountCDF / totalGrantedGames)
       : 0;
 
-    // Ne pas écraser scholarshipDistributedAmountCDF
-    const alreadyDistributed = session.scholarshipDistributedAmountCDF ?? 0;
-    const scholarshipRemainingAmountCDF = Math.max(0, scholarshipInitialAmountCDF - alreadyDistributed);
-
-    // Sauvegarder
     const beforeRemaining = session.scholarshipRemainingAmountCDF ?? 0;
 
-    session.enrollmentFeeCDF = enrollmentFeeCDF;
-    session.platformRate = platformRate;
-    session.scholarshipRate = scholarshipRate;
-    session.gamesPerEnrollment = gamesPerEnrollment;
-    session.totalValidatedEnrollments = totalValidatedEnrollments;
-    session.totalCollectedCDF = totalCollectedCDF;
-    session.platformAmountCDF = platformAmountCDF;
-    session.scholarshipInitialAmountCDF = scholarshipInitialAmountCDF;
-    session.scholarshipDistributedAmountCDF = alreadyDistributed;
-    session.scholarshipRemainingAmountCDF = scholarshipRemainingAmountCDF;
-    session.totalGrantedGames = totalGrantedGames;
-    session.unitRewardPerWonGameCDF = unitRewardPerWonGameCDF;
-    session.lastScholarshipComputedAt = new Date();
-    await session.save();
+    // Mise à jour atomique : la Bourse restante dépend de la Bourse distribuée au moment de l'écriture.
+    const updated = await Session.findOneAndUpdate(
+      { _id: session._id },
+      [
+        {
+          $set: {
+            enrollmentFeeCDF,
+            platformRate,
+            scholarshipRate,
+            gamesPerEnrollment,
+            paymentCommissionRate: commissionRate,
+            totalValidatedEnrollments,
+            totalCollectedCDF,
+            netCollectedCDF,
+            platformAmountCDF,
+            scholarshipInitialAmountCDF,
+            totalGrantedGames,
+            unitRewardPerWonGameCDF,
+            lastScholarshipComputedAt: '$$NOW',
+            scholarshipDistributedAmountCDF: { $ifNull: ['$scholarshipDistributedAmountCDF', 0] },
+            scholarshipRemainingAmountCDF: {
+              $max: [0, { $subtract: [scholarshipInitialAmountCDF, { $ifNull: ['$scholarshipDistributedAmountCDF', 0] }] }],
+            },
+          },
+        },
+      ],
+      { new: true, ...tx(dbSession) },
+    ).lean();
+
+    const alreadyDistributed = updated?.scholarshipDistributedAmountCDF ?? 0;
+    const scholarshipRemainingAmountCDF = updated?.scholarshipRemainingAmountCDF ?? 0;
 
     // Enregistrer le mouvement
-    await ScholarshipMovement.create({
+    await ScholarshipMovement.create([{
       sessionId: session._id,
       type: 'scholarship_recompute',
       amountCDF: scholarshipInitialAmountCDF,
       beforeRemainingCDF: beforeRemaining,
       afterRemainingCDF: scholarshipRemainingAmountCDF,
       createdBy: 'SYSTEM',
-      note: `Recalcul après ${totalValidatedEnrollments} enrôlement(s) validé(s)`,
-    });
+      note: `Recalcul après ${totalValidatedEnrollments} enrôlement(s) validé(s) : ${totalCollectedCDF} FC encaissés, ${netCollectedCDF} FC nets`,
+    }], tx(dbSession));
 
     return {
       success: true,
@@ -173,6 +163,7 @@ export async function recomputeCompetitionScholarship(sessionId: string): Promis
         enrollmentFeeCDF,
         totalValidatedEnrollments,
         totalCollectedCDF,
+        netCollectedCDF,
         platformAmountCDF,
         scholarshipInitialAmountCDF,
         scholarshipDistributedAmountCDF: alreadyDistributed,
@@ -182,6 +173,7 @@ export async function recomputeCompetitionScholarship(sessionId: string): Promis
       },
     };
   } catch (error: any) {
+    if (dbSession) throw error; // Laisser la transaction appelante s'annuler
     return { success: false, error: error.message };
   }
 }
@@ -189,151 +181,165 @@ export async function recomputeCompetitionScholarship(sessionId: string): Promis
 // ── CRÉDIT PAR PARTIE GAGNÉE ──────────────────────────────────────
 
 /**
- * Crédite la Bourse à une équipe lorsqu'elle gagne une partie.
- * Appelé depuis terminerPartieAction.
+ * Une partie est gagnée si et seulement si elle s'est terminée normalement, avec toutes ses
+ * questions répondues et toutes justes (correction JEU-04 : une partie vide n'est plus gagnée).
+ */
+export function isPartieWon(partie: {
+  endReason?: string;
+  reponses?: Array<{ estCorrecte: boolean }>;
+  nbQuestions?: number;
+}) {
+  const reponses = partie.reponses || [];
+  const expected = Number(partie.nbQuestions || 0);
+  return (
+    partie.endReason === 'COMPLETED' &&
+    expected > 0 &&
+    reponses.length === expected &&
+    reponses.every((r) => r.estCorrecte)
+  );
+}
+
+/**
+ * Crédite la Bourse à une équipe lorsqu'elle gagne un match.
+ * Appelé par finalizePartie, dans sa transaction : verrou de la partie, décrément conditionnel de la
+ * Bourse de session, crédit de la caisse d'équipe et journal ScholarshipMovement bougent ensemble.
  */
 export async function creditScholarshipForWonGame(
   partieId: string,
   enrollmentId: string,
+  dbSession: ClientSession | null = null,
 ): Promise<{ success: boolean; error?: string; rewardCDF?: number }> {
-  try {
-    await connectToDb();
+  await connectToDb();
 
-    const partie = await Partie.findById(partieId).lean();
-    if (!partie) return { success: false, error: 'Partie introuvable' };
-    if (partie.scholarshipCredited) {
-      return { success: false, error: 'Cette partie a déjà été récompensée' };
-    }
-    if (partie.status !== 'TERMINE') {
-      return { success: false, error: 'La partie doit être terminée pour créditer la Bourse' };
-    }
+  const partie = await Partie.findById(partieId).session(dbSession).lean();
+  if (!partie) return { success: false, error: 'Partie introuvable' };
+  if (partie.scholarshipCredited) {
+    return { success: false, error: 'Cette partie a déjà été récompensée' };
+  }
+  if (partie.status !== 'TERMINE') {
+    return { success: false, error: 'La partie doit être terminée pour créditer la Bourse' };
+  }
 
-    // Vérifier que c'est une partie VIP (competition)
-    if (partie.mode !== 'VIP' || partie.gameSource !== 'competition') {
-      return { success: false, error: 'Seules les parties de compétition (VIP) sont éligibles' };
-    }
+  // Vérifier que c'est une partie VIP (competition)
+  if (partie.mode !== 'VIP' || partie.gameSource !== 'competition') {
+    return { success: false, error: 'Seules les parties de compétition (VIP) sont éligibles' };
+  }
 
-    // Vérifier que toutes les réponses sont correctes (partie gagnée)
-    const allCorrect = partie.reponses?.every((r: any) => r.estCorrecte) ?? false;
-    if (!allCorrect) {
-      return { success: false, error: 'La partie n\'est pas entièrement gagnée' };
-    }
+  if (!isPartieWon(partie)) {
+    return { success: false, error: 'La partie n\'est pas entièrement gagnée' };
+  }
 
-    const enrollment = await Enrollement.findById(enrollmentId)
-      .populate('sessionId')
-      .populate('equipeId')
-      .lean();
-    if (!enrollment) return { success: false, error: 'Enrôlement introuvable' };
-    if (enrollment.status !== 'CONFIRMED') {
-      return { success: false, error: 'Enrôlement non confirmé' };
-    }
-    if (!enrollment.equipeId) {
-      return { success: false, error: 'Enrôlement sans équipe' };
-    }
+  const enrollment = await Enrollement.findById(enrollmentId)
+    .populate('sessionId')
+    .session(dbSession)
+    .lean();
+  if (!enrollment) return { success: false, error: 'Enrôlement introuvable' };
+  if (enrollment.status !== 'CONFIRMED') {
+    return { success: false, error: 'Enrôlement non confirmé' };
+  }
+  if (!enrollment.equipeId) {
+    return { success: false, error: 'Enrôlement sans équipe' };
+  }
 
-    const session = enrollment.sessionId as any;
-    if (!session) return { success: false, error: 'Session introuvable' };
-    if (session.type !== 'competition') {
-      return { success: false, error: 'Session de compétition requise' };
-    }
+  const session = enrollment.sessionId as any;
+  if (!session) return { success: false, error: 'Session introuvable' };
+  if (session.type !== 'competition') {
+    return { success: false, error: 'Session de compétition requise' };
+  }
 
-    const equipeId = enrollment.equipeId.toString();
-    const sessionId = session._id.toString();
+  const equipeId = enrollment.equipeId.toString();
+  const sessionId = session._id.toString();
 
-    // Vérifier que la session est active
-    if (!['ACTIVE', 'COMPLETED'].includes(session.status)) {
-      return { success: false, error: 'La session est inactive : la Bourse d\'Excellence AcadÃ©mique disponible a Ã©tÃ© entiÃ¨rement distribuÃ©e ou suspendue par la gestion.' };
-    }
+  // Vérifier que la session est ouverte
+  if (!['ACTIVE', 'COMPLETED'].includes(session.status)) {
+    return { success: false, error: 'La session est inactive : la Bourse d\'Excellence Académique disponible a été entièrement distribuée ou suspendue par la gestion.' };
+  }
 
-    // Vérifier la Bourse restante
-    const currentRemaining = session.scholarshipRemainingAmountCDF ?? 0;
-    if (currentRemaining <= 0) {
-      // Marquer la session comme inactive si Bourse épuisée
-      await Session.findByIdAndUpdate(sessionId, {
-        status: 'INACTIVE',
-        scholarshipFullyDistributedAt: new Date(),
-      });
-      return { success: false, error: 'La Bourse d\'Excellence Académique est épuisée' };
-    }
+  const unitReward = session.unitRewardPerWonGameCDF ?? 0;
+  if (unitReward <= 0) {
+    return { success: false, error: 'Valeur unitaire de Bourse non calculée. Recalculez la Bourse de session.' };
+  }
 
-    // Calculer la récompense
-    const unitReward = session.unitRewardPerWonGameCDF ?? 0;
-    if (unitReward <= 0) {
-      return { success: false, error: 'Valeur unitaire de Bourse non calculÃ©e. Recalculez la Bourse de session.' };
-    }
-    const rawRewardCDF = unitReward;
-    const rewardCDF = Math.min(rawRewardCDF, currentRemaining);
+  const currentRemaining = session.scholarshipRemainingAmountCDF ?? 0;
+  if (currentRemaining <= 0) {
+    await Session.updateOne(
+      { _id: sessionId, status: { $ne: 'INACTIVE' } },
+      { $set: { status: 'INACTIVE', scholarshipFullyDistributedAt: new Date() } },
+      tx(dbSession),
+    );
+    return { success: false, error: 'La Bourse d\'Excellence Académique est épuisée' };
+  }
 
-    if (rewardCDF <= 0) {
-      return { success: false, error: 'Récompense nulle ou Bourse insuffisante' };
-    }
+  const rewardCDF = Math.min(unitReward, currentRemaining);
 
-    const beforeRemaining = currentRemaining;
-    const afterRemaining = beforeRemaining - rewardCDF;
-
-    // Créditer l'équipe
-    const lockedPartie = await Partie.findOneAndUpdate(
-      { _id: partieId, scholarshipCredited: { $ne: true }, status: 'TERMINE' },
-      { $set: { scholarshipCredited: true } },
-      { new: true },
-    ).lean();
-    if (!lockedPartie) {
-      return { success: false, error: 'Cette partie a dÃ©jÃ  Ã©tÃ© rÃ©compensÃ©e' };
-    }
-
-    // Mettre à jour la session
-    const updatedSession = await Session.findOneAndUpdate(
-      { _id: sessionId, scholarshipRemainingAmountCDF: { $gte: rewardCDF } },
-      {
+  // Décrément conditionnel de la Bourse restante (jamais négative). Fait en premier : s'il échoue
+  // (Bourse consommée entre-temps), rien n'a été modifié et la clôture de la partie se poursuit.
+  const updatedSession = await Session.findOneAndUpdate(
+    { _id: sessionId, scholarshipRemainingAmountCDF: { $gte: rewardCDF } },
+    {
       $inc: {
         scholarshipDistributedAmountCDF: rewardCDF,
         scholarshipRemainingAmountCDF: -rewardCDF,
       },
-      },
-      { new: true },
-    ).lean();
-    if (!updatedSession) {
-      await Partie.findByIdAndUpdate(partieId, { scholarshipCredited: false });
-      return { success: false, error: 'Bourse restante insuffisante pour crÃ©diter cette partie' };
-    }
-
-    // Marquer la partie comme créditée
-    await Equipe.findByIdAndUpdate(equipeId, {
-      $inc: { 'metriques.soldeCDF': rewardCDF },
-    });
-
-    // Enregistrer le mouvement
-    await ScholarshipMovement.create({
-      sessionId: new mongoose.Types.ObjectId(sessionId),
-      teamId: new mongoose.Types.ObjectId(equipeId),
-      enrollmentId: new mongoose.Types.ObjectId(enrollmentId),
-      gameId: new mongoose.Types.ObjectId(partieId),
-      type: 'reward_per_won_game',
-      amountCDF: rewardCDF,
-      beforeRemainingCDF: beforeRemaining,
-      afterRemainingCDF: afterRemaining,
-      createdBy: 'SYSTEM',
-      note: `Crédit de ${rewardCDF} FC pour partie gagnée`,
-    });
-
-    // Vérifier si la Bourse est épuisée
-    if (afterRemaining <= 0) {
-      await Session.findByIdAndUpdate(sessionId, {
-        status: 'INACTIVE',
-        scholarshipFullyDistributedAt: new Date(),
-      });
-    }
-
-    return { success: true, rewardCDF };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+    },
+    { new: true, ...tx(dbSession) },
+  ).lean();
+  if (!updatedSession) {
+    return { success: false, error: 'Bourse restante insuffisante pour créditer cette partie' };
   }
+
+  // Verrou de la partie : un seul crédit par match
+  const lockedPartie = await Partie.findOneAndUpdate(
+    { _id: partieId, scholarshipCredited: { $ne: true }, status: 'TERMINE' },
+    { $set: { scholarshipCredited: true } },
+    { new: true, ...tx(dbSession) },
+  ).lean();
+  if (!lockedPartie) {
+    // Déjà créditée : on rend le montant à la Bourse (dans une transaction, l'annulation suffit).
+    if (dbSession) throw new Error('Cette partie a déjà été récompensée');
+    await Session.updateOne(
+      { _id: sessionId },
+      { $inc: { scholarshipDistributedAmountCDF: -rewardCDF, scholarshipRemainingAmountCDF: rewardCDF } },
+    );
+    return { success: false, error: 'Cette partie a déjà été récompensée' };
+  }
+
+  // Créditer la caisse de l'équipe
+  await Equipe.updateOne({ _id: equipeId }, { $inc: { 'metriques.soldeCDF': rewardCDF } }, tx(dbSession));
+
+  const afterRemaining = updatedSession.scholarshipRemainingAmountCDF ?? 0;
+
+  // Enregistrer le mouvement
+  await ScholarshipMovement.create([{
+    sessionId: new mongoose.Types.ObjectId(sessionId),
+    teamId: new mongoose.Types.ObjectId(equipeId),
+    enrollmentId: new mongoose.Types.ObjectId(enrollmentId),
+    gameId: new mongoose.Types.ObjectId(partieId),
+    type: 'reward_per_won_game',
+    amountCDF: rewardCDF,
+    beforeRemainingCDF: afterRemaining + rewardCDF,
+    afterRemainingCDF: afterRemaining,
+    createdBy: 'SYSTEM',
+    note: `Crédit de ${rewardCDF} FC pour partie gagnée`,
+  }], tx(dbSession));
+
+  // Bourse épuisée : la session passe INACTIVE
+  if (afterRemaining <= 0) {
+    await Session.updateOne(
+      { _id: sessionId },
+      { $set: { status: 'INACTIVE', scholarshipFullyDistributedAt: new Date() } },
+      tx(dbSession),
+    );
+  }
+
+  return { success: true, rewardCDF };
 }
 
 // ── ACTION ADMIN : PRIMER UNE ÉQUIPE ──────────────────────────────
 
 /**
- * Action admin pour attribuer le reste de la Bourse à une équipe.
+ * Attribue tout ou partie de la Bourse restante à une équipe (clôture de session).
+ * Transactionnel ; le contrôle d'accès (ADMIN) est fait par l'action appelante.
  */
 export async function awardRemainingScholarshipToTeam(
   sessionId: string,
@@ -341,95 +347,89 @@ export async function awardRemainingScholarshipToTeam(
   amount?: number,
 ): Promise<{ success: boolean; error?: string; data?: any }> {
   try {
-    const userSession = await getSession();
-    if (!userSession || !['ADMIN', 'MOD'].includes(userSession.role)) {
-      return { success: false, error: 'Non autorisé. Action réservée aux administrateurs.' };
+    if (!mongoose.Types.ObjectId.isValid(String(sessionId)) || !mongoose.Types.ObjectId.isValid(String(teamId))) {
+      return { success: false, error: 'Paramètres invalides' };
     }
 
-    await connectToDb();
+    return await withTransaction(async (dbSession) => {
+      const session = await Session.findById(sessionId).session(dbSession);
+      if (!session) return { success: false, error: 'Session introuvable' };
+      if (session.type !== 'competition') {
+        return { success: false, error: 'Seules les sessions de compétition ont une Bourse' };
+      }
 
-    const session = await Session.findById(sessionId);
-    if (!session) return { success: false, error: 'Session introuvable' };
-    if (session.type !== 'competition') {
-      return { success: false, error: 'Seules les sessions de compétition ont une Bourse' };
-    }
+      const remaining = session.scholarshipRemainingAmountCDF ?? 0;
+      if (remaining <= 0) {
+        return { success: false, error: 'La Bourse restante est déjà épuisée' };
+      }
 
-    const remaining = session.scholarshipRemainingAmountCDF ?? 0;
-    if (remaining <= 0) {
-      return { success: false, error: 'La Bourse restante est déjà épuisée' };
-    }
+      // Vérifier que l'équipe est enrôlée dans cette session
+      const enrollment = await Enrollement.findOne({
+        sessionId: new mongoose.Types.ObjectId(sessionId),
+        equipeId: new mongoose.Types.ObjectId(teamId),
+        competitionId: { $exists: true, $ne: null },
+        status: 'CONFIRMED',
+      }).session(dbSession).lean();
 
-    // Vérifier que l'équipe est enrôlée dans cette session
-    const enrollment = await Enrollement.findOne({
-      sessionId: new mongoose.Types.ObjectId(sessionId),
-      equipeId: new mongoose.Types.ObjectId(teamId),
-      competitionId: { $exists: true, $ne: null },
-      status: 'CONFIRMED',
-    }).lean();
+      if (!enrollment) {
+        return { success: false, error: 'Cette équipe n\'est pas enrôlée dans cette session' };
+      }
 
-    if (!enrollment) {
-      return { success: false, error: 'Cette équipe n\'est pas enrôlée dans cette session' };
-    }
+      const hasAmount = amount !== undefined && amount !== null && String(amount) !== '';
+      const awardAmount = hasAmount ? floorCDF(Number(amount)) : remaining;
+      if (!Number.isFinite(awardAmount) || awardAmount <= 0) {
+        return { success: false, error: 'Montant invalide' };
+      }
+      if (awardAmount > remaining) {
+        return { success: false, error: 'Le montant demandé dépasse la Bourse restante' };
+      }
 
-    // Montant à attribuer
-    const awardAmount = amount !== undefined ? floorCDF(Number(amount)) : remaining;
+      // Décrément conditionnel : la Bourse ne peut pas devenir négative
+      const updatedSession = await Session.findOneAndUpdate(
+        { _id: sessionId, scholarshipRemainingAmountCDF: { $gte: awardAmount } },
+        { $inc: { scholarshipDistributedAmountCDF: awardAmount, scholarshipRemainingAmountCDF: -awardAmount } },
+        { new: true, ...tx(dbSession) },
+      ).lean();
+      if (!updatedSession) {
+        return { success: false, error: 'La Bourse restante a changé, réessayez.' };
+      }
 
-    if (awardAmount <= 0) {
-      return { success: false, error: 'Montant invalide' };
-    }
-    if (awardAmount > remaining) {
-      return { success: false, error: 'Le montant demandÃ© dÃ©passe la Bourse restante' };
-    }
+      await Equipe.updateOne({ _id: teamId }, { $inc: { 'metriques.soldeCDF': awardAmount } }, tx(dbSession));
 
-    const beforeRemaining = remaining;
-    const afterRemaining = remaining - awardAmount;
+      const afterRemaining = updatedSession.scholarshipRemainingAmountCDF ?? 0;
+      if (afterRemaining <= 0) {
+        await Session.updateOne(
+          { _id: sessionId },
+          { $set: { status: 'INACTIVE', scholarshipFullyDistributedAt: new Date() } },
+          tx(dbSession),
+        );
+      }
 
-    // Créditer l'équipe
-    await Equipe.findByIdAndUpdate(teamId, {
-      $inc: { 'metriques.soldeCDF': awardAmount },
+      await ScholarshipMovement.create([{
+        sessionId: session._id,
+        teamId: new mongoose.Types.ObjectId(teamId),
+        enrollmentId: enrollment._id,
+        type: 'scholarship_admin_award',
+        amountCDF: awardAmount,
+        beforeRemainingCDF: afterRemaining + awardAmount,
+        afterRemainingCDF: afterRemaining,
+        createdBy: 'ADMIN',
+        note: hasAmount
+          ? `Prime de clôture de session : ${awardAmount} FC attribués à l'équipe`
+          : `Prime complémentaire d'excellence : total restant de ${awardAmount} FC attribué à l'équipe`,
+      }], tx(dbSession));
+
+      return {
+        success: true,
+        data: {
+          awardAmount,
+          beforeRemaining: afterRemaining + awardAmount,
+          afterRemaining,
+          teamId,
+          scholarshipFullyDistributed: afterRemaining <= 0,
+        },
+      };
     });
-
-    // Mettre à jour la session
-    await Session.findByIdAndUpdate(sessionId, {
-      $inc: {
-        scholarshipDistributedAmountCDF: awardAmount,
-        scholarshipRemainingAmountCDF: -awardAmount,
-      },
-    });
-
-    // Marquer la session inactive si Bourse épuisée
-    if (afterRemaining <= 0) {
-      await Session.findByIdAndUpdate(sessionId, {
-        status: 'INACTIVE',
-        scholarshipFullyDistributedAt: new Date(),
-      });
-    }
-
-    // Enregistrer le mouvement
-    await ScholarshipMovement.create({
-      sessionId: session._id,
-      teamId: new mongoose.Types.ObjectId(teamId),
-      enrollmentId: enrollment._id,
-      type: 'scholarship_admin_award',
-      amountCDF: awardAmount,
-      beforeRemainingCDF: beforeRemaining,
-      afterRemainingCDF: afterRemaining,
-      createdBy: 'ADMIN',
-      note: amount !== undefined && amount > 0
-        ? `Prime de clôture de session : ${awardAmount} FC attribués à l'équipe`
-        : `Prime complémentaire d'excellence : total restant de ${awardAmount} FC attribué à l'équipe`,
-    });
-
-    return {
-      success: true,
-      data: {
-        awardAmount,
-        beforeRemaining,
-        afterRemaining,
-        teamId,
-        scholarshipFullyDistributed: afterRemaining <= 0,
-      },
-    };
   } catch (error: any) {
     return { success: false, error: error.message };
   }
@@ -459,6 +459,8 @@ export async function getSessionScholarshipInfo(sessionId: string) {
         enrollmentFeeCDF: session.enrollmentFeeCDF ?? 0,
         totalValidatedEnrollments: session.totalValidatedEnrollments ?? 0,
         totalCollectedCDF: session.totalCollectedCDF ?? 0,
+        netCollectedCDF: session.netCollectedCDF ?? 0,
+        paymentCommissionRate: session.paymentCommissionRate ?? PAYMENT_COMMISSION_RATE,
         platformAmountCDF: session.platformAmountCDF ?? 0,
         scholarshipInitialAmountCDF: session.scholarshipInitialAmountCDF ?? 0,
         scholarshipDistributedAmountCDF: session.scholarshipDistributedAmountCDF ?? 0,

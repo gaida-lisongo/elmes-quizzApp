@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyPersistedPaymentAction } from "@/actions/payment.actions";
+import { verifyAndApplyPayment } from "@/lib/services/payment-flow.service";
 
 async function readPayload(request: NextRequest) {
   const contentType = request.headers.get("content-type") || "";
@@ -21,54 +21,43 @@ async function readPayload(request: NextRequest) {
   return text || null;
 }
 
-async function handleFlexPayCallback(request: NextRequest) {
+/**
+ * Callback FlexPay. Seuls le numéro de commande et la référence sont lus : le produit et l'effet
+ * du paiement sont relus en base, et le statut est redemandé au fournisseur (EX-PAY-02, PAY-06).
+ * Le traitement est idempotent : un callback rejoué ne crédite rien deux fois.
+ */
+export async function POST(request: NextRequest) {
   const payload = await readPayload(request);
-  const searchParams = Object.fromEntries(request.nextUrl.searchParams.entries());
+  const searchParams = request.nextUrl.searchParams;
   const payloadData = typeof payload === "object" && payload !== null ? payload as Record<string, any> : {};
   const transaction = payloadData.transaction || {};
-  const orderNumber =
-    searchParams.orderNumber ||
-    searchParams.order_number ||
-    searchParams.order ||
-    payloadData.orderNumber ||
-    payloadData.order_number ||
-    payloadData.order ||
-    transaction.orderNumber ||
-    transaction.order_number ||
-    "";
-  const reference =
-    searchParams.reference ||
-    payloadData.reference ||
-    transaction.reference ||
-    "";
+  const pick = (...values: unknown[]) => values.find((value) => typeof value === "string" && value.trim()) as string | undefined;
 
-  console.log("[FLEXPAY CALLBACK]", {
-    method: request.method,
-    path: request.nextUrl.pathname,
-    searchParams,
-    payload,
-    userAgent: request.headers.get("user-agent"),
-  });
+  const orderNumber = pick(
+    searchParams.get("orderNumber"),
+    searchParams.get("order_number"),
+    payloadData.orderNumber,
+    payloadData.order_number,
+    transaction.orderNumber,
+    transaction.order_number,
+  );
+  const reference = pick(searchParams.get("reference"), payloadData.reference, transaction.reference);
+
+  // Journal minimal : aucune donnée personnelle ni payload brut du fournisseur.
+  console.log("[FLEXPAY CALLBACK]", { orderNumber: orderNumber || null, reference: reference || null });
 
   if (!orderNumber && !reference) {
     return NextResponse.json({ success: false, error: "Paramètres de transaction manquants." }, { status: 400 });
   }
 
-  const result = await verifyPersistedPaymentAction({
-    orderNumber,
-    reference,
-    playerId: searchParams.playerId || payloadData.playerId,
-    resourceType: searchParams.resourceType || payloadData.resourceType,
-    resourceId: searchParams.resourceId || payloadData.resourceId,
-  });
-
-  return NextResponse.json(result, { status: result.success ? 200 : 400 });
+  const result = await verifyAndApplyPayment((orderNumber || reference) as string);
+  return NextResponse.json(
+    { success: result.success, status: result.status, message: result.message || result.error },
+    { status: result.success ? 200 : 400 },
+  );
 }
 
-export async function GET(request: NextRequest) {
-  return handleFlexPayCallback(request);
-}
-
-export async function POST(request: NextRequest) {
-  return handleFlexPayCallback(request);
+/** Plus aucune modification sur un simple GET (PAY-22). */
+export async function GET() {
+  return NextResponse.json({ success: false, error: "Méthode non autorisée." }, { status: 405, headers: { Allow: "POST" } });
 }

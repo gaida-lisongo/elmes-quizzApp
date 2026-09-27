@@ -3,41 +3,36 @@
 import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import {
-  Zap, CheckCircle, XCircle, Loader2, RefreshCw, Trash2, Clock, AlertCircle,
+  Zap, CheckCircle, XCircle, Loader2, RefreshCw, Clock, AlertCircle,
 } from "lucide-react";
 import { getPlayerMetricsAction, type PlayerMetricsData } from "@/actions/player.metrics.actions";
-import { checkRechargeStatusAction, deleteRechargeAction } from "@/actions/payment.actions";
+import { verifyMyPaymentAction } from "@/actions/payment.actions";
 import toast from "react-hot-toast";
 
 const STATUS_BADGE: Record<string, string> = {
   SUCCES: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
   EN_ATTENTE: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
+  A_VERIFIER: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
   ECHEC: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
 };
 
 const STATUS_LABEL: Record<string, string> = {
   SUCCES: "Succès",
   EN_ATTENTE: "En attente",
+  A_VERIFIER: "À vérifier",
   ECHEC: "Échec",
 };
 
 export default function AdvancedRechargesTable() {
   const [data, setData] = useState<PlayerMetricsData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [playerId, setPlayerId] = useState<string>("");
   const [checkingIndex, setCheckingIndex] = useState<number | null>(null);
-  const [deletingIndex, setDeletingIndex] = useState<number | null>(null);
 
   const loadMetrics = async () => {
     setLoading(true);
     const res = await getPlayerMetricsAction();
     if (res.success) {
       setData(res.data || null);
-      // Récupérer le playerId depuis les métriques via getMyRechargesAction
-      const rechargesRes = await import("@/actions/payment.actions").then(m => m.getMyRechargesAction());
-      if (rechargesRes.success && rechargesRes.data?.playerId) {
-        setPlayerId(rechargesRes.data.playerId);
-      }
     }
     setLoading(false);
   };
@@ -45,10 +40,11 @@ export default function AdvancedRechargesTable() {
   useEffect(() => { loadMetrics(); }, []);
 
   const handleCheck = async (index: number, providerTxId: string) => {
-    if (!providerTxId || !playerId) return toast.error("Aucune transaction à vérifier.");
+    if (!providerTxId) return toast.error("Aucune transaction à vérifier.");
     setCheckingIndex(index);
     try {
-      const res = await checkRechargeStatusAction(playerId, index);
+      // Vérification par numéro de commande, restreinte aux paiements du joueur connecté.
+      const res = await verifyMyPaymentAction(providerTxId);
       if (res.success) {
         toast.success(res.message || "Statut mis à jour.");
         await loadMetrics();
@@ -59,24 +55,6 @@ export default function AdvancedRechargesTable() {
       toast.error("Erreur lors de la vérification.");
     } finally {
       setCheckingIndex(null);
-    }
-  };
-
-  const handleDelete = async (index: number) => {
-    if (!playerId) return toast.error("Impossible d'identifier le joueur.");
-    setDeletingIndex(index);
-    try {
-      const res = await deleteRechargeAction(playerId, index);
-      if (res.success) {
-        toast.success("Recharge supprimée.");
-        await loadMetrics();
-      } else {
-        toast.error(res.error || "Erreur de suppression.");
-      }
-    } catch {
-      toast.error("Erreur lors de la suppression.");
-    } finally {
-      setDeletingIndex(null);
     }
   };
 
@@ -127,7 +105,7 @@ export default function AdvancedRechargesTable() {
                     {r.createdAt ? new Date(r.createdAt).toLocaleDateString("fr-FR") : "—"}
                   </td>
                   <td className="py-3 pr-4 font-semibold text-black dark:text-white">
-                    {r.amount.toLocaleString()} FC
+                    {r.amount.toLocaleString()} {r.currency === "USD" ? "$" : "FC"}
                   </td>
                   <td className="py-3 pr-4 text-waterloo">Niv. {r.targetLevel}</td>
                   <td className="py-3 pr-4">
@@ -150,18 +128,6 @@ export default function AdvancedRechargesTable() {
                               <RefreshCw className="h-3 w-3" />
                             )}
                             Vérifier
-                          </button>
-                          <button
-                            onClick={() => handleDelete(i)}
-                            disabled={deletingIndex === i}
-                            className="flex items-center gap-1 rounded-lg bg-red-50 px-2.5 py-1.5 text-xs text-red-500 transition hover:bg-red-100 disabled:opacity-50 dark:bg-red-900/20 dark:text-red-400"
-                          >
-                            {deletingIndex === i ? (
-                              <Loader2 className="h-3 w-3 animate-spin" />
-                            ) : (
-                              <Trash2 className="h-3 w-3" />
-                            )}
-                            Supprimer
                           </button>
                         </>
                       )}

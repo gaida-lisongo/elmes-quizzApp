@@ -108,7 +108,7 @@ class FlexPay {
 
             // Vérifier si la réponse est OK avant de parser
             const responseText = await req.text();
-            console.log("[FlexPay] InitCard raw response:", responseText.substring(0, 500));
+            // Réponse brute non journalisée (données de paiement).
 
             let data;
             try {
@@ -159,7 +159,6 @@ class FlexPay {
 
     async processTransaction(payload: any, cb: (data :any) => void){
         try {
-            console.log("[PROCESS TRANSACTION]", payload)
             cb(payload)
         } catch (error: any) {
             console.error('[PROCESS TRANSACTION ERROR]', error);

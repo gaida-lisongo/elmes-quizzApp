@@ -6,8 +6,7 @@ import {
   Users, UserPlus, UserX, Shield, ShieldOff, Loader2, Crown, Search,
 } from "lucide-react";
 import { getPlayerMetricsAction, type PlayerMetricsData } from "@/actions/player.metrics.actions";
-import { searchUsers } from "@/actions/payment.actions";
-import { inviteMemberAction, updateMemberRoleAction, getMyEquipeDetailAction } from "@/actions/equipe.actions";
+import { inviteMemberAction, updateMemberRoleAction, getMyEquipeDetailAction, searchInvitableVipPlayersAction } from "@/actions/equipe.actions";
 import toast from "react-hot-toast";
 
 export default function VipMembresTable() {
@@ -26,7 +25,8 @@ export default function VipMembresTable() {
     if (res.success) {
       setData(res.data || null);
       if (res.data?.team) {
-        const detail = await getMyEquipeDetailAction(res.data.team.members.find((m) => m.isCurrentUser)?._id || "");
+        // L'équipe est résolue depuis la session (plus d'identifiant joueur envoyé par le client).
+        const detail = await getMyEquipeDetailAction();
         if (detail.success) setEquipeDetail(detail.data);
       }
     }
@@ -39,8 +39,9 @@ export default function VipMembresTable() {
     if (searchQuery.length < 2) { setSearchResults([]); return; }
     const timer = setTimeout(async () => {
       setSearching(true);
-      const res = await searchUsers(searchQuery);
-      if (res.success) setSearchResults(res.users || []);
+      // Recherche réservée au capitaine : joueurs VIP sans équipe, sans téléphone ni e-mail.
+      const res = await searchInvitableVipPlayersAction(searchQuery);
+      if (res.success) setSearchResults((res.players || []).map((p: any) => ({ ...p, playerId: p._id })));
       setSearching(false);
     }, 400);
     return () => clearTimeout(timer);
@@ -141,7 +142,7 @@ export default function VipMembresTable() {
                   >
                     <UserPlus className="h-4 w-4 text-primary" />
                     <span className="font-medium text-black dark:text-white">{u.pseudo}</span>
-                    <span className="text-waterloo">{u.telephone}</span>
+                    <span className="text-waterloo">VIP</span>
                     {actionLoading === `invite-${u.playerId}` && <Loader2 className="ml-auto h-3 w-3 animate-spin" />}
                   </button>
                 ))}

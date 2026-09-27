@@ -1,10 +1,11 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
 export interface IRecharge {
-  amount: number;
+  _id?: mongoose.Types.ObjectId;
+  amount: number; // Montant réellement demandé au payeur, dans la devise `currency`
   providerTxId: string;
   reference?: string;
-  status: 'EN_ATTENTE' | 'SUCCES' | 'ECHEC';
+  status: 'EN_ATTENTE' | 'SUCCES' | 'ECHEC' | 'A_VERIFIER';
   targetLevel: number;
   creditedParties?: number;
   creditedAt?: Date;
@@ -12,16 +13,27 @@ export interface IRecharge {
   resourceId?: string;
   metadata?: Record<string, any>;
   currency?: 'CDF' | 'USD';
+  // Registre de transaction (EX-PAY-02, EX-PAY-05)
+  productId?: string;              // Identifiant catalogue (ex. "elonga") ou ressource
+  amountCDF?: number;              // Équivalent CDF du montant payé
+  fxRate?: number;                 // Taux utilisé pour amountCDF (1 si payé en CDF)
+  beneficiaryPlayerId?: mongoose.Types.ObjectId; // Achat pour un tiers (Q-07)
+  appliedAt?: Date;                // Verrou : effet du paiement appliqué une seule fois
+  providerAmount?: number;         // Montant renvoyé par le fournisseur à la vérification
+  failureReason?: string;
   createdAt: Date;
 }
 
 export interface IRetrait {
+  _id?: mongoose.Types.ObjectId;
   amount: number;
   providerTxId: string;
   reference?: string;
-  status: 'EN_ATTENTE' | 'SUCCES' | 'ECHEC';
+  status: 'EN_ATTENTE' | 'EN_COURS' | 'SUCCES' | 'ECHEC';
   method?: string;
   currency?: 'CDF' | 'USD';
+  phone?: string;                  // Numéro Mobile Money saisi par le joueur (PAY-26)
+  validatedBy?: mongoose.Types.ObjectId;
   beneficiaryName?: string;
   message?: string;
   processedAt?: Date;
@@ -68,7 +80,7 @@ const PlayerSchema: Schema<IPlayer> = new Schema(
         amount: { type: Number, required: true },
         providerTxId: { type: String, required: true },
         reference: { type: String },
-        status: { type: String, enum: ['EN_ATTENTE', 'SUCCES', 'ECHEC'], default: 'EN_ATTENTE' },
+        status: { type: String, enum: ['EN_ATTENTE', 'SUCCES', 'ECHEC', 'A_VERIFIER'], default: 'EN_ATTENTE' },
         targetLevel: { type: Number, required: true },
         creditedParties: { type: Number, default: 0 },
         creditedAt: { type: Date },
@@ -76,6 +88,13 @@ const PlayerSchema: Schema<IPlayer> = new Schema(
         resourceId: { type: String },
         metadata: { type: Schema.Types.Mixed, default: {} },
         currency: { type: String, enum: ['CDF', 'USD'], default: 'CDF' },
+        productId: { type: String },
+        amountCDF: { type: Number },
+        fxRate: { type: Number },
+        beneficiaryPlayerId: { type: Schema.Types.ObjectId, ref: 'Player' },
+        appliedAt: { type: Date },
+        providerAmount: { type: Number },
+        failureReason: { type: String },
         createdAt: { type: Date, default: Date.now }
       }
     ],
@@ -84,9 +103,11 @@ const PlayerSchema: Schema<IPlayer> = new Schema(
         amount: { type: Number, required: true },
         providerTxId: { type: String, required: true },
         reference: { type: String },
-        status: { type: String, enum: ['EN_ATTENTE', 'SUCCES', 'ECHEC'], default: 'EN_ATTENTE' },
+        status: { type: String, enum: ['EN_ATTENTE', 'EN_COURS', 'SUCCES', 'ECHEC'], default: 'EN_ATTENTE' },
         method: { type: String, default: 'MOBILE_MONEY' },
         currency: { type: String, enum: ['CDF', 'USD'], default: 'CDF' },
+        phone: { type: String },
+        validatedBy: { type: Schema.Types.ObjectId, ref: 'User' },
         beneficiaryName: { type: String },
         message: { type: String },
         processedAt: { type: Date },
