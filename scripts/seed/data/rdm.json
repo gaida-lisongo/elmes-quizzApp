@@ -1,0 +1,2327 @@
+{
+  "categorie": {
+    "designation": "RDM - Résistance des Matériaux",
+    "description": "Résistance des matériaux : contraintes, déformations, dimensionnement des structures",
+    "slug": "rdm"
+  },
+  "questions": [
+    {
+      "enonce": "Qu'est-ce que la contrainte normale Ïƒ dans un matÃ©riau ?",
+      "assertions": [
+        "Force par unité de surface perpendiculaire à la section",
+        "Force par unité de longueur",
+        "Moment par unité de surface",
+        "Force totale appliquée sur une section"
+      ],
+      "reponse": "Force par unité de surface perpendiculaire à la section",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est l'unité SI de la contrainte ?",
+      "assertions": [
+        "Pascal (Pa)",
+        "Newton (N)",
+        "Joule (J)",
+        "Kilogramme (kg)"
+      ],
+      "reponse": "Pascal (Pa)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La loi de Hooke s'Ã©crit Ïƒ = EÂ·Îµ. Que reprÃ©sente E ?",
+      "assertions": [
+        "Le module de Young (rigidité du matériau)",
+        "Le coefficient de Poisson",
+        "La contrainte admissible",
+        "La déformation permanente"
+      ],
+      "reponse": "Le module de Young (rigidité du matériau)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la valeur approximative du module de Young de l'acier ?",
+      "assertions": [
+        "210 GPa",
+        "70 GPa",
+        "30 GPa",
+        "150 GPa"
+      ],
+      "reponse": "210 GPa",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La déformation ε (allongement relatif) est définie comme :",
+      "assertions": [
+        "Î”L / L0 (variation de longueur sur longueur initiale)",
+        "F / A (force sur aire)",
+        "M / W (moment sur module de section)",
+        "E Â· Ïƒ (module fois contrainte)"
+      ],
+      "reponse": "Î”L / L0 (variation de longueur sur longueur initiale)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel type de sollicitation correspond à un effort axial tendant à allonger la barre ?",
+      "assertions": [
+        "Traction",
+        "Compression",
+        "Cisaillement",
+        "Torsion"
+      ],
+      "reponse": "Traction",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La torsion génère principalement des contraintes de quel type ?",
+      "assertions": [
+        "Contraintes tangentielles (cisaillement)",
+        "Contraintes normales de traction",
+        "Contraintes normales de compression",
+        "Contraintes de flexion"
+      ],
+      "reponse": "Contraintes tangentielles (cisaillement)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la valeur approximative du coefficient de Poisson ν pour l'acier ?",
+      "assertions": [
+        "0,3",
+        "0,5",
+        "0,1",
+        "0,8"
+      ],
+      "reponse": "0,3",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le coefficient de Poisson ν est défini comme le rapport :",
+      "assertions": [
+        "Déformation transversale sur déformation longitudinale (en valeur absolue)",
+        "Contrainte transversale sur contrainte longitudinale",
+        "Module de Young sur module de cisaillement",
+        "Charge sur section"
+      ],
+      "reponse": "Déformation transversale sur déformation longitudinale (en valeur absolue)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "1 MPa est équivalent à :",
+      "assertions": [
+        "1 N/mm²",
+        "1 kN/m²",
+        "1 000 Pa",
+        "1 N/m²"
+      ],
+      "reponse": "1 N/mm²",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La limite d'élasticité d'un matériau est la contrainte au-delà de laquelle :",
+      "assertions": [
+        "Les déformations ne sont plus réversibles (domaine plastique)",
+        "Le matériau se rompt immédiatement",
+        "La loi de Hooke reste valable",
+        "Le module de Young double"
+      ],
+      "reponse": "Les déformations ne sont plus réversibles (domaine plastique)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le moment d'inertie d'une section traduit sa résistance à :",
+      "assertions": [
+        "La flexion (rotation autour d'un axe)",
+        "La traction axiale",
+        "La torsion dans un arbre creux",
+        "La compression uniforme"
+      ],
+      "reponse": "La flexion (rotation autour d'un axe)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la formule du moment d'inertie d'un rectangle de base b et hauteur h par rapport à son axe centroïdal horizontal ?",
+      "assertions": [
+        "I = b·h³/12",
+        "I = b·h³/6",
+        "I = b·h/12",
+        "I = Ï€Â·bÂ·hÂ³/64"
+      ],
+      "reponse": "I = b·h³/12",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le module de section W est défini par :",
+      "assertions": [
+        "W = I / v (moment d'inertie divisé par la distance à la fibre extrême)",
+        "W = I · v",
+        "W = M / Ïƒ uniquement pour les sections circulaires",
+        "W = E · I"
+      ],
+      "reponse": "W = I / v (moment d'inertie divisé par la distance à la fibre extrême)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "L'aluminium a un module de Young d'environ :",
+      "assertions": [
+        "70 GPa",
+        "210 GPa",
+        "30 GPa",
+        "150 GPa"
+      ],
+      "reponse": "70 GPa",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel est le phénomène où un matériau se déforme de manière permanente sous une charge constante à haute température ?",
+      "assertions": [
+        "Fluage (creep)",
+        "Fatigue",
+        "Flambement",
+        "Relaxation élastique"
+      ],
+      "reponse": "Fluage (creep)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle sollicitation agit sur une poutre soumise à des charges transversales ?",
+      "assertions": [
+        "Flexion et cisaillement",
+        "Traction pure",
+        "Torsion pure",
+        "Compression axiale uniquement"
+      ],
+      "reponse": "Flexion et cisaillement",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que mesure la ductilité d'un matériau ?",
+      "assertions": [
+        "Sa capacité à se déformer plastiquement avant rupture",
+        "Sa résistance à la compression",
+        "Son module de Young",
+        "Sa dureté de surface"
+      ],
+      "reponse": "Sa capacité à se déformer plastiquement avant rupture",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "L'unité GPa est équivalente à :",
+      "assertions": [
+        "10⁹ Pa",
+        "10⁶ Pa",
+        "10³ Pa",
+        "10¹² Pa"
+      ],
+      "reponse": "10⁹ Pa",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Dans la sollicitation de torsion, la contrainte tangentielle maximale se situe :",
+      "assertions": [
+        "Ã€ la surface extÃ©rieure de la section circulaire",
+        "Au centre de la section",
+        "Ã€ mi-rayon",
+        "Uniformément répartie sur toute la section"
+      ],
+      "reponse": "Ã€ la surface extÃ©rieure de la section circulaire",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la relation entre le module de Young E, le module de Coulomb G et le coefficient de Poisson ν ?",
+      "assertions": [
+        "G = E / (2(1+ν))",
+        "G = E · ν / 2",
+        "G = E / ν",
+        "G = 2E / (1-ν)"
+      ],
+      "reponse": "G = E / (2(1+ν))",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "L'aire de la section transversale A est utilisée dans le calcul de :",
+      "assertions": [
+        "La contrainte normale Ïƒ = N/A",
+        "Le moment d'inertie I",
+        "La flèche d'une poutre",
+        "Le moment fléchissant M"
+      ],
+      "reponse": "La contrainte normale Ïƒ = N/A",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Un matériau fragile se caractérise par :",
+      "assertions": [
+        "Une rupture soudaine sans déformation plastique significative",
+        "Une grande capacité de déformation avant rupture",
+        "Un module de Young très faible",
+        "Une limite d'élasticité nulle"
+      ],
+      "reponse": "Une rupture soudaine sans déformation plastique significative",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le moment d'inertie polaire Ip d'une section circulaire de diamètre d vaut :",
+      "assertions": [
+        "Ï€Â·dâ´/32",
+        "Ï€Â·dâ´/64",
+        "Ï€Â·dâ´/16",
+        "Ï€Â·dÂ²/4"
+      ],
+      "reponse": "Ï€Â·dâ´/32",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la contrainte de cisaillement dans une section de diamètre d soumise à un effort tranchant T (approximation pour section circulaire) ?",
+      "assertions": [
+        "Ï„_moy = T / A",
+        "Ï„_moy = T Â· d / 4",
+        "Ï„_moy = T Â· I / A",
+        "Ï„_moy = T / W"
+      ],
+      "reponse": "Ï„_moy = T / A",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le rayon de giration i d'une section est défini par :",
+      "assertions": [
+        "i = âˆš(I/A)",
+        "i = I/A",
+        "i = âˆš(A/I)",
+        "i = A/I"
+      ],
+      "reponse": "i = âˆš(I/A)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel matériau a le coefficient de Poisson le plus proche de 0,5 ?",
+      "assertions": [
+        "Le caoutchouc (matériau quasi-incompressible)",
+        "L'acier",
+        "Le béton",
+        "L'aluminium"
+      ],
+      "reponse": "Le caoutchouc (matériau quasi-incompressible)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle grandeur représente la résistance d'un matériau à la déformation par cisaillement ?",
+      "assertions": [
+        "Module de Coulomb G",
+        "Module de Young E",
+        "Coefficient de Poisson ν",
+        "Limite d'Ã©lasticitÃ© Ïƒ_e"
+      ],
+      "reponse": "Module de Coulomb G",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "L'effort normal N dans une barre est positif en :",
+      "assertions": [
+        "Traction",
+        "Compression",
+        "Flexion positive",
+        "Torsion horaire"
+      ],
+      "reponse": "Traction",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la limite à la rupture d'un matériau ?",
+      "assertions": [
+        "La contrainte maximale supportée avant rupture complète",
+        "La contrainte au-delà de laquelle le matériau entre en plasticité",
+        "La contrainte de service admissible",
+        "La contrainte correspondant à une déformation de 0,2%"
+      ],
+      "reponse": "La contrainte maximale supportée avant rupture complète",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle section est la plus efficace en flexion à masse égale ?",
+      "assertions": [
+        "Section en I (IPE)",
+        "Section circulaire pleine",
+        "Section rectangulaire pleine",
+        "Section carrée pleine"
+      ],
+      "reponse": "Section en I (IPE)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Dans l'Ã©criture de la loi de Hooke Îµ = Ïƒ/E, que reprÃ©sente Îµ ?",
+      "assertions": [
+        "La déformation longitudinale sans dimension",
+        "La contrainte en Pa",
+        "Le module de Young en GPa",
+        "L'allongement absolu en mm"
+      ],
+      "reponse": "La déformation longitudinale sans dimension",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Un acier de construction courant a une limite d'élasticité d'environ :",
+      "assertions": [
+        "250 MPa",
+        "1 000 MPa",
+        "30 MPa",
+        "2 500 MPa"
+      ],
+      "reponse": "250 MPa",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La contrainte de cisaillement maximale dans une section rectangulaire soumise à un effort tranchant T est :",
+      "assertions": [
+        "Ï„_max = 1,5 Â· T/A",
+        "Ï„_max = T/A",
+        "Ï„_max = 2 Â· T/A",
+        "Ï„_max = T/(2A)"
+      ],
+      "reponse": "Ï„_max = 1,5 Â· T/A",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la nature des contraintes sur la fibre neutre d'une poutre en flexion simple ?",
+      "assertions": [
+        "Les contraintes normales sont nulles sur la fibre neutre",
+        "Les contraintes normales sont maximales",
+        "Les contraintes tangentielles sont nulles",
+        "Il n'y a aucune contrainte"
+      ],
+      "reponse": "Les contraintes normales sont nulles sur la fibre neutre",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le moment d'inertie d'une section circulaire pleine de diamètre d par rapport à un axe diamétral vaut :",
+      "assertions": [
+        "I = Ï€Â·dâ´/64",
+        "I = Ï€Â·dâ´/32",
+        "I = Ï€Â·dÂ²/4",
+        "I = Ï€Â·dÂ³/32"
+      ],
+      "reponse": "I = Ï€Â·dâ´/64",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La résistance à la compression du béton ordinaire est d'environ :",
+      "assertions": [
+        "25 MPa",
+        "250 MPa",
+        "2,5 MPa",
+        "2 500 MPa"
+      ],
+      "reponse": "25 MPa",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'section doublement symétrique' en résistance des matériaux ?",
+      "assertions": [
+        "La section a deux axes de symétrie, ce qui simplifie le calcul des propriétés géométriques",
+        "La section est soumise à deux moments fléchissants",
+        "La section a double épaisseur de matière",
+        "La section comporte deux matériaux différents"
+      ],
+      "reponse": "La section a deux axes de symétrie, ce qui simplifie le calcul des propriétés géométriques",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la dÃ©formation transversale d'une barre soumise Ã  une contrainte axiale Ïƒ, en fonction du coefficient de Poisson Î½ ?",
+      "assertions": [
+        "Îµ_t = -Î½ Â· Ïƒ/E",
+        "Îµ_t = Î½ Â· Ïƒ/E",
+        "Îµ_t = Ïƒ Â· E / Î½",
+        "Îµ_t = -Ïƒ/(Î½ Â· E)"
+      ],
+      "reponse": "Îµ_t = -Î½ Â· Ïƒ/E",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La contrainte tangentielle Ï„ est une contrainte agissant parallÃ¨lement Ã  la section transversale.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Dans le domaine élastique, la relation entre contrainte et déformation est non-linéaire.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le béton a un module de Young supérieur à celui de l'acier.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La compression génère des contraintes normales négatives (par convention).",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le module de Young E est une propriété intrinsèque du matériau, indépendante de la géométrie de la pièce.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le béton résiste bien en traction.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "En RDM, l'hypothèse de Bernoulli stipule que les sections planes restent planes après déformation en flexion.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La flexion simple ne crée que des contraintes normales sur la section transversale.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le module de Young E de l'acier est environ 3 fois plus grand que celui de l'aluminium.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La rigidité en traction d'une barre (E·A) dépend à la fois du matériau et de la section.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "En RDM, on suppose généralement que les déformations sont petites devant les dimensions de la structure.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Une barre de section A = 4 cmÂ², soumise Ã  un effort de traction N = 80 kN. La contrainte normale Ïƒ est :",
+      "assertions": [
+        "200 MPa",
+        "320 MPa",
+        "20 MPa",
+        "0,05 MPa"
+      ],
+      "reponse": "200 MPa",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Une barre de longueur L = 2 m, section A = 10 cmÂ², module E = 210 GPa, soumise Ã  N = 210 kN. L'allongement Î”L est :",
+      "assertions": [
+        "0,2 mm",
+        "2 mm",
+        "0,02 mm",
+        "20 mm"
+      ],
+      "reponse": "0,2 mm",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La formule de calcul de la contrainte de flexion Ïƒ_f en un point situÃ© Ã  la distance v de la fibre neutre est :",
+      "assertions": [
+        "Ïƒ_f = M Â· v / I",
+        "Ïƒ_f = M / v Â· I",
+        "Ïƒ_f = M Â· I / v",
+        "Ïƒ_f = v / (M Â· I)"
+      ],
+      "reponse": "Ïƒ_f = M Â· v / I",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le coefficient de sécurité s est défini par :",
+      "assertions": [
+        "s = Ïƒ_e / Ïƒ_adm (limite d'Ã©lasticitÃ© sur contrainte admissible)",
+        "s = Ïƒ_adm / Ïƒ_e",
+        "s = Ïƒ_e Â· Ïƒ_adm",
+        "s = Ïƒ_adm - Ïƒ_e"
+      ],
+      "reponse": "s = Ïƒ_e / Ïƒ_adm (limite d'Ã©lasticitÃ© sur contrainte admissible)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour dimensionner une barre en traction, on calcule la section minimale nécessaire par :",
+      "assertions": [
+        "A_min = N / Ïƒ_adm",
+        "A_min = Ïƒ_adm / N",
+        "A_min = N Â· E / Ïƒ_adm",
+        "A_min = N Â· Ïƒ_adm"
+      ],
+      "reponse": "A_min = N / Ïƒ_adm",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Une section rectangulaire b=100 mm, h=200 mm a un moment d'inertie par rapport à son axe horizontal centroïdal de :",
+      "assertions": [
+        "66,67 · 10⁶ mm⁴",
+        "133,33 · 10⁶ mm⁴",
+        "33,33 · 10⁶ mm⁴",
+        "200 · 10⁶ mm⁴"
+      ],
+      "reponse": "66,67 · 10⁶ mm⁴",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le module de section W d'un rectangle (bÃ—h) est :",
+      "assertions": [
+        "W = b·h²/6",
+        "W = b·h²/12",
+        "W = b·h³/12",
+        "W = b²·h/6"
+      ],
+      "reponse": "W = b·h²/6",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Un acier de limite d'Ã©lasticitÃ© Ïƒ_e = 250 MPa avec un coefficient de sÃ©curitÃ© s = 1,5 a une contrainte admissible Ïƒ_adm de :",
+      "assertions": [
+        "166,7 MPa",
+        "375 MPa",
+        "250 MPa",
+        "100 MPa"
+      ],
+      "reponse": "166,7 MPa",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une barre d'acier (E=210 GPa) de 1 m de long et section de 2 cm², soumise à 100 kN de traction, la déformation unitaire ε est :",
+      "assertions": [
+        "2,38 Ã— 10â»Â³",
+        "4,76 Ã— 10â»Â³",
+        "1,19 Ã— 10â»Â³",
+        "9,52 Ã— 10â»Â³"
+      ],
+      "reponse": "2,38 Ã— 10â»Â³",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le théorème de Huygens (transfert d'axes parallèles) s'écrit :",
+      "assertions": [
+        "I = I_G + A·d²",
+        "I = I_G - A·d²",
+        "I = I_G · d²",
+        "I = I_G / (A·d²)"
+      ],
+      "reponse": "I = I_G + A·d²",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Une poutre rectangulaire (b=50mm, h=150mm) soumise à un moment M=3 kN·m. La contrainte normale maximale est :",
+      "assertions": [
+        "16 MPa",
+        "8 MPa",
+        "32 MPa",
+        "4 MPa"
+      ],
+      "reponse": "16 MPa",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Dans le calcul de l'effort tranchant sur une poutre, les unités du moment fléchissant sont :",
+      "assertions": [
+        "N·m (newton-mètre)",
+        "N (newton)",
+        "Pa (pascal)",
+        "N/m²"
+      ],
+      "reponse": "N·m (newton-mètre)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une section en T, le calcul du centroïde nécessite :",
+      "assertions": [
+        "La décomposition en sous-surfaces élémentaires et le calcul du barycentre",
+        "Le calcul de la moyenne des hauteurs",
+        "Simplement la mi-hauteur totale",
+        "L'utilisation du théorème de Pythagore"
+      ],
+      "reponse": "La décomposition en sous-surfaces élémentaires et le calcul du barycentre",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La contrainte tangentielle de torsion Ï„ = M_t Â· r / I_p. Que reprÃ©sente I_p ?",
+      "assertions": [
+        "Le moment d'inertie polaire de la section",
+        "Le moment d'inertie en flexion",
+        "Le module de cisaillement G",
+        "L'aire de la section"
+      ],
+      "reponse": "Le moment d'inertie polaire de la section",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une section rectangulaire (b=80mm, h=160mm), quel est le module de section W_y (en cm³) ?",
+      "assertions": [
+        "341,3 cm³",
+        "170,7 cm³",
+        "682,7 cm³",
+        "256 cm³"
+      ],
+      "reponse": "341,3 cm³",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le diagramme de moment fléchissant d'une poutre simplement appuyée chargée en son milieu est :",
+      "assertions": [
+        "Triangulaire avec un maximum au centre",
+        "Rectangulaire uniforme",
+        "Parabolique",
+        "Nul sur toute la portée"
+      ],
+      "reponse": "Triangulaire avec un maximum au centre",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Si on double simultanÃ©ment L et A pour une barre en traction, l'allongement total Î”L = NÂ·L/(EÂ·A) est multipliÃ© par :",
+      "assertions": [
+        "1 (inchangé)",
+        "2",
+        "4",
+        "0,5"
+      ],
+      "reponse": "1 (inchangé)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La contrainte normale dans une section soumise à un effort de compression N=-50 kN et de section A=5 cm² est :",
+      "assertions": [
+        "-100 MPa",
+        "+100 MPa",
+        "-50 MPa",
+        "-200 MPa"
+      ],
+      "reponse": "-100 MPa",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel est l'effort tranchant maximal d'une poutre simplement appuyée (portée L) soumise à une charge uniformément répartie q ?",
+      "assertions": [
+        "T_max = q·L/2 (réaction d'appui)",
+        "T_max = q·L",
+        "T_max = q·L²/8",
+        "T_max = 0 en tout point"
+      ],
+      "reponse": "T_max = q·L/2 (réaction d'appui)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour vérifier une poutre en flexion, la condition de résistance est :",
+      "assertions": [
+        "Ïƒ_max = M_max / W â‰¤ Ïƒ_adm",
+        "Ïƒ_max = M_max Â· W â‰¤ Ïƒ_adm",
+        "Ïƒ_max = M_max / I â‰¤ Ïƒ_adm",
+        "Ïƒ_max = M_max Â· A â‰¤ Ïƒ_adm"
+      ],
+      "reponse": "Ïƒ_max = M_max / W â‰¤ Ïƒ_adm",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Sur une poutre isostatique simplement appuyée sous charge concentrée P au milieu (portée L), le moment fléchissant maximum est :",
+      "assertions": [
+        "M_max = P·L/4",
+        "M_max = P·L/2",
+        "M_max = P·L/8",
+        "M_max = P·L"
+      ],
+      "reponse": "M_max = P·L/4",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Une poutre simplement appuyée (portée L=6m) supporte une charge répartie q=10kN/m. Les réactions d'appui sont :",
+      "assertions": [
+        "R_A = R_B = 30 kN",
+        "R_A = R_B = 60 kN",
+        "R_A = 20 kN, R_B = 40 kN",
+        "R_A = R_B = 15 kN"
+      ],
+      "reponse": "R_A = R_B = 30 kN",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un arbre circulaire plein de diamètre d=40mm soumis à un moment de torsion M_t=500 N·m, la contrainte tangentielle maximale est :",
+      "assertions": [
+        "199 MPa",
+        "99 MPa",
+        "398 MPa",
+        "50 MPa"
+      ],
+      "reponse": "199 MPa",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le moment fléchissant maximum d'une poutre en console (longueur L) soumise à une charge répartie q est :",
+      "assertions": [
+        "M_max = q·L²/2 (à l'encastrement)",
+        "M_max = q·L²/8",
+        "M_max = q·L/2",
+        "M_max = q·L²/4"
+      ],
+      "reponse": "M_max = q·L²/2 (à l'encastrement)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle section rectangulaire (b=100mm) doit-on choisir pour que M_max=20kNÂ·m ne dÃ©passe pas Ïƒ_adm=150MPa ?",
+      "assertions": [
+        "h = 163 mm minimum",
+        "h = 200 mm minimum",
+        "h = 100 mm minimum",
+        "h = 400 mm minimum"
+      ],
+      "reponse": "h = 163 mm minimum",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La contrainte de cisaillement dans une section rectangulaire soumise à un effort tranchant T varie :",
+      "assertions": [
+        "Paraboliquement sur la hauteur, avec maximum au centroïde",
+        "Uniformément sur toute la section",
+        "Linéairement, avec maximum aux fibres extrêmes",
+        "Elle est nulle sur toute la section"
+      ],
+      "reponse": "Paraboliquement sur la hauteur, avec maximum au centroïde",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Un poteau carré de côté 100mm, acier E=210GPa, longueur 3m. Son moment d'inertie est I=b⁴/12 et son rayon de giration est :",
+      "assertions": [
+        "i = 28,87 mm",
+        "i = 100 mm",
+        "i = 50 mm",
+        "i = 57,74 mm"
+      ],
+      "reponse": "i = 28,87 mm",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La contrainte admissible Ïƒ_adm d'un acier de Ïƒ_e=355MPa avec coefficient de sÃ©curitÃ© s=1,5 est :",
+      "assertions": [
+        "236,7 MPa",
+        "532,5 MPa",
+        "355 MPa",
+        "177 MPa"
+      ],
+      "reponse": "236,7 MPa",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une section circulaire pleine de diamètre d=50mm, le module de section en flexion W est :",
+      "assertions": [
+        "W = Ï€Â·dÂ³/32 = 12,27 cmÂ³",
+        "W = Ï€Â·dÂ³/16 = 24,54 cmÂ³",
+        "W = Ï€Â·dâ´/64",
+        "W = Ï€Â·dÂ²/4"
+      ],
+      "reponse": "W = Ï€Â·dÂ³/32 = 12,27 cmÂ³",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Une barre en aluminium (E=70GPa, L=1m, A=5cmÂ²) supporte N=70kN. Son allongement Î”L est :",
+      "assertions": [
+        "0,2 mm",
+        "2 mm",
+        "0,02 mm",
+        "20 mm"
+      ],
+      "reponse": "0,2 mm",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un acier A36 (Ïƒ_e=250MPa) avec s=2, la section minimale pour reprendre N=400kN en traction est :",
+      "assertions": [
+        "32 cm²",
+        "16 cm²",
+        "8 cm²",
+        "80 cm²"
+      ],
+      "reponse": "32 cm²",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La section minimale W nÃ©cessaire pour une poutre soumise Ã  M_max avec contrainte admissible Ïƒ_adm est :",
+      "assertions": [
+        "W_min = M_max / Ïƒ_adm",
+        "W_min = M_max Â· Ïƒ_adm",
+        "W_min = Ïƒ_adm / M_max",
+        "W_min = M_max / (E Â· Ïƒ_adm)"
+      ],
+      "reponse": "W_min = M_max / Ïƒ_adm",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une barre acier (E=210GPa, L=2m, A=8cm²) sous N=168kN, l'allongement ΔL est :",
+      "assertions": [
+        "ΔL = N·L/(E·A) = 168000·2/(210000·800) = 0,002 m = 2 mm",
+        "ΔL = 0,2 mm",
+        "ΔL = 20 mm",
+        "ΔL = 0,02 mm"
+      ],
+      "reponse": "ΔL = N·L/(E·A) = 168000·2/(210000·800) = 0,002 m = 2 mm",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une section rectangulaire (b=80mm, h=120mm), quelle est la contrainte de flexion maximale sous M=5kN·m ?",
+      "assertions": [
+        "σ_max = M/W = 5000000/(80·120²/6) = 26 MPa",
+        "σ_max = M·I = 50 MPa",
+        "σ_max = M/(b·h) = 0,52 MPa",
+        "σ_max = 6·M/(b·h²) = 26 MPa"
+      ],
+      "reponse": "σ_max = M/W = 5000000/(80·120²/6) = 26 MPa",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre simplement appuyée (L=5m) sous charge répartie q=20kN/m, le moment fléchissant maximal (en milieu) est :",
+      "assertions": [
+        "M_max = q·L²/8 = 20·25/8 = 62,5 kN·m",
+        "M_max = q·L²/4 = 125 kN·m",
+        "M_max = q·L = 100 kN·m",
+        "M_max = q·L²/2 = 250 kN·m"
+      ],
+      "reponse": "M_max = q·L²/8 = 20·25/8 = 62,5 kN·m",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La rigidité en flexion EI d'une poutre (E=200GPa, section carrée 100mm×100mm) vaut :",
+      "assertions": [
+        "EI = 200000·(100⁴/12) = 1 667 kN·m²",
+        "EI = 200000·100² = 2 000 000 kN·m²",
+        "EI = 200·100 = 20 000 kN·m²",
+        "EI = 200000·(100²/12) = 167 kN·m²"
+      ],
+      "reponse": "EI = 200000·(100⁴/12) = 1 667 kN·m²",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour vérifier la résistance en flexion d'une poutre, quelle est la condition à respecter ?",
+      "assertions": [
+        "σ_max = M_max/W ≤ σ_adm",
+        "σ_max = M_max·W ≤ σ_adm",
+        "σ_max = M_max/I ≤ σ_adm",
+        "σ_max = M_max·A ≤ σ_adm"
+      ],
+      "reponse": "σ_max = M_max/W ≤ σ_adm",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une section en T (aile b=150mm, t=15mm, âme h=135mm, t_w=12mm), l'aire totale est :",
+      "assertions": [
+        "A = 150·15 + 135·12 = 2250+1620 = 3870 mm²",
+        "A = 150·150 = 22500 mm²",
+        "A = 150·15 = 2250 mm²",
+        "A = (150+135)·12 = 3420 mm²"
+      ],
+      "reponse": "A = 150·15 + 135·12 = 2250+1620 = 3870 mm²",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La déformation d'une barre sous charge N, section A, module E, longueur L par unité de longueur est :",
+      "assertions": [
+        "ε = N/(E·A) (déformation unitaire)",
+        "ε = N·L/(E·A) (allongement total)",
+        "ε = E·A/N",
+        "ε = N·E/A"
+      ],
+      "reponse": "ε = N/(E·A) (déformation unitaire)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La section minimale W d'une poutre soumise à M=45kN·m avec σ_adm=180MPa est :",
+      "assertions": [
+        "W_min = M/σ_adm = 45000000/180 = 250 000 mm³ = 250 cm³",
+        "W_min = M·σ_adm = 8,1·10⁶ mm⁵",
+        "W_min = σ_adm/M = 0,000004 mm⁻³",
+        "W_min = 125 cm³"
+      ],
+      "reponse": "W_min = M/σ_adm = 45000000/180 = 250 000 mm³ = 250 cm³",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La contrainte de flexion maximale d'une poutre vaut Ïƒ_max = M_max / W. La contrainte maximale augmente si le module de section W diminue.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "L'allongement d'une barre Î”L = NÂ·L/(EÂ·A). Si la section double, l'allongement est divisÃ© par 2.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La contrainte de cisaillement Ï„ = T/A est une valeur moyenne. La valeur maximale rÃ©elle peut Ãªtre diffÃ©rente selon la forme de la section.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La rigidité en flexion EI d'une poutre est le produit du module de Young par le moment d'inertie de la section.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le moment résistant maximum d'une section correspond à la contrainte admissible.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "L'effort tranchant est la dérivée du moment fléchissant par rapport à l'abscisse le long de la poutre.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La contrainte normale Ïƒ = N/A s'applique au calcul d'une section soumise Ã  un effort axial N et d'aire A.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Pour une poutre en T (semelle b_f=200mm, t_f=20mm, âme h_w=180mm, t_w=15mm), la hauteur du centroïde depuis le bas est calculée par la formule des moments statiques.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La contrainte de flexion Ïƒ = M/W est maximale aux fibres les plus Ã©loignÃ©es de l'axe neutre.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "L'effort tranchant est nul à l'endroit où le moment fléchissant est maximal sur une poutre chargée symétriquement.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La flèche maximale d'une poutre simplement appuyée soumise à une charge répartie uniforme q (portée L, rigidité EI) vaut :",
+      "assertions": [
+        "f_max = 5·q·L⁴/(384·E·I)",
+        "f_max = q·L⁴/(48·E·I)",
+        "f_max = q·L³/(48·E·I)",
+        "f_max = P·L³/(48·E·I)"
+      ],
+      "reponse": "f_max = 5·q·L⁴/(384·E·I)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La charge critique d'Euler pour une colonne bi-articulée (longueur L, rigidité EI) est :",
+      "assertions": [
+        "P_cr = Ï€Â²Â·EÂ·I / LÂ²",
+        "P_cr = Ï€Â·EÂ·I / LÂ²",
+        "P_cr = 4Â·Ï€Â²Â·EÂ·I / LÂ²",
+        "P_cr = E·I / L²"
+      ],
+      "reponse": "P_cr = Ï€Â²Â·EÂ·I / LÂ²",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une colonne encastrée-libre (poteau en console), la longueur de flambement L_f est :",
+      "assertions": [
+        "L_f = 2·L",
+        "L_f = L",
+        "L_f = 0,5·L",
+        "L_f = 0,7·L"
+      ],
+      "reponse": "L_f = 2·L",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La contrainte de torsion maximale Ï„_max dans un arbre plein de diamÃ¨tre d soumis Ã  un couple M_t est :",
+      "assertions": [
+        "Ï„_max = 16Â·M_t / (Ï€Â·dÂ³)",
+        "Ï„_max = 32Â·M_t / (Ï€Â·dÂ³)",
+        "Ï„_max = M_t Â· d / 4",
+        "Ï„_max = 8Â·M_t / (Ï€Â·dÂ³)"
+      ],
+      "reponse": "Ï„_max = 16Â·M_t / (Ï€Â·dÂ³)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "L'angle de torsion Ï† d'un arbre circulaire de longueur L, rigiditÃ© en torsion GIp, soumis au moment M_t est :",
+      "assertions": [
+        "Ï† = M_t Â· L / (G Â· Ip)",
+        "Ï† = M_t Â· G Â· Ip / L",
+        "Ï† = M_t Â· L Â· G / Ip",
+        "Ï† = G Â· Ip / (M_t Â· L)"
+      ],
+      "reponse": "Ï† = M_t Â· L / (G Â· Ip)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La flèche maximale d'une poutre en console (longueur L, charge P en bout) est :",
+      "assertions": [
+        "f_max = P·L³/(3·E·I)",
+        "f_max = P·L³/(48·E·I)",
+        "f_max = 5·P·L⁴/(384·E·I)",
+        "f_max = P·L²/(2·E·I)"
+      ],
+      "reponse": "f_max = P·L³/(3·E·I)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Une colonne bi-articulée (E=210 GPa, I=8 000 cm⁴, L=5 m) a une charge critique de flambement de :",
+      "assertions": [
+        "6 629 kN",
+        "1 657 kN",
+        "3 314 kN",
+        "13 258 kN"
+      ],
+      "reponse": "6 629 kN",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre simplement appuyée sous charge P en milieu, la flèche maximale vaut :",
+      "assertions": [
+        "f_max = P·L³/(48·E·I)",
+        "f_max = 5·P·L⁴/(384·E·I)",
+        "f_max = P·L³/(3·E·I)",
+        "f_max = P·L²/(8·E·I)"
+      ],
+      "reponse": "f_max = P·L³/(48·E·I)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la section minimale nÃ©cessaire pour une barre soumise Ã  une traction N=500 kN avec Ïƒ_adm=200 MPa ?",
+      "assertions": [
+        "25 cm²",
+        "10 cm²",
+        "50 cm²",
+        "100 cm²"
+      ],
+      "reponse": "25 cm²",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un arbre creux (diamètre extérieur D, diamètre intérieur d), le moment d'inertie polaire est :",
+      "assertions": [
+        "Ip = Ï€(Dâ´ - dâ´)/32",
+        "Ip = Ï€(Dâ´ + dâ´)/32",
+        "Ip = Ï€(Dâ´ - dâ´)/64",
+        "Ip = Ï€Â·Dâ´/32"
+      ],
+      "reponse": "Ip = Ï€(Dâ´ - dâ´)/32",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Une poutre en console de longueur L=3m, EI=2Ã—10â¶ NÂ·mÂ², soumise Ã  P=10kN en bout a une flÃ¨che de :",
+      "assertions": [
+        "45 mm",
+        "15 mm",
+        "90 mm",
+        "22,5 mm"
+      ],
+      "reponse": "45 mm",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La méthode de la superposition pour les poutres consiste à :",
+      "assertions": [
+        "Additionner les effets de chaque charge appliquée séparément",
+        "Multiplier les moments par le nombre de charges",
+        "Diviser la poutre en sous-poutres indépendantes",
+        "Négliger les charges les moins importantes"
+      ],
+      "reponse": "Additionner les effets de chaque charge appliquée séparément",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La flèche maximale d'une poutre simplement appuyée de portée L=5m, EI=10⁶ kN·cm², soumise à P=50kN en milieu est :",
+      "assertions": [
+        "f = P·L³/(48EI) = 1,302 cm",
+        "f = 5·P·L⁴/(384EI)",
+        "f = P·L³/(3EI)",
+        "f = 0"
+      ],
+      "reponse": "f = P·L³/(48EI) = 1,302 cm",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La longueur de flambement d'une colonne bi-encastrée est :",
+      "assertions": [
+        "L_f = 0,5·L",
+        "L_f = L",
+        "L_f = 2·L",
+        "L_f = 0,7·L"
+      ],
+      "reponse": "L_f = 0,5·L",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre IPE 200 (W=194 cmÂ³), quelle charge concentrÃ©e maximale P (en milieu d'une portÃ©e L=6m) est admissible pour Ïƒ_adm=150MPa ?",
+      "assertions": [
+        "P = 38,8 kN",
+        "P = 19,4 kN",
+        "P = 77,6 kN",
+        "P = 9,7 kN"
+      ],
+      "reponse": "P = 38,8 kN",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La contrainte axiale dans une section soumise à un effort N=200kN et un moment M=10kN·m (section b=100mm, h=200mm) à la fibre supérieure est :",
+      "assertions": [
+        "Ïƒ_sup = N/A + M/W",
+        "Ïƒ_sup = N/A - M/W",
+        "Ïƒ_sup = NÂ·A + MÂ·W",
+        "Ïƒ_sup = M/I Â· h"
+      ],
+      "reponse": "Ïƒ_sup = N/A + M/W",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La flèche d'une poutre en console de longueur L=2m, EI=500kN·m², soumise à une charge répartie q=10kN/m est :",
+      "assertions": [
+        "f = q·L⁴/(8EI) = 0,032 m",
+        "f = 5·q·L⁴/(384EI)",
+        "f = q·L³/(3EI)",
+        "f = 0"
+      ],
+      "reponse": "f = q·L⁴/(8EI) = 0,032 m",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la longueur de flambement d'une colonne encastrée à la base et articulée en tête ?",
+      "assertions": [
+        "L_f = 0,7·L",
+        "L_f = 0,5·L",
+        "L_f = 2·L",
+        "L_f = L"
+      ],
+      "reponse": "L_f = 0,7·L",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un poteau de section b=200mm, h=200mm, longueur L=4m, acier E=210GPa, encastré-libre : la charge critique est :",
+      "assertions": [
+        "P_cr = Ï€Â²Â·EI/(2L)Â² = 2 722 kN",
+        "P_cr = Ï€Â²Â·EI/LÂ² = 10 888 kN",
+        "P_cr = 4Ï€Â²Â·EI/LÂ² = 43 553 kN",
+        "P_cr = EI/L² = 1 100 kN"
+      ],
+      "reponse": "P_cr = Ï€Â²Â·EI/(2L)Â² = 2 722 kN",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre sur deux appuis simples (portée L=8m) avec charge concentrée P=100kN placée à L/4 du premier appui, la réaction au premier appui est :",
+      "assertions": [
+        "R_A = 75 kN",
+        "R_A = 50 kN",
+        "R_A = 25 kN",
+        "R_A = 100 kN"
+      ],
+      "reponse": "R_A = 75 kN",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre en console soumise à une charge répartie q sur toute sa longueur L, l'effort tranchant maximal (en pied) est :",
+      "assertions": [
+        "T_max = q·L",
+        "T_max = q·L/2",
+        "T_max = q·L²/2",
+        "T_max = 2·q·L"
+      ],
+      "reponse": "T_max = q·L",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La flèche d'une poutre simplement appuyée (L=4m, EI=2000kN·m²) soumise à une charge répartie q=20kN/m est :",
+      "assertions": [
+        "f = 5·q·L⁴/(384·E·I) = 0,833 cm",
+        "f = q·L⁴/(8·E·I)",
+        "f = P·L³/(48·E·I)",
+        "f = 5·q·L³/(384·E·I)"
+      ],
+      "reponse": "f = 5·q·L⁴/(384·E·I) = 0,833 cm",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La flèche maximale d'une poutre en console de longueur L sous charge répartie q est f = q·L⁴/(8EI). Pour L=2m, q=10kN/m, EI=1000kN·m², f vaut :",
+      "assertions": [
+        "f = 0,02 m = 2 cm",
+        "f = 0,16 m",
+        "f = 0,04 m",
+        "f = 0,01 m"
+      ],
+      "reponse": "f = 0,02 m = 2 cm",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la méthode pour tracer le diagramme de moment fléchissant d'une poutre chargée ?",
+      "assertions": [
+        "Calculer les réactions, puis intégrer l'effort tranchant pour obtenir M(x)",
+        "Appliquer directement M = F·L²/8 en tout point",
+        "Utiliser la loi de Hooke",
+        "Calculer le module de section W"
+      ],
+      "reponse": "Calculer les réactions, puis intégrer l'effort tranchant pour obtenir M(x)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La charge critique d'Euler pour une colonne bi-articulée (E=200GPa, I=400cm⁴, L=4m) est :",
+      "assertions": [
+        "P_cr = π²·EI/L² = 4 935 kN",
+        "P_cr = π²·EI/L = 1 234 kN",
+        "P_cr = EI/L² = 500 kN",
+        "P_cr = 4π²·EI/L² = 19 740 kN"
+      ],
+      "reponse": "P_cr = π²·EI/L² = 4 935 kN",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Un poteau de section carrée (100mm×100mm, acier E=210GPa) a un moment d'inertie I = b⁴/12. Sa charge critique (L=3m, bi-articulé) est :",
+      "assertions": [
+        "P_cr = π²·EI/L² = π²·210000·8333/(3000²) ≈ 1 914 N",
+        "P_cr = 500 kN",
+        "P_cr = 10 000 N",
+        "P_cr = 192 kN"
+      ],
+      "reponse": "P_cr = π²·EI/L² = π²·210000·8333/(3000²) ≈ 1 914 N",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un arbre plein de diamètre d=60mm soumis à M_t=2kN·m, la contrainte tangentielle maximale est :",
+      "assertions": [
+        "τ = 16·M_t/(π·d³) = 16·2000000/(π·60³) = 47,2 MPa",
+        "τ = 32·M_t/(π·d³) = 94,4 MPa",
+        "τ = M_t/(π·d³) = 2,9 MPa",
+        "τ = M_t·d/2 = 60 MPa"
+      ],
+      "reponse": "τ = 16·M_t/(π·d³) = 16·2000000/(π·60³) = 47,2 MPa",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La flèche centrale d'une poutre IPE300 (I=8356cm⁴, E=210GPa, L=6m) sous charge P=30kN au centre est :",
+      "assertions": [
+        "f = P·L³/(48EI) = 30000·6³/(48·210000·8356·10⁴) ≈ 4,1 mm",
+        "f = 5·P·L⁴/(384EI)",
+        "f = 20 mm",
+        "f = 1 mm"
+      ],
+      "reponse": "f = P·L³/(48EI) = 30000·6³/(48·210000·8356·10⁴) ≈ 4,1 mm",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une barre comprimée, l'élancement λ = Lf/i. Si i=28mm et Lf=3m, alors λ vaut :",
+      "assertions": [
+        "λ = 3000/28 = 107",
+        "λ = 28/3000 = 0,0093",
+        "λ = 3000·28 = 84000",
+        "λ = 3000+28 = 3028"
+      ],
+      "reponse": "λ = 3000/28 = 107",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour vérifier une poutre en flexion, on calcule la flèche f et on compare à f_lim = L/300. Pour L=6m, la flèche limite est :",
+      "assertions": [
+        "f_lim = 20 mm",
+        "f_lim = 2 mm",
+        "f_lim = 6 mm",
+        "f_lim = 60 mm"
+      ],
+      "reponse": "f_lim = 20 mm",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le module de section W = I/v. Pour une IPE200 avec I=1940cm⁴ et v=100mm, W vaut :",
+      "assertions": [
+        "W = 194 cm³",
+        "W = 97 cm³",
+        "W = 388 cm³",
+        "W = 1940 cm³"
+      ],
+      "reponse": "W = 194 cm³",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un arbre creux (D=80mm, d=60mm) soumis à M_t=3kN·m, la contrainte maximale τ_max est :",
+      "assertions": [
+        "τ_max = M_t·R/Ip où Ip = π(D⁴-d⁴)/32 = 3000000·40/[π·(80⁴-60⁴)/32] = 37,6 MPa",
+        "τ_max = 16·M_t/(π·D³) = 29,8 MPa",
+        "τ_max = M_t/W_t = 50 MPa",
+        "τ_max = M_t/(π·d³) = 44,4 MPa"
+      ],
+      "reponse": "τ_max = M_t·R/Ip où Ip = π(D⁴-d⁴)/32 = 3000000·40/[π·(80⁴-60⁴)/32] = 37,6 MPa",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle section de barre circulaire pleine faut-il pour reprendre P=200kN en traction avec σ_adm=160MPa ?",
+      "assertions": [
+        "A_min = P/σ_adm = 12,5 cm², soit d ≈ 40 mm",
+        "A_min = 25 cm², soit d ≈ 56 mm",
+        "A_min = 6 cm², soit d ≈ 28 mm",
+        "A_min = 50 cm², soit d ≈ 80 mm"
+      ],
+      "reponse": "A_min = P/σ_adm = 12,5 cm², soit d ≈ 40 mm",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La superposition s'applique : pour P1 et P2 concentrées sur une poutre élastique, la flèche totale est :",
+      "assertions": [
+        "f_total = f(P1) + f(P2)",
+        "f_total = f(P1) × f(P2)",
+        "f_total = max(f(P1), f(P2))",
+        "f_total = f(P1+P2)/2"
+      ],
+      "reponse": "f_total = f(P1) + f(P2)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une colonne encastrée aux deux extrémités, la longueur de flambement est :",
+      "assertions": [
+        "Lf = 0,5·L (poteau rigidement ancré aux deux bouts)",
+        "Lf = L",
+        "Lf = 2·L",
+        "Lf = 0,7·L"
+      ],
+      "reponse": "Lf = 0,5·L (poteau rigidement ancré aux deux bouts)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre simplement appuyée sous charge P=40kN à x=a=2m (portée L=8m), le moment fléchissant maximal se situe :",
+      "assertions": [
+        "Sous la charge P, M_max = P·a·b/L = 40·2·6/8 = 60 kN·m",
+        "Au milieu de la portée",
+        "À l'appui A",
+        "À l'appui B"
+      ],
+      "reponse": "Sous la charge P, M_max = P·a·b/L = 40·2·6/8 = 60 kN·m",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la déflexion (flèche) d'une poutre en console (EI=500kN·m², L=2m) sous charge concentrée P=5kN en bout ?",
+      "assertions": [
+        "f = P·L³/(3EI) = 5·8/(3·500) = 0,0267 m = 26,7 mm",
+        "f = P·L³/(48EI) = 1,67 mm",
+        "f = 5·P·L⁴/(384EI)",
+        "f = P·L²/(2EI)"
+      ],
+      "reponse": "f = P·L³/(3EI) = 5·8/(3·500) = 0,0267 m = 26,7 mm",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une console (L=2,5m, EI=800kN·m²) soumise à P=10kN en bout, la flèche en bout est :",
+      "assertions": [
+        "f = P·L³/(3EI) = 10·15,625/(3·800) = 0,065 m = 6,5 cm",
+        "f = P·L³/(48EI) = 0,000406 m",
+        "f = 5·P·L⁴/(384EI)",
+        "f = P·L/(2EI)"
+      ],
+      "reponse": "f = P·L³/(3EI) = 10·15,625/(3·800) = 0,065 m = 6,5 cm",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un arbre acier (G=80GPa, d=50mm, L=1m) soumis à M_t=1kN·m, l'angle de torsion φ (en radians) est :",
+      "assertions": [
+        "φ = M_t·L/(G·Ip) = 1000000·1000/(80000·π·50⁴/32) = 0,0163 rad",
+        "φ = 0,163 rad",
+        "φ = 0,00163 rad",
+        "φ = 1,63 rad"
+      ],
+      "reponse": "φ = M_t·L/(G·Ip) = 1000000·1000/(80000·π·50⁴/32) = 0,0163 rad",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour dimensionner un arbre en torsion (M_t=2kN·m, τ_adm=80MPa), le diamètre minimal d est :",
+      "assertions": [
+        "d_min = (16·M_t/(π·τ_adm))^(1/3) = (16·2000000/(π·80))^(1/3) ≈ 53,5 mm",
+        "d_min = 100 mm",
+        "d_min = 30 mm",
+        "d_min = (32·M_t/(π·τ_adm))^(1/3) ≈ 67 mm"
+      ],
+      "reponse": "d_min = (16·M_t/(π·τ_adm))^(1/3) = (16·2000000/(π·80))^(1/3) ≈ 53,5 mm",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "L'élancement λ d'une colonne est défini par λ = L_f / i, où i est le rayon de giration.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Pour dimensionner un poteau soumis à une charge de compression, on doit vérifier que P < P_cr (charge critique de flambement).",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Sur le diagramme d'effort tranchant d'une poutre soumise à une charge concentrée, il y a une discontinuité (saut) à l'endroit de la charge.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Une colonne très élancée (λ élevé) a tendance à flamber plutôt qu'à se plastifier par écrasement.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La contrainte de flexion maximale d'une poutre est nulle sur la fibre neutre et maximale sur les fibres extrêmes.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La résistance à la flexion d'une section est proportionnelle à son moment de section W = I/v.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "L'élancement limite au-dessous duquel le flambement est à craindre (selon Euler) dépend du matériau.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Dans le diagramme des moments fléchissants d'une poutre, le moment est nul aux appuis simples (rotules).",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Pour vÃ©rifier une colonne contre le flambement, on calcule la charge critique P_cr = Ï€Â²EI/L_fÂ². La colonne est sÃ»re si P_appliquÃ© < P_cr.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "L'élancement λ = L_f/i d'une colonne augmente quand le rayon de giration i diminue.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le cercle de Mohr permet de déterminer :",
+      "assertions": [
+        "Les contraintes principales et l'orientation des plans principaux",
+        "La charge critique de flambement",
+        "La flèche d'une poutre",
+        "Le moment d'inertie d'une section complexe"
+      ],
+      "reponse": "Les contraintes principales et l'orientation des plans principaux",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le critÃ¨re de Von Mises exprime la contrainte Ã©quivalente Ïƒ_eq par :",
+      "assertions": [
+        "Ïƒ_eq = âˆš(ÏƒxÂ² - ÏƒxÂ·Ïƒy + ÏƒyÂ² + 3Â·Ï„xyÂ²)",
+        "Ïƒ_eq = (Ïƒ1 - Ïƒ2)/2",
+        "Ïƒ_eq = (Ïƒx + Ïƒy)/2",
+        "Ïƒ_eq = âˆš(ÏƒxÂ² + ÏƒyÂ² + Ï„xyÂ²)"
+      ],
+      "reponse": "Ïƒ_eq = âˆš(ÏƒxÂ² - ÏƒxÂ·Ïƒy + ÏƒyÂ² + 3Â·Ï„xyÂ²)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La courbe S-N de Wöhler représente :",
+      "assertions": [
+        "La relation entre la contrainte alternée et le nombre de cycles à rupture",
+        "La relation contrainte-déformation monotone",
+        "Le flambement en fonction de l'élancement",
+        "L'état des contraintes sur le cercle de Mohr"
+      ],
+      "reponse": "La relation entre la contrainte alternée et le nombre de cycles à rupture",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le coefficient de concentration de contrainte Kt (en fatigue) tient compte des effets de :",
+      "assertions": [
+        "Concentrations de contraintes aux encoches, trous, changements de section",
+        "La charge critique de flambement",
+        "Le module de Young du matériau",
+        "L'uniformité de la section"
+      ],
+      "reponse": "Concentrations de contraintes aux encoches, trous, changements de section",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La contrainte de membrane dans un réservoir cylindrique sous pression interne p (rayon r, épaisseur e) est :",
+      "assertions": [
+        "Ïƒ_Î¸ = pÂ·r/e (contrainte circonfÃ©rentielle)",
+        "Ïƒ_Î¸ = pÂ·e/r",
+        "Ïƒ_Î¸ = pÂ·rÂ²/e",
+        "Ïƒ_Î¸ = p/(rÂ·e)"
+      ],
+      "reponse": "Ïƒ_Î¸ = pÂ·r/e (contrainte circonfÃ©rentielle)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un réservoir sphérique sous pression interne p (rayon r, épaisseur e), la contrainte de membrane vaut :",
+      "assertions": [
+        "Ïƒ = pÂ·r/(2Â·e)",
+        "Ïƒ = pÂ·r/e",
+        "Ïƒ = 2Â·pÂ·r/e",
+        "Ïƒ = pÂ·rÂ²/(2Â·e)"
+      ],
+      "reponse": "Ïƒ = pÂ·r/(2Â·e)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La plastification complète d'une section rectangulaire en flexion se produit quand :",
+      "assertions": [
+        "Toute la section a atteint la contrainte limite d'Ã©lasticitÃ© Ïƒ_e",
+        "La fibre neutre a atteint Ïƒ_e",
+        "Les fibres extrÃªmes seulement ont atteint Ïƒ_e",
+        "Le moment est nul sur toute la section"
+      ],
+      "reponse": "Toute la section a atteint la contrainte limite d'Ã©lasticitÃ© Ïƒ_e",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le moment plastique M_p d'une section rectangulaire (bÃ—h) est :",
+      "assertions": [
+        "M_p = Ïƒ_e Â· b Â· hÂ² / 4",
+        "M_p = Ïƒ_e Â· b Â· hÂ² / 6",
+        "M_p = Ïƒ_e Â· b Â· hÂ² / 8",
+        "M_p = Ïƒ_e Â· b Â· hÂ²"
+      ],
+      "reponse": "M_p = Ïƒ_e Â· b Â· hÂ² / 4",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le rapport M_p/M_e (facteur de plastification) d'une section rectangulaire est :",
+      "assertions": [
+        "1,5",
+        "1,0",
+        "2,0",
+        "1,25"
+      ],
+      "reponse": "1,5",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La contrainte tangentielle maximale selon le critère de Tresca est :",
+      "assertions": [
+        "Ï„_max = (Ïƒ1 - Ïƒ2)/2",
+        "Ï„_max = (Ïƒ1 + Ïƒ2)/2",
+        "Ï„_max = Ïƒ1 - Ïƒ2",
+        "Ï„_max = Ïƒ1/2"
+      ],
+      "reponse": "Ï„_max = (Ïƒ1 - Ïƒ2)/2",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Dans un béton armé, les aciers reprennent principalement les efforts de :",
+      "assertions": [
+        "Traction (zone tendue de la section)",
+        "Compression (zone comprimée)",
+        "Cisaillement uniquement",
+        "Torsion uniquement"
+      ],
+      "reponse": "Traction (zone tendue de la section)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le théorème de la borne inférieure (statique) garantit que la charge trouvée est :",
+      "assertions": [
+        "Inférieure ou égale à la charge de plastification réelle",
+        "Supérieure à la charge réelle",
+        "Ã‰gale Ã  la charge rÃ©elle",
+        "Toujours nulle"
+      ],
+      "reponse": "Inférieure ou égale à la charge de plastification réelle",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Dans un composite à fibres unidirectionnelles, la rigidité longitudinale est donnée par la loi des mélanges :",
+      "assertions": [
+        "E_L = V_f Â· E_f + V_m Â· E_m (volume de fibres Ã— module fibre + volume matrice Ã— module matrice)",
+        "E_L = E_f / V_f",
+        "E_L = E_m · E_f / (E_m + E_f)",
+        "E_L = (E_f + E_m) / 2"
+      ],
+      "reponse": "E_L = V_f Â· E_f + V_m Â· E_m (volume de fibres Ã— module fibre + volume matrice Ã— module matrice)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Les deux invariants du tenseur de contrainte en 2D sont :",
+      "assertions": [
+        "I1 = Ïƒx + Ïƒy et I2 = ÏƒxÂ·Ïƒy - Ï„xyÂ²",
+        "I1 = Ïƒx - Ïƒy et I2 = Ï„xy",
+        "I1 = ÏƒxÂ·Ïƒy et I2 = Ï„xy",
+        "I1 = Ï„xy et I2 = Ïƒx + Ïƒy"
+      ],
+      "reponse": "I1 = Ïƒx + Ïƒy et I2 = ÏƒxÂ·Ïƒy - Ï„xyÂ²",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En analyse limite des structures, une rotule plastique se forme quand le moment atteint :",
+      "assertions": [
+        "Le moment plastique M_p = Ïƒ_e Â· W_p",
+        "Le moment Ã©lastique M_e = Ïƒ_e Â· W",
+        "Le moment de flambement",
+        "Un moment quelconque"
+      ],
+      "reponse": "Le moment plastique M_p = Ïƒ_e Â· W_p",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un Ã©tat de contrainte plane Ïƒx=100MPa, Ïƒy=50MPa, Ï„xy=30MPa, la contrainte principale Ïƒ1 est :",
+      "assertions": [
+        "Ïƒ1 = 75 + âˆš(25Â² + 30Â²) = 75 + 39,05 = 114,05 MPa",
+        "Ïƒ1 = 100 MPa",
+        "Ïƒ1 = 50 MPa",
+        "Ïƒ1 = 130 MPa"
+      ],
+      "reponse": "Ïƒ1 = 75 + âˆš(25Â² + 30Â²) = 75 + 39,05 = 114,05 MPa",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Un rÃ©servoir cylindrique mince (rayon r=500mm, Ã©paisseur e=10mm) sous pression p=2MPa a une contrainte axiale Ïƒ_a de :",
+      "assertions": [
+        "Ïƒ_a = pÂ·r/(2e) = 50 MPa",
+        "Ïƒ_a = pÂ·r/e = 100 MPa",
+        "Ïƒ_a = pÂ·rÂ²/e = 50 000 MPa",
+        "Ïƒ_a = p/e = 0,2 MPa"
+      ],
+      "reponse": "Ïƒ_a = pÂ·r/(2e) = 50 MPa",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Dans un matériau composite à fibres longues, la rigidité transversale est donnée par la loi des mélanges inverse :",
+      "assertions": [
+        "1/E_T = V_f/E_f + V_m/E_m",
+        "E_T = V_f·E_f + V_m·E_m",
+        "E_T = E_f · E_m",
+        "E_T = (E_f + E_m)/2"
+      ],
+      "reponse": "1/E_T = V_f/E_f + V_m/E_m",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un Ã©tat de contrainte Ïƒx=80MPa, Ïƒy=-40MPa, Ï„xy=60MPa, la contrainte tangentielle maximale selon Tresca est :",
+      "assertions": [
+        "Ï„_max = âˆš(60Â² + 60Â²) = 84,85 MPa",
+        "Ï„_max = 60 MPa",
+        "Ï„_max = 120 MPa",
+        "Ï„_max = 40 MPa"
+      ],
+      "reponse": "Ï„_max = âˆš(60Â² + 60Â²) = 84,85 MPa",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour le critère de Von Mises en état plan (σx=120MPa, σy=40MPa, τxy=50MPa), la contrainte équivalente σ_eq est :",
+      "assertions": [
+        "σ_eq = √(σx²-σx·σy+σy²+3τxy²) = √(14400-4800+1600+7500) = √18700 ≈ 136,8 MPa",
+        "σ_eq = σx+σy = 160 MPa",
+        "σ_eq = √(σx²+σy²) = 126,5 MPa",
+        "σ_eq = (σx+σy)/2+τxy = 130 MPa"
+      ],
+      "reponse": "σ_eq = √(σx²-σx·σy+σy²+3τxy²) = √(14400-4800+1600+7500) = √18700 ≈ 136,8 MPa",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un état de contrainte plane (σx=100, σy=60, τxy=40 MPa), les contraintes principales σ1 et σ2 sont :",
+      "assertions": [
+        "σ1 = 80+√(20²+40²) = 80+44,7 = 124,7 MPa; σ2 = 35,3 MPa",
+        "σ1 = 140 MPa; σ2 = 20 MPa",
+        "σ1 = 100 MPa; σ2 = 60 MPa",
+        "σ1 = 80 MPa; σ2 = 80 MPa"
+      ],
+      "reponse": "σ1 = 80+√(20²+40²) = 80+44,7 = 124,7 MPa; σ2 = 35,3 MPa",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La limite d'endurance d'un acier (σ_R=600MPa) en flexion alternée est approximativement :",
+      "assertions": [
+        "σ_D ≈ 0,5·σ_R = 300 MPa",
+        "σ_D ≈ 0,9·σ_R = 540 MPa",
+        "σ_D ≈ 0,2·σ_R = 120 MPa",
+        "σ_D = σ_R = 600 MPa"
+      ],
+      "reponse": "σ_D ≈ 0,5·σ_R = 300 MPa",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un réservoir cylindrique mince (r=300mm, e=8mm) sous pression p=3MPa, les contraintes circonférentielle et axiale sont :",
+      "assertions": [
+        "σ_θ = p·r/e = 112,5 MPa; σ_a = p·r/(2e) = 56,25 MPa",
+        "σ_θ = p·r/e = 112,5 MPa; σ_a = σ_θ = 112,5 MPa",
+        "σ_θ = p·r/(2e) = 56,25 MPa; σ_a = p·r/e = 112,5 MPa",
+        "σ_θ = p·e/r = 0,08 MPa; σ_a = 0,04 MPa"
+      ],
+      "reponse": "σ_θ = p·r/e = 112,5 MPa; σ_a = p·r/(2e) = 56,25 MPa",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour la construction du cercle de Mohr avec σx=80MPa, σy=20MPa, τxy=30MPa, le centre est au point :",
+      "assertions": [
+        "C = ((80+20)/2 ; 0) = (50 ; 0)",
+        "C = (80 ; 0)",
+        "C = (20 ; 0)",
+        "C = (50 ; 30)"
+      ],
+      "reponse": "C = ((80+20)/2 ; 0) = (50 ; 0)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le rayon du cercle de Mohr pour σx=80MPa, σy=20MPa, τxy=30MPa est :",
+      "assertions": [
+        "R = √((80-20)²/4 + 30²) = √(900+900) = 42,4 MPa",
+        "R = (80-20)/2 = 30 MPa",
+        "R = 30 MPa",
+        "R = τxy = 30 MPa"
+      ],
+      "reponse": "R = √((80-20)²/4 + 30²) = √(900+900) = 42,4 MPa",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le moment plastique d'une section rectangulaire (b=100mm, h=200mm, σ_e=250MPa) est :",
+      "assertions": [
+        "M_p = σ_e·b·h²/4 = 250·100·200²/4 = 250 kN·m",
+        "M_p = σ_e·b·h²/6 = 166,7 kN·m",
+        "M_p = σ_e·b·h = 5000 kN",
+        "M_p = σ_e·W = 167 kN·m"
+      ],
+      "reponse": "M_p = σ_e·b·h²/4 = 250·100·200²/4 = 250 kN·m",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Dans la théorie de la plasticité, le rapport de plastification κ = M_p/M_e pour une section rectangulaire vaut :",
+      "assertions": [
+        "κ = 1,5 (facteur de forme plastique)",
+        "κ = 1,0",
+        "κ = 2,0",
+        "κ = 1,25"
+      ],
+      "reponse": "κ = 1,5 (facteur de forme plastique)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre simplement appuyée (portée L) sous charge P au centre, en analyse limite, la charge de plastification P_p est :",
+      "assertions": [
+        "P_p = 4·M_p/L (2 rotules : aux appuis non, au centre et... Non : 1 rotule au centre + 2 appuis articulés → P_p = 4·M_p/L)",
+        "P_p = 8·M_p/L",
+        "P_p = 2·M_p/L",
+        "P_p = M_p/L"
+      ],
+      "reponse": "P_p = 4·M_p/L (2 rotules : aux appuis non, au centre et... Non : 1 rotule au centre + 2 appuis articulés → P_p = 4·M_p/L)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le critère de Tresca est vérifié si τ_max = (σ1-σ2)/2 ≤ σ_e/2. Pour σ1=200MPa et σ2=-50MPa avec σ_e=300MPa :",
+      "assertions": [
+        "τ_max = (200-(-50))/2 = 125 MPa ≤ 150 MPa → OK",
+        "τ_max = 100 MPa ≤ 150 MPa → OK",
+        "τ_max = 150 MPa = 150 MPa → limite",
+        "τ_max = 175 MPa > 150 MPa → plastification"
+      ],
+      "reponse": "τ_max = (200-(-50))/2 = 125 MPa ≤ 150 MPa → OK",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un composite fibres-matrice (V_f=0,6, E_f=70GPa, E_m=3GPa), le module longitudinal E_L est :",
+      "assertions": [
+        "E_L = 0,6·70 + 0,4·3 = 43,2 GPa",
+        "E_L = 0,6·3 + 0,4·70 = 29,8 GPa",
+        "E_L = 70·3/(0,6·70+0,4·3) = 4,5 GPa",
+        "E_L = (70+3)/2 = 36,5 GPa"
+      ],
+      "reponse": "E_L = 0,6·70 + 0,4·3 = 43,2 GPa",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un module transversal E_T d'un composite (V_f=0,6, E_f=70GPa, E_m=3GPa), en utilisant la loi des mélanges inverse :",
+      "assertions": [
+        "1/E_T = 0,6/70 + 0,4/3 → E_T ≈ 6,6 GPa",
+        "E_T = 43,2 GPa (même que E_L)",
+        "E_T = 70·3/70 = 3 GPa",
+        "E_T = 36,5 GPa"
+      ],
+      "reponse": "1/E_T = 0,6/70 + 0,4/3 → E_T ≈ 6,6 GPa",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La contrainte principale maximale σ1 d'un état de contrainte plane est σ1 = (σx+σy)/2 + √[((σx-σy)/2)² + τxy²]. Pour σx=100, σy=0, τxy=0 :",
+      "assertions": [
+        "σ1 = 100 MPa, σ2 = 0 MPa (état de traction uniaxiale)",
+        "σ1 = 50 MPa",
+        "σ1 = 200 MPa",
+        "σ1 = 70 MPa"
+      ],
+      "reponse": "σ1 = 100 MPa, σ2 = 0 MPa (état de traction uniaxiale)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un béton armé (section rectangulaire b=300mm, d=450mm, A_s=1500mm², fy=400MPa, f'c=25MPa), le moment résistant ultime selon l'Eurocode est :",
+      "assertions": [
+        "M_rd = A_s·fy·(d - a/2) où a = A_s·fy/(0,85·f'c·b) ≈ 94mm → M_rd ≈ 234 kN·m",
+        "M_rd = A_s·fy·d = 270 kN·m",
+        "M_rd = 0,85·f'c·b·d² = 1 444 kN·m",
+        "M_rd = A_s·fy = 600 kN"
+      ],
+      "reponse": "M_rd = A_s·fy·(d - a/2) où a = A_s·fy/(0,85·f'c·b) ≈ 94mm → M_rd ≈ 234 kN·m",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Dans la courbe S-N (Wöhler), la pente de la courbe en coordonnées log-log représente :",
+      "assertions": [
+        "L'exposant de la loi de puissance reliant la contrainte alternée au nombre de cycles",
+        "La limite d'endurance",
+        "Le coefficient de concentration Kt",
+        "La résistance à la traction statique"
+      ],
+      "reponse": "L'exposant de la loi de puissance reliant la contrainte alternée au nombre de cycles",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un état de contrainte triaxial σ1, σ2, σ3, la contrainte équivalente de Von Mises est :",
+      "assertions": [
+        "σ_VM = √[((σ1-σ2)²+(σ2-σ3)²+(σ3-σ1)²)/2]",
+        "σ_VM = (σ1+σ2+σ3)/3",
+        "σ_VM = max(σ1,σ2,σ3)",
+        "σ_VM = σ1-σ3"
+      ],
+      "reponse": "σ_VM = √[((σ1-σ2)²+(σ2-σ3)²+(σ3-σ1)²)/2]",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour le critère de Von Mises avec σx=150MPa, σy=50MPa, τxy=0, la contrainte équivalente est :",
+      "assertions": [
+        "σ_VM = √(150²-150·50+50²+0) = √(22500-7500+2500) = √17500 ≈ 132,3 MPa",
+        "σ_VM = 150+50 = 200 MPa",
+        "σ_VM = (150-50)/2 = 50 MPa",
+        "σ_VM = 150 MPa"
+      ],
+      "reponse": "σ_VM = √(150²-150·50+50²+0) = √(22500-7500+2500) = √17500 ≈ 132,3 MPa",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un réservoir sphérique mince (r=400mm, e=6mm) sous pression p=4MPa, la contrainte de membrane est :",
+      "assertions": [
+        "σ = p·r/(2e) = 4·400/(2·6) = 133,3 MPa",
+        "σ = p·r/e = 266,7 MPa",
+        "σ = 2·p·r/e = 533,3 MPa",
+        "σ = p·r²/e = 106 700 MPa"
+      ],
+      "reponse": "σ = p·r/(2e) = 4·400/(2·6) = 133,3 MPa",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un état de contrainte σx=200MPa, σy=100MPa, τxy=80MPa, la contrainte de cisaillement maximale selon Tresca est :",
+      "assertions": [
+        "τ_max = R = √((50²)+(80²)) = √(2500+6400) = 94,3 MPa",
+        "τ_max = τxy = 80 MPa",
+        "τ_max = (σx-σy)/2 = 50 MPa",
+        "τ_max = (σx+σy)/2 = 150 MPa"
+      ],
+      "reponse": "τ_max = R = √((50²)+(80²)) = √(2500+6400) = 94,3 MPa",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Dans la courbe S-N, le nombre de cycles pour 400MPa est 10⁶ cycles, et pour 300MPa c'est 10⁷ cycles. La pente de la droite de Wöhler en log-log est :",
+      "assertions": [
+        "log(400/300) / log(10⁷/10⁶) = 0,125 (exposant de la loi de puissance)",
+        "0,5",
+        "1,0",
+        "0,0125"
+      ],
+      "reponse": "log(400/300) / log(10⁷/10⁶) = 0,125 (exposant de la loi de puissance)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le facteur de plastification κ = M_p/M_e d'une section en I est généralement :",
+      "assertions": [
+        "κ ≈ 1,15 (entre 1,1 et 1,2 selon la section)",
+        "κ = 1,5 comme pour un rectangle",
+        "κ = 1,0",
+        "κ = 2,0"
+      ],
+      "reponse": "κ ≈ 1,15 (entre 1,1 et 1,2 selon la section)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le critère de Tresca est plus conservateur (plus sécuritaire) que le critère de Von Mises.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Sur le cercle de Mohr, les contraintes principales correspondent aux points où la contrainte tangentielle est nulle.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La limite d'endurance d'un acier est la contrainte alternée en dessous de laquelle le matériau peut supporter un nombre infini de cycles.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le critère de Von Mises est basé sur l'énergie de distorsion (cisaillement), tandis que Tresca utilise la contrainte tangentielle maximale.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Dans l'analyse limite d'une structure, le théorème de la borne supérieure utilise des mécanismes cinématiques admissibles.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Les matériaux composites à fibres sont généralement anisotropes (propriétés différentes selon la direction).",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La résistance en fatigue d'une pièce dépend uniquement de la résistance statique du matériau.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Pour un Ã©tat de contrainte plan (Ïƒx, Ïƒy, Ï„xy), les contraintes principales Ïƒ1 et Ïƒ2 sont les valeurs propres du tenseur de contrainte.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Un réservoir cylindrique sous pression interne a une contrainte axiale qui vaut la moitié de la contrainte circonférentielle.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La fatigue des métaux se manifeste par la propagation de microfissures sous chargement cyclique.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    }
+  ]
+}
