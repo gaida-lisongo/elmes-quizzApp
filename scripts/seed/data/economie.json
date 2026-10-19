@@ -1,0 +1,1409 @@
+{
+  "categorie": {
+    "designation": "Économie",
+    "description": "Microéconomie, macroéconomie et économie du développement — perspective congolaise",
+    "slug": "economie"
+  },
+  "questions": [
+    {
+      "enonce": "Qu'est-ce qu'un bien économique ?",
+      "assertions": ["Un bien rare qui satisfait un besoin humain et nécessite des ressources pour être produit", "Tout objet physique existant dans la nature quelle que soit sa disponibilité", "Un service fourni gratuitement par l'État à tous les citoyens", "Un bien importé de l'étranger et vendu sur le marché local"],
+      "reponse": "Un bien rare qui satisfait un besoin humain et nécessite des ressources pour être produit",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la rareté en économie ?",
+      "assertions": ["La situation où les ressources disponibles sont insuffisantes pour satisfaire tous les besoins humains illimités", "L'absence totale d'un bien sur un marché donné", "La monopolisation d'un bien par un seul producteur", "La difficulté d'importer des biens en raison des barrières douanières"],
+      "reponse": "La situation où les ressources disponibles sont insuffisantes pour satisfaire tous les besoins humains illimités",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le coût d'opportunité ?",
+      "assertions": ["La valeur de la meilleure alternative à laquelle on renonce lorsqu'on effectue un choix économique", "Le coût supplémentaire engagé pour produire une unité additionnelle d'un bien", "Le coût total de production divisé par la quantité produite", "Les frais administratifs liés à l'ouverture d'une entreprise"],
+      "reponse": "La valeur de la meilleure alternative à laquelle on renonce lorsqu'on effectue un choix économique",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la demande en microéconomie ?",
+      "assertions": ["La quantité d'un bien ou service que les consommateurs sont prêts et capables d'acheter à différents niveaux de prix", "La totalité des biens produits par une entreprise sur une période donnée", "Le volume des importations d'un pays sur le marché international", "Les besoins exprimés par les ménages sans lien avec leur pouvoir d'achat"],
+      "reponse": "La quantité d'un bien ou service que les consommateurs sont prêts et capables d'acheter à différents niveaux de prix",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'énonce la loi de la demande ?",
+      "assertions": ["Toutes choses égales par ailleurs, lorsque le prix d'un bien augmente, la quantité demandée diminue", "Plus le prix d'un bien augmente, plus la quantité demandée augmente", "La demande est indépendante du prix lorsque le bien est de première nécessité", "La quantité demandée est uniquement déterminée par le revenu des consommateurs"],
+      "reponse": "Toutes choses égales par ailleurs, lorsque le prix d'un bien augmente, la quantité demandée diminue",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'offre en microéconomie ?",
+      "assertions": ["La quantité d'un bien ou service que les producteurs sont prêts à vendre à différents niveaux de prix", "L'ensemble des biens disponibles dans les magasins d'un pays", "Les dons accordés par l'État aux ménages en situation de pauvreté", "Le stock de marchandises importées d'un pays partenaire commercial"],
+      "reponse": "La quantité d'un bien ou service que les producteurs sont prêts à vendre à différents niveaux de prix",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Comment définit-on le Produit Intérieur Brut (PIB) ?",
+      "assertions": ["La valeur totale des biens et services finals produits sur le territoire d'un pays au cours d'une période donnée", "La valeur des biens produits par les entreprises nationales qu'elles soient à l'intérieur ou à l'extérieur du pays", "La valeur totale des exportations d'un pays sur une année", "Le revenu total perçu par les ménages dans une économie sur une année"],
+      "reponse": "La valeur totale des biens et services finals produits sur le territoire d'un pays au cours d'une période donnée",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la différence entre le PIB et le PNB ?",
+      "assertions": ["Le PIB mesure la production sur le territoire national ; le PNB mesure la production des résidents nationaux où qu'ils se trouvent", "Le PIB inclut les services ; le PNB n'inclut que les biens manufacturés", "Le PIB est calculé en valeur nominale ; le PNB est toujours en valeur réelle", "Le PIB mesure le revenu des ménages ; le PNB mesure le revenu des entreprises"],
+      "reponse": "Le PIB mesure la production sur le territoire national ; le PNB mesure la production des résidents nationaux où qu'ils se trouvent",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la méthode de calcul du PIB par les dépenses ?",
+      "assertions": ["PIB = Consommation + Investissement + Dépenses publiques + Exportations nettes (X - M)", "PIB = Revenus des ménages + Profits des entreprises + Impôts", "PIB = Valeur ajoutée brute + Taxes nettes sur les produits", "PIB = Exportations totales - Importations totales + Consommation intérieure"],
+      "reponse": "PIB = Consommation + Investissement + Dépenses publiques + Exportations nettes (X - M)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'inflation ?",
+      "assertions": ["Une hausse générale et durable du niveau des prix dans une économie", "Une augmentation ponctuelle du prix d'un seul bien de consommation", "Une dépréciation de la monnaie nationale sur les marchés de change", "Une réduction du pouvoir d'achat liée à une baisse des salaires"],
+      "reponse": "Une hausse générale et durable du niveau des prix dans une économie",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Comment mesure-t-on l'inflation dans un pays ?",
+      "assertions": ["Par l'Indice des Prix à la Consommation (IPC), qui mesure l'évolution du prix d'un panier de biens représentatif", "Par le taux de croissance du PIB nominal par rapport au PIB réel", "Par le montant total des crédits accordés par les banques commerciales", "Par le différentiel entre les taux d'intérêt débiteurs et créditeurs"],
+      "reponse": "Par l'Indice des Prix à la Consommation (IPC), qui mesure l'évolution du prix d'un panier de biens représentatif",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'inflation par la demande ?",
+      "assertions": ["Une hausse des prix causée par une demande globale excédant la capacité de production de l'économie", "Une hausse des prix résultant d'une augmentation des coûts de production (matières premières, salaires)", "Une hausse des prix importée via la dépréciation de la monnaie nationale", "Une hausse des prix causée par la spéculation sur les marchés financiers"],
+      "reponse": "Une hausse des prix causée par une demande globale excédant la capacité de production de l'économie",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le chômage en économie ?",
+      "assertions": ["La situation d'une personne sans emploi, disponible pour travailler et activement à la recherche d'un emploi", "L'absence totale d'activité économique dans une région donnée", "La fermeture temporaire d'une entreprise en période de ralentissement", "Le fait de travailler à temps partiel involontairement"],
+      "reponse": "La situation d'une personne sans emploi, disponible pour travailler et activement à la recherche d'un emploi",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le chômage frictionnel ?",
+      "assertions": ["Le chômage temporaire lié au temps de transition entre deux emplois ou à l'entrée sur le marché du travail", "Le chômage causé par un recul global de l'activité économique (récession)", "Le chômage résultant d'une inadéquation entre les compétences des travailleurs et les besoins des entreprises", "Le chômage saisonnier affectant certains secteurs à certaines périodes de l'année"],
+      "reponse": "Le chômage temporaire lié au temps de transition entre deux emplois ou à l'entrée sur le marché du travail",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le chômage structurel ?",
+      "assertions": ["Le chômage résultant d'une inadéquation durable entre les qualifications des travailleurs et les besoins du marché du travail", "Le chômage lié aux fluctuations cycliques de l'activité économique", "Le chômage temporaire entre deux emplois dans un marché du travail dynamique", "Le chômage saisonnier dans les secteurs agricole et touristique"],
+      "reponse": "Le chômage résultant d'une inadéquation durable entre les qualifications des travailleurs et les besoins du marché du travail",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelles sont les trois fonctions de la monnaie ?",
+      "assertions": ["Moyen d'échange, unité de compte et réserve de valeur", "Instrument de crédit, moyen d'épargne et garantie bancaire", "Outil de production, instrument de taxation et réserve de change", "Moyen de paiement international, garantie de crédit et instrument de politique fiscale"],
+      "reponse": "Moyen d'échange, unité de compte et réserve de valeur",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la monnaie officielle de la République Démocratique du Congo ?",
+      "assertions": ["Le Franc Congolais (CDF)", "Le Dollar Congolais (USD)", "Le Franc CFA", "Le Franc Zaïre"],
+      "reponse": "Le Franc Congolais (CDF)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel est le rôle principal de la Banque Centrale du Congo (BCC) ?",
+      "assertions": ["Émettre la monnaie nationale, conduire la politique monétaire et superviser le système bancaire", "Accorder des crédits aux entreprises privées et aux ménages", "Percevoir les impôts et financer le budget de l'État", "Gérer les réserves en devises étrangères uniquement"],
+      "reponse": "Émettre la monnaie nationale, conduire la politique monétaire et superviser le système bancaire",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le taux directeur d'une banque centrale ?",
+      "assertions": ["Le taux d'intérêt auquel la banque centrale prête aux banques commerciales, influençant le coût du crédit dans l'économie", "Le taux de croissance annuel du PIB fixé par le gouvernement", "Le taux de change officiel de la monnaie nationale par rapport au dollar", "Le pourcentage de bénéfices que les banques doivent reverser à l'État"],
+      "reponse": "Le taux d'intérêt auquel la banque centrale prête aux banques commerciales, influençant le coût du crédit dans l'économie",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que les réserves obligatoires en politique monétaire ?",
+      "assertions": ["Le pourcentage des dépôts que les banques commerciales doivent obligatoirement conserver à la banque centrale", "Les réserves en or détenues par la BCC dans ses coffres", "Les fonds propres minimaux exigés pour créer une nouvelle banque", "Les réserves de change en dollars que la BCC doit maintenir"],
+      "reponse": "Le pourcentage des dépôts que les banques commerciales doivent obligatoirement conserver à la banque centrale",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un bien normal en microéconomie ?",
+      "assertions": ["Un bien dont la demande augmente lorsque le revenu des consommateurs augmente", "Un bien dont la demande est insensible aux variations de prix", "Un bien produit selon les normes sanitaires en vigueur", "Un bien dont la qualité est certifiée par une autorité publique"],
+      "reponse": "Un bien dont la demande augmente lorsque le revenu des consommateurs augmente",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que des biens substituables en microéconomie ?",
+      "assertions": ["Des biens qui peuvent se remplacer l'un l'autre dans la satisfaction d'un même besoin (ex. : café et thé)", "Des biens qui doivent être consommés ensemble pour satisfaire un besoin (ex. : voiture et carburant)", "Des biens dont le prix est fixé de manière identique par les producteurs", "Des biens produits dans le même secteur industriel par des concurrents directs"],
+      "reponse": "Des biens qui peuvent se remplacer l'un l'autre dans la satisfaction d'un même besoin (ex. : café et thé)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un marché en économie ?",
+      "assertions": ["Un mécanisme de rencontre entre l'offre et la demande permettant de déterminer un prix et une quantité d'équilibre", "Un lieu physique où les marchandises sont vendues et achetées", "Un accord entre producteurs pour fixer les prix de vente", "Un établissement public chargé de distribuer les biens de première nécessité"],
+      "reponse": "Un mécanisme de rencontre entre l'offre et la demande permettant de déterminer un prix et une quantité d'équilibre",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le surplus du consommateur ?",
+      "assertions": ["La différence entre le prix maximum qu'un consommateur est prêt à payer et le prix qu'il paie effectivement", "L'excédent de biens stockés par les consommateurs au-delà de leurs besoins immédiats", "Le montant des subventions accordées par l'État aux ménages à faibles revenus", "La différence entre le revenu total et les dépenses de consommation d'un ménage"],
+      "reponse": "La différence entre le prix maximum qu'un consommateur est prêt à payer et le prix qu'il paie effectivement",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelles sont les principales exportations minières de la RDC ?",
+      "assertions": ["Le cuivre, le cobalt, le coltan (tantale) et le diamant", "Le pétrole, le gaz naturel et le charbon", "Le café, le cacao et le coton", "L'or, l'argent et le platine exclusivement"],
+      "reponse": "Le cuivre, le cobalt, le coltan (tantale) et le diamant",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la balance commerciale ?",
+      "assertions": ["La différence entre la valeur des exportations et la valeur des importations d'un pays", "Le solde du compte courant de la balance des paiements", "La différence entre les recettes fiscales et les dépenses publiques de l'État", "Le montant total des dettes extérieures d'un pays envers ses créanciers"],
+      "reponse": "La différence entre la valeur des exportations et la valeur des importations d'un pays",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le PIB par habitant ?",
+      "assertions": ["Le PIB total d'un pays divisé par sa population, indicateur du niveau de vie moyen", "Le revenu annuel moyen d'un ménage composé de deux personnes", "La part du PIB consacrée aux dépenses de santé et d'éducation", "Le salaire minimum légal en vigueur dans un pays"],
+      "reponse": "Le PIB total d'un pays divisé par sa population, indicateur du niveau de vie moyen",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la microéconomie ?",
+      "assertions": ["La branche de l'économie qui étudie le comportement des agents individuels (ménages, entreprises) et les mécanismes de marché", "La branche qui étudie les phénomènes économiques à l'échelle d'un pays entier", "L'économie des petites entreprises et des micro-crédits", "L'étude des économies des petits pays en voie de développement"],
+      "reponse": "La branche de l'économie qui étudie le comportement des agents individuels (ménages, entreprises) et les mécanismes de marché",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la macroéconomie ?",
+      "assertions": ["La branche de l'économie qui étudie les phénomènes économiques à l'échelle d'un pays (PIB, inflation, chômage, politique budgétaire)", "L'étude des grandes entreprises multinationales et de leurs stratégies", "L'analyse des marchés financiers internationaux et des flux de capitaux", "L'économie des pays membres du G20 et des grandes puissances mondiales"],
+      "reponse": "La branche de l'économie qui étudie les phénomènes économiques à l'échelle d'un pays (PIB, inflation, chômage, politique budgétaire)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'élasticité-prix de la demande ?",
+      "assertions": ["La sensibilité de la quantité demandée d'un bien à une variation de son prix, mesurée par le rapport des variations relatives", "Le pourcentage de hausse des prix toléré par les consommateurs sans modification de leurs achats", "La capacité d'un producteur à modifier ses prix en fonction de l'évolution de ses coûts", "La relation entre le prix d'un bien et le prix des biens substituables sur le marché"],
+      "reponse": "La sensibilité de la quantité demandée d'un bien à une variation de son prix, mesurée par le rapport des variations relatives",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'économie de subsistance encore pratiquée dans plusieurs provinces de la RDC ?",
+      "assertions": ["Une forme d'organisation économique où les ménages produisent essentiellement pour leur propre consommation, avec peu d'échanges marchands", "Une économie entièrement basée sur les ressources naturelles exportées vers l'étranger", "Un système économique où l'État contrôle tous les moyens de production", "Une économie caractérisée par un fort taux d'investissement étranger"],
+      "reponse": "Une forme d'organisation économique où les ménages produisent essentiellement pour leur propre consommation, avec peu d'échanges marchands",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La rareté est le problème économique fondamental que toute société doit résoudre.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le PIB mesure uniquement la production de biens physiques, à l'exclusion des services.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "L'inflation réduit le pouvoir d'achat des ménages lorsque les salaires n'augmentent pas aussi vite que les prix.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le chômage frictionnel est considéré comme normal et inévitable dans une économie de marché dynamique.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La monnaie n'a qu'une seule fonction dans l'économie : servir de moyen d'échange.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La Banque Centrale du Congo (BCC) est la banque des banques et l'émetteur exclusif du franc congolais.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le franc congolais (CDF) est la seule monnaie légale pour toutes les transactions sur le territoire de la RDC.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Selon la loi de la demande, lorsque le prix d'un bien augmente, la quantité demandée augmente également.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le PIB et le PNB sont toujours identiques pour un pays donné.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "En RDC, c'est le gouvernement qui conduit la politique monétaire, et non la BCC.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Comment se détermine le prix d'équilibre sur un marché concurrentiel ?",
+      "assertions": ["Par la rencontre de l'offre et de la demande au point où les quantités offertes égalent les quantités demandées", "Par décision administrative du Ministère du Commerce", "Par négociation entre les syndicats patronaux et les syndicats de consommateurs", "Par le niveau de prix pratiqué par l'entreprise dominante sur le marché"],
+      "reponse": "Par la rencontre de l'offre et de la demande au point où les quantités offertes égalent les quantités demandées",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'arrive-t-il à la courbe de demande lorsque le revenu des consommateurs augmente (pour un bien normal) ?",
+      "assertions": ["La courbe de demande se déplace vers la droite (augmentation de la demande à tout prix)", "La courbe de demande se déplace vers la gauche (réduction de la demande)", "La courbe de demande devient plus élastique sans changer de position", "Le prix d'équilibre diminue en raison de la hausse du pouvoir d'achat"],
+      "reponse": "La courbe de demande se déplace vers la droite (augmentation de la demande à tout prix)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelles sont les conditions de la concurrence parfaite ?",
+      "assertions": ["Grand nombre d'acheteurs et vendeurs, homogénéité du produit, libre entrée/sortie, information parfaite", "Quelques grandes entreprises dominant le marché avec des produits différenciés", "Un seul producteur fixant librement le prix sur un marché sans substitut", "Des accords de prix entre les principaux acteurs du marché"],
+      "reponse": "Grand nombre d'acheteurs et vendeurs, homogénéité du produit, libre entrée/sortie, information parfaite",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un monopole en économie ?",
+      "assertions": ["Un marché où il n'existe qu'un seul vendeur face à de nombreux acheteurs, lui permettant de fixer le prix", "Un marché avec quelques vendeurs qui se font une concurrence limitée", "Un marché où un seul acheteur face à de nombreux vendeurs fixe le prix d'achat", "Une situation où deux entreprises se partagent équitablement un marché"],
+      "reponse": "Un marché où il n'existe qu'un seul vendeur face à de nombreux acheteurs, lui permettant de fixer le prix",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un oligopole ?",
+      "assertions": ["Un marché dominé par un petit nombre de grandes entreprises dont les décisions s'influencent mutuellement", "Un marché où des milliers de petits producteurs vendent un produit homogène", "Un marché avec un seul acheteur et de nombreux vendeurs", "Une situation de concurrence pure et parfaite avec de nombreux acteurs"],
+      "reponse": "Un marché dominé par un petit nombre de grandes entreprises dont les décisions s'influencent mutuellement",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la formule de l'élasticité-prix de la demande ?",
+      "assertions": ["e = (variation % de la quantité demandée) / (variation % du prix)", "e = (variation du prix) / (variation de la quantité demandée)", "e = (variation de la quantité demandée) × (variation du prix)", "e = (variation du revenu) / (variation de la quantité demandée)"],
+      "reponse": "e = (variation % de la quantité demandée) / (variation % du prix)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la politique budgétaire ?",
+      "assertions": ["L'ensemble des décisions de l'État concernant ses recettes (impôts) et ses dépenses pour influencer l'activité économique", "La politique de la BCC visant à contrôler la masse monétaire et l'inflation", "La politique commerciale réglementant les échanges avec l'étranger", "Les décisions des collectivités locales en matière de budget communal"],
+      "reponse": "L'ensemble des décisions de l'État concernant ses recettes (impôts) et ses dépenses pour influencer l'activité économique",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un déficit budgétaire ?",
+      "assertions": ["La situation où les dépenses publiques excèdent les recettes fiscales de l'État sur une période donnée", "La situation où l'État réalise plus d'économies qu'il ne dépense", "L'excédent des exportations sur les importations d'un pays", "La différence négative entre les actifs et les dettes d'une entreprise publique"],
+      "reponse": "La situation où les dépenses publiques excèdent les recettes fiscales de l'État sur une période donnée",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le multiplicateur keynésien ?",
+      "assertions": ["Le coefficient qui mesure l'amplification de l'effet d'une dépense initiale sur le revenu national total", "Le taux de croissance du PIB attribuable à l'investissement public uniquement", "La proportion du revenu consacrée à l'épargne dans une économie", "Le rapport entre la dette publique et le PIB d'un pays"],
+      "reponse": "Le coefficient qui mesure l'amplification de l'effet d'une dépense initiale sur le revenu national total",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la théorie des avantages comparatifs de Ricardo ?",
+      "assertions": ["Chaque pays a intérêt à se spécialiser dans la production où son coût relatif est le plus faible, même s'il n'a aucun avantage absolu", "Chaque pays devrait produire tous les biens dont il a besoin pour être autosuffisant", "Les pays riches doivent aider les pays pauvres en leur transférant leurs technologies", "Le commerce international est toujours bénéfique pour les pays développés et nuisible aux pays en développement"],
+      "reponse": "Chaque pays a intérêt à se spécialiser dans la production où son coût relatif est le plus faible, même s'il n'a aucun avantage absolu",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'Indice de Développement Humain (IDH) ?",
+      "assertions": ["Un indicateur composite mesurant le développement humain à travers trois dimensions : revenu, santé (espérance de vie) et éducation", "Un indicateur mesurant uniquement le revenu par habitant en parité de pouvoir d'achat", "Un indice mesurant l'égalité des revenus entre les 10% les plus riches et les 10% les plus pauvres", "Un indicateur de la compétitivité économique internationale d'un pays"],
+      "reponse": "Un indicateur composite mesurant le développement humain à travers trois dimensions : revenu, santé (espérance de vie) et éducation",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le coefficient de Gini ?",
+      "assertions": ["Un indicateur mesurant les inégalités de revenu dans une population, variant de 0 (égalité parfaite) à 1 (inégalité maximale)", "Le taux de croissance économique annuel corrigé de l'inflation", "Le rapport entre les dépenses publiques et le PIB d'un pays", "La part du revenu national consacrée au remboursement de la dette extérieure"],
+      "reponse": "Un indicateur mesurant les inégalités de revenu dans une population, variant de 0 (égalité parfaite) à 1 (inégalité maximale)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le protectionnisme en commerce international ?",
+      "assertions": ["L'ensemble des mesures prises par un État pour protéger son économie nationale de la concurrence étrangère (droits de douane, quotas)", "La politique visant à ouvrir le marché national à la concurrence internationale sans restrictions", "L'aide accordée par les pays riches aux pays pauvres pour développer leurs exportations", "La coopération entre États pour harmoniser leurs politiques commerciales"],
+      "reponse": "L'ensemble des mesures prises par un État pour protéger son économie nationale de la concurrence étrangère (droits de douane, quotas)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la Banque Mondiale ?",
+      "assertions": ["Une institution internationale fournissant des prêts et des aides aux pays en développement pour financer des projets de développement", "La banque centrale des pays membres de l'Union Européenne", "Une banque privée internationale spécialisée dans les crédits aux entreprises multinationales", "L'organisme qui gère les réserves de change des pays membres du FMI"],
+      "reponse": "Une institution internationale fournissant des prêts et des aides aux pays en développement pour financer des projets de développement",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le Fonds Monétaire International (FMI) ?",
+      "assertions": ["Une institution internationale qui surveille le système monétaire mondial et fournit une assistance financière aux pays en difficulté de balance des paiements", "Une banque de développement finançant les projets d'infrastructure dans les pays africains", "L'organisme chargé de réguler le commerce international entre les pays membres", "Un fonds géré par les pays du G7 pour aider les pays les plus pauvres"],
+      "reponse": "Une institution internationale qui surveille le système monétaire mondial et fournit une assistance financière aux pays en difficulté de balance des paiements",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'une externalité négative en économie ?",
+      "assertions": ["Un coût imposé à un tiers non partie à la transaction, non reflété dans le prix du marché (ex. : pollution industrielle)", "La perte financière subie par une entreprise en cas de faillite", "Le coût d'opportunité d'une décision d'investissement", "Les effets négatifs d'une réduction des dépenses publiques sur la croissance"],
+      "reponse": "Un coût imposé à un tiers non partie à la transaction, non reflété dans le prix du marché (ex. : pollution industrielle)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un bien public en économie ?",
+      "assertions": ["Un bien non rival (sa consommation ne réduit pas celle d'autrui) et non exclusif (on ne peut exclure personne de sa consommation) comme la défense nationale", "Tout bien produit et fourni par une entreprise publique de l'État", "Un bien offert à prix réduit par l'État aux populations défavorisées", "Un bien collectif produit par coopérative ou association sans but lucratif"],
+      "reponse": "Un bien non rival (sa consommation ne réduit pas celle d'autrui) et non exclusif (on ne peut exclure personne de sa consommation) comme la défense nationale",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'aléa moral (moral hazard) en économie ?",
+      "assertions": ["La tendance d'un agent à prendre plus de risques lorsqu'il est protégé contre les conséquences négatives de ses actes par un tiers", "Le risque de fraude fiscale lié à l'augmentation des impôts", "L'incertitude inhérente à tout investissement dans un pays à risque politique élevé", "La probabilité qu'un emprunteur ne rembourse pas son crédit"],
+      "reponse": "La tendance d'un agent à prendre plus de risques lorsqu'il est protégé contre les conséquences négatives de ses actes par un tiers",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Dans une concurrence parfaite, les entreprises sont des price-takers (preneurs de prix), ce qui signifie qu'elles ne peuvent pas influencer le prix du marché.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Un monopole peut fixer librement son prix de vente sans tenir compte d'aucune contrainte économique.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La théorie des avantages comparatifs de Ricardo démontre que tous les pays ont intérêt à participer au commerce international.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "L'IDH est calculé uniquement à partir du revenu par habitant d'un pays.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Une politique monétaire expansionniste (baisse du taux directeur) peut contribuer à une hausse de l'inflation.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La courbe de Laffer suggère qu'au-delà d'un certain taux d'imposition, une baisse des impôts peut augmenter les recettes fiscales.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Les externalités négatives sont automatiquement corrigées par le mécanisme du marché sans intervention de l'État.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La République Démocratique du Congo est membre du Fonds Monétaire International (FMI).",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La balance commerciale est équilibrée lorsque la valeur des exportations est égale à la valeur des importations.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Un déficit budgétaire signifie systématiquement que l'État est en état de faillite.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Si le prix d'un bien augmente de 10% et que la quantité demandée diminue de 20%, quelle est l'élasticité-prix de la demande ?",
+      "assertions": ["-2 : la demande est élastique (très sensible au prix)", "-0,5 : la demande est inélastique (peu sensible au prix)", "2 : la demande est élastique mais de signe positif", "-1 : la demande est d'élasticité unitaire"],
+      "reponse": "-2 : la demande est élastique (très sensible au prix)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la signification d'une élasticité-prix de la demande comprise entre 0 et -1 en valeur absolue ?",
+      "assertions": ["La demande est inélastique : une variation du prix entraîne une variation proportionnellement plus faible de la quantité demandée", "La demande est élastique : les consommateurs sont très sensibles aux variations de prix", "La demande est parfaitement élastique : toute hausse de prix annule totalement la demande", "La demande est parfaitement inélastique : les consommateurs achètent la même quantité quel que soit le prix"],
+      "reponse": "La demande est inélastique : une variation du prix entraîne une variation proportionnellement plus faible de la quantité demandée",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La RDC est le premier producteur mondial de quel minéral stratégique utilisé dans les batteries de véhicules électriques ?",
+      "assertions": ["Le cobalt", "Le lithium", "Le nickel", "Le manganèse"],
+      "reponse": "Le cobalt",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel est l'impact économique d'une chute brutale du cours international du cuivre sur l'économie congolaise ?",
+      "assertions": ["Réduction des recettes d'exportation, baisse des recettes fiscales minières et pression sur la balance des paiements", "Augmentation des recettes fiscales grâce à des volumes d'exportation plus élevés", "Impact nul car la RDC fixe elle-même le prix du cuivre sur les marchés internationaux", "Amélioration de la balance commerciale par réduction des coûts d'importation"],
+      "reponse": "Réduction des recettes d'exportation, baisse des recettes fiscales minières et pression sur la balance des paiements",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel est l'impact direct d'une forte inflation sur le pouvoir d'achat des ménages congolais dont le salaire est fixé en francs congolais (CDF) ?",
+      "assertions": ["La même quantité de CDF permet d'acheter moins de biens et services, réduisant le niveau de vie réel", "L'inflation augmente le pouvoir d'achat car les prix plus élevés signifient plus de valeur", "L'inflation n'affecte pas les ménages dont le salaire est indexé sur l'inflation", "L'inflation profite aux ménages endettés car la valeur réelle de leur dette diminue"],
+      "reponse": "La même quantité de CDF permet d'acheter moins de biens et services, réduisant le niveau de vie réel",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le compte courant de la balance des paiements d'un pays comme la RDC ?",
+      "assertions": ["Le solde des échanges de biens, services, revenus de facteurs et transferts courants avec le reste du monde", "Le registre des flux de capitaux entrants et sortants du pays", "Le compte de réserves officielles de change détenu à la BCC", "Le montant des crédits accordés par les banques commerciales aux entreprises"],
+      "reponse": "Le solde des échanges de biens, services, revenus de facteurs et transferts courants avec le reste du monde",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'économie informelle en RDC et comment est-elle estimée ?",
+      "assertions": ["L'ensemble des activités économiques non enregistrées ni déclarées aux autorités fiscales, représentant une part très importante du PIB réel en RDC", "Les activités illégales comme le trafic de minerais pratiquées en dehors du cadre légal", "Les transactions commerciales effectuées en devises étrangères non déclarées à la BCC", "Les activités des entreprises étrangères opérant sans permis d'exploitation en RDC"],
+      "reponse": "L'ensemble des activités économiques non enregistrées ni déclarées aux autorités fiscales, représentant une part très importante du PIB réel en RDC",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la principale cause structurelle du développement de l'économie informelle en RDC ?",
+      "assertions": ["La faiblesse de l'État, les lourdeurs bureaucratiques, la fiscalité excessive et le manque d'accès au financement formel", "La richesse minière qui rend le travail formel inutile pour la population", "Les politiques d'ajustement structurel imposées par le FMI qui ont formalisé l'économie", "La forte présence d'entreprises étrangères qui absorbent toute la main-d'œuvre qualifiée"],
+      "reponse": "La faiblesse de l'État, les lourdeurs bureaucratiques, la fiscalité excessive et le manque d'accès au financement formel",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Comment calcule-t-on le coût moyen de production ?",
+      "assertions": ["Coût moyen = Coût total / Quantité produite", "Coût moyen = Coût variable / Quantité produite", "Coût moyen = Variation du coût total / Variation de la quantité produite", "Coût moyen = Coût fixe + Coût variable marginal"],
+      "reponse": "Coût moyen = Coût total / Quantité produite",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la condition de maximisation du profit pour une entreprise ?",
+      "assertions": ["L'entreprise maximise son profit lorsque le coût marginal est égal à la recette marginale (Cm = Rm)", "L'entreprise maximise son profit en produisant le maximum possible", "Le profit est maximisé lorsque le coût total est minimal", "L'entreprise maximise son profit en fixant le prix le plus élevé possible"],
+      "reponse": "L'entreprise maximise son profit lorsque le coût marginal est égal à la recette marginale (Cm = Rm)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le seuil de rentabilité (point mort) d'une entreprise ?",
+      "assertions": ["Le niveau de chiffre d'affaires à partir duquel l'entreprise couvre tous ses coûts (fixes + variables) et commence à réaliser un bénéfice", "Le nombre d'années nécessaires pour récupérer un investissement initial", "Le taux de profit minimum exigé par les actionnaires d'une entreprise", "Le montant minimal de capital requis pour démarrer une activité commerciale"],
+      "reponse": "Le niveau de chiffre d'affaires à partir duquel l'entreprise couvre tous ses coûts (fixes + variables) et commence à réaliser un bénéfice",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la dollarisation de l'économie congolaise ?",
+      "assertions": ["La tendance à utiliser massivement le dollar américain dans les transactions quotidiennes par méfiance envers le franc congolais", "La politique officielle de la BCC d'arrimer le CDF au dollar américain", "L'introduction du dollar comme seule monnaie légale en RDC", "L'investissement massif de capitaux américains dans l'économie congolaise"],
+      "reponse": "La tendance à utiliser massivement le dollar américain dans les transactions quotidiennes par méfiance envers le franc congolais",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la structure de la balance des paiements d'un pays ?",
+      "assertions": ["Le compte courant, le compte de capital et le compte financier", "Les recettes fiscales, les dépenses publiques et le solde budgétaire", "Les exportations de biens, les importations et les transferts courants uniquement", "Les réserves de change, la dette extérieure et les investissements directs"],
+      "reponse": "Le compte courant, le compte de capital et le compte financier",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel est l'impact de la corruption sur l'économie congolaise selon les études économiques ?",
+      "assertions": ["Elle augmente les coûts de transaction, décourage l'investissement privé et réduit l'efficacité des dépenses publiques", "Elle favorise la croissance économique en accélérant les procédures administratives", "Elle n'a aucun impact mesurable sur la croissance économique d'un pays", "Elle profite aux entreprises locales en leur donnant un avantage sur les concurrents étrangers"],
+      "reponse": "Elle augmente les coûts de transaction, décourage l'investissement privé et réduit l'efficacité des dépenses publiques",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que les réserves de change de la BCC et à quoi servent-elles ?",
+      "assertions": ["Des avoirs en devises étrangères permettant à la BCC de défendre la valeur du franc congolais et de financer les importations vitales", "Les stocks d'or physique conservés dans les coffres de la BCC à Kinshasa", "Les fonds déposés par les banques commerciales auprès de la BCC", "Les bénéfices annuels réalisés par la BCC sur ses opérations de change"],
+      "reponse": "Des avoirs en devises étrangères permettant à la BCC de défendre la valeur du franc congolais et de financer les importations vitales",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La RDC est le premier producteur mondial de cobalt.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Une élasticité-prix de la demande de -2 signifie que la demande est inélastique (peu sensible aux variations de prix).",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "L'économie informelle représente une part significative (souvent estimée à plus de 50%) de l'activité économique réelle en RDC.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le coût marginal d'une entreprise diminue nécessairement à mesure que la production augmente.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La dollarisation informelle de l'économie congolaise reflète une méfiance des agents économiques envers la stabilité du franc congolais.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Les réserves de change de la BCC permettent de défendre la valeur du franc congolais en cas de pression sur le marché des changes.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Un déficit du compte courant de la balance des paiements signifie que la RDC importe plus (biens + services + revenus) qu'elle n'exporte.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le multiplicateur budgétaire keynésien est toujours supérieur à 1 quelles que soient les conditions économiques.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La dépréciation du franc congolais (CDF) rend les exportations congolaises moins chères et donc plus compétitives sur les marchés internationaux.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le seuil de rentabilité est atteint lorsque le chiffre d'affaires total est égal aux coûts totaux de l'entreprise.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'est-ce que le paradoxe de l'épargne (paradox of thrift) de Keynes ?",
+      "assertions": ["Si tous les ménages augmentent leur épargne simultanément, la demande globale chute, le revenu national diminue et l'épargne totale peut finalement baisser", "Épargner davantage enrichit toujours l'économie car cela finance l'investissement productif", "Les ménages pauvres épargnent plus que les ménages riches en proportion de leur revenu", "L'épargne est toujours égale à l'investissement dans une économie à l'équilibre keynésien"],
+      "reponse": "Si tous les ménages augmentent leur épargne simultanément, la demande globale chute, le revenu national diminue et l'épargne totale peut finalement baisser",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la trappe à liquidité selon Keynes ?",
+      "assertions": ["Une situation où les taux d'intérêt sont si bas que la politique monétaire perd son efficacité car les agents thésaurisent plutôt qu'ils n'investissent", "Une situation où les banques refusent d'accorder des crédits aux entreprises", "Un mécanisme par lequel une forte liquidité bancaire entraîne automatiquement une inflation élevée", "La tendance des banques centrales à accumuler des réserves excessives en période de récession"],
+      "reponse": "Une situation où les taux d'intérêt sont si bas que la politique monétaire perd son efficacité car les agents thésaurisent plutôt qu'ils n'investissent",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelles sont les conclusions principales du modèle de croissance de Solow ?",
+      "assertions": ["La croissance à long terme dépend uniquement du progrès technique ; l'accumulation du capital seule conduit à des rendements décroissants et une croissance nulle", "L'accumulation illimitée de capital garantit une croissance économique permanente", "Le capital humain est le seul déterminant de la croissance à long terme", "La croissance est uniquement déterminée par les politiques budgétaires de l'État"],
+      "reponse": "La croissance à long terme dépend uniquement du progrès technique ; l'accumulation du capital seule conduit à des rendements décroissants et une croissance nulle",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la croissance endogène dans les théories de Romer et Lucas ?",
+      "assertions": ["Une théorie qui explique la croissance à long terme par des facteurs internes à l'économie : innovations, capital humain, apprentissage par la pratique", "Une théorie selon laquelle la croissance est uniquement déterminée par des facteurs exogènes comme le progrès technique tombant du ciel", "Le modèle affirmant que la croissance est impossible sans aide extérieure pour les pays en développement", "La théorie expliquant la croissance par la seule accumulation de capital physique"],
+      "reponse": "Une théorie qui explique la croissance à long terme par des facteurs internes à l'économie : innovations, capital humain, apprentissage par la pratique",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la malédiction des ressources naturelles (resource curse) ?",
+      "assertions": ["Le paradoxe par lequel les pays riches en ressources naturelles tendent à avoir une croissance économique plus faible et des institutions plus fragiles que les pays moins bien dotés", "La pollution environnementale inévitable causée par l'exploitation des ressources naturelles", "Le fait que les ressources naturelles s'épuisent inévitablement, condamnant les économies qui en dépendent", "L'hypothèse que les ressources naturelles profitent uniquement aux pays développés importateurs"],
+      "reponse": "Le paradoxe par lequel les pays riches en ressources naturelles tendent à avoir une croissance économique plus faible et des institutions plus fragiles que les pays moins bien dotés",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la maladie hollandaise (Dutch disease) et comment peut-elle affecter la RDC ?",
+      "assertions": ["L'appréciation de la monnaie nationale due aux revenus miniers ou pétroliers, rendant les exportations hors ressources non compétitives et désindustrialisant l'économie", "La contamination des sols par les produits chimiques utilisés dans l'exploitation minière", "La propagation de maladies tropicales liées aux déplacements de populations vers les zones minières", "L'afflux de travailleurs étrangers dans le secteur minier au détriment de l'emploi local"],
+      "reponse": "L'appréciation de la monnaie nationale due aux revenus miniers ou pétroliers, rendant les exportations hors ressources non compétitives et désindustrialisant l'économie",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la SADC (Southern African Development Community) et quel est son lien avec la RDC ?",
+      "assertions": ["Une organisation d'intégration régionale de l'Afrique australe dont la RDC est membre, visant la coopération économique et politique de la région", "Une organisation militaire de défense commune des pays d'Afrique du Sud", "Un accord de libre-échange entre la RDC et ses voisins de l'Afrique centrale uniquement", "L'organisation des pays producteurs de diamants d'Afrique subsaharienne"],
+      "reponse": "Une organisation d'intégration régionale de l'Afrique australe dont la RDC est membre, visant la coopération économique et politique de la région",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la Zone de Libre-Échange Continentale Africaine (ZLECAf) ?",
+      "assertions": ["Un accord commercial signé en 2018 visant à créer un marché unique africain en supprimant les barrières tarifaires entre les pays membres de l'Union Africaine", "Un accord militaire de défense collective entre les pays africains membres de l'Union Africaine", "Une zone monétaire commune adoptant une monnaie unique africaine", "Un fonds commun de développement financé par les pays membres de l'Union Africaine"],
+      "reponse": "Un accord commercial signé en 2018 visant à créer un marché unique africain en supprimant les barrières tarifaires entre les pays membres de l'Union Africaine",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'initiative PPTE (Pays Pauvres Très Endettés) et comment la RDC en a-t-elle bénéficié ?",
+      "assertions": ["Un programme du FMI et de la Banque Mondiale offrant un allègement de dette aux pays pauvres très endettés remplissant certaines conditions ; la RDC a atteint le point d'achèvement en 2010", "Une aide budgétaire directe accordée par les pays du G8 aux gouvernements africains", "Un programme d'annulation totale et immédiate de toutes les dettes des pays africains", "Un fonds d'investissement créé pour financer les infrastructures des pays les plus pauvres"],
+      "reponse": "Un programme du FMI et de la Banque Mondiale offrant un allègement de dette aux pays pauvres très endettés remplissant certaines conditions ; la RDC a atteint le point d'achèvement en 2010",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le Club de Paris en matière de gestion de la dette souveraine ?",
+      "assertions": ["Un groupe informel de créanciers publics officiels qui négocient et restructurent la dette des pays débiteurs en difficulté", "Une organisation internationale dotée d'un statut juridique formel basée à Paris", "Le G7 des pays industrialisés qui fixe les règles du commerce international", "Un fonds souverain géré par les pays membres de l'OCDE pour financer le développement"],
+      "reponse": "Un groupe informel de créanciers publics officiels qui négocient et restructurent la dette des pays débiteurs en difficulté",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la microfinance en économie du développement ?",
+      "assertions": ["La fourniture de services financiers (microcrédit, épargne, assurance) aux personnes exclues du système bancaire classique, notamment dans les pays en développement", "La gestion des réserves de change de la banque centrale en petites quantités", "Le financement des micro-entreprises par des subventions directes de l'État", "La politique monétaire consistant à injecter de petites quantités de liquidités dans l'économie"],
+      "reponse": "La fourniture de services financiers (microcrédit, épargne, assurance) aux personnes exclues du système bancaire classique, notamment dans les pays en développement",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que M-Pesa et en quoi est-ce un exemple d'inclusion financière en Afrique ?",
+      "assertions": ["Un service de paiement mobile kenyan permettant aux personnes sans compte bancaire d'effectuer des transactions via leur téléphone portable, modèle reproduit dans plusieurs pays africains", "Un réseau bancaire panafricain spécialisé dans les prêts aux petites entreprises", "Un programme gouvernemental de transferts monétaires aux ménages pauvres en Afrique de l'Est", "Une monnaie numérique officielle émise par la banque centrale du Kenya"],
+      "reponse": "Un service de paiement mobile kenyan permettant aux personnes sans compte bancaire d'effectuer des transactions via leur téléphone portable, modèle reproduit dans plusieurs pays africains",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un régime de change fixe ?",
+      "assertions": ["Un système où la banque centrale maintient la valeur de la monnaie nationale à un taux prédéterminé par rapport à une devise de référence (dollar, euro)", "Un système où le taux de change est uniquement déterminé par les forces du marché", "Un système où la monnaie nationale est directement adossée à des réserves d'or", "Un régime où l'État fixe le prix de toutes les devises étrangères par décret"],
+      "reponse": "Un système où la banque centrale maintient la valeur de la monnaie nationale à un taux prédéterminé par rapport à une devise de référence (dollar, euro)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la différence entre une dépréciation et une dévaluation de la monnaie nationale ?",
+      "assertions": ["La dépréciation est une baisse spontanée de la valeur de la monnaie sur le marché des changes ; la dévaluation est une baisse décidée officiellement par les autorités", "La dépréciation est toujours plus forte que la dévaluation en termes de variation du taux de change", "La dépréciation affecte uniquement les changes nominaux ; la dévaluation affecte les changes réels", "La dépréciation est une politique monétaire ; la dévaluation est une politique budgétaire"],
+      "reponse": "La dépréciation est une baisse spontanée de la valeur de la monnaie sur le marché des changes ; la dévaluation est une baisse décidée officiellement par les autorités",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la courbe de Phillips et quel arbitrage décrit-elle ?",
+      "assertions": ["Une relation inverse entre le taux d'inflation et le taux de chômage : pour réduire le chômage, une économie doit accepter plus d'inflation, et vice versa", "Une relation positive entre le taux d'investissement et le taux de croissance économique", "La relation entre le déficit budgétaire et le taux d'inflation dans une économie en développement", "La courbe représentant les coûts marginaux croissants d'une entreprise en expansion"],
+      "reponse": "Une relation inverse entre le taux d'inflation et le taux de chômage : pour réduire le chômage, une économie doit accepter plus d'inflation, et vice versa",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le Washington Consensus en économie du développement ?",
+      "assertions": ["Un ensemble de recommandations économiques libérales (discipline budgétaire, privatisations, libéralisation des échanges, déréglementation) promu par le FMI et la Banque Mondiale dans les années 1990", "Un accord commercial entre les États-Unis et les pays d'Amérique latine", "La politique étrangère économique des États-Unis envers les pays en développement", "Un traité multilatéral sur la réduction des tarifs douaniers négocié à Washington"],
+      "reponse": "Un ensemble de recommandations économiques libérales (discipline budgétaire, privatisations, libéralisation des échanges, déréglementation) promu par le FMI et la Banque Mondiale dans les années 1990",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la parité de pouvoir d'achat (PPA) et pourquoi est-elle utile pour comparer les économies ?",
+      "assertions": ["Une méthode de comparaison internationale des niveaux de vie qui tient compte des différences de prix entre pays, permettant de comparer le PIB en termes de pouvoir d'achat réel", "Le taux de change officiel entre deux monnaies fixé par les banques centrales", "La politique visant à maintenir un niveau de vie équivalent pour tous les citoyens d'un pays", "L'indicateur mesurant l'évolution du pouvoir d'achat des ménages dans le temps"],
+      "reponse": "Une méthode de comparaison internationale des niveaux de vie qui tient compte des différences de prix entre pays, permettant de comparer le PIB en termes de pouvoir d'achat réel",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le développement durable en économie ?",
+      "assertions": ["Un développement qui répond aux besoins du présent sans compromettre la capacité des générations futures à répondre aux leurs (Brundtland, 1987)", "La croissance économique soutenue sur plus de 20 ans sans récession", "Le développement exclusivement basé sur les énergies renouvelables", "La politique de croissance des pays développés visant à atteindre la neutralité carbone"],
+      "reponse": "Un développement qui répond aux besoins du présent sans compromettre la capacité des générations futures à répondre aux leurs (Brundtland, 1987)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le paradoxe de l'épargne de Keynes illustre le fait qu'un comportement individuellement rationnel (épargner) peut être collectivement néfaste.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La maladie hollandaise favorise le développement de l'industrie manufacturière dans les pays riches en ressources naturelles.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La Zone de Libre-Échange Continentale Africaine (ZLECAf) est la plus grande zone de libre-échange au monde en termes de nombre de pays membres.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "L'initiative PPTE a permis à la RDC d'obtenir un allègement significatif de sa dette extérieure après avoir atteint le point d'achèvement en 2010.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le mobile banking (comme Orange Money) ne peut pas remplacer les banques traditionnelles pour améliorer l'inclusion financière en RDC.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "En régime de change fixe, la banque centrale doit intervenir sur le marché des changes pour maintenir la parité officielle de sa monnaie.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La courbe de Phillips établit qu'une réduction du chômage s'accompagne généralement d'une hausse de l'inflation.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le Washington Consensus préconisait principalement l'intervention massive de l'État dans l'économie pour favoriser le développement.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Les théories de la croissance endogène (Romer, Lucas) valorisent le rôle des innovations et du capital humain comme moteurs de la croissance à long terme.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "En situation de trappe à liquidité, la politique monétaire (baisse des taux) est pleinement efficace pour relancer l'économie.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un service économique ?",
+      "assertions": ["Une prestation immatérielle fournie par un agent économique à un autre en échange d'une rémunération (coiffure, transport, enseignement)", "Un service offert gratuitement par l'État à tous les citoyens sans contrepartie", "Un bien physique produit par le secteur public uniquement", "Une aide financière octroyée par l'État aux entreprises en difficulté"],
+      "reponse": "Une prestation immatérielle fournie par un agent économique à un autre en échange d'une rémunération (coiffure, transport, enseignement)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un bien inférieur en microéconomie ?",
+      "assertions": ["Un bien dont la demande diminue lorsque le revenu des consommateurs augmente (ex. : manioc, transport en commun basique)", "Un bien de mauvaise qualité ne répondant pas aux normes sanitaires en vigueur", "Un bien dont la production est interdite sur le territoire national", "Un bien importé à un prix inférieur au prix du marché local"],
+      "reponse": "Un bien dont la demande diminue lorsque le revenu des consommateurs augmente (ex. : manioc, transport en commun basique)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le taux d'inflation ?",
+      "assertions": ["La variation en pourcentage de l'indice des prix à la consommation (IPC) sur une période donnée, généralement une année", "La proportion du PIB consacrée aux dépenses de consommation des ménages", "Le taux auquel la banque centrale prête aux banques commerciales", "La variation du taux de change entre deux monnaies sur une période donnée"],
+      "reponse": "La variation en pourcentage de l'indice des prix à la consommation (IPC) sur une période donnée, généralement une année",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la politique fiscale ?",
+      "assertions": ["L'ensemble des décisions relatives à la collecte des impôts et taxes par l'État pour financer ses dépenses publiques", "La politique de la BCC visant à contrôler la création monétaire dans l'économie", "Les règles douanières applicables aux importations et exportations", "Les mesures prises par les collectivités locales pour gérer leur budget"],
+      "reponse": "L'ensemble des décisions relatives à la collecte des impôts et taxes par l'État pour financer ses dépenses publiques",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la valeur ajoutée en économie ?",
+      "assertions": ["La différence entre la valeur de la production d'une entreprise et la valeur des consommations intermédiaires utilisées pour cette production", "Le bénéfice net réalisé par une entreprise après paiement de toutes ses charges", "La hausse du prix de vente d'un produit par rapport à son prix de revient", "La somme des salaires versés par une entreprise à ses employés sur une année"],
+      "reponse": "La différence entre la valeur de la production d'une entreprise et la valeur des consommations intermédiaires utilisées pour cette production",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le taux de chômage ?",
+      "assertions": ["Le rapport entre le nombre de chômeurs et la population active (occupée + chômeurs), exprimé en pourcentage", "Le pourcentage de la population totale sans emploi dans un pays", "La proportion de la population en âge de travailler qui n'est pas sur le marché du travail", "Le ratio entre les emplois disponibles et les emplois pourvus dans une économie"],
+      "reponse": "Le rapport entre le nombre de chômeurs et la population active (occupée + chômeurs), exprimé en pourcentage",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la monnaie fiduciaire ?",
+      "assertions": ["Les billets de banque et pièces de monnaie émis par la banque centrale, dont la valeur repose sur la confiance (fides) des utilisateurs", "Les dépôts bancaires créés par les banques commerciales par le mécanisme du crédit", "Les devises étrangères (dollars, euros) acceptées sur le territoire national", "Les titres financiers (actions, obligations) utilisés comme moyen de paiement"],
+      "reponse": "Les billets de banque et pièces de monnaie émis par la banque centrale, dont la valeur repose sur la confiance (fides) des utilisateurs",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le chômage cyclique ?",
+      "assertions": ["Le chômage causé par un ralentissement de l'activité économique (récession), qui diminue lorsque l'économie repart à la hausse", "Le chômage affectant les secteurs saisonniers comme l'agriculture et le tourisme", "Le chômage résultant de l'introduction de nouvelles technologies remplaçant des travailleurs", "Le chômage volontaire des personnes qui choisissent de ne pas travailler"],
+      "reponse": "Le chômage causé par un ralentissement de l'activité économique (récession), qui diminue lorsque l'économie repart à la hausse",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Les biens complémentaires sont des biens dont la demande de l'un augmente lorsque le prix de l'autre augmente.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La valeur ajoutée est le fondement du calcul du PIB par la méthode de la production.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'est-ce que la politique de stabilisation économique ?",
+      "assertions": ["L'ensemble des politiques (monétaire et budgétaire) visant à maintenir une croissance stable, un faible chômage et une inflation maîtrisée", "La politique visant à maintenir un taux de change fixe par rapport au dollar américain", "La stratégie de l'État consistant à nationaliser les industries stratégiques pour stabiliser l'économie", "L'ensemble des réglementations limitant les fluctuations des prix sur les marchés de matières premières"],
+      "reponse": "L'ensemble des politiques (monétaire et budgétaire) visant à maintenir une croissance stable, un faible chômage et une inflation maîtrisée",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que les termes de l'échange dans le commerce international ?",
+      "assertions": ["Le rapport entre l'indice des prix des exportations d'un pays et l'indice des prix de ses importations, mesurant l'évolution du pouvoir d'achat à l'international", "Le délai de paiement accordé dans les contrats commerciaux internationaux", "L'ensemble des conditions (prix, délais, Incoterms) d'un contrat de commerce extérieur", "La durée des accords commerciaux bilatéraux conclus entre deux pays"],
+      "reponse": "Le rapport entre l'indice des prix des exportations d'un pays et l'indice des prix de ses importations, mesurant l'évolution du pouvoir d'achat à l'international",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la déflation et pourquoi est-elle dangereuse ?",
+      "assertions": ["Une baisse générale et durable des prix qui peut entraîner un report des achats, une chute de la demande et une spirale récessive", "Une réduction volontaire de la masse monétaire par la banque centrale pour lutter contre l'inflation", "Une dépréciation de la monnaie nationale entraînant une hausse des prix des importations", "Une politique de rigueur budgétaire consistant à réduire les dépenses publiques pour équilibrer le budget"],
+      "reponse": "Une baisse générale et durable des prix qui peut entraîner un report des achats, une chute de la demande et une spirale récessive",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'investissement en macroéconomie ?",
+      "assertions": ["L'acquisition de biens de capital (machines, équipements, bâtiments) par les entreprises pour augmenter leur capacité productive", "L'achat d'actions et d'obligations sur les marchés financiers par les ménages", "Le placement de l'épargne des ménages dans des produits d'épargne bancaire", "Les dépenses de l'État en infrastructures publiques uniquement"],
+      "reponse": "L'acquisition de biens de capital (machines, équipements, bâtiments) par les entreprises pour augmenter leur capacité productive",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la propension marginale à consommer (PMC) ?",
+      "assertions": ["La fraction d'un revenu supplémentaire consacrée à la consommation, utilisée dans le calcul du multiplicateur keynésien", "Le pourcentage du revenu total d'un ménage consacré à la consommation", "La tendance des ménages à dépenser moins quand les prix augmentent", "La part du PIB consacrée à la consommation publique dans un pays"],
+      "reponse": "La fraction d'un revenu supplémentaire consacrée à la consommation, utilisée dans le calcul du multiplicateur keynésien",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la politique de change en macroéconomie ?",
+      "assertions": ["L'ensemble des interventions de la banque centrale sur le marché des changes pour influencer la valeur de la monnaie nationale", "La politique tarifaire et douanière réglementant les échanges commerciaux internationaux", "Les décisions de l'État concernant l'adoption ou l'abandon d'une monnaie commune régionale", "Les règles fixant les commissions prélevées par les banques sur les opérations de change"],
+      "reponse": "L'ensemble des interventions de la banque centrale sur le marché des changes pour influencer la valeur de la monnaie nationale",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la théorie quantitative de la monnaie (équation de Fisher MV = PT) ?",
+      "assertions": ["La théorie selon laquelle toute augmentation de la masse monétaire (M) se traduit à long terme par une hausse proportionnelle des prix (P), toutes choses égales par ailleurs", "La théorie selon laquelle la vitesse de circulation de la monnaie détermine seule le niveau des prix", "La loi économique établissant que les prix augmentent en proportion de la demande de monnaie", "La théorie selon laquelle l'offre de monnaie doit toujours être égale à la demande de monnaie"],
+      "reponse": "La théorie selon laquelle toute augmentation de la masse monétaire (M) se traduit à long terme par une hausse proportionnelle des prix (P), toutes choses égales par ailleurs",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la dette publique d'un pays ?",
+      "assertions": ["L'ensemble des emprunts contractés par l'État auprès de créanciers internes et externes pour financer ses déficits budgétaires cumulés", "Les dettes des entreprises publiques envers leurs fournisseurs et prestataires", "Le montant total des impôts non recouvrés par l'administration fiscale sur une année", "Les engagements financiers des collectivités locales envers le gouvernement central"],
+      "reponse": "L'ensemble des emprunts contractés par l'État auprès de créanciers internes et externes pour financer ses déficits budgétaires cumulés",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la croissance économique intensive ?",
+      "assertions": ["Une croissance reposant sur l'amélioration de la productivité des facteurs (technologie, capital humain) plutôt que sur l'augmentation de leur volume", "Une croissance fondée exclusivement sur l'augmentation des investissements en capital physique", "Une croissance rapide obtenue grâce à l'exploitation intensive des ressources naturelles", "Une croissance concentrée dans un seul secteur dominant de l'économie"],
+      "reponse": "Une croissance reposant sur l'amélioration de la productivité des facteurs (technologie, capital humain) plutôt que sur l'augmentation de leur volume",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la sélection adverse (antisélection) en économie de l'information ?",
+      "assertions": ["La situation où l'asymétrie d'information conduit les mauvais risques à dominer le marché, en chassant les bons risques (ex. : marché des voitures d'occasion d'Akerlof)", "La tendance des agents à choisir les produits de mauvaise qualité en raison de leur faible prix", "Le phénomène par lequel les entreprises inefficaces survivent grâce aux subventions publiques", "La sélection par les entreprises des travailleurs les moins qualifiés pour réduire les coûts salariaux"],
+      "reponse": "La situation où l'asymétrie d'information conduit les mauvais risques à dominer le marché, en chassant les bons risques (ex. : marché des voitures d'occasion d'Akerlof)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'Investissement Direct Étranger (IDE) ?",
+      "assertions": ["Un investissement réalisé par une entreprise étrangère dans un pays hôte pour créer ou acquérir une participation durable dans une entreprise locale", "Tout achat d'obligations d'État congolaises par des investisseurs étrangers", "L'aide publique au développement accordée par les pays riches aux pays pauvres", "Un prêt accordé par une banque étrangère à une entreprise congolaise"],
+      "reponse": "Un investissement réalisé par une entreprise étrangère dans un pays hôte pour créer ou acquérir une participation durable dans une entreprise locale",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le salaire minimum en droit du travail et en économie du travail ?",
+      "assertions": ["Le salaire le plus bas qu'un employeur peut légalement verser à un salarié, fixé par les pouvoirs publics pour protéger les travailleurs les moins qualifiés", "Le salaire médian dans un secteur professionnel donné négocié par les syndicats", "La rémunération minimale garantie uniquement aux fonctionnaires de l'État", "Le seuil de revenu en dessous duquel un ménage est considéré comme vivant dans la pauvreté absolue"],
+      "reponse": "Le salaire le plus bas qu'un employeur peut légalement verser à un salarié, fixé par les pouvoirs publics pour protéger les travailleurs les moins qualifiés",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la productivité du travail ?",
+      "assertions": ["La quantité de biens ou services produite par unité de travail (par heure travaillée ou par travailleur), mesure de l'efficacité du facteur travail", "Le niveau de qualification et de formation des travailleurs dans un secteur donné", "Le nombre d'heures supplémentaires effectuées par les salariés d'une entreprise", "La part des salaires dans la valeur ajoutée totale d'une entreprise ou d'un secteur"],
+      "reponse": "La quantité de biens ou services produite par unité de travail (par heure travaillée ou par travailleur), mesure de l'efficacité du facteur travail",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'une banque commerciale et quel est son rôle dans l'économie congolaise ?",
+      "assertions": ["Un établissement de crédit qui collecte des dépôts du public et accorde des crédits, jouant un rôle d'intermédiaire financier entre épargnants et emprunteurs", "Un établissement public gérant les fonds de retraite des fonctionnaires", "Une institution spécialisée dans le financement des échanges commerciaux internationaux", "Un fonds d'investissement gérant le portefeuille d'actifs financiers de l'État"],
+      "reponse": "Un établissement de crédit qui collecte des dépôts du public et accorde des crédits, jouant un rôle d'intermédiaire financier entre épargnants et emprunteurs",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'économie de marché ?",
+      "assertions": ["Un système économique où les décisions de production et de consommation sont décentralisées et coordonnées par le mécanisme des prix", "Un système économique planifié par l'État qui détermine les prix et les quantités produites", "Un système mixte où l'État contrôle les secteurs stratégiques et laisse le reste au marché", "Un système commercial international basé sur des échanges équitables entre pays"],
+      "reponse": "Un système économique où les décisions de production et de consommation sont décentralisées et coordonnées par le mécanisme des prix",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La déflation est toujours bénéfique pour les consommateurs car elle augmente leur pouvoir d'achat.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La propension marginale à consommer (PMC) est toujours comprise entre 0 et 1.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La théorie quantitative de la monnaie prédit qu'une augmentation de la masse monétaire entraîne à long terme une inflation proportionnelle.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Les Investissements Directs Étrangers (IDE) sont toujours bénéfiques pour les pays en développement comme la RDC.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'est-ce que le secteur primaire en économie ?",
+      "assertions": ["Le secteur qui regroupe les activités d'extraction et de production directe de ressources naturelles (agriculture, mines, pêche, forêt)", "Le secteur des activités industrielles transformant les matières premières en produits finis", "Le secteur des services (commerce, finance, transport, tourisme, éducation)", "Le secteur des nouvelles technologies de l'information et de la communication"],
+      "reponse": "Le secteur qui regroupe les activités d'extraction et de production directe de ressources naturelles (agriculture, mines, pêche, forêt)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le marché du coltan en RDC et quelle est son importance stratégique mondiale ?",
+      "assertions": ["La RDC possède les plus grandes réserves mondiales de coltan (tantale), minéral essentiel à la fabrication de condensateurs pour les téléphones et appareils électroniques", "Le coltan est utilisé exclusivement dans la fabrication des piles électriques pour véhicules", "La RDC est le 3e producteur mondial de coltan derrière le Rwanda et l'Australie", "Le coltan est principalement exporté vers la Chine pour la fabrication de panneaux solaires"],
+      "reponse": "La RDC possède les plus grandes réserves mondiales de coltan (tantale), minéral essentiel à la fabrication de condensateurs pour les téléphones et appareils électroniques",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le revenu national brut disponible en macroéconomie ?",
+      "assertions": ["Le PIB augmenté des revenus reçus de l'étranger et diminué des revenus envoyés à l'étranger et des transferts courants nets", "Le revenu total des ménages après paiement de tous les impôts directs", "La somme des salaires, profits et loyers dans une économie sur une année", "Le PIB divisé par la population active employée dans le pays"],
+      "reponse": "Le PIB augmenté des revenus reçus de l'étranger et diminué des revenus envoyés à l'étranger et des transferts courants nets",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est l'incidence d'une taxe sur le bien-être des consommateurs et producteurs sur un marché concurrentiel ?",
+      "assertions": ["La taxe génère une perte sèche de bien-être (deadweight loss) : le surplus total (consommateurs + producteurs) diminue d'un montant supérieur aux recettes fiscales collectées", "La taxe augmente toujours le bien-être total car elle finance des services publics utiles", "La taxe est toujours intégralement supportée par les producteurs sans effet sur les consommateurs", "La taxe n'a aucun effet sur le prix d'équilibre si le marché est parfaitement concurrentiel"],
+      "reponse": "La taxe génère une perte sèche de bien-être (deadweight loss) : le surplus total (consommateurs + producteurs) diminue d'un montant supérieur aux recettes fiscales collectées",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel est l'impact de l'hyperinflation sur l'économie d'un pays comme l'a vécu le Zaïre dans les années 1990 ?",
+      "assertions": ["Destruction du pouvoir d'achat, fuite devant la monnaie, dollarisation, désorganisation du système de prix et paralysie des investissements", "Stimulation de la croissance économique par augmentation de la demande des ménages", "Amélioration de la compétitivité des exportations par dépréciation de la monnaie", "Réduction de la dette extérieure en termes réels bénéficiant aux créanciers publics"],
+      "reponse": "Destruction du pouvoir d'achat, fuite devant la monnaie, dollarisation, désorganisation du système de prix et paralysie des investissements",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la politique d'austerité budgétaire et quels en sont les effets sur la croissance en RDC ?",
+      "assertions": ["Une politique de réduction des dépenses publiques et/ou de hausse des impôts pour réduire le déficit budgétaire, pouvant freiner la croissance à court terme", "Une politique d'augmentation des dépenses publiques pour stimuler la demande globale en période de récession", "La privatisation des entreprises publiques déficitaires pour améliorer les finances de l'État", "La politique monétaire de restriction du crédit pour lutter contre une inflation trop élevée"],
+      "reponse": "Une politique de réduction des dépenses publiques et/ou de hausse des impôts pour réduire le déficit budgétaire, pouvant freiner la croissance à court terme",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Comment la structure de l'économie congolaise peut-elle être décrite en termes de secteurs économiques ?",
+      "assertions": ["Une économie à fort secteur primaire (mines, agriculture) et secteur tertiaire informel dominant, avec un secteur secondaire (industrie) très peu développé", "Une économie équilibrée entre secteurs primaire, secondaire et tertiaire formels", "Une économie de services dont le secteur financier contribue plus de 40% au PIB", "Une économie industrielle émergente avec un secteur manufacturier en forte croissance"],
+      "reponse": "Une économie à fort secteur primaire (mines, agriculture) et secteur tertiaire informel dominant, avec un secteur secondaire (industrie) très peu développé",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le déficit de la balance commerciale et quelles en sont les conséquences pour la RDC ?",
+      "assertions": ["Les importations excèdent les exportations, créant une pression sur les réserves de change et pouvant déprécier le franc congolais", "Les exportations excèdent les importations, ce qui accroît les réserves de change de la BCC", "Le solde nul entre exportations et importations qui indique une économie équilibrée", "Une situation favorable signifiant que la RDC consomme plus qu'elle ne produit"],
+      "reponse": "Les importations excèdent les exportations, créant une pression sur les réserves de change et pouvant déprécier le franc congolais",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la concentration industrielle dans un secteur et comment se mesure-t-elle ?",
+      "assertions": ["Le degré auquel la production d'un secteur est concentrée entre un petit nombre d'entreprises, mesuré par l'indice Herfindahl-Hirschman (IHH) ou le ratio de concentration CR4", "La localisation géographique des industries dans des zones économiques spéciales", "Le pourcentage du PIB national généré par le secteur industriel dans son ensemble", "Le niveau d'investissement étranger dans un secteur industriel stratégique"],
+      "reponse": "Le degré auquel la production d'un secteur est concentrée entre un petit nombre d'entreprises, mesuré par l'indice Herfindahl-Hirschman (IHH) ou le ratio de concentration CR4",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le transfert de technologie dans le contexte du développement de la RDC ?",
+      "assertions": ["Le processus par lequel des technologies développées ailleurs sont adoptées par des entreprises congolaises, notamment via les IDE ou les accords de licence", "L'exportation de technologies congolaises vers les pays voisins moins développés", "La formation des techniciens congolais dans les universités étrangères aux frais de l'État", "L'acquisition de brevets technologiques par la RDC auprès des pays membres de l'OCDE"],
+      "reponse": "Le processus par lequel des technologies développées ailleurs sont adoptées par des entreprises congolaises, notamment via les IDE ou les accords de licence",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'indice Big Mac comme mesure informelle de la parité de pouvoir d'achat ?",
+      "assertions": ["Un indicateur créé par The Economist comparant le prix d'un Big Mac dans différents pays pour évaluer si les monnaies sont sur ou sous-évaluées par rapport au dollar", "Un indice mesurant la compétitivité alimentaire des pays africains sur les marchés mondiaux", "Un indicateur de pauvreté mesurant si les ménages peuvent s'offrir des repas dans les fast-foods", "Un outil de mesure de l'inflation alimentaire dans les pays en développement"],
+      "reponse": "Un indicateur créé par The Economist comparant le prix d'un Big Mac dans différents pays pour évaluer si les monnaies sont sur ou sous-évaluées par rapport au dollar",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la loi des rendements décroissants en microéconomie ?",
+      "assertions": ["Le principe selon lequel, à partir d'un certain niveau, ajouter des unités d'un facteur variable à des facteurs fixes entraîne une baisse de la productivité marginale", "La loi selon laquelle les grandes entreprises sont toujours moins efficaces que les petites", "Le principe affirmant que les rendements des investissements en capital humain diminuent avec l'âge", "La règle selon laquelle les retours sur investissement dans les matières premières sont toujours inférieurs à ceux des services"],
+      "reponse": "Le principe selon lequel, à partir d'un certain niveau, ajouter des unités d'un facteur variable à des facteurs fixes entraîne une baisse de la productivité marginale",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le multiplicateur du commerce extérieur et comment affecte-t-il l'économie congolaise ?",
+      "assertions": ["L'amplification des effets d'une variation des exportations sur le PIB via la demande globale ; une hausse des prix du cobalt peut ainsi avoir un effet multiplicateur sur l'économie congolaise", "Le coefficient mesurant l'impact d'une dépréciation de la monnaie sur le volume des exportations", "Le rapport entre les recettes douanières et la valeur totale des échanges commerciaux", "L'indice de diversification des partenaires commerciaux de la RDC"],
+      "reponse": "L'amplification des effets d'une variation des exportations sur le PIB via la demande globale ; une hausse des prix du cobalt peut ainsi avoir un effet multiplicateur sur l'économie congolaise",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la politique industrielle en économie du développement ?",
+      "assertions": ["L'ensemble des interventions de l'État visant à orienter le développement industriel, notamment en soutenant certains secteurs stratégiques (politique de l'infant industry)", "La réglementation des conditions de travail et des normes de sécurité dans les usines", "La privatisation des entreprises publiques industrielles pour améliorer leur efficacité", "La politique commerciale protégeant les industries nationales contre la concurrence étrangère"],
+      "reponse": "L'ensemble des interventions de l'État visant à orienter le développement industriel, notamment en soutenant certains secteurs stratégiques (politique de l'infant industry)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la politique de change réel en économie ouverte ?",
+      "assertions": ["La valeur du taux de change nominal corrigée des différentiels d'inflation entre pays, déterminant la compétitivité réelle des exportations congolaises", "La politique officielle de la BCC fixant le cours du franc congolais par rapport aux devises étrangères", "Le taux de change appliqué aux transactions commerciales réelles (biens physiques) par opposition aux transactions financières", "Le cours de change en vigueur sur le marché parallèle de Kinshasa"],
+      "reponse": "La valeur du taux de change nominal corrigée des différentiels d'inflation entre pays, déterminant la compétitivité réelle des exportations congolaises",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "L'économie congolaise est considérée comme l'une des plus diversifiées d'Afrique subsaharienne.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Une forte appréciation du franc congolais rendrait les exportations minières de la RDC moins compétitives sur les marchés internationaux.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La loi des rendements marginaux décroissants s'applique uniquement au facteur capital dans une économie industrielle.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "L'hyperinflation vécue au Zaïre dans les années 1990 est un exemple historique des conséquences d'une politique monétaire irresponsable.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le secteur minier congolais est principalement organisé en petites exploitations artisanales sans présence de grandes multinationales.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'est-ce que le modèle de Harrod-Domar et son application aux économies en développement comme la RDC ?",
+      "assertions": ["Un modèle de croissance liant le taux de croissance au taux d'épargne et au coefficient de capital ; il justifie l'aide au développement pour combler le manque d'épargne interne", "Un modèle expliquant la croissance par le seul progrès technique exogène sans rôle de l'épargne", "La théorie de la croissance équilibrée entre secteurs agricole et industriel dans les pays en développement", "Un modèle commercial expliquant les échanges Nord-Sud par les dotations factorielles"],
+      "reponse": "Un modèle de croissance liant le taux de croissance au taux d'épargne et au coefficient de capital ; il justifie l'aide au développement pour combler le manque d'épargne interne",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la théorie de la dépendance et comment s'applique-t-elle à la RDC ?",
+      "assertions": ["La théorie selon laquelle les pays en développement restent sous-développés en raison de leur intégration défavorable dans l'économie mondiale dominée par les pays du centre (Prebisch, Cardoso)", "La théorie de Solow expliquant la convergence économique entre pays riches et pauvres", "La théorie néolibérale justifiant la libéralisation comme voie vers le développement", "La théorie de l'avantage comparatif appliquée aux relations économiques Nord-Sud"],
+      "reponse": "La théorie selon laquelle les pays en développement restent sous-développés en raison de leur intégration défavorable dans l'économie mondiale dominée par les pays du centre (Prebisch, Cardoso)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que les Objectifs de Développement Durable (ODD) des Nations Unies et leur lien avec la RDC ?",
+      "assertions": ["17 objectifs mondiaux adoptés en 2015 (Agenda 2030) pour éradiquer la pauvreté, réduire les inégalités et protéger l'environnement ; la RDC est particulièrement concernée par les objectifs liés à la pauvreté, la santé et l'éducation", "Les objectifs fixés par le FMI aux pays bénéficiant de ses programmes d'ajustement structurel", "Les cibles de croissance économique que les pays africains doivent atteindre pour accéder aux marchés mondiaux", "Les normes environnementales imposées aux industries extractives opérant en RDC"],
+      "reponse": "17 objectifs mondiaux adoptés en 2015 (Agenda 2030) pour éradiquer la pauvreté, réduire les inégalités et protéger l'environnement ; la RDC est particulièrement concernée par les objectifs liés à la pauvreté, la santé et l'éducation",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'économie comportementale et en quoi remet-elle en cause l'homo economicus ?",
+      "assertions": ["Une branche de l'économie (Kahneman, Thaler) qui montre que les agents économiques réels prennent des décisions irrationnelles, influencées par des biais cognitifs et émotionnels", "Une théorie selon laquelle les comportements économiques sont entièrement déterminés par les habitudes culturelles", "Le courant économique qui prône l'intervention comportementale de l'État pour corriger les défaillances du marché", "L'étude des comportements économiques dans les sociétés traditionnelles à faible revenu"],
+      "reponse": "Une branche de l'économie (Kahneman, Thaler) qui montre que les agents économiques réels prennent des décisions irrationnelles, influencées par des biais cognitifs et émotionnels",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la politique de ciblage de l'inflation et la BCC peut-elle l'adopter ?",
+      "assertions": ["Un cadre de politique monétaire où la banque centrale s'engage publiquement à maintenir l'inflation proche d'un objectif chiffré en ajustant les taux d'intérêt", "Une politique visant à cibler et à éliminer les principales causes structurelles de l'inflation en RDC", "La politique de la BCC consistant à fixer directement les prix des biens de première nécessité", "Une stratégie de diversification économique pour réduire la dépendance aux cours des matières premières"],
+      "reponse": "Un cadre de politique monétaire où la banque centrale s'engage publiquement à maintenir l'inflation proche d'un objectif chiffré en ajustant les taux d'intérêt",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le marché du carbone (quota d'émissions) et son lien avec l'économie congolaise ?",
+      "assertions": ["Un mécanisme économique visant à réduire les émissions de CO2 par l'échange de droits à polluer ; la forêt tropicale congolaise représente un actif carbone considérable (crédits REDD+)", "Un marché financier spécialisé dans le commerce du charbon et du pétrole en Afrique centrale", "Un mécanisme de compensation carbone uniquement applicable aux pays industrialisés membres de l'OCDE", "Un instrument de politique monétaire visant à réduire l'empreinte carbone du système bancaire congolais"],
+      "reponse": "Un mécanisme économique visant à réduire les émissions de CO2 par l'échange de droits à polluer ; la forêt tropicale congolaise représente un actif carbone considérable (crédits REDD+)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la théorie des jeux et son application à l'économie des ressources naturelles en RDC ?",
+      "assertions": ["L'étude des situations stratégiques où les décisions d'un agent dépendent de celles des autres ; applicable aux négociations entre la RDC et les multinationales minières (dilemme du prisonnier, bargaining)", "L'application des mathématiques aux prévisions économiques dans les pays à fort potentiel minier", "La théorie de la concurrence parfaite appliquée aux marchés des matières premières congolaises", "L'analyse des jeux d'influence entre institutions internationales (FMI, BM) et le gouvernement congolais"],
+      "reponse": "L'étude des situations stratégiques où les décisions d'un agent dépendent de celles des autres ; applicable aux négociations entre la RDC et les multinationales minières (dilemme du prisonnier, bargaining)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la transition énergétique et son impact potentiel sur la demande de minerais de la RDC ?",
+      "assertions": ["Le passage des énergies fossiles aux énergies renouvelables, qui devrait accroître fortement la demande mondiale de cobalt, lithium et cuivre dont la RDC est un producteur majeur", "Le remplacement progressif des industries extractives congolaises par des industries de services", "La diversification du bouquet énergétique de la RDC pour réduire sa dépendance au pétrole importé", "La politique de réduction de la consommation d'énergie électrique dans les ménages congolais"],
+      "reponse": "Le passage des énergies fossiles aux énergies renouvelables, qui devrait accroître fortement la demande mondiale de cobalt, lithium et cuivre dont la RDC est un producteur majeur",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le revenu de base universel (RBU) et pourrait-il s'appliquer en RDC ?",
+      "assertions": ["Un revenu minimum garanti versé à tous les citoyens sans condition ; difficile à financer en RDC à court terme mais pertinent face à l'économie informelle et la pauvreté", "Le salaire minimum légal étendu à tous les travailleurs du secteur formel et informel", "Une aide sociale ciblée versée uniquement aux ménages vivant en dessous du seuil de pauvreté absolue", "Un revenu complémentaire versé aux retraités et personnes handicapées par la sécurité sociale"],
+      "reponse": "Un revenu minimum garanti versé à tous les citoyens sans condition ; difficile à financer en RDC à court terme mais pertinent face à l'économie informelle et la pauvreté",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la CEEAC (Communauté Économique des États de l'Afrique Centrale) et son rôle pour la RDC ?",
+      "assertions": ["Une organisation d'intégration économique régionale de l'Afrique centrale dont la RDC est membre, visant à favoriser la coopération économique et commerciale entre États membres", "Un accord commercial bilatéral entre la RDC et la République du Congo", "L'organisation des pays producteurs de pétrole d'Afrique centrale", "Un fonds de développement régional financé par les pays du Golfe de Guinée"],
+      "reponse": "Une organisation d'intégration économique régionale de l'Afrique centrale dont la RDC est membre, visant à favoriser la coopération économique et commerciale entre États membres",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la contrainte de balance des paiements dans la théorie de Thirlwall sur la croissance des pays en développement ?",
+      "assertions": ["La thèse selon laquelle la croissance d'un pays en développement est limitée par sa capacité à équilibrer sa balance des paiements, liée à sa spécialisation dans des produits à faible élasticité-revenu", "La contrainte imposée par le FMI aux pays bénéficiant de ses programmes d'ajustement structurel", "La limitation de la croissance monétaire par les réserves de change détenues par la banque centrale", "L'obligation pour un pays de maintenir un solde nul de sa balance commerciale sous peine de sanctions"],
+      "reponse": "La thèse selon laquelle la croissance d'un pays en développement est limitée par sa capacité à équilibrer sa balance des paiements, liée à sa spécialisation dans des produits à faible élasticité-revenu",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La transition énergétique mondiale vers les énergies renouvelables devrait augmenter la demande de cobalt produit par la RDC.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La théorie des jeux est exclusivement applicable aux marchés financiers et n'a aucune pertinence pour les négociations sur les ressources naturelles.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Les Objectifs de Développement Durable (ODD) ont été adoptés par les Nations Unies en 2015 pour l'horizon 2030.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "L'économie comportementale (Kahneman, Thaler) confirme que les agents économiques prennent toujours des décisions parfaitement rationnelles.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'est-ce que le taux d'épargne national d'un pays ?",
+      "assertions": ["La fraction du revenu national non consommée et mise de côté par les ménages, les entreprises et l'État", "Le montant total des dépôts dans les banques commerciales exprimé en pourcentage du PIB", "La proportion du budget de l'État consacrée aux investissements publics", "Le pourcentage du revenu des ménages consacré aux produits financiers"],
+      "reponse": "La fraction du revenu national non consommée et mise de côté par les ménages, les entreprises et l'État",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la compétitivité d'une économie ?",
+      "assertions": ["La capacité d'un pays à vendre ses biens et services sur les marchés internationaux à des prix et des qualités attractifs tout en maintenant un niveau de vie élevé", "La capacité des entreprises nationales à dégager des profits supérieurs à ceux de leurs concurrentes étrangères", "La position d'un pays dans les classements internationaux en termes de PIB par habitant", "La force relative de la monnaie nationale par rapport aux devises des principaux partenaires commerciaux"],
+      "reponse": "La capacité d'un pays à vendre ses biens et services sur les marchés internationaux à des prix et des qualités attractifs tout en maintenant un niveau de vie élevé",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le Produit National Brut (PNB) et comment diffère-t-il du PIB pour la RDC ?",
+      "assertions": ["Le PNB mesure le revenu des résidents congolais où qu'ils se trouvent ; il peut différer du PIB en raison des rapatriements de profits des multinationales minières vers l'étranger", "Le PNB et le PIB sont identiques pour la RDC car elle n'a pas de résidents à l'étranger", "Le PNB exclut les revenus du secteur minier car il est principalement exploité par des étrangers", "Le PNB de la RDC est toujours supérieur à son PIB car elle exporte plus qu'elle n'importe"],
+      "reponse": "Le PNB mesure le revenu des résidents congolais où qu'ils se trouvent ; il peut différer du PIB en raison des rapatriements de profits des multinationales minières vers l'étranger",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le Code minier de la RDC et quel est son rôle dans la gestion des ressources naturelles ?",
+      "assertions": ["Le texte législatif régissant l'exploration, l'exploitation et la transformation des ressources minérales en RDC, fixant les droits et obligations des entreprises minières", "Un code de conduite volontaire pour les entreprises minières opérant en Afrique centrale", "Un accord international entre la RDC et ses partenaires commerciaux sur les prix des minerais", "Le règlement technique de l'ICCN fixant les normes environnementales des mines congolaises"],
+      "reponse": "Le texte législatif régissant l'exploration, l'exploitation et la transformation des ressources minérales en RDC, fixant les droits et obligations des entreprises minières",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le taux de bancarisation et pourquoi est-il faible en RDC ?",
+      "assertions": ["Le pourcentage de la population ayant accès à des services bancaires formels ; il est faible en RDC en raison de la méfiance envers les banques, des frais élevés et de l'éloignement géographique", "Le taux d'intérêt moyen pratiqué par les banques commerciales sur les crédits accordés aux ménages", "Le ratio entre les dépôts bancaires et la masse monétaire totale en circulation", "La proportion des transactions effectuées par voie bancaire par rapport aux paiements en espèces"],
+      "reponse": "Le pourcentage de la population ayant accès à des services bancaires formels ; il est faible en RDC en raison de la méfiance envers les banques, des frais élevés et de l'éloignement géographique",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Un taux de bancarisation élevé est associé à un développement financier plus important et une meilleure inclusion économique.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le Code minier révisé de la RDC (2018) a augmenté les redevances minières payées à l'État par les entreprises minières.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'est-ce que le concept de valeur actualisée nette (VAN) dans l'analyse des investissements ?",
+      "assertions": ["La somme actualisée de tous les flux de trésorerie futurs d'un projet moins son coût initial ; un projet est rentable si la VAN est positive", "La valeur totale d'un investissement calculée en additionnant simplement tous les flux de trésorerie sans actualisation", "Le bénéfice brut d'un projet d'investissement avant déduction des charges fiscales", "Le taux de rendement minimal exigé par un investisseur pour financer un projet"],
+      "reponse": "La somme actualisée de tous les flux de trésorerie futurs d'un projet moins son coût initial ; un projet est rentable si la VAN est positive",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le concept de trappe à pauvreté et comment affecte-t-il la RDC ?",
+      "assertions": ["Un équilibre de faible niveau où la pauvreté se perpétue car les ménages pauvres ne peuvent ni épargner ni investir, reproduisant les conditions de leur pauvreté", "Un mécanisme fiscal empêchant les ménages pauvres d'accéder aux aides sociales de l'État", "La situation de chômage structurel massif qui réduit le potentiel de croissance d'un pays", "Le phénomène par lequel l'aide internationale crée une dépendance et perpétue le sous-développement"],
+      "reponse": "Un équilibre de faible niveau où la pauvreté se perpétue car les ménages pauvres ne peuvent ni épargner ni investir, reproduisant les conditions de leur pauvreté",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le concept d'économie duale développé par Lewis pour les pays en développement ?",
+      "assertions": ["La coexistence d'un secteur traditionnel de subsistance (à faible productivité) et d'un secteur moderne capitaliste ; la croissance résulte du transfert du travail vers le secteur moderne", "La division de l'économie entre secteur public et secteur privé dans les pays en transition", "La coexistence d'une économie formelle et d'une économie informelle sans interaction entre elles", "La théorie du dualisme monétaire décrivant la coexistence du franc congolais et du dollar en RDC"],
+      "reponse": "La coexistence d'un secteur traditionnel de subsistance (à faible productivité) et d'un secteur moderne capitaliste ; la croissance résulte du transfert du travail vers le secteur moderne",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le concept de désindustrialisation et son lien avec la malédiction des ressources en RDC ?",
+      "assertions": ["Le recul de la part de l'industrie manufacturière dans le PIB, souvent lié en RDC à la domination du secteur minier qui absorbe les ressources et déprécie les industries transformatrices", "La fermeture progressive des usines congolaises suite aux importations bon marché de Chine", "La privatisation des entreprises industrielles publiques entraînant des licenciements massifs", "La migration des travailleurs industriels vers le secteur des services informels à Kinshasa"],
+      "reponse": "Le recul de la part de l'industrie manufacturière dans le PIB, souvent lié en RDC à la domination du secteur minier qui absorbe les ressources et déprécie les industries transformatrices",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La théorie de la trappe à pauvreté est particulièrement pertinente pour expliquer les difficultés de développement de certaines régions enclavées de la RDC.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le modèle dualiste de Lewis prédit que le développement économique passe par le transfert de main-d'œuvre du secteur traditionnel vers le secteur moderne.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La financiarisation excessive de l'économie mondiale a contribué à la crise financière mondiale de 2008.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    }
+  ]
+}

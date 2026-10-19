@@ -1,0 +1,2325 @@
+{
+  "categorie": {
+    "designation": "Statique",
+    "description": "Mécanique statique : équilibre des solides, forces, moments et réactions d'appui",
+    "slug": "statique"
+  },
+  "questions": [
+    {
+      "enonce": "La statique est la branche de la mécanique qui étudie :",
+      "assertions": [
+        "Les corps en équilibre sous l'action de forces (ΣF=0, ΣM=0)",
+        "Le mouvement des corps sous l'action de forces",
+        "La déformation des matériaux",
+        "La vitesse des corps en mouvement"
+      ],
+      "reponse": "Les corps en équilibre sous l'action de forces (ΣF=0, ΣM=0)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Une force est une grandeur vectorielle définie par :",
+      "assertions": [
+        "Son module, sa direction et son sens",
+        "Son module uniquement",
+        "Sa direction uniquement",
+        "Son sens uniquement"
+      ],
+      "reponse": "Son module, sa direction et son sens",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le moment d'une force F par rapport à un point O est :",
+      "assertions": [
+        "M = F × d (force multipliée par la distance perpendiculaire)",
+        "M = F / d",
+        "M = F + d",
+        "M = d / F"
+      ],
+      "reponse": "M = F × d (force multipliée par la distance perpendiculaire)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "L'unité du moment d'une force est :",
+      "assertions": [
+        "Newton-mètre (N·m)",
+        "Newton (N)",
+        "Pascal (Pa)",
+        "Joule/mètre (J/m)"
+      ],
+      "reponse": "Newton-mètre (N·m)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Un couple est formé de deux forces :",
+      "assertions": [
+        "Parallèles, égales, opposées et non colinéaires",
+        "Parallèles et de même sens",
+        "Perpendiculaires entre elles",
+        "Colinéaires et opposées"
+      ],
+      "reponse": "Parallèles, égales, opposées et non colinéaires",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La résultante de deux forces parallèles de même sens est :",
+      "assertions": [
+        "Égale à leur somme algébrique, appliquée entre les deux forces",
+        "Égale à leur différence",
+        "Nulle",
+        "Égale à leur produit"
+      ],
+      "reponse": "Égale à leur somme algébrique, appliquée entre les deux forces",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Un appui simple (appui-plan) fournit combien de réactions ?",
+      "assertions": [
+        "1 réaction (perpendiculaire à la surface d'appui)",
+        "2 réactions",
+        "3 réactions",
+        "Aucune réaction"
+      ],
+      "reponse": "1 réaction (perpendiculaire à la surface d'appui)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Une rotule (articulation) fournit combien de réactions en 2D ?",
+      "assertions": [
+        "2 réactions (horizontale et verticale)",
+        "1 réaction",
+        "3 réactions",
+        "4 réactions"
+      ],
+      "reponse": "2 réactions (horizontale et verticale)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Un encastrement (appui fixe) fournit combien de réactions en 2D ?",
+      "assertions": [
+        "3 réactions (2 forces + 1 moment)",
+        "2 réactions",
+        "1 réaction",
+        "4 réactions"
+      ],
+      "reponse": "3 réactions (2 forces + 1 moment)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le théorème de Varignon stipule que :",
+      "assertions": [
+        "Le moment de la résultante est égal à la somme des moments des forces composantes",
+        "La résultante de forces parallèles est nulle",
+        "Le centre de gravité est le barycentre des masses",
+        "Les forces d'action et de réaction sont égales et opposées"
+      ],
+      "reponse": "Le moment de la résultante est égal à la somme des moments des forces composantes",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La résultante d'un système de forces concurrent est nulle si et seulement si :",
+      "assertions": [
+        "Les forces s'annulent vectoriellement",
+        "Les forces ont le même module",
+        "Les forces sont toutes perpendiculaires",
+        "Il y a un nombre pair de forces"
+      ],
+      "reponse": "Les forces s'annulent vectoriellement",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le principe d'action et de réaction (3ème loi de Newton) stipule que toute force exercée par A sur B est :",
+      "assertions": [
+        "Égale en module, opposée en sens, et colinéaire à la force de B sur A",
+        "Plus grande que la force de B sur A",
+        "Perpendiculaire à la force de B sur A",
+        "De même sens que la force de B sur A"
+      ],
+      "reponse": "Égale en module, opposée en sens, et colinéaire à la force de B sur A",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La loi de Coulomb pour le frottement sec s'écrit :",
+      "assertions": [
+        "T ≤ μ·N (effort de frottement ≤ coefficient de frottement × effort normal)",
+        "T = N / μ",
+        "T = μ / N",
+        "T ≥ μ·N"
+      ],
+      "reponse": "T ≤ μ·N (effort de frottement ≤ coefficient de frottement × effort normal)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La poussée d'Archimède est :",
+      "assertions": [
+        "Égale au poids du fluide déplacé, dirigée vers le haut",
+        "Égale au poids du corps immergé, dirigée vers le bas",
+        "Toujours supérieure au poids du corps",
+        "Indépendante du volume immergé"
+      ],
+      "reponse": "Égale au poids du fluide déplacé, dirigée vers le haut",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La décomposition d'une force F selon deux axes x et y donne les composantes :",
+      "assertions": [
+        "Fx = F·cos(θ) et Fy = F·sin(θ) où θ est l'angle avec l'axe x",
+        "Fx = F·sin(θ) et Fy = F·cos(θ)",
+        "Fx = Fy = F/√2 toujours",
+        "Fx = F et Fy = 0"
+      ],
+      "reponse": "Fx = F·cos(θ) et Fy = F·sin(θ) où θ est l'angle avec l'axe x",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Deux forces F1 et F2 parallèles, de même sens, ont une résultante R égale à :",
+      "assertions": [
+        "R = F1 + F2",
+        "R = F1 - F2",
+        "R = F1 · F2",
+        "R = |F1 - F2|"
+      ],
+      "reponse": "R = F1 + F2",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Un système de forces est dit 'équivalent' à un autre si :",
+      "assertions": [
+        "Il produit les mêmes effets mécaniques sur le corps (même résultante et même moment résultant)",
+        "Il a le même nombre de forces",
+        "Il a les mêmes points d'application",
+        "Les forces ont les mêmes modules"
+      ],
+      "reponse": "Il produit les mêmes effets mécaniques sur le corps (même résultante et même moment résultant)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le centre de pression d'une surface immergée dans un fluide se situe :",
+      "assertions": [
+        "En dessous du centroïde de la surface",
+        "Au-dessus du centroïde",
+        "Au même niveau que le centroïde",
+        "À la surface libre du fluide"
+      ],
+      "reponse": "En dessous du centroïde de la surface",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une surface en contact avec un fluide de masse volumique ρ, la pression hydrostatique à la profondeur h est :",
+      "assertions": [
+        "p = ρ·g·h",
+        "p = ρ·h",
+        "p = g·h",
+        "p = ρ·g/h"
+      ],
+      "reponse": "p = ρ·g·h",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Un solide posé sur un plan horizontal est en équilibre si :",
+      "assertions": [
+        "Sa verticale de gravité passe à l'intérieur de la base de sustentation",
+        "Sa hauteur est inférieure à sa base",
+        "Son centre de gravité est en dessous de son centre géométrique",
+        "Sa masse est suffisamment faible"
+      ],
+      "reponse": "Sa verticale de gravité passe à l'intérieur de la base de sustentation",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La composante horizontale d'une force inclinée à 30° par rapport à l'horizontale, de module F=100N, est :",
+      "assertions": [
+        "Fx = 100·cos(30°) = 86,6 N",
+        "Fx = 100·sin(30°) = 50 N",
+        "Fx = 100 N",
+        "Fx = 100·tan(30°) = 57,7 N"
+      ],
+      "reponse": "Fx = 100·cos(30°) = 86,6 N",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le moment d'une force F=200N par rapport à un point O situé à d=3m perpendiculairement à la ligne d'action est :",
+      "assertions": [
+        "M = 600 N·m",
+        "M = 66,7 N·m",
+        "M = 200 N·m",
+        "M = 300 N·m"
+      ],
+      "reponse": "M = 600 N·m",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la différence entre un corps rigide et un corps déformable en statique ?",
+      "assertions": [
+        "Le corps rigide ne se déforme pas, simplifiant l'analyse",
+        "Le corps déformable ne peut pas être étudié en statique",
+        "Le corps rigide est toujours en équilibre",
+        "Le corps déformable est toujours plus lourd"
+      ],
+      "reponse": "Le corps rigide ne se déforme pas, simplifiant l'analyse",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le module vectoriel d'une force F ayant des composantes Fx et Fy est :",
+      "assertions": [
+        "|F| = √(Fx² + Fy²)",
+        "|F| = Fx + Fy",
+        "|F| = Fx · Fy",
+        "|F| = Fx² + Fy²"
+      ],
+      "reponse": "|F| = √(Fx² + Fy²)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour deux forces F1=100N vers la droite et F2=60N vers la gauche, la résultante est :",
+      "assertions": [
+        "R = 40 N vers la droite",
+        "R = 160 N vers la droite",
+        "R = 40 N vers la gauche",
+        "R = 60 N vers la droite"
+      ],
+      "reponse": "R = 40 N vers la droite",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La distance perpendiculaire entre la ligne d'action d'une force et un point de référence s'appelle :",
+      "assertions": [
+        "Le bras de levier",
+        "Le vecteur force",
+        "La résultante",
+        "Le vecteur position"
+      ],
+      "reponse": "Le bras de levier",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Une force F=500N fait un angle de 60° avec l'horizontale. Sa composante verticale est :",
+      "assertions": [
+        "Fy = 500·sin(60°) = 433 N",
+        "Fy = 500·cos(60°) = 250 N",
+        "Fy = 500/sin(60°) = 577 N",
+        "Fy = 500 N"
+      ],
+      "reponse": "Fy = 500·sin(60°) = 433 N",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La résultante d'un couple (moment pur) est :",
+      "assertions": [
+        "Nulle (le couple n'a pas de résultante en force)",
+        "Égale à la somme des forces du couple",
+        "Perpendiculaire aux forces du couple",
+        "Égale au double de l'une des forces"
+      ],
+      "reponse": "Nulle (le couple n'a pas de résultante en force)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle condition est nécessaire pour l'équilibre de translation d'un corps ?",
+      "assertions": [
+        "La somme vectorielle des forces est nulle (ΣF=0)",
+        "Le moment résultant est nul",
+        "Toutes les forces sont parallèles",
+        "Le centre de gravité est à mi-hauteur"
+      ],
+      "reponse": "La somme vectorielle des forces est nulle (ΣF=0)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la relation entre un couple et son moment ?",
+      "assertions": [
+        "Le couple a un moment constant indépendant du point de référence",
+        "Le couple dépend du point d'application",
+        "Le couple est une force concentrée",
+        "Le moment du couple varie selon le point choisi"
+      ],
+      "reponse": "Le couple a un moment constant indépendant du point de référence",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Combien de réactions fournit un encastrement en 2D ?",
+      "assertions": [
+        "3 réactions (2 forces + 1 moment)",
+        "1 réaction",
+        "2 réactions",
+        "4 réactions"
+      ],
+      "reponse": "3 réactions (2 forces + 1 moment)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le théorème de Varignon stipule ?",
+      "assertions": [
+        "Le moment de la résultante = somme des moments des forces composantes",
+        "La résultante des forces parallèles est nulle",
+        "Le centre de gravité est le barycentre géométrique",
+        "Les forces d'action et réaction sont égales"
+      ],
+      "reponse": "Le moment de la résultante = somme des moments des forces composantes",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Un appui à rouleau fournit quelle(s) réaction(s) ?",
+      "assertions": [
+        "1 réaction perpendiculaire à la surface d'appui",
+        "2 réactions",
+        "3 réactions",
+        "Aucune réaction"
+      ],
+      "reponse": "1 réaction perpendiculaire à la surface d'appui",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La force normale exercée par une surface plane sur un objet posé est orientée :",
+      "assertions": [
+        "Perpendiculairement à la surface, dirigée vers l'objet",
+        "Parallèlement à la surface",
+        "Dans la direction du poids",
+        "Vers le bas toujours"
+      ],
+      "reponse": "Perpendiculairement à la surface, dirigée vers l'objet",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Deux forces F1=50N et F2=30N s'appliquent en sens opposés sur un axe. Leur résultante est :",
+      "assertions": [
+        "R=20N dans la direction de F1",
+        "R=80N",
+        "R=50N",
+        "R=15N"
+      ],
+      "reponse": "R=20N dans la direction de F1",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel est l'angle de frottement φ si le coefficient de frottement statique μ=0,5 ?",
+      "assertions": [
+        "φ = arctan(0,5) ≈ 26,6°",
+        "φ = arctan(2) ≈ 63,4°",
+        "φ = 0,5 radian = 28,6°",
+        "φ = 45°"
+      ],
+      "reponse": "φ = arctan(0,5) ≈ 26,6°",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Un corps de masse m=50kg est posé sur un plan incliné de 30°. La composante normale du poids est :",
+      "assertions": [
+        "N = mg·cos(30°) = 425 N",
+        "N = mg·sin(30°) = 245 N",
+        "N = mg = 490 N",
+        "N = mg·tan(30°) = 283 N"
+      ],
+      "reponse": "N = mg·cos(30°) = 425 N",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La poussée d'Archimède exercée sur un objet immergé dans l'eau est :",
+      "assertions": [
+        "Égale au poids du volume d'eau déplacé, vers le haut",
+        "Égale au poids de l'objet, vers le bas",
+        "Toujours supérieure au poids de l'objet",
+        "Égale à la pression au fond de l'objet"
+      ],
+      "reponse": "Égale au poids du volume d'eau déplacé, vers le haut",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour équilibrer un levier de 4m, pivot au milieu, avec F1=200N à gauche, quelle force F2 placer à droite ?",
+      "assertions": [
+        "F2=200N (symétrie)",
+        "F2=400N",
+        "F2=100N",
+        "F2=800N"
+      ],
+      "reponse": "F2=200N (symétrie)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la composante verticale d'une force F=1000N inclinée à 45° par rapport à l'horizontale ?",
+      "assertions": [
+        "Fy = 1000·sin(45°) = 707 N",
+        "Fy = 1000·cos(45°) = 707 N (même valeur)",
+        "Fy = 1000 N",
+        "Fy = 500 N"
+      ],
+      "reponse": "Fy = 1000·sin(45°) = 707 N",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "L'unité de la force dans le système SI est le Newton (N).",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le moment d'un couple est indépendant du point de référence choisi.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Un corps rigide ne se déforme pas sous l'action des forces.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "En statique plane, les conditions d'équilibre s'écrivent ΣFx=0, ΣFy=0 et ΣM=0, soit 3 équations.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Un système de forces est dit 'concurrent' si toutes les forces se coupent en un même point.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le centre de gravité d'un corps homogène coïncide avec son centroïde géométrique.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "L'angle de frottement φ est relié au coefficient de frottement μ par la relation μ = tan(φ).",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Pour qu'un corps soit en équilibre de translation, la somme vectorielle de toutes les forces doit être nulle.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Un treillis est une structure constituée de barres articulées aux nœuds, soumises uniquement à des efforts axiaux (traction ou compression).",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le moment résistant d'un encastrement s'oppose à la rotation du corps encastré.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Pour une poutre simplement appuyée (portée L=6m) soumise à une charge concentrée P=30kN au milieu, les réactions d'appui valent :",
+      "assertions": [
+        "R_A = R_B = 15 kN",
+        "R_A = R_B = 30 kN",
+        "R_A = 10 kN, R_B = 20 kN",
+        "R_A = R_B = 7,5 kN"
+      ],
+      "reponse": "R_A = R_B = 15 kN",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre en console (encastrée à gauche, libre à droite, L=4m) soumise à P=20kN en bout, la réaction verticale d'encastrement est :",
+      "assertions": [
+        "R_v = 20 kN (vers le haut)",
+        "R_v = 80 kN",
+        "R_v = 40 kN",
+        "R_v = 10 kN"
+      ],
+      "reponse": "R_v = 20 kN (vers le haut)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour la même console (P=20kN, L=4m), le moment d'encastrement vaut :",
+      "assertions": [
+        "M_encastrement = 80 kN·m",
+        "M_encastrement = 20 kN·m",
+        "M_encastrement = 40 kN·m",
+        "M_encastrement = 5 kN·m"
+      ],
+      "reponse": "M_encastrement = 80 kN·m",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Une barre à deux forces (two-force member) d'un treillis est soumise uniquement à :",
+      "assertions": [
+        "Un effort axial (traction ou compression)",
+        "Un moment fléchissant",
+        "Un effort tranchant",
+        "Un couple"
+      ],
+      "reponse": "Un effort axial (traction ou compression)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le centre de gravité d'un triangle est situé au :",
+      "assertions": [
+        "Tiers de la hauteur depuis la base (centroïde)",
+        "Milieu de la hauteur",
+        "Sommet",
+        "Pied de la hauteur"
+      ],
+      "reponse": "Tiers de la hauteur depuis la base (centroïde)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un plan incliné d'angle α, un corps de poids W commence à glisser quand :",
+      "assertions": [
+        "tan(α) > μ (l'angle dépasse l'angle de frottement)",
+        "α > 45°",
+        "W·cos(α) > W·sin(α)",
+        "μ = 0"
+      ],
+      "reponse": "tan(α) > μ (l'angle dépasse l'angle de frottement)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre simplement appuyée (portée L=8m, appuis A et B) soumise à une charge répartie q=10kN/m, les réactions valent :",
+      "assertions": [
+        "R_A = R_B = 40 kN",
+        "R_A = R_B = 80 kN",
+        "R_A = 20 kN, R_B = 60 kN",
+        "R_A = R_B = 20 kN"
+      ],
+      "reponse": "R_A = R_B = 40 kN",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le centroïde d'une section composée de rectangles est calculé par la formule :",
+      "assertions": [
+        "ȳ = Σ(A_i · y_i) / Σ(A_i) (somme des moments statiques divisée par l'aire totale)",
+        "ȳ = Σ(y_i) / n (moyenne des positions)",
+        "ȳ = (y_max + y_min) / 2",
+        "ȳ = Σ(A_i) / Σ(y_i)"
+      ],
+      "reponse": "ȳ = Σ(A_i · y_i) / Σ(A_i) (somme des moments statiques divisée par l'aire totale)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Dans une poutre simplement appuyée (portée L=10m), une charge concentrée P=50kN est placée à 4m de l'appui A. La réaction en B est :",
+      "assertions": [
+        "R_B = P·a/L = 50·4/10 = 20 kN",
+        "R_B = 30 kN",
+        "R_B = 50 kN",
+        "R_B = 25 kN"
+      ],
+      "reponse": "R_B = P·a/L = 50·4/10 = 20 kN",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La condition de non-glissement d'un corps sur un plan horizontal est T ≤ μN. Si μ=0,4 et N=1000N, l'effort tangentiel maximum sans glissement est :",
+      "assertions": [
+        "T_max = 400 N",
+        "T_max = 2500 N",
+        "T_max = 1400 N",
+        "T_max = 600 N"
+      ],
+      "reponse": "T_max = 400 N",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre en console de longueur L=5m soumise à une charge répartie q=8kN/m, la réaction d'encastrement horizontale est :",
+      "assertions": [
+        "R_h = 0 (charge verticale uniquement)",
+        "R_h = 40 kN",
+        "R_h = 8 kN",
+        "R_h = 200 kN"
+      ],
+      "reponse": "R_h = 0 (charge verticale uniquement)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre simplement appuyée (portée L=10m) soumise à une charge concentrée P=40kN à 3m de A, la réaction en A est :",
+      "assertions": [
+        "R_A = P·(L-a)/L = 40·7/10 = 28 kN",
+        "R_A = P/2 = 20 kN",
+        "R_A = 40 kN",
+        "R_A = P·a/L = 12 kN"
+      ],
+      "reponse": "R_A = P·(L-a)/L = 40·7/10 = 28 kN",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le centre de gravité d'un corps homogène rectangulaire de dimensions a×b se trouve à :",
+      "assertions": [
+        "Au centre géométrique (a/2 ; b/2)",
+        "Au coin supérieur gauche",
+        "Au milieu de la base",
+        "Au centroïde de la diagonale"
+      ],
+      "reponse": "Au centre géométrique (a/2 ; b/2)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre simplement appuyée (portée L=12m) sous charge répartie q=8kN/m sur toute la portée, la réaction à chaque appui est :",
+      "assertions": [
+        "R = q·L/2 = 48 kN",
+        "R = q·L = 96 kN",
+        "R = q·L²/8 = 144 kN",
+        "R = q·L/4 = 24 kN"
+      ],
+      "reponse": "R = q·L/2 = 48 kN",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le moment d'encastrement d'une poutre en console (L=3m, charge P=15kN en bout) est :",
+      "assertions": [
+        "M = P·L = 45 kN·m",
+        "M = P·L/2 = 22,5 kN·m",
+        "M = P·L² = 135 kN·m",
+        "M = P/L = 5 kN"
+      ],
+      "reponse": "M = P·L = 45 kN·m",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel est le moment exercé par une force F=300N à une distance d=2m par rapport au point A ?",
+      "assertions": [
+        "M = 600 N·m",
+        "M = 150 N·m",
+        "M = 300 N·m",
+        "M = 900 N·m"
+      ],
+      "reponse": "M = 600 N·m",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une section rectangulaire (b=120mm, h=200mm) composée de 2 sous-parties, le moment statique S_x par rapport à la base est :",
+      "assertions": [
+        "S_x = b·h·(h/2) = 120·200·100 = 2 400 000 mm³",
+        "S_x = b·h²/12",
+        "S_x = b·h²/6",
+        "S_x = b·h/2"
+      ],
+      "reponse": "S_x = b·h·(h/2) = 120·200·100 = 2 400 000 mm³",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une charge répartie triangulaire (q_0 au maximum, nulle à l'autre extrémité) sur une portée L, la résultante vaut :",
+      "assertions": [
+        "R = q_0·L/2 (appliquée au tiers de la portée depuis l'extrémité chargée)",
+        "R = q_0·L (appliquée au milieu)",
+        "R = q_0·L/3",
+        "R = q_0·L²/2"
+      ],
+      "reponse": "R = q_0·L/2 (appliquée au tiers de la portée depuis l'extrémité chargée)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une console (L=2m, q=5kN/m), la reaction verticale d'encastrement est :",
+      "assertions": [
+        "R_v = q*L = 10 kN",
+        "R_v = q*L/2 = 5 kN",
+        "R_v = q*L**2 = 20 kN",
+        "R_v = 2*q*L = 20 kN"
+      ],
+      "reponse": "R_v = q*L = 10 kN",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre simplement appuyée (L=5m) sous charge P=60kN au tiers de la portée (1,67m de A), quelle est la réaction en A ?",
+      "assertions": [
+        "R_A = P·(L-a)/L = 60·3,33/5 = 40 kN",
+        "R_A = P/2 = 30 kN",
+        "R_A = 20 kN",
+        "R_A = 60 kN"
+      ],
+      "reponse": "R_A = P·(L-a)/L = 60·3,33/5 = 40 kN",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour calculer les réactions d'une poutre simplement appuyée, quelle équation d'équilibre utilise-t-on en premier ?",
+      "assertions": [
+        "ΣM_A = 0 pour trouver R_B, puis ΣFy = 0 pour R_A",
+        "ΣFx = 0 uniquement",
+        "ΣM = 0 en un seul point suffit pour les deux réactions",
+        "ΣFy = 0 pour les deux réactions simultanément"
+      ],
+      "reponse": "ΣM_A = 0 pour trouver R_B, puis ΣFy = 0 pour R_A",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un treillis simple en triangle isocèle (base=4m, hauteur=3m, charge P=100kN au sommet), les efforts dans les barres inclinées valent :",
+      "assertions": [
+        "F = P/(2·cos(θ)) où θ est l'angle avec la verticale",
+        "F = P/2",
+        "F = P·sin(θ)",
+        "F = P·2·cos(θ)"
+      ],
+      "reponse": "F = P/(2·cos(θ)) où θ est l'angle avec la verticale",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le bras de levier d'une force F=200N par rapport à un point O, si le moment est M=800 N·m, vaut :",
+      "assertions": [
+        "d = M/F = 4 m",
+        "d = M·F = 160 000 m",
+        "d = F/M = 0,25 m",
+        "d = F+M = 1 000 m"
+      ],
+      "reponse": "d = M/F = 4 m",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre en console (L=3m) sous charge répartie q=6kN/m, quel est le moment d'encastrement ?",
+      "assertions": [
+        "M = q·L²/2 = 27 kN·m",
+        "M = q·L = 18 kN·m",
+        "M = q·L²/8 = 6,75 kN·m",
+        "M = q·L²/4 = 13,5 kN·m"
+      ],
+      "reponse": "M = q·L²/2 = 27 kN·m",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la résultante d'une charge répartie triangulaire variant de 0 à q_0=20kN/m sur une longueur L=6m ?",
+      "assertions": [
+        "R = q_0·L/2 = 60 kN, appliquée au tiers depuis le maximum",
+        "R = q_0·L = 120 kN au milieu",
+        "R = q_0·L/3 = 40 kN au milieu",
+        "R = q_0·L²/6 = 120 kN"
+      ],
+      "reponse": "R = q_0·L/2 = 60 kN, appliquée au tiers depuis le maximum",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre simplement appuyée (L=6m, q=10kN/m sur les 4m de gauche), la réaction en B est :",
+      "assertions": [
+        "R_B = q·4·2/6 = 13,33 kN (moment de la résultante par rapport à A)",
+        "R_B = q·4/2 = 20 kN",
+        "R_B = q·L/2 = 30 kN",
+        "R_B = q·4/6 = 6,67 kN"
+      ],
+      "reponse": "R_B = q·4·2/6 = 13,33 kN (moment de la résultante par rapport à A)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La méthode de résolution graphique (polygone des forces) permet de trouver la résultante en :",
+      "assertions": [
+        "Construisant un polygone vectoriel avec les forces bout à bout",
+        "Calculant algébriquement les composantes",
+        "Mesurant les forces avec un dynamomètre",
+        "Utilisant le théorème de Pythagore uniquement"
+      ],
+      "reponse": "Construisant un polygone vectoriel avec les forces bout à bout",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour trouver le centroïde y d'une section en T (aile 100×20mm + âme 20×80mm) depuis le bas, on utilise :",
+      "assertions": [
+        "ȳ = Σ(A_i·y_i) / ΣA_i",
+        "ȳ = (h_total)/2",
+        "ȳ = y_max · 2/3",
+        "ȳ = ΣA_i / Σy_i"
+      ],
+      "reponse": "ȳ = Σ(A_i·y_i) / ΣA_i",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la force nécessaire pour déplacer un objet de 50kg sur un plan horizontal avec μ=0,3 (g=10 m/s²) ?",
+      "assertions": [
+        "F = μ·N = 0,3·500 = 150 N",
+        "F = N/μ = 1667 N",
+        "F = 500 N",
+        "F = 50 N"
+      ],
+      "reponse": "F = μ·N = 0,3·500 = 150 N",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un nœud de treillis sur lequel convergent 3 barres dont 2 inconnues et une force extérieure, comment procède-t-on ?",
+      "assertions": [
+        "On écrit ΣFx=0 et ΣFy=0 pour les 2 inconnues",
+        "On applique le théorème de Varignon",
+        "On découpe la section",
+        "On applique la loi de Hooke"
+      ],
+      "reponse": "On écrit ΣFx=0 et ΣFy=0 pour les 2 inconnues",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre simplement appuyée (L=10m), soumise à P=80kN à a=4m de A, la réaction en B est :",
+      "assertions": [
+        "R_B = P·a/L = 80·4/10 = 32 kN",
+        "R_B = P/2 = 40 kN",
+        "R_B = P·(L-a)/L = 48 kN",
+        "R_B = P = 80 kN"
+      ],
+      "reponse": "R_B = P·a/L = 80·4/10 = 32 kN",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel est le moment fléchissant maximal d'une poutre simplement appuyée (L=6m) sous charge uniformément répartie q=15kN/m ?",
+      "assertions": [
+        "M_max = q·L²/8 = 15·36/8 = 67,5 kN·m",
+        "M_max = q·L²/4 = 135 kN·m",
+        "M_max = q·L = 90 kN·m",
+        "M_max = q·L²/2 = 270 kN·m"
+      ],
+      "reponse": "M_max = q·L²/8 = 15·36/8 = 67,5 kN·m",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour calculer les réactions d'une poutre avec 2 appuis (A rotule, B rouleau), combien d'inconnues a-t-on ?",
+      "assertions": [
+        "3 inconnues (Ax, Ay, By)",
+        "2 inconnues",
+        "4 inconnues",
+        "1 inconnue"
+      ],
+      "reponse": "3 inconnues (Ax, Ay, By)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le centroïde d'un triangle rectangle (base b=6m, hauteur h=4m) est situé à quelle distance de la base ?",
+      "assertions": [
+        "h/3 = 4/3 ≈ 1,33 m depuis la base",
+        "h/2 = 2 m",
+        "h/4 = 1 m",
+        "2h/3 = 2,67 m"
+      ],
+      "reponse": "h/3 = 4/3 ≈ 1,33 m depuis la base",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La force de frottement maximum pour un objet de masse M=100kg sur un plan horizontal (μ=0,35, g=10m/s²) est :",
+      "assertions": [
+        "T_max = μ·N = 0,35·1000 = 350 N",
+        "T_max = N/μ = 2857 N",
+        "T_max = μ·M = 35 N",
+        "T_max = M·g = 1000 N"
+      ],
+      "reponse": "T_max = μ·N = 0,35·1000 = 350 N",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un nœud de treillis avec force verticale P=60kN vers le bas et 2 barres faisant 45° avec l'horizontal, les efforts dans les barres sont :",
+      "assertions": [
+        "F = P/(2·sin45°) = 42,4 kN (compression dans les 2 barres)",
+        "F = P/2 = 30 kN",
+        "F = P·sin45° = 42,4 kN",
+        "F = P·cos45° = 42,4 kN (traction)"
+      ],
+      "reponse": "F = P/(2·sin45°) = 42,4 kN (compression dans les 2 barres)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre en console de 3m sous charge de P=20kN en bout, quel est l'effort tranchant dans la section à x=1m de l'encastrement ?",
+      "assertions": [
+        "T(x=1m) = 20 kN (constant pour charge concentrée en bout)",
+        "T(x=1m) = 0",
+        "T(x=1m) = 40 kN",
+        "T(x=1m) = 10 kN"
+      ],
+      "reponse": "T(x=1m) = 20 kN (constant pour charge concentrée en bout)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une section rectangulaire découpée (b=200mm plein, puis trou rectangulaire de 80mm×60mm), le centroïde horizontal est :",
+      "assertions": [
+        "x̄ = (A_plein·x_plein - A_trou·x_trou) / (A_plein - A_trou)",
+        "x̄ = b/2 = 100 mm toujours",
+        "x̄ = (x_plein + x_trou)/2",
+        "x̄ = A_plein·x_plein / (A_plein + A_trou)"
+      ],
+      "reponse": "x̄ = (A_plein·x_plein - A_trou·x_trou) / (A_plein - A_trou)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la condition pour qu'un plan incliné (angle α=25°, μ_s=0,4) ne permette pas le glissement d'un objet ?",
+      "assertions": [
+        "μ_s > tan(α) → 0,4 > tan(25°)=0,47 : Non, il y aura glissement",
+        "μ_s > sin(α) → 0,4 > 0,42 : OK marginalement",
+        "μ_s > cos(α) → 0,4 > 0,91 : Non",
+        "μ_s > α (en radians)"
+      ],
+      "reponse": "μ_s > tan(α) → 0,4 > tan(25°)=0,47 : Non, il y aura glissement",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre simplement appuyée (L=8m) avec charge répartie q=12kN/m sur 3m à gauche (0 à 3m), la résultante Q de cette charge est :",
+      "assertions": [
+        "Q = q·3 = 36 kN, appliquée à 1,5m de A",
+        "Q = q·L = 96 kN",
+        "Q = q·3/2 = 18 kN",
+        "Q = q·8 = 96 kN"
+      ],
+      "reponse": "Q = q·3 = 36 kN, appliquée à 1,5m de A",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Les conditions d'équilibre plan ΣFx=0, ΣFy=0, ΣM_A=0 permettent de résoudre une structure isostatique plane.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Dans la méthode des nœuds pour les treillis, on applique les conditions d'équilibre ΣFx=0 et ΣFy=0 à chaque nœud.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le centre de gravité d'un rectangle est à l'intersection de ses diagonales.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La condition de glissement sur un plan incliné est : la composante tangentielle de la force doit être supérieure à la force de frottement maximale.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Pour un treillis plan, la condition d'isostaticité est : m + r = 2·n, où m=barres, r=réactions, n=nœuds.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La stabilité au renversement d'un mur de soutènement est vérifiée si le moment stabilisateur est supérieur au moment renversant.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Pour une barre de treillis en traction, le signe de l'effort interne est positif par convention.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La méthode de résolution d'un treillis par la méthode des nœuds procède de nœud en nœud, en commençant par celui ayant 2 inconnues maximum.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Un nœud de treillis avec 3 barres peut être résolu directement par la méthode des nœuds si seulement 2 de ces barres sont inconnues.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le centroïde d'un demi-cercle de rayon R se situe à une distance 4R/(3π) du diamètre.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Pour l'analyse d'une structure plane, le critère d'isostaticité (structure parfaitement déterminée) est :",
+      "assertions": [
+        "Degré d'hyperstaticité h = r + m - 3·n = 0 (pour un treillis : m + r - 2n = 0)",
+        "h > 0 (structure hyperstatique)",
+        "h < 0 (structure labile)",
+        "Aucun critère n'existe"
+      ],
+      "reponse": "Degré d'hyperstaticité h = r + m - 3·n = 0 (pour un treillis : m + r - 2n = 0)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un treillis de Pratt à 5 travées (10 nœuds, 17 barres), le nombre de réactions nécessaire pour l'isostaticité est :",
+      "assertions": [
+        "r = 2·n - m = 20 - 17 = 3",
+        "r = 2",
+        "r = 5",
+        "r = 17"
+      ],
+      "reponse": "r = 2·n - m = 20 - 17 = 3",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre simplement appuyée (portée L=12m) soumise à une charge concentrée P=60kN à 4m de A et une charge répartie q=10kN/m sur les 6m centraux, la réaction en A est calculée par ΣM_B=0.",
+      "assertions": [
+        "Vrai (c'est la méthode correcte)",
+        "Faux (on utilise ΣM_A=0 uniquement)",
+        "Faux (on ne peut pas résoudre)",
+        "Vrai mais on doit aussi utiliser ΣFx=0"
+      ],
+      "reponse": "Vrai (c'est la méthode correcte)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour vérifier la stabilité au renversement d'un ouvrage, le coefficient de sécurité est :",
+      "assertions": [
+        "K_renversement = M_stabilisant / M_renversant (doit être ≥ 1,5)",
+        "K_renversement = M_renversant / M_stabilisant",
+        "K_renversement = poids total / charge horizontale",
+        "K_renversement = hauteur / largeur de la base"
+      ],
+      "reponse": "K_renversement = M_stabilisant / M_renversant (doit être ≥ 1,5)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un problème de frottement sur plan incliné (angle α, coefficient μ), la force minimale pour déplacer un corps de poids W vers le haut est :",
+      "assertions": [
+        "F_min = W·(sin(α) + μ·cos(α))",
+        "F_min = W·sin(α)",
+        "F_min = W·μ·cos(α)",
+        "F_min = W·(sin(α) - μ·cos(α))"
+      ],
+      "reponse": "F_min = W·(sin(α) + μ·cos(α))",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un portique plan isostatique (2 colonnes + 1 traverse), le nombre de réactions est :",
+      "assertions": [
+        "6 réactions pour 2 encastrements, dont 3 sont réductibles par les équations d'équilibre",
+        "3 réactions (isostatique)",
+        "9 réactions (hyperstatique)",
+        "0 réaction"
+      ],
+      "reponse": "3 réactions (isostatique)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un treillis plan à n nœuds, m barres, r réactions extérieures, le critère d'isostaticité est :",
+      "assertions": [
+        "m + r = 2·n",
+        "m + r = 3·n",
+        "m = r = n",
+        "m - r = 2·n"
+      ],
+      "reponse": "m + r = 2·n",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un portique plan isostatique avec deux appuis en rotule, le nombre total de réactions est :",
+      "assertions": [
+        "4 (2 par rotule : vertical + horizontal à chaque appui)",
+        "3 (1 vertical par appui + 1 horizontal)",
+        "2 (1 vertical par appui)",
+        "6"
+      ],
+      "reponse": "4 (2 par rotule : vertical + horizontal à chaque appui)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La poutre de Gerber est une poutre continue avec des articulations internes permettant de la rendre :",
+      "assertions": [
+        "Isostatique (en ajoutant des équations de condition)",
+        "Hyperstatique de degré 1",
+        "Plus rigide qu'une poutre continue",
+        "Labile"
+      ],
+      "reponse": "Isostatique (en ajoutant des équations de condition)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la méthode adaptée pour calculer les réactions d'une structure isostatique plane complexe ?",
+      "assertions": [
+        "Appliquer les 3 équations d'équilibre (ΣFx=0, ΣFy=0, ΣM_A=0)",
+        "Utiliser la méthode des éléments finis",
+        "Appliquer la loi de Hooke",
+        "Calculer le moment d'inertie de la section"
+      ],
+      "reponse": "Appliquer les 3 équations d'équilibre (ΣFx=0, ΣFy=0, ΣM_A=0)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le degré d'hyperstaticité d'une structure plane continue à 3 appuis simples (travée continue) est :",
+      "assertions": [
+        "h = 1 (1 réaction en excès)",
+        "h = 0 (isostatique)",
+        "h = 3",
+        "h = 2"
+      ],
+      "reponse": "h = 1 (1 réaction en excès)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour calculer l'effort dans la membrure supérieure d'un treillis de Warren par la méthode des coupes, quelle équation utilise-t-on de préférence ?",
+      "assertions": [
+        "ΣM = 0 par rapport au nœud d'intersection des deux autres barres coupées",
+        "ΣFy = 0 uniquement",
+        "ΣFx = 0 uniquement",
+        "Méthode des nœuds uniquement"
+      ],
+      "reponse": "ΣM = 0 par rapport au nœud d'intersection des deux autres barres coupées",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un portique plan symétrique chargé symétriquement, les réactions horizontales aux appuis sont :",
+      "assertions": [
+        "Égales et orientées en sens opposés (poussée vers l'extérieur)",
+        "Nulles si les appuis sont des rotules",
+        "Égales en sens et module",
+        "Toujours vers l'intérieur"
+      ],
+      "reponse": "Égales et orientées en sens opposés (poussée vers l'extérieur)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le centroïde d'une section composée de 3 rectangles (en forme de H) est calculé par la formule :",
+      "assertions": [
+        "ȳ = Σ(A_i·y_ci) / ΣA_i où y_ci est la distance du centroïde de chaque rectangle à l'axe de référence",
+        "ȳ = moyenne arithmétique des 3 centroïdes",
+        "ȳ = mi-hauteur totale",
+        "ȳ = Σ(I_i) / ΣA_i"
+      ],
+      "reponse": "ȳ = Σ(A_i·y_ci) / ΣA_i où y_ci est la distance du centroïde de chaque rectangle à l'axe de référence",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel est le critère de stabilité au glissement d'un mur de soutènement selon les normes courantes ?",
+      "assertions": [
+        "K_glissement = F_résistante / F_motrice ≥ 1,5",
+        "K_glissement ≥ 1,0",
+        "K_glissement ≥ 2,0",
+        "K_glissement ≥ 3,0"
+      ],
+      "reponse": "K_glissement = F_résistante / F_motrice ≥ 1,5",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une structure hyperstatique de degré 2, la méthode des forces nécessite de résoudre :",
+      "assertions": [
+        "Un système de 2 équations de compatibilité à 2 inconnues",
+        "1 équation d'équilibre supplémentaire",
+        "Un système de 6 équations",
+        "La structure est insoluble"
+      ],
+      "reponse": "Un système de 2 équations de compatibilité à 2 inconnues",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la pression de pointe maximale sous une fondation rectangulaire excentriquement chargée (N=500kN, M=50kN·m, B=2m, L=1m) ?",
+      "assertions": [
+        "σ_max = N/(B·L) + 6·M/(B²·L) = 250 + 75 = 325 kPa",
+        "σ_max = N/(B·L) = 250 kPa",
+        "σ_max = 6·M/(B²·L) = 75 kPa",
+        "σ_max = (N+M)/(B·L) = 275 kPa"
+      ],
+      "reponse": "σ_max = N/(B·L) + 6·M/(B²·L) = 250 + 75 = 325 kPa",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la méthode pour trouver les réactions d'un treillis plan avant d'appliquer la méthode des nœuds ?",
+      "assertions": [
+        "Traiter le treillis comme un corps rigide et appliquer les 3 équations d'équilibre global",
+        "Appliquer directement la méthode des nœuds au nœud d'appui",
+        "Utiliser la méthode des éléments finis",
+        "Calculer les moments d'inertie"
+      ],
+      "reponse": "Traiter le treillis comme un corps rigide et appliquer les 3 équations d'équilibre global",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un treillis avec une barre nulle (effort nul), quelle est la condition pour identifier une telle barre ?",
+      "assertions": [
+        "Un nœud avec 2 barres non colinéaires et sans charge extérieure : les 2 efforts sont nuls",
+        "Un nœud avec 3 barres dont 2 sont parallèles",
+        "Un nœud avec 4 barres en croix",
+        "Un nœud avec 1 seule barre"
+      ],
+      "reponse": "Un nœud avec 2 barres non colinéaires et sans charge extérieure : les 2 efforts sont nuls",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour analyser la stabilité d'une échelle appuyée contre un mur lisse (μ_sol=0,4), quel angle minimum α assure l'équilibre ?",
+      "assertions": [
+        "tan(α) = (1-μ_sol·μ_mur)/(μ_sol+μ_mur) - approche : α ≥ arctan(1/(2·μ_sol)) ≈ 51°",
+        "α ≥ 30°",
+        "α ≥ 60°",
+        "α ≥ 45° toujours"
+      ],
+      "reponse": "tan(α) = (1-μ_sol·μ_mur)/(μ_sol+μ_mur) - approche : α ≥ arctan(1/(2·μ_sol)) ≈ 51°",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre simplement appuyée (L=8m) soumise à P=50kN à 3m de A et q=6kN/m sur les 4m de droite, la réaction en A est :",
+      "assertions": [
+        "R_A = P·(8-3)/8 + q·4·(4+2)/2/8 = 37,25 kN",
+        "R_A = (P+q·4)/2 = 37 kN",
+        "R_A = P/2 + q·4/2 = 37 kN",
+        "R_A = P·5/8 + q·4·2/8 = 37,25 kN"
+      ],
+      "reponse": "R_A = P·(8-3)/8 + q·4·(4+2)/2/8 = 37,25 kN",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un treillis N (Pratt), la barre diagonale sous charge descendante est en :",
+      "assertions": [
+        "Traction",
+        "Compression",
+        "Moment nul",
+        "Cisaillement pur"
+      ],
+      "reponse": "Traction",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la valeur de la poussée hydrostatique totale sur un barrage vertical de largeur b=1m, hauteur H=5m, immergé dans l'eau (ρ=1000kg/m³, g=10m/s²) ?",
+      "assertions": [
+        "F = ρ·g·H²·b/2 = 125 kN",
+        "F = ρ·g·H·b = 50 kN",
+        "F = ρ·g·H²·b = 250 kN",
+        "F = ρ·g·H²·b/4 = 62,5 kN"
+      ],
+      "reponse": "F = ρ·g·H²·b/2 = 125 kN",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Un portique isostatique (2 rotules d'appui) supporte une charge horizontale H=20kN en tête de colonne gauche (h=5m, largeur l=6m). La réaction verticale à droite est :",
+      "assertions": [
+        "R_droit_v = H·h/l = 20·5/6 = 16,67 kN",
+        "R_droit_v = H/2 = 10 kN",
+        "R_droit_v = H·l/h = 60 kN",
+        "R_droit_v = 0"
+      ],
+      "reponse": "R_droit_v = H·h/l = 20·5/6 = 16,67 kN",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une section en T (aile b_f=200mm, t_f=20mm, âme h_w=160mm, t_w=15mm), la hauteur du centroïde depuis le bas est :",
+      "assertions": [
+        "ȳ = (b_f·t_f·(h_w+t_f/2)+t_w·h_w·h_w/2)/(b_f·t_f+t_w·h_w) ≈ 98 mm",
+        "ȳ = (160+20)/2 = 90 mm",
+        "ȳ = 160/2 = 80 mm",
+        "ȳ = (160+20)/3 = 60 mm"
+      ],
+      "reponse": "ȳ = (b_f·t_f·(h_w+t_f/2)+t_w·h_w·h_w/2)/(b_f·t_f+t_w·h_w) ≈ 98 mm",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour le calcul des réactions d'une poutre de Gerber AB-BC (rotule en B), avec articulation B à mi-portée de AC, quelle condition supplémentaire utilise-t-on ?",
+      "assertions": [
+        "Le moment fléchissant est nul à la rotule B : M_B = 0",
+        "Le déplacement vertical est nul en B",
+        "L'effort tranchant est nul en B",
+        "La réaction en B est nulle"
+      ],
+      "reponse": "Le moment fléchissant est nul à la rotule B : M_B = 0",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour vérifier la non-renversement d'un ouvrage de masse 50t (G=490kN) centré sur une fondation de 3m×1m, soumis à une force latérale H=120kN appliquée à 2m de hauteur, K_renversement vaut :",
+      "assertions": [
+        "K = M_stab/M_renvers = (490·1,5)/(120·2) = 3,06 > 1,5 OK",
+        "K = (490·3)/(120·2) = 6,13",
+        "K = (490)/(120) = 4,08",
+        "K = (490·1,5)/(120) = 6,13"
+      ],
+      "reponse": "K = M_stab/M_renvers = (490·1,5)/(120·2) = 3,06 > 1,5 OK",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un treillis plan (10 nœuds, 17 barres), le nombre de réactions d'appui pour l'isostaticité est :",
+      "assertions": [
+        "r = 2·n - m = 20-17 = 3",
+        "r = 2",
+        "r = 5",
+        "r = 17"
+      ],
+      "reponse": "r = 2·n - m = 20-17 = 3",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La résultante de la poussée des terres sur un mur de soutènement (H=4m, γ=18kN/m³, φ=30°, Ka=1/3) par mètre linéaire est :",
+      "assertions": [
+        "F = Ka·γ·H²/2 = (1/3)·18·16/2 = 48 kN/m",
+        "F = Ka·γ·H = (1/3)·18·4 = 24 kN/m",
+        "F = γ·H²/2 = 144 kN/m",
+        "F = Ka·γ·H² = 96 kN/m"
+      ],
+      "reponse": "F = Ka·γ·H²/2 = (1/3)·18·16/2 = 48 kN/m",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un portique plan avec 2 encastrements à la base (structure triplement hyperstatique), la méthode des forces utilise comme structure de base (isostatique) :",
+      "assertions": [
+        "Le même portique avec les 3 inconnues redondantes supprimées (ex: remplacer encastrements par rotules + couper la traverse)",
+        "La même structure sans aucune modification",
+        "Une structure avec 6 appuis",
+        "Une poutre simple équivalente"
+      ],
+      "reponse": "Le même portique avec les 3 inconnues redondantes supprimées (ex: remplacer encastrements par rotules + couper la traverse)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour calculer la réaction en B d'une poutre de Gerber (portée totale 12m, rotule à 8m de A, charge P=60kN à 10m de A) :",
+      "assertions": [
+        "On analyse la partie de droite (8m à 12m) séparément, avec M=0 en rotule pour trouver R_B",
+        "On traite l'ensemble comme une poutre continue",
+        "On utilise la loi de Hooke",
+        "On intègre le diagramme des moments"
+      ],
+      "reponse": "On analyse la partie de droite (8m à 12m) séparément, avec M=0 en rotule pour trouver R_B",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un treillis de Pratt (charges aux nœuds), les barres verticales sont en :",
+      "assertions": [
+        "Compression (sous charge descendante)",
+        "Traction",
+        "Moment fléchissant",
+        "Cisaillement pur"
+      ],
+      "reponse": "Compression (sous charge descendante)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La pression de contact σ sous une semelle (B=2,5m, L=1m) transmettant N=500kN et M=100kN·m est :",
+      "assertions": [
+        "σ_max = N/(B·L) + 6M/(B²·L) = 200 + 96 = 296 kPa; σ_min = 200 - 96 = 104 kPa",
+        "σ_max = N/(B·L) = 200 kPa uniforme",
+        "σ_max = M/(B·L) = 40 kPa",
+        "σ_max = N+M = 600 kPa"
+      ],
+      "reponse": "σ_max = N/(B·L) + 6M/(B²·L) = 200 + 96 = 296 kPa; σ_min = 200 - 96 = 104 kPa",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une structure plane avec 3 appuis (hyperstatique de degré 1), quelle méthode peut résoudre le problème ?",
+      "assertions": [
+        "Méthode des forces (choisir une réaction comme inconnue redondante)",
+        "Uniquement la méthode des éléments finis",
+        "La loi de Hooke directement",
+        "La méthode des coupes de Ritter"
+      ],
+      "reponse": "Méthode des forces (choisir une réaction comme inconnue redondante)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un treillis Warren (triangles équilatéraux, hauteur h=3m, travées de 3m), sous charge P=90kN au nœud central, l'effort dans la membrure inférieure centrale est :",
+      "assertions": [
+        "F = P·L/(2h) = 90·3/(2·3) = 45 kN (traction)",
+        "F = P/2 = 45 kN (compression)",
+        "F = P = 90 kN (traction)",
+        "F = P/h = 30 kN"
+      ],
+      "reponse": "F = P·L/(2h) = 90·3/(2·3) = 45 kN (traction)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour analyser la stabilité d'un mur de soutènement sous poussée de terres, les forces stabilisatrices comprennent :",
+      "assertions": [
+        "Le poids propre du mur, le poids du remblai sur la fondation, la réaction du sol",
+        "La poussée des terres et le poids du mur uniquement",
+        "La poussée active des terres et l'eau",
+        "Le poids du mur uniquement"
+      ],
+      "reponse": "Le poids propre du mur, le poids du remblai sur la fondation, la réaction du sol",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un portique plan soumis à du vent (charge horizontale H=10kN/m sur hauteur h=5m par colonne), la force totale de vent est :",
+      "assertions": [
+        "F = H·h = 50 kN par colonne",
+        "F = H/h = 2 kN",
+        "F = H·h² = 250 kN",
+        "F = H = 10 kN"
+      ],
+      "reponse": "F = H·h = 50 kN par colonne",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un treillis plan simple (4 nœuds en carré, diagonale, 5 barres, 3 réactions), le degré d'isostaticité est :",
+      "assertions": [
+        "m+r-2n = 5+3-2·4 = 0 (isostatique)",
+        "m+r-2n = 1 (hyperstatique)",
+        "m+r-2n = -1 (labile)",
+        "m+r-2n = 2"
+      ],
+      "reponse": "m+r-2n = 5+3-2·4 = 0 (isostatique)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La méthode des coupes (de Ritter) pour les treillis permet de calculer directement les efforts dans des barres internes sans analyser tous les nœuds.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Une structure labile (mécanisme) a un degré d'hyperstaticité négatif et ne peut pas être en équilibre sous des charges quelconques.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La résistance au glissement d'un mur de soutènement est vérifiée par : force horizontale ≤ μ × force verticale.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Pour un escalier avec des marches, la force nécessaire pour qu'un objet reste en équilibre sur la première marche dépend de l'angle de la marche et du coefficient de frottement.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le calcul du centroïde d'une section en I (IPE) peut se faire en décomposant la section en 3 rectangles (2 semelles + 1 âme).",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Pour un coin autobloquant, la condition est que l'angle d'affût soit inférieur à deux fois l'angle de frottement.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Une structure hyperstatique a plus d'inconnues de réaction que d'équations d'équilibre disponibles.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La méthode des coupes nécessite que la coupe expose au maximum 3 barres inconnues pour rester solvable.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Pour une poutre continue sur 3 appuis, le calcul des réactions nécessite de recourir aux équations de compatibilité (structure hyperstatique).",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Dans la méthode des coupes de Ritter, si on coupe 3 barres, on peut écrire 3 équations d'équilibre sur l'une des deux parties.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le centre de gravité d'une section en L (cornière) est calculé par la décomposition en deux rectangles et la formule du barycentre.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Une treillis hyperstatique ne peut pas être analysé par la seule méthode des nœuds ou des coupes sans hypothèses supplémentaires.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "En 3D, un appui rotule sphérique fournit combien de réactions ?",
+      "assertions": [
+        "3 réactions (Rx, Ry, Rz)",
+        "6 réactions",
+        "2 réactions",
+        "1 réaction"
+      ],
+      "reponse": "3 réactions (Rx, Ry, Rz)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La méthode des forces (méthode des forces redondantes) consiste à :",
+      "assertions": [
+        "Choisir des inconnues hyperstatiques, les libérer pour obtenir une structure isostatique de base, puis imposer la compatibilité de déformation",
+        "Calculer toutes les réactions simultanément par un système d'équations",
+        "Supprimer les appuis en excès et calculer uniquement les réactions restantes",
+        "Appliquer le principe des travaux virtuels directement"
+      ],
+      "reponse": "Choisir des inconnues hyperstatiques, les libérer pour obtenir une structure isostatique de base, puis imposer la compatibilité de déformation",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La pulsation propre ω d'un oscillateur masse-ressort est donnée par :",
+      "assertions": [
+        "ω = √(k/m), où k est la rigidité et m la masse",
+        "ω = k·m",
+        "ω = m/k",
+        "ω = √(m/k)"
+      ],
+      "reponse": "ω = √(k/m), où k est la rigidité et m la masse",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En statique des structures, le théorème de réciprocité de Maxwell stipule que :",
+      "assertions": [
+        "Le déplacement au point i dû à une force en j est égal au déplacement en j dû à la même force en i",
+        "Les réactions d'appui sont symétriques",
+        "Les contraintes sont proportionnelles aux déformations",
+        "L'énergie de déformation est constante quelle que soit la structure"
+      ],
+      "reponse": "Le déplacement au point i dû à une force en j est égal au déplacement en j dû à la même force en i",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le degré d'hyperstaticité d'un portique plan fermé (cadre rectangulaire) est :",
+      "assertions": [
+        "3 (structure triplement hyperstatique)",
+        "0 (structure isostatique)",
+        "1",
+        "6"
+      ],
+      "reponse": "3 (structure triplement hyperstatique)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La méthode des éléments finis (MEF) en statique consiste à :",
+      "assertions": [
+        "Discrétiser la structure en éléments finis, puis assembler une matrice de rigidité globale K et résoudre le système K·u = F",
+        "Appliquer la méthode des coupes à chaque élément",
+        "Calculer analytiquement les contraintes en tout point",
+        "Utiliser des séries de Fourier pour représenter les charges"
+      ],
+      "reponse": "Discrétiser la structure en éléments finis, puis assembler une matrice de rigidité globale K et résoudre le système K·u = F",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une structure spatiale en treillis 3D à n nœuds, m barres et r réactions, la condition d'isostaticité est :",
+      "assertions": [
+        "m + r = 3·n",
+        "m + r = 2·n",
+        "m + r = 6·n",
+        "m + r = n"
+      ],
+      "reponse": "m + r = 3·n",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La méthode des trois moments (Clapeyron) permet de calculer les moments fléchissants aux appuis d'une poutre continue en reliant :",
+      "assertions": [
+        "Les moments aux 3 appuis successifs, les portées et les charges des travées",
+        "Les réactions d'appui uniquement",
+        "Les déformations des travées indépendamment",
+        "Les efforts normaux dans la structure"
+      ],
+      "reponse": "Les moments aux 3 appuis successifs, les portées et les charges des travées",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel est le degré d'hyperstaticité d'un portique plan rectangulaire avec 2 encastrements à la base ?",
+      "assertions": [
+        "h = 3 (triplement hyperstatique)",
+        "h = 0 (isostatique)",
+        "h = 6",
+        "h = 1"
+      ],
+      "reponse": "h = 3 (triplement hyperstatique)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En statique spatiale (3D), combien d'équations d'équilibre peut-on écrire pour un corps rigide ?",
+      "assertions": [
+        "6 équations (3 en force, 3 en moment)",
+        "3 équations",
+        "9 équations",
+        "2 équations"
+      ],
+      "reponse": "6 équations (3 en force, 3 en moment)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la différence entre la méthode des forces et la méthode des déplacements pour les structures hyperstatiques ?",
+      "assertions": [
+        "Forces : les efforts redondants sont inconnues ; Déplacements : les déplacements nodaux sont inconnues",
+        "Forces est plus précise que Déplacements",
+        "Les deux méthodes sont identiques",
+        "Déplacements s'applique uniquement aux treillis"
+      ],
+      "reponse": "Forces : les efforts redondants sont inconnues ; Déplacements : les déplacements nodaux sont inconnues",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour la ligne d'influence du moment fléchissant en une section S d'une poutre simplement appuyée (portée L), quelle est sa forme ?",
+      "assertions": [
+        "Triangulaire avec un maximum à la section S",
+        "Rectangulaire uniforme",
+        "Parabolique",
+        "Nulle sur toute la portée"
+      ],
+      "reponse": "Triangulaire avec un maximum à la section S",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un cadre hyperstatique de degré 3, la méthode des forces nécessite de choisir 3 inconnues redondantes. Une méthode courante est d'utiliser :",
+      "assertions": [
+        "Les efforts aux encastrements (moments et force horizontale) comme inconnues",
+        "Les déplacements verticaux des nœuds",
+        "Les réactions verticales",
+        "Les déformations des barres"
+      ],
+      "reponse": "Les efforts aux encastrements (moments et force horizontale) comme inconnues",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la fréquence propre d'un portique simple (masse M au niveau du plancher, rigidité latérale k) ?",
+      "assertions": [
+        "f = (1/2π)·√(k/M)",
+        "f = 2π·√(M/k)",
+        "f = √(k/M)",
+        "f = k/M"
+      ],
+      "reponse": "f = (1/2π)·√(k/M)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Dans la méthode des déplacements (rigidité), le vecteur des forces nodales F est relié aux déplacements nodaux u par :",
+      "assertions": [
+        "F = K·u, où K est la matrice de rigidité globale",
+        "F = u/K",
+        "F = K+u",
+        "u = F·K"
+      ],
+      "reponse": "F = K·u, où K est la matrice de rigidité globale",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre continue à 2 travées (L1=L2=5m, charge q=10kN/m), la réaction à l'appui central B par la méthode des trois moments est :",
+      "assertions": [
+        "R_B = 10·q·L/8 = 62,5 kN (réaction centrale majorée)",
+        "R_B = q·L/2 = 25 kN",
+        "R_B = q·L = 50 kN",
+        "R_B = q·L²/8 = 31,25 kN"
+      ],
+      "reponse": "R_B = 10·q·L/8 = 62,5 kN (réaction centrale majorée)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Dans la théorie des poutres continues, le théorème de réciprocité de Betti énonce que :",
+      "assertions": [
+        "Le travail de F1 sur le déplacement dû à F2 est égal au travail de F2 sur le déplacement dû à F1",
+        "Les réactions sont proportionnelles aux charges",
+        "Les déformations sont toujours symétriques",
+        "Les moments sont inversement proportionnels aux portées"
+      ],
+      "reponse": "Le travail de F1 sur le déplacement dû à F2 est égal au travail de F2 sur le déplacement dû à F1",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En 3D, quel type de liaison bloque les 3 translations mais permet les 3 rotations ?",
+      "assertions": [
+        "La rotule sphérique (ball-and-socket joint)",
+        "L'encastrement",
+        "La glissière",
+        "Le pivot glissant"
+      ],
+      "reponse": "La rotule sphérique (ball-and-socket joint)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour analyser un portique en béton armé par la méthode des éléments finis, chaque élément de poutre a combien de degrés de liberté aux nœuds en 2D ?",
+      "assertions": [
+        "6 DDL total (3 par nœud : u, v, θ)",
+        "4 DDL total",
+        "2 DDL par nœud",
+        "12 DDL total"
+      ],
+      "reponse": "6 DDL total (3 par nœud : u, v, θ)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La méthode de Hardy-Cross distribue les moments non équilibrés aux nœuds selon des facteurs proportionnels à :",
+      "assertions": [
+        "La rigidité relative EI/L de chaque barre",
+        "La longueur des barres uniquement",
+        "La charge appliquée",
+        "Le moment d'inertie seul"
+      ],
+      "reponse": "La rigidité relative EI/L de chaque barre",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une structure hyperstatique, le principe de superposition s'applique uniquement si :",
+      "assertions": [
+        "La structure se comporte de façon linéaire-élastique",
+        "Les charges sont statiques",
+        "Les déformations sont grandes",
+        "La structure est en béton armé"
+      ],
+      "reponse": "La structure se comporte de façon linéaire-élastique",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Dans la méthode des forces pour une poutre continue sur 3 appuis (h=1), les coefficients de flexibilité f_ij représentent :",
+      "assertions": [
+        "Le déplacement en i dû à une force unitaire en j (sur la structure isostatique de base)",
+        "La rigidité de la structure en i",
+        "La réaction en i pour une charge en j",
+        "L'énergie de déformation due à une charge unitaire"
+      ],
+      "reponse": "Le déplacement en i dû à une force unitaire en j (sur la structure isostatique de base)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La réaction centrale R_B d'une poutre continue 2 travées (L1=L2=6m, q=10kN/m) par la méthode des trois moments est R_B = 5·q·L/4 pour travées égales :",
+      "assertions": [
+        "R_B = 10·q·L/8 = 10·10·6/8 = 75 kN",
+        "R_B = q·L = 60 kN",
+        "R_B = 2·q·L/2 = 60 kN",
+        "R_B = q·L/2 = 30 kN"
+      ],
+      "reponse": "R_B = 10·q·L/8 = 10·10·6/8 = 75 kN",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le facteur de distribution μ_i dans la méthode de Hardy-Cross pour un nœud avec 3 barres de rigidités k1=2, k2=3, k3=5 pour la barre 2 est :",
+      "assertions": [
+        "μ_2 = k2/(k1+k2+k3) = 3/10 = 0,30",
+        "μ_2 = k2/k1 = 1,5",
+        "μ_2 = 1/3",
+        "μ_2 = k2·(k1+k3) = 15"
+      ],
+      "reponse": "μ_2 = k2/(k1+k2+k3) = 3/10 = 0,30",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une structure spatiale (3D) à treillis, avec n=20 nœuds et m=50 barres, le nombre de réactions pour l'isostaticité est :",
+      "assertions": [
+        "r = 3·n - m = 60 - 50 = 10",
+        "r = 6",
+        "r = 3",
+        "r = 20"
+      ],
+      "reponse": "r = 3·n - m = 60 - 50 = 10",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre continue hyperstatiuqe, le principe d'analyse limite permet de calculer une charge ultime en cherchant le mécanisme de ruine avec un nombre de rotules plastiques = degré d'hyperstaticité + 1.",
+      "assertions": [
+        "Vrai (le nombre de rotules = h+1 pour transformer la structure en mécanisme)",
+        "Faux (il faut h rotules)",
+        "Vrai (il faut exactement h+2 rotules)",
+        "Faux (la structure ne peut pas former de mécanisme)"
+      ],
+      "reponse": "Vrai (le nombre de rotules = h+1 pour transformer la structure en mécanisme)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un portique rectangulaire (h=4m, l=6m) avec encastrements, sous charge latérale H=30kN (analyse élastique), les moments aux encastrements valent environ :",
+      "assertions": [
+        "M ≈ H·h/2 = 60 kN·m (répartis entre les 2 colonnes, chacune reprend H/2)",
+        "M = H·h = 120 kN·m par colonne",
+        "M = H·l = 180 kN·m",
+        "M = H/(h+l) = 3 kN·m"
+      ],
+      "reponse": "M ≈ H·h/2 = 60 kN·m (répartis entre les 2 colonnes, chacune reprend H/2)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La ligne d'influence de la réaction d'appui R_A d'une poutre simplement appuyée (portée L) est :",
+      "assertions": [
+        "Une droite variant de 1 en A à 0 en B (lorsque la charge unitaire passe de A à B)",
+        "Une constante égale à 0,5",
+        "Une parabole",
+        "Nulle sur toute la portée"
+      ],
+      "reponse": "Une droite variant de 1 en A à 0 en B (lorsque la charge unitaire passe de A à B)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une structure spatiale 3D, un encastrement complet bloque combien de degrés de liberté ?",
+      "assertions": [
+        "6 (3 translations + 3 rotations)",
+        "3",
+        "4",
+        "2"
+      ],
+      "reponse": "6 (3 translations + 3 rotations)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En analyse des portiques par la méthode des déplacements, la matrice de rigidité d'une barre de poutre sans translation de nœud (barre sans déplacement latéral relatif) est de dimension :",
+      "assertions": [
+        "4×4 (2 rotations et 2 moments par barre, en 2D)",
+        "2×2",
+        "6×6",
+        "3×3"
+      ],
+      "reponse": "4×4 (2 rotations et 2 moments par barre, en 2D)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre continue à 3 appuis (A-B-C, L_AB=L_BC=5m, P=50kN au milieu de AB), la méthode des trois moments de Clapeyron donne le moment en B. Quelle est la forme de l'équation de Clapeyron ?",
+      "assertions": [
+        "M_A·L1 + 2·M_B·(L1+L2) + M_C·L2 = -6·A1·a1/L1 - 6·A2·b2/L2 où A1, A2 sont des termes liés aux charges",
+        "M_B = P·L/8",
+        "M_B = R_B·L/4",
+        "M_B = P·L/4 uniquement pour les charges centrées"
+      ],
+      "reponse": "M_A·L1 + 2·M_B·(L1+L2) + M_C·L2 = -6·A1·a1/L1 - 6·A2·b2/L2 où A1, A2 sont des termes liés aux charges",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est l'utilité de la ligne d'influence dans la conception d'un pont routier ?",
+      "assertions": [
+        "Déterminer la position des charges mobiles (convoi) qui maximise l'effet en une section critique",
+        "Calculer le moment d'inertie de la section",
+        "Vérifier la résistance des matériaux",
+        "Calculer les efforts sismiques"
+      ],
+      "reponse": "Déterminer la position des charges mobiles (convoi) qui maximise l'effet en une section critique",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Dans la méthode des déplacements, la rigidité d'une barre de longueur L (EI constant) en flexion est caractérisée par la matrice de rigidité. Le terme diagonal K_ii (moment dû à la rotation unitaire au nœud i sans translation) vaut :",
+      "assertions": [
+        "K_ii = 4EI/L",
+        "K_ii = 2EI/L",
+        "K_ii = 6EI/L²",
+        "K_ii = 12EI/L³"
+      ],
+      "reponse": "K_ii = 4EI/L",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une poutre continue à 2 travées inégales (L1=4m, L2=6m, q=10kN/m sur les 2 travées), le moment en B par la méthode des 3 moments (appuis A et C à moment nul) vaut :",
+      "assertions": [
+        "M_B·(L1+L2)/2 = -[q·L1²/8 + q·L2²/8] → M_B = -q(L1²+L2²)/(8·(L1+L2)/2) ≈ -24,4 kN·m",
+        "M_B = -q·L²/8 = -10·25/8 = -31,25 kN·m",
+        "M_B = 0",
+        "M_B = -q·(L1+L2)²/8 = -62,5 kN·m"
+      ],
+      "reponse": "M_B·(L1+L2)/2 = -[q·L1²/8 + q·L2²/8] → M_B = -q(L1²+L2²)/(8·(L1+L2)/2) ≈ -24,4 kN·m",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour une structure avec 3 barres se rejoignant en un nœud libre (K), les rigidités étant k1=EI1/L1, k2, k3, le facteur de transport (carry-over) dans Hardy-Cross entre nœuds adjacents est :",
+      "assertions": [
+        "0,5 pour une barre à nœuds encastrés aux deux bouts",
+        "1,0 pour tout type de barre",
+        "0,0 pour une barre articulée à l'autre bout",
+        "0,33 toujours"
+      ],
+      "reponse": "0,5 pour une barre à nœuds encastrés aux deux bouts",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En analyse dynamique linéaire d'une structure à n degrés de liberté, le nombre de fréquences propres est :",
+      "assertions": [
+        "n (autant que de degrés de liberté)",
+        "1 (la fréquence fondamentale uniquement)",
+        "n/2",
+        "Infini"
+      ],
+      "reponse": "n (autant que de degrés de liberté)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour vérifier qu'une structure 3D est bien hyperstatique, on utilise le critère :",
+      "assertions": [
+        "h = 6·n_corps - (nb liaisons×nb degrés bloqués) pour les corps rigides",
+        "h = 3·n - (m+r)",
+        "h = n - m",
+        "h = m - n"
+      ],
+      "reponse": "h = 6·n_corps - (nb liaisons×nb degrés bloqués) pour les corps rigides",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le théorème de Castigliano (2ème) permet de calculer le déplacement u_i dans la direction d'une force F_i par :",
+      "assertions": [
+        "u_i = ∂U/∂F_i (dérivée partielle de l'énergie de déformation par rapport à F_i)",
+        "u_i = U/F_i",
+        "u_i = U·F_i",
+        "u_i = ∂F_i/∂U"
+      ],
+      "reponse": "u_i = ∂U/∂F_i (dérivée partielle de l'énergie de déformation par rapport à F_i)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Pour un portique plan avec traverse horizontale (EI_traverse >> EI_colonne), les colonnes se déforment comme un cadre rigide. La rigidité latérale est approximativement :",
+      "assertions": [
+        "K_lat = 24EI_col/h³ (pour 2 colonnes encastrées, traverse rigide)",
+        "K_lat = 3EI_col/h³",
+        "K_lat = EI_col/h",
+        "K_lat = 12EI_col/h³"
+      ],
+      "reponse": "K_lat = 24EI_col/h³ (pour 2 colonnes encastrées, traverse rigide)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En béton armé, la vérification de la flèche d'une poutre se fait à l'état limite de service (ELS), en considérant les propriétés de la section fissurée.",
+      "assertions": [
+        "Vrai (on utilise le moment d'inertie de la section fissurée ou équivalente)",
+        "Faux (on utilise toujours la section brute)",
+        "Vrai uniquement pour les poutres continues",
+        "Faux (la flèche n'est pas vérifiée en ELS)"
+      ],
+      "reponse": "Vrai (on utilise le moment d'inertie de la section fissurée ou équivalente)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le degré d'hyperstaticité d'une structure est la différence entre le nombre d'inconnues et le nombre d'équations d'équilibre disponibles.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "En statique spatiale (3D), l'équilibre complet d'un corps rigide nécessite 6 équations : ΣFx=0, ΣFy=0, ΣFz=0, ΣMx=0, ΣMy=0, ΣMz=0.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Une ligne d'influence pour l'effort en une section d'une poutre représente la variation de cet effort lorsqu'une charge unitaire se déplace sur la poutre.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Les lignes d'influence sont utilisées pour positionner les charges mobiles de façon à maximiser l'effet en un point donné.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "En dynamique des structures, la fréquence propre d'une structure dépend de sa masse et de sa rigidité.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le moment d'inertie de masse (de rotation) d'une sphère pleine homogène de masse M et rayon R est I = 2MR²/5.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "En statique spatiale, une rotule (articulation sphérique) empêche les 3 translations mais permet les 3 rotations.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La méthode des déplacements (rigidité) est duale de la méthode des forces : elle prend les déplacements comme inconnues primaires.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Pour une poutre continue à 3 travées (hyperstatique de degré 2), la méthode des trois moments de Clapeyron permet de calculer les moments aux appuis intermédiaires.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le principe des travaux virtuels stipule que pour un système en équilibre, le travail virtuel des forces extérieures pour tout déplacement virtuel compatible est nul.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    }
+  ]
+}

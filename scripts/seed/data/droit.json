@@ -1,0 +1,1409 @@
+{
+  "categorie": {
+    "designation": "Droit",
+    "description": "Droit public, privé et constitutionnel — adapté au contexte congolais",
+    "slug": "droit"
+  },
+  "questions": [
+    {
+      "enonce": "Qu'est-ce qu'une loi au sens formel en RDC ?",
+      "assertions": ["Un texte voté par le Parlement et promulgué par le Président de la République", "Un texte réglementaire signé par le Premier Ministre", "Une décision judiciaire rendue par la Cour Suprême", "Une instruction administrative adressée aux agents de l'État"],
+      "reponse": "Un texte voté par le Parlement et promulgué par le Président de la République",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Dans la hiérarchie des normes en RDC, quel texte occupe le sommet ?",
+      "assertions": ["La Constitution du 18 février 2006", "La loi organique du Parlement", "Le règlement intérieur du Gouvernement", "Le Code Civil congolais"],
+      "reponse": "La Constitution du 18 février 2006",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un décret en droit congolais ?",
+      "assertions": ["Un acte réglementaire pris par le Président de la République ou le Premier Ministre", "Une loi adoptée en urgence par l'Assemblée Nationale", "Une décision de justice du Tribunal de Grande Instance", "Un arrêté ministériel signé par plusieurs ministres"],
+      "reponse": "Un acte réglementaire pris par le Président de la République ou le Premier Ministre",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En quelle année la Constitution de la RDC (3e République) a-t-elle été promulguée ?",
+      "assertions": ["2006", "1997", "2001", "1990"],
+      "reponse": "2006",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'une ordonnance en droit congolais ?",
+      "assertions": ["Un acte pris par le Président de la République dans les matières qui lui sont réservées", "Un texte adopté par les deux chambres du Parlement réunies", "Une décision administrative du Gouverneur de province", "Un jugement rendu par un tribunal administratif"],
+      "reponse": "Un acte pris par le Président de la République dans les matières qui lui sont réservées",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qui promulgue les lois en République Démocratique du Congo ?",
+      "assertions": ["Le Président de la République", "Le Président de l'Assemblée Nationale", "Le Premier Ministre", "Le Président du Sénat"],
+      "reponse": "Le Président de la République",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle République correspond à la Constitution congolaise de 2006 ?",
+      "assertions": ["La 3e République", "La 2e République", "La 4e République", "La 1ère République"],
+      "reponse": "La 3e République",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le droit constitutionnel ?",
+      "assertions": ["La branche du droit qui étudie les règles relatives à l'organisation et au fonctionnement de l'État", "L'ensemble des règles qui régissent les rapports entre particuliers", "Le droit qui gouverne les relations commerciales entre entreprises", "La discipline juridique relative aux infractions pénales"],
+      "reponse": "La branche du droit qui étudie les règles relatives à l'organisation et au fonctionnement de l'État",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'entend-on par droits fondamentaux ?",
+      "assertions": ["Les droits reconnus à toute personne humaine, garantis par la Constitution et les traités internationaux", "Les droits accordés uniquement aux citoyens congolais majeurs", "Les privilèges conférés aux agents de la fonction publique", "Les droits patrimoniaux liés à la propriété foncière"],
+      "reponse": "Les droits reconnus à toute personne humaine, garantis par la Constitution et les traités internationaux",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le droit à la vie en droit constitutionnel congolais ?",
+      "assertions": ["Le droit inviolable reconnu à toute personne de ne pas être arbitrairement privée de son existence", "Le droit pour tout citoyen de vivre sur le territoire national", "Le droit à un logement décent garanti par l'État", "Le droit à une alimentation suffisante pour chaque individu"],
+      "reponse": "Le droit inviolable reconnu à toute personne de ne pas être arbitrairement privée de son existence",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la liberté d'expression ?",
+      "assertions": ["Le droit pour toute personne de communiquer librement ses opinions, sous réserve des limites légales", "Le droit exclusif des journalistes à diffuser des informations", "L'autorisation donnée par l'État de publier un journal", "Le monopole de la presse d'État sur l'information officielle"],
+      "reponse": "Le droit pour toute personne de communiquer librement ses opinions, sous réserve des limites légales",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le droit de propriété en droit civil congolais ?",
+      "assertions": ["Le droit d'user, de jouir et de disposer d'une chose de la manière la plus absolue", "Le droit de posséder uniquement des biens meubles", "Le droit de l'État sur toutes les terres du territoire national", "Le droit exclusif accordé aux commerçants sur leurs marchandises"],
+      "reponse": "Le droit d'user, de jouir et de disposer d'une chose de la manière la plus absolue",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un contrat en droit civil ?",
+      "assertions": ["Un accord de volontés entre deux ou plusieurs personnes destiné à créer des obligations juridiques", "Un document administratif signé par un fonctionnaire public", "Une décision unilatérale d'une entreprise envers ses clients", "Un jugement rendu par un tribunal en matière civile"],
+      "reponse": "Un accord de volontés entre deux ou plusieurs personnes destiné à créer des obligations juridiques",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'une obligation juridique ?",
+      "assertions": ["Un lien de droit en vertu duquel une personne est tenue d'accomplir une prestation envers une autre", "Un devoir moral imposé par la société sans sanction légale", "Une instruction administrative sans force exécutoire", "Un engagement volontaire sans conséquence juridique"],
+      "reponse": "Un lien de droit en vertu duquel une personne est tenue d'accomplir une prestation envers une autre",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'une faute civile ?",
+      "assertions": ["Un comportement illicite ou imprudent causant un préjudice à autrui et engageant la responsabilité de son auteur", "Une infraction pénale passible d'une peine de prison", "Un manquement aux obligations religieuses", "Un défaut de paiement d'une taxe administrative"],
+      "reponse": "Un comportement illicite ou imprudent causant un préjudice à autrui et engageant la responsabilité de son auteur",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un dommage en droit civil ?",
+      "assertions": ["Le préjudice subi par une personne, qu'il soit matériel, moral ou corporel", "La sanction pénale prononcée par un juge pénal", "La peine imposée par la loi en cas d'infraction", "Le montant des impôts dû à l'État par un contribuable"],
+      "reponse": "Le préjudice subi par une personne, qu'il soit matériel, moral ou corporel",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'une personne physique en droit ?",
+      "assertions": ["Tout être humain, sujet de droits et d'obligations dès sa naissance", "Uniquement les individus de nationalité congolaise", "Une entité abstraite comme une entreprise ou une association", "Les agents de l'État dans l'exercice de leurs fonctions"],
+      "reponse": "Tout être humain, sujet de droits et d'obligations dès sa naissance",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'une personne morale en droit ?",
+      "assertions": ["Un groupement d'individus ou de biens auquel la loi reconnaît la personnalité juridique (État, société, association)", "Un individu de haute moralité reconnu par la société", "Un citoyen jouissant de tous ses droits civiques", "Un fonctionnaire investi d'une autorité publique"],
+      "reponse": "Un groupement d'individus ou de biens auquel la loi reconnaît la personnalité juridique (État, société, association)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la capacité juridique ?",
+      "assertions": ["L'aptitude d'une personne à être titulaire de droits et à les exercer elle-même", "L'autorisation administrative d'exercer une profession réglementée", "La compétence professionnelle requise pour exercer le droit", "Le diplôme obligatoire pour accéder à la magistrature"],
+      "reponse": "L'aptitude d'une personne à être titulaire de droits et à les exercer elle-même",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "À quel âge la capacité juridique pleine est-elle acquise en RDC selon le droit de la famille ?",
+      "assertions": ["18 ans", "21 ans", "16 ans", "25 ans"],
+      "reponse": "18 ans",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qui est le chef de l'État en République Démocratique du Congo ?",
+      "assertions": ["Le Président de la République, élu au suffrage universel direct", "Le Premier Ministre, chef du Gouvernement", "Le Président de l'Assemblée Nationale", "Le Président du Sénat en cas de vacance"],
+      "reponse": "Le Président de la République, élu au suffrage universel direct",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "De quelles chambres est composé le Parlement congolais ?",
+      "assertions": ["L'Assemblée Nationale et le Sénat", "L'Assemblée Nationale et le Conseil d'État", "Le Sénat et la Cour Constitutionnelle", "L'Assemblée Nationale et le Gouvernement"],
+      "reponse": "L'Assemblée Nationale et le Sénat",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel est le rôle principal de la Cour Constitutionnelle en RDC ?",
+      "assertions": ["Contrôler la constitutionnalité des lois et trancher les litiges électoraux", "Juger les crimes et délits commis sur le territoire national", "Superviser les activités des tribunaux de commerce", "Administrer la justice en matière administrative"],
+      "reponse": "Contrôler la constitutionnalité des lois et trancher les litiges électoraux",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'une infraction pénale ?",
+      "assertions": ["Un acte ou une omission prévu et puni par la loi pénale", "Un simple manquement aux règles de politesse sociale", "Une décision administrative défavorable à un administré", "Un litige commercial entre deux entreprises"],
+      "reponse": "Un acte ou une omission prévu et puni par la loi pénale",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la classification des infractions pénales par ordre de gravité croissante ?",
+      "assertions": ["Contravention, délit, crime", "Crime, délit, contravention", "Délit, crime, contravention", "Contravention, crime, délit"],
+      "reponse": "Contravention, délit, crime",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un crime en droit pénal congolais ?",
+      "assertions": ["L'infraction la plus grave, punie d'une peine d'emprisonnement de plus de cinq ans", "Toute infraction commise avec intention de nuire à autrui", "Un acte illégal entraînant seulement une amende", "Un comportement contraire aux mœurs sans sanction légale"],
+      "reponse": "L'infraction la plus grave, punie d'une peine d'emprisonnement de plus de cinq ans",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'une contravention en droit pénal ?",
+      "assertions": ["L'infraction la moins grave, sanctionnée par une peine légère (amende ou emprisonnement court)", "L'infraction la plus grave du droit pénal", "Un acte civil causant un préjudice à autrui", "Une violation de la Constitution nationale"],
+      "reponse": "L'infraction la moins grave, sanctionnée par une peine légère (amende ou emprisonnement court)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le droit public ?",
+      "assertions": ["La branche du droit qui régit les rapports entre l'État et les particuliers, ainsi que l'organisation de l'État", "L'ensemble des règles accessibles au public sans restriction", "Le droit applicable uniquement dans les lieux publics", "Les normes juridiques adoptées en séance publique du Parlement"],
+      "reponse": "La branche du droit qui régit les rapports entre l'État et les particuliers, ainsi que l'organisation de l'État",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le droit privé ?",
+      "assertions": ["La branche du droit qui régit les rapports entre particuliers (droit civil, commercial, du travail)", "Le droit réservé aux affaires confidentielles de l'État", "L'ensemble des lois secrètes non publiées au Journal officiel", "Le droit applicable aux personnes de nationalité étrangère"],
+      "reponse": "La branche du droit qui régit les rapports entre particuliers (droit civil, commercial, du travail)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la jurisprudence comme source du droit ?",
+      "assertions": ["L'ensemble des décisions rendues par les juridictions qui créent une règle de droit par leur répétition", "Le recueil des lois et règlements publiés par le gouvernement", "L'opinion des professeurs de droit sur l'interprétation des textes", "Les coutumes ancestrales reconnues par les tribunaux coutumiers"],
+      "reponse": "L'ensemble des décisions rendues par les juridictions qui créent une règle de droit par leur répétition",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la coutume comme source du droit ?",
+      "assertions": ["Une pratique ancienne, constante et répétée considérée comme obligatoire par ceux qui la suivent", "Un décret présidentiel pris en période de crise nationale", "Une circulaire ministérielle adressée aux services administratifs", "Une clause insérée dans un contrat international"],
+      "reponse": "Une pratique ancienne, constante et répétée considérée comme obligatoire par ceux qui la suivent",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le droit objectif ?",
+      "assertions": ["L'ensemble des règles de droit en vigueur dans une société donnée", "L'évaluation impartiale d'un litige par un juge neutre", "Les droits subjectifs reconnus à un individu particulier", "Le droit applicable uniquement aux étrangers résidant en RDC"],
+      "reponse": "L'ensemble des règles de droit en vigueur dans une société donnée",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un droit subjectif ?",
+      "assertions": ["Une prérogative individuelle reconnue par le droit objectif à une personne déterminée", "Une règle de droit applicable à toute la société sans exception", "La liberté totale d'agir sans contrainte légale", "Un privilège accordé uniquement aux fonctionnaires de l'État"],
+      "reponse": "Une prérogative individuelle reconnue par le droit objectif à une personne déterminée",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la doctrine comme source du droit ?",
+      "assertions": ["L'ensemble des travaux écrits des juristes (professeurs, avocats, magistrats) analysant et interprétant le droit", "Les instructions données par le Ministère de la Justice aux tribunaux", "Les décrets pris par le Premier Ministre en matière juridique", "Les jugements définitifs rendus par la Cour de Cassation"],
+      "reponse": "L'ensemble des travaux écrits des juristes (professeurs, avocats, magistrats) analysant et interprétant le droit",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'état civil en droit congolais ?",
+      "assertions": ["Le service public chargé de constater et d'enregistrer les actes relatifs à la situation des personnes (naissance, mariage, décès)", "Le registre des propriétés foncières de l'État", "Le casier judiciaire des personnes condamnées", "Le répertoire des entreprises immatriculées au RCCM"],
+      "reponse": "Le service public chargé de constater et d'enregistrer les actes relatifs à la situation des personnes (naissance, mariage, décès)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le domicile en droit civil ?",
+      "assertions": ["Le lieu où une personne a son principal établissement, servant de référence pour les actes juridiques", "Tout endroit où une personne séjourne temporairement", "L'adresse professionnelle d'un commerçant immatriculé", "Le lieu de naissance d'une personne physique"],
+      "reponse": "Le lieu où une personne a son principal établissement, servant de référence pour les actes juridiques",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un acte juridique ?",
+      "assertions": ["Une manifestation de volonté destinée à produire des effets de droit (contrat, testament, donation)", "Un fait qui se produit indépendamment de toute volonté humaine", "Un document administratif sans portée juridique", "Une décision judiciaire rendue en matière pénale"],
+      "reponse": "Une manifestation de volonté destinée à produire des effets de droit (contrat, testament, donation)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un fait juridique ?",
+      "assertions": ["Un événement qui produit des effets de droit sans être voulu comme tel (accident, décès, naissance)", "Un document signé volontairement par les parties à un contrat", "Un acte administratif pris par un ministre", "Un texte législatif adopté par le Parlement"],
+      "reponse": "Un événement qui produit des effets de droit sans être voulu comme tel (accident, décès, naissance)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le droit administratif ?",
+      "assertions": ["La branche du droit public qui régit l'organisation et l'activité de l'administration publique", "Le droit qui s'applique aux administrateurs de sociétés privées", "L'ensemble des procédures civiles devant les tribunaux ordinaires", "Le droit relatif à la gestion comptable des entreprises"],
+      "reponse": "La branche du droit public qui régit l'organisation et l'activité de l'administration publique",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le droit du travail en RDC ?",
+      "assertions": ["L'ensemble des règles juridiques régissant les relations entre employeurs et salariés, codifiées dans le Code du travail", "Le droit applicable uniquement aux travailleurs de la fonction publique", "Les règles relatives à l'organisation des syndicats professionnels", "Le droit qui régit les contrats commerciaux entre entreprises"],
+      "reponse": "L'ensemble des règles juridiques régissant les relations entre employeurs et salariés, codifiées dans le Code du travail",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La Constitution de la RDC a été adoptée par référendum le 18 décembre 2005 et promulguée le 18 février 2006.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Un décret présidentiel a une valeur juridique supérieure à une loi votée par le Parlement en RDC.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le Parlement congolais est composé de deux chambres : l'Assemblée Nationale et le Sénat.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Une contravention est l'infraction la plus grave dans la classification des infractions pénales en RDC.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le droit civil fait partie de la branche du droit privé.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La Cour Constitutionnelle est le gardien de la Constitution en RDC.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Une personne morale peut être titulaire de droits et d'obligations au même titre qu'une personne physique.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La loi est la seule et unique source formelle du droit en République Démocratique du Congo.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le droit pénal fait partie de la branche du droit public.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Un contrat peut être valablement conclu oralement en droit civil congolais, sauf exigence de forme écrite prévue par la loi.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Quelles sont les conditions essentielles de validité d'un contrat en droit civil congolais ?",
+      "assertions": ["Consentement, capacité, objet certain et cause licite", "Signature, témoins, notaire et enregistrement", "Offre, contre-offre, délai de réflexion et confirmation", "Acceptation écrite, paiement d'avance et livraison"],
+      "reponse": "Consentement, capacité, objet certain et cause licite",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le dol comme vice du consentement en droit contractuel ?",
+      "assertions": ["Des manœuvres frauduleuses utilisées par l'une des parties pour tromper l'autre et la pousser à contracter", "Une erreur spontanée commise par l'une des parties sur la nature du contrat", "Une contrainte physique ou morale exercée pour obtenir le consentement", "Un désaccord entre les parties sur le prix du contrat"],
+      "reponse": "Des manœuvres frauduleuses utilisées par l'une des parties pour tromper l'autre et la pousser à contracter",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la violence comme vice du consentement ?",
+      "assertions": ["Une contrainte physique ou psychologique exercée sur une personne pour la forcer à contracter", "Un acte délibéré visant à tromper le cocontractant sur les qualités du bien vendu", "Une erreur sur la substance de la chose objet du contrat", "Un déséquilibre manifeste entre les prestations des parties"],
+      "reponse": "Une contrainte physique ou psychologique exercée sur une personne pour la forcer à contracter",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la différence entre la nullité absolue et la nullité relative d'un contrat ?",
+      "assertions": ["La nullité absolue protège l'ordre public et peut être invoquée par tout intéressé ; la nullité relative protège un intérêt privé et ne peut être invoquée que par la partie protégée", "La nullité absolue ne peut être prononcée que par la Cour Suprême ; la nullité relative par les tribunaux inférieurs", "La nullité absolue anéantit le contrat pour l'avenir ; la nullité relative l'anéantit rétroactivement", "La nullité absolue est définitive ; la nullité relative peut être confirmée par les parties"],
+      "reponse": "La nullité absolue protège l'ordre public et peut être invoquée par tout intéressé ; la nullité relative protège un intérêt privé et ne peut être invoquée que par la partie protégée",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelles sont les conditions légales du mariage en RDC selon le Code de la famille ?",
+      "assertions": ["Consentement des époux, âge requis (18 ans pour l'homme, 15 ans pour la femme avec dispense) et absence d'empêchements", "Consentement des parents, cérémonie religieuse et dot versée à la famille", "Accord de la famille élargie, publication des bans pendant 30 jours et approbation du chef de quartier", "Contrat notarié, témoins officiels et enregistrement à la mairie dans les 48 heures"],
+      "reponse": "Consentement des époux, âge requis (18 ans pour l'homme, 15 ans pour la femme avec dispense) et absence d'empêchements",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En droit congolais, le régime matrimonial légal applicable à défaut de contrat est :",
+      "assertions": ["La communauté des biens réduite aux acquêts", "La séparation de biens", "La communauté universelle de tous les biens", "La participation aux acquêts"],
+      "reponse": "La communauté des biens réduite aux acquêts",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelles sont les conditions de la responsabilité civile délictuelle ?",
+      "assertions": ["Une faute, un dommage et un lien de causalité entre la faute et le dommage", "Un contrat valable, une inexécution et une mise en demeure", "Une décision judiciaire, un préjudice et une voie d'exécution", "Une loi, un règlement et un acte administratif"],
+      "reponse": "Une faute, un dommage et un lien de causalité entre la faute et le dommage",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la différence fondamentale entre la responsabilité civile contractuelle et délictuelle ?",
+      "assertions": ["La responsabilité contractuelle suppose l'existence d'un contrat violé ; la responsabilité délictuelle résulte d'un fait dommageable indépendant de tout contrat", "La responsabilité contractuelle relève du droit pénal ; la responsabilité délictuelle relève du droit civil", "La responsabilité contractuelle ne nécessite pas de faute ; la responsabilité délictuelle en exige toujours une", "La responsabilité contractuelle est appréciée par les tribunaux administratifs ; la délictuelle par les tribunaux civils"],
+      "reponse": "La responsabilité contractuelle suppose l'existence d'un contrat violé ; la responsabilité délictuelle résulte d'un fait dommageable indépendant de tout contrat",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle juridiction est compétente en première instance pour les litiges civils ordinaires dépassant le seuil de compétence du tribunal de paix en RDC ?",
+      "assertions": ["Le Tribunal de Grande Instance (TGI)", "La Cour d'Appel", "La Cour de Cassation", "La Cour Constitutionnelle"],
+      "reponse": "Le Tribunal de Grande Instance (TGI)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel est le rôle de la Cour de Cassation en RDC ?",
+      "assertions": ["Vérifier si les juridictions inférieures ont correctement appliqué la loi, sans rejuger les faits", "Rejuger entièrement les affaires pénales en troisième instance", "Contrôler la constitutionnalité des lois adoptées par le Parlement", "Statuer en première instance sur les crimes commis par les hauts dignitaires"],
+      "reponse": "Vérifier si les juridictions inférieures ont correctement appliqué la loi, sans rejuger les faits",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quels sont les éléments constitutifs d'une infraction pénale en droit congolais ?",
+      "assertions": ["L'élément légal (texte de loi), l'élément matériel (acte commis) et l'élément moral (intention ou négligence)", "L'auteur de l'infraction, la victime et le préjudice subi", "La plainte de la victime, l'arrestation et le jugement", "L'acte d'accusation, la défense et le verdict du jury"],
+      "reponse": "L'élément légal (texte de loi), l'élément matériel (acte commis) et l'élément moral (intention ou négligence)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la légitime défense en droit pénal congolais ?",
+      "assertions": ["Un fait justificatif qui supprime l'infraction lorsqu'une personne repousse une agression injuste et actuelle par des moyens proportionnés", "Le droit pour toute personne de se faire justice elle-même sans recourir aux tribunaux", "Une circonstance atténuante réduisant la peine de moitié en cas de violence", "Un motif d'acquittement automatique pour tout acte de violence commis en état d'ivresse"],
+      "reponse": "Un fait justificatif qui supprime l'infraction lorsqu'une personne repousse une agression injuste et actuelle par des moyens proportionnés",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un acte administratif en droit administratif congolais ?",
+      "assertions": ["Une décision unilatérale prise par une autorité administrative dans l'exercice de ses prérogatives de puissance publique", "Un contrat signé entre deux administrations de l'État", "Une décision judiciaire rendue par un tribunal administratif", "Un règlement intérieur adopté par une entreprise publique"],
+      "reponse": "Une décision unilatérale prise par une autorité administrative dans l'exercice de ses prérogatives de puissance publique",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le recours pour excès de pouvoir en droit administratif ?",
+      "assertions": ["Un recours contentieux visant à faire annuler un acte administratif illégal devant le juge administratif", "Un recours hiérarchique adressé au supérieur de l'auteur de l'acte", "Une plainte pénale contre un fonctionnaire pour abus de biens sociaux", "Une demande de réparation financière pour préjudice causé par l'administration"],
+      "reponse": "Un recours contentieux visant à faire annuler un acte administratif illégal devant le juge administratif",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la définition du contrat de travail selon le Code du travail congolais ?",
+      "assertions": ["Une convention par laquelle une personne (travailleur) s'engage à fournir ses services à une autre (employeur) sous sa subordination, moyennant rémunération", "Un accord entre deux entreprises pour la réalisation d'un projet commun", "Une convention collective négociée entre un syndicat et un groupement d'employeurs", "Un contrat de prestations de services entre un professionnel libéral et un client"],
+      "reponse": "Une convention par laquelle une personne (travailleur) s'engage à fournir ses services à une autre (employeur) sous sa subordination, moyennant rémunération",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la différence entre le CDI et le CDD en droit du travail congolais ?",
+      "assertions": ["Le CDI est conclu sans terme fixe et ne peut être rompu que pour motif valable ; le CDD est conclu pour une durée déterminée et prend fin automatiquement à l'échéance", "Le CDI est réservé aux cadres ; le CDD s'applique aux travailleurs manuels", "Le CDI est conclu par écrit obligatoire ; le CDD peut être verbal", "Le CDI relève de la loi nationale ; le CDD est régi par des conventions internationales"],
+      "reponse": "Le CDI est conclu sans terme fixe et ne peut être rompu que pour motif valable ; le CDD est conclu pour une durée déterminée et prend fin automatiquement à l'échéance",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Combien de jours de congé annuel un salarié acquiert-il par mois de service selon le Code du travail congolais ?",
+      "assertions": ["2 jours ouvrables par mois, soit 24 jours par an", "1 jour par mois, soit 12 jours par an", "3 jours ouvrables par mois, soit 36 jours par an", "5 jours par trimestre, soit 20 jours par an"],
+      "reponse": "2 jours ouvrables par mois, soit 24 jours par an",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la prescription extinctive en droit civil ?",
+      "assertions": ["Le mécanisme par lequel une action en justice s'éteint à l'expiration d'un délai fixé par la loi faute d'avoir été exercée", "Le droit d'acquérir la propriété d'un bien par l'usage prolongé", "La sanction automatique d'un contrat en cas de non-exécution", "La nullité d'un acte juridique faute d'avoir respecté une formalité"],
+      "reponse": "Le mécanisme par lequel une action en justice s'éteint à l'expiration d'un délai fixé par la loi faute d'avoir été exercée",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la responsabilité du fait d'autrui en droit civil ?",
+      "assertions": ["La responsabilité d'une personne pour les dommages causés par celles dont elle doit répondre (enfants mineurs, préposés)", "La responsabilité solidaire de tous les membres d'une famille pour les dettes de l'un d'eux", "La responsabilité de l'État pour tous les actes de ses fonctionnaires", "La responsabilité d'un héritier pour les dettes du défunt"],
+      "reponse": "La responsabilité d'une personne pour les dommages causés par celles dont elle doit répondre (enfants mineurs, préposés)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le Ministère Public en droit judiciaire congolais ?",
+      "assertions": ["L'organe chargé de défendre les intérêts de la société, de poursuivre les infractions et de veiller à l'application de la loi pénale", "L'ensemble des avocats inscrits au Barreau de Kinshasa", "Le service administratif du Ministère de la Justice", "La juridiction spécialisée dans les affaires commerciales"],
+      "reponse": "L'organe chargé de défendre les intérêts de la société, de poursuivre les infractions et de veiller à l'application de la loi pénale",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un appel en procédure civile ?",
+      "assertions": ["La voie de recours ordinaire permettant de soumettre le litige à une juridiction supérieure pour un réexamen du fond", "La demande de révision d'un jugement définitif en raison de faits nouveaux", "Le recours formé devant la Cour de Cassation pour violation de la loi", "La demande d'exequatur d'un jugement étranger"],
+      "reponse": "La voie de recours ordinaire permettant de soumettre le litige à une juridiction supérieure pour un réexamen du fond",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le mariage en RDC exige le consentement libre et éclairé des deux époux.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La nullité relative d'un contrat peut être invoquée par n'importe quelle personne intéressée.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La Cour de Cassation rejuge le fond des affaires portées devant elle.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La légitime défense est une cause de justification qui supprime le caractère infractionnel de l'acte en droit pénal congolais.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Un employeur peut rompre un CDI sans motif valable en RDC.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "En droit congolais, l'appel est en principe suspensif d'exécution du jugement attaqué.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La responsabilité civile contractuelle requiert l'existence d'un lien contractuel préalable entre les parties.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le droit de grève est reconnu et garanti par la Constitution congolaise de 2006.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le dol est un vice du consentement qui entraîne la nullité relative du contrat.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Un acte administratif illégal est automatiquement nul de plein droit dès qu'il est pris.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Monsieur Kalala signe un contrat de vente d'une maison sous l'effet d'une grave erreur sur la superficie réelle du bien. Quelle action peut-il exercer ?",
+      "assertions": ["Une action en nullité relative pour vice du consentement (erreur sur la substance)", "Une action en nullité absolue pour cause illicite", "Une action en résolution du contrat pour inexécution", "Une action en responsabilité délictuelle contre le vendeur"],
+      "reponse": "Une action en nullité relative pour vice du consentement (erreur sur la substance)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Un commerçant utilise de faux documents pour vendre un véhicule volé à un acheteur de bonne foi. Quelle infraction le vendeur a-t-il commise ?",
+      "assertions": ["Escroquerie et recel de vol", "Simple contravention pour fraude commerciale", "Abus de confiance sans circonstances aggravantes", "Faux témoignage devant un tribunal"],
+      "reponse": "Escroquerie et recel de vol",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel est le délai de prescription ordinaire pour les actions civiles personnelles en RDC selon le Code civil ?",
+      "assertions": ["30 ans à compter du jour où le droit peut être exercé", "10 ans à compter de la connaissance du préjudice", "5 ans pour toutes les actions civiles", "1 an pour les actions en responsabilité délictuelle"],
+      "reponse": "30 ans à compter du jour où le droit peut être exercé",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel est le délai de prescription de l'action publique pour un crime en droit pénal congolais ?",
+      "assertions": ["10 ans à compter du jour de la commission de l'infraction", "5 ans", "30 ans", "3 ans"],
+      "reponse": "10 ans à compter du jour de la commission de l'infraction",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Selon le droit foncier congolais, qui est le propriétaire du sol en RDC ?",
+      "assertions": ["L'État congolais, le sol étant sa propriété inaliénable et imprescriptible", "Les particuliers qui l'occupent depuis plus de 20 ans", "Les communautés locales selon la coutume ancestrale", "L'État et les particuliers selon un régime de copropriété"],
+      "reponse": "L'État congolais, le sol étant sa propriété inaliénable et imprescriptible",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'une concession foncière en droit congolais ?",
+      "assertions": ["Un contrat par lequel l'État accorde à un particulier le droit d'exploiter ou d'occuper une terre pour une durée déterminée", "La vente définitive d'une parcelle de terrain par l'État à un citoyen", "Le droit coutumier d'une communauté sur ses terres ancestrales", "L'attribution gratuite de terres aux anciens combattants de la nation"],
+      "reponse": "Un contrat par lequel l'État accorde à un particulier le droit d'exploiter ou d'occuper une terre pour une durée déterminée",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "À quel âge l'enfant peut-il être entendu dans une procédure judiciaire le concernant en RDC, selon la Convention des droits de l'enfant ?",
+      "assertions": ["À tout âge dès lors qu'il est capable de discernement", "À partir de 15 ans révolus uniquement", "À partir de 18 ans (majorité légale)", "À partir de 10 ans et uniquement en matière civile"],
+      "reponse": "À tout âge dès lors qu'il est capable de discernement",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'OHADA ?",
+      "assertions": ["L'Organisation pour l'Harmonisation en Afrique du Droit des Affaires, regroupant des États africains autour d'un droit des affaires unifié", "L'Organisation des Hauts Administrateurs et Dirigeants d'Afrique", "Un tribunal arbitral international basé à Abidjan", "Une association de juristes africains francophones"],
+      "reponse": "L'Organisation pour l'Harmonisation en Afrique du Droit des Affaires, regroupant des États africains autour d'un droit des affaires unifié",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La RDC est-elle membre de l'OHADA et depuis quelle année ?",
+      "assertions": ["Oui, depuis 2012", "Non, la RDC n'est pas membre de l'OHADA", "Oui, depuis 2003 en tant que membre fondateur", "Oui, depuis 1993, date de la création de l'OHADA"],
+      "reponse": "Oui, depuis 2012",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Selon l'Acte uniforme OHADA relatif au droit commercial général, qui est considéré comme commerçant ?",
+      "assertions": ["Celui qui accomplit des actes de commerce à titre professionnel habituel et en son propre nom", "Toute personne possédant un commerce ou un magasin", "Celui qui est inscrit au registre des impôts comme professionnel", "Toute personne exerçant une activité rémunérée en dehors du salariat"],
+      "reponse": "Celui qui accomplit des actes de commerce à titre professionnel habituel et en son propre nom",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le Registre de Commerce et de Crédit Mobilier (RCCM) selon l'OHADA ?",
+      "assertions": ["Un registre officiel où les commerçants et les sociétés commerciales doivent s'immatriculer pour exercer légalement leur activité", "Le registre foncier où sont inscrits les titres de propriété immobilière", "Le fichier national des contribuables assujettis à la TVA", "Le registre des brevets et marques déposés par les entreprises"],
+      "reponse": "Un registre officiel où les commerçants et les sociétés commerciales doivent s'immatriculer pour exercer légalement leur activité",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la caractéristique principale d'une Société à Responsabilité Limitée (SARL) selon l'OHADA ?",
+      "assertions": ["La responsabilité des associés est limitée à leurs apports ; le capital minimum est de 1 000 000 FCFA", "Les associés sont responsables solidairement et indéfiniment sur leurs biens personnels", "La société peut émettre des actions cotées en bourse", "Les associés sont au minimum 7 et les parts sont librement cessibles"],
+      "reponse": "La responsabilité des associés est limitée à leurs apports ; le capital minimum est de 1 000 000 FCFA",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le statut de la fonction publique congolaise ?",
+      "assertions": ["L'ensemble des règles régissant les droits et obligations des agents de l'État (recrutement, avancement, discipline, retraite)", "Le règlement intérieur de chaque ministère fixant les horaires de travail", "Les conventions collectives applicables aux entreprises publiques", "Le code de déontologie des magistrats et des avocats"],
+      "reponse": "L'ensemble des règles régissant les droits et obligations des agents de l'État (recrutement, avancement, discipline, retraite)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Un fonctionnaire congolais peut-il exercer simultanément une activité commerciale à titre personnel ?",
+      "assertions": ["Non, le statut de la fonction publique interdit en principe aux fonctionnaires d'exercer une activité lucrative privée incompatible", "Oui, librement et sans restriction aucune", "Oui, à condition de déclarer ses revenus commerciaux à l'administration fiscale", "Non, sauf autorisation du Ministre des Finances"],
+      "reponse": "Non, le statut de la fonction publique interdit en principe aux fonctionnaires d'exercer une activité lucrative privée incompatible",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel tribunal est compétent pour juger les infractions commises par les mineurs en RDC ?",
+      "assertions": ["Le Tribunal pour Enfants", "Le Tribunal de Grande Instance statuant en chambre spéciale", "Le Parquet de Grande Instance", "Le Tribunal de Paix"],
+      "reponse": "Le Tribunal pour Enfants",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En dessous de quel âge un enfant est-il considéré comme pénalement irresponsable en RDC ?",
+      "assertions": ["14 ans", "12 ans", "16 ans", "18 ans"],
+      "reponse": "14 ans",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la détention préventive en procédure pénale congolaise ?",
+      "assertions": ["La privation de liberté d'un suspect avant tout jugement, sous contrôle judiciaire et pour une durée limitée par la loi", "La sanction définitive prononcée par le juge après condamnation", "La mise en résidence surveillée d'un prévenu en attente de jugement", "L'incarcération administrative décidée par le chef de la police"],
+      "reponse": "La privation de liberté d'un suspect avant tout jugement, sous contrôle judiciaire et pour une durée limitée par la loi",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le droit international privé ?",
+      "assertions": ["La branche du droit qui détermine la loi applicable et la juridiction compétente lorsqu'une situation juridique comporte un élément étranger", "Le droit applicable aux contrats conclus entre deux États souverains", "L'ensemble des traités internationaux ratifiés par la RDC", "Le droit des organisations internationales non gouvernementales"],
+      "reponse": "La branche du droit qui détermine la loi applicable et la juridiction compétente lorsqu'une situation juridique comporte un élément étranger",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'une sûreté réelle en droit civil congolais ?",
+      "assertions": ["Un droit accordé à un créancier sur un bien du débiteur pour garantir l'exécution d'une obligation (hypothèque, gage, nantissement)", "Une garantie personnelle donnée par un tiers en faveur du débiteur", "Un acte notarié constatant une reconnaissance de dette", "Un jugement condamnant le débiteur à payer ses dettes"],
+      "reponse": "Un droit accordé à un créancier sur un bien du débiteur pour garantir l'exécution d'une obligation (hypothèque, gage, nantissement)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le droit des successions en droit civil congolais ?",
+      "assertions": ["L'ensemble des règles organisant la transmission du patrimoine d'une personne décédée à ses héritiers", "Le droit régissant les faillites et liquidations d'entreprises", "Les règles applicables aux héritiers d'un dirigeant d'entreprise", "Le droit de l'État à percevoir des droits sur les donations entre vifs"],
+      "reponse": "L'ensemble des règles organisant la transmission du patrimoine d'une personne décédée à ses héritiers",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Selon le droit foncier congolais, la terre appartient à l'État et les particuliers ne peuvent qu'en obtenir des concessions.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "L'OHADA s'applique à tous les États membres de l'Union Africaine sans exception.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "En RDC, un enfant de moins de 14 ans est pénalement irresponsable.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La détention préventive peut être prolongée indéfiniment en RDC dès lors que l'instruction est en cours.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La République Démocratique du Congo a ratifié la Convention internationale des droits de l'enfant (CDE).",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Un commerçant non immatriculé au RCCM peut néanmoins se prévaloir des dispositions de l'Acte uniforme OHADA en sa faveur.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le délai de prescription extinctive de droit commun en matière civile est de 30 ans en RDC.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le testament olographe doit être entièrement écrit, daté et signé de la main du testateur pour être valable.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La Constitution congolaise de 2006 interdit la double nationalité.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "L'hypothèque est une sûreté portant sur un bien meuble corporel remis au créancier.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "En cas de conflit entre une loi ordinaire et la Constitution en RDC, quel principe s'applique ?",
+      "assertions": ["La suprématie constitutionnelle : la loi inconstitutionnelle doit être déclarée nulle par la Cour Constitutionnelle", "La primauté législative : la loi la plus récente prévaut sur la Constitution plus ancienne", "La compétence du Parlement : le législateur peut déroger à la Constitution par une majorité simple", "La souveraineté du peuple : un référendum peut valider la loi inconstitutionnelle"],
+      "reponse": "La suprématie constitutionnelle : la loi inconstitutionnelle doit être déclarée nulle par la Cour Constitutionnelle",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En RDC, quelle est la valeur juridique d'un traité international régulièrement ratifié par rapport à une loi ordinaire ?",
+      "assertions": ["Le traité a une autorité supérieure à la loi ordinaire dès lors qu'il est régulièrement ratifié et publié", "Le traité et la loi ont la même valeur juridique en droit interne congolais", "La loi nationale prime toujours sur le traité international en cas de conflit", "Le traité n'a de valeur qu'entre les États signataires, sans effet sur le droit interne"],
+      "reponse": "Le traité a une autorité supérieure à la loi ordinaire dès lors qu'il est régulièrement ratifié et publié",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le contrôle de constitutionnalité a priori en RDC ?",
+      "assertions": ["Le contrôle exercé par la Cour Constitutionnelle avant la promulgation d'une loi, sur saisine du Président, du Premier Ministre ou des présidents des chambres", "Le contrôle exercé par les citoyens après la promulgation d'une loi via un référendum abrogatoire", "L'examen de la loi par le Conseil d'État avant son envoi au Parlement", "Le contrôle exercé par les tribunaux ordinaires lors de l'application de la loi"],
+      "reponse": "Le contrôle exercé par la Cour Constitutionnelle avant la promulgation d'une loi, sur saisine du Président, du Premier Ministre ou des présidents des chambres",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la théorie de la pyramide des normes de Kelsen ?",
+      "assertions": ["Une hiérarchie des normes juridiques où chaque norme tire sa validité de la norme supérieure, avec la Constitution au sommet", "Une théorie selon laquelle les normes sont créées par la volonté populaire sans hiérarchie formelle", "L'idée que le droit naturel prime toujours le droit positif quel que soit le rang de la norme", "Une méthode d'interprétation des textes juridiques selon leur importance pratique"],
+      "reponse": "Une hiérarchie des normes juridiques où chaque norme tire sa validité de la norme supérieure, avec la Constitution au sommet",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la Convention de Vienne sur le droit des traités et son importance pour la RDC ?",
+      "assertions": ["Une convention internationale de 1969 codifiant les règles relatives à la conclusion, validité et extinction des traités, ratifiée par la RDC", "Un traité créant la zone de libre-échange entre les pays d'Afrique centrale", "L'accord fondateur de l'Organisation de l'Unité Africaine signé à Vienne", "La convention internationale sur les droits des réfugiés adoptée en Autriche"],
+      "reponse": "Une convention internationale de 1969 codifiant les règles relatives à la conclusion, validité et extinction des traités, ratifiée par la RDC",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Comment se caractérise un régime présidentiel comme celui des États-Unis ?",
+      "assertions": ["Séparation stricte des pouvoirs, exécutif non responsable devant le législatif, Président élu au suffrage universel direct", "Fusion des pouvoirs exécutif et législatif, Premier Ministre responsable devant le Parlement", "Président de la République chef de l'État sans pouvoirs exécutifs réels", "Gouvernement nommé par le Parlement et responsable devant lui"],
+      "reponse": "Séparation stricte des pouvoirs, exécutif non responsable devant le législatif, Président élu au suffrage universel direct",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Comment se caractérise un régime parlementaire comme celui du Royaume-Uni ?",
+      "assertions": ["Le gouvernement est responsable devant le Parlement qui peut le renverser par un vote de défiance", "Le Président de la République concentre tous les pouvoirs exécutifs et législatifs", "Le chef de l'État dispose d'un droit de dissolution illimité de l'Assemblée", "La Constitution est révisée uniquement par voie de référendum populaire"],
+      "reponse": "Le gouvernement est responsable devant le Parlement qui peut le renverser par un vote de défiance",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le régime politique de la RDC institué par la Constitution de 2006 est généralement qualifié de :",
+      "assertions": ["Semi-présidentiel, avec un Président fort élu au suffrage universel et un gouvernement responsable devant le Parlement", "Parlementaire pur avec un chef de l'État à rôle symbolique", "Présidentiel pur sans responsabilité du gouvernement devant le Parlement", "Directorial avec un collège de gouvernants à pouvoirs égaux"],
+      "reponse": "Semi-présidentiel, avec un Président fort élu au suffrage universel et un gouvernement responsable devant le Parlement",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le positivisme juridique ?",
+      "assertions": ["La théorie qui considère que le droit se réduit aux normes positives effectivement en vigueur, sans référence à des valeurs morales ou naturelles", "La théorie selon laquelle le droit naturel prime sur le droit écrit", "La conception du droit comme un instrument de transformation sociale positive", "La méthode d'interprétation stricte et littérale des textes juridiques"],
+      "reponse": "La théorie qui considère que le droit se réduit aux normes positives effectivement en vigueur, sans référence à des valeurs morales ou naturelles",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le droit naturel en philosophie du droit ?",
+      "assertions": ["L'ensemble de principes juridiques universels fondés sur la nature humaine, antérieurs et supérieurs au droit positif (Grotius, Locke)", "Le droit applicable dans l'état de nature selon les théories contractualistes", "Les lois de la nature physique applicables par analogie aux relations humaines", "Les coutumes primitives d'une société avant l'apparition de l'État"],
+      "reponse": "L'ensemble de principes juridiques universels fondés sur la nature humaine, antérieurs et supérieurs au droit positif (Grotius, Locke)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le principe de non-rétroactivité des lois pénales en défaveur de l'accusé ?",
+      "assertions": ["La règle selon laquelle une loi pénale plus sévère ne peut s'appliquer à des faits commis avant son entrée en vigueur", "L'interdiction pour les juges de prononcer des peines supérieures à celles prévues par la loi", "Le principe selon lequel toute loi pénale s'applique immédiatement à tous les procès en cours", "La règle interdisant la publication rétroactive des textes légaux"],
+      "reponse": "La règle selon laquelle une loi pénale plus sévère ne peut s'appliquer à des faits commis avant son entrée en vigueur",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la rétroactivité des lois pénales in mitius ?",
+      "assertions": ["L'application rétroactive d'une loi pénale plus douce aux situations en cours, dans l'intérêt de l'accusé", "L'interdiction absolue d'appliquer une nouvelle loi à des faits antérieurs", "La révision d'une condamnation définitive en raison de faits nouveaux découverts", "L'annulation d'une loi par la Cour Constitutionnelle pour inconstitutionnalité"],
+      "reponse": "L'application rétroactive d'une loi pénale plus douce aux situations en cours, dans l'intérêt de l'accusé",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le droit à un procès équitable en droit congolais et international ?",
+      "assertions": ["Le droit fondamental comprenant la présomption d'innocence, le droit à la défense, l'impartialité du juge et le délai raisonnable du procès", "Le droit pour toute personne d'obtenir une décision favorable devant les tribunaux", "Le droit exclusif de certaines catégories de citoyens à un jugement spécialisé", "L'obligation pour l'État de fournir gratuitement un avocat à toute personne poursuivie"],
+      "reponse": "Le droit fondamental comprenant la présomption d'innocence, le droit à la défense, l'impartialité du juge et le délai raisonnable du procès",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la Cour Pénale Internationale (CPI) et quel est son lien avec la RDC ?",
+      "assertions": ["Un tribunal international permanent créé par le Statut de Rome pour juger les crimes contre l'humanité, génocides et crimes de guerre ; la RDC est État partie", "Un tribunal régional africain créé par l'Union Africaine pour juger les violations des droits de l'homme", "Une chambre spéciale des Nations Unies compétente pour les conflits armés en Afrique centrale", "Un organe de médiation internationale sans pouvoir judiciaire contraignant"],
+      "reponse": "Un tribunal international permanent créé par le Statut de Rome pour juger les crimes contre l'humanité, génocides et crimes de guerre ; la RDC est État partie",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le crime de génocide en droit international pénal ?",
+      "assertions": ["Des actes commis avec l'intention de détruire, en tout ou en partie, un groupe national, ethnique, racial ou religieux (Convention de 1948)", "Tout acte de violence commis à grande échelle contre une population civile", "L'extermination d'une catégorie de population pour des raisons politiques", "Un crime contre l'humanité caractérisé par la persécution d'opposants politiques"],
+      "reponse": "Des actes commis avec l'intention de détruire, en tout ou en partie, un groupe national, ethnique, racial ou religieux (Convention de 1948)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la décentralisation en droit administratif congolais ?",
+      "assertions": ["Le transfert de compétences et de ressources de l'État central aux entités territoriales décentralisées (provinces, villes, communes)", "La délégation de pouvoirs du Président de la République aux Ministres", "La déconcentration des services de l'État dans les provinces sans autonomie locale", "La privatisation des services publics de l'État"],
+      "reponse": "Le transfert de compétences et de ressources de l'État central aux entités territoriales décentralisées (provinces, villes, communes)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Selon la Constitution de 2006, quel pourcentage des recettes nationales les provinces doivent-elles recevoir dans le cadre de la rétrocession ?",
+      "assertions": ["40% des recettes à caractère national", "25% des recettes à caractère national", "50% des recettes à caractère national", "15% des recettes à caractère national"],
+      "reponse": "40% des recettes à caractère national",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le droit de la concurrence dans l'espace OHADA ?",
+      "assertions": ["Les règles visant à assurer une concurrence libre et non faussée entre entreprises, interdisant les ententes anticoncurrentielles et les abus de position dominante", "Le droit pour toute entreprise de concurrencer librement sans aucune restriction légale", "Les règles douanières applicables aux échanges commerciaux entre États membres de l'OHADA", "Les règles de propriété intellectuelle protégeant les marques et brevets"],
+      "reponse": "Les règles visant à assurer une concurrence libre et non faussée entre entreprises, interdisant les ententes anticoncurrentielles et les abus de position dominante",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le monisme en droit international ?",
+      "assertions": ["La théorie selon laquelle le droit international et le droit interne forment un seul ordre juridique, le droit international primant en cas de conflit", "La théorie selon laquelle le droit international et le droit interne sont deux ordres juridiques distincts et séparés", "La doctrine de la souveraineté absolue de l'État face au droit international", "Le principe d'uniformisation des législations nationales dans le cadre de l'intégration régionale"],
+      "reponse": "La théorie selon laquelle le droit international et le droit interne forment un seul ordre juridique, le droit international primant en cas de conflit",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la responsabilité internationale de l'État en droit international public ?",
+      "assertions": ["L'obligation pour un État d'assumer les conséquences juridiques d'un fait internationalement illicite lui étant attribuable", "La responsabilité pénale des dirigeants d'État devant la CPI", "Le droit d'un État à demander réparation à un autre État pour tout acte hostile", "La sanction automatique d'un État par le Conseil de Sécurité en cas de violation d'un traité"],
+      "reponse": "L'obligation pour un État d'assumer les conséquences juridiques d'un fait internationalement illicite lui étant attribuable",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'interprétation téléologique d'un texte juridique ?",
+      "assertions": ["L'interprétation qui recherche la finalité et l'objectif poursuivi par le législateur plutôt que le sens littéral des termes", "L'interprétation strictement grammaticale et littérale du texte de loi", "L'interprétation historique fondée sur les travaux préparatoires de la loi", "L'interprétation par analogie avec des textes étrangers similaires"],
+      "reponse": "L'interprétation qui recherche la finalité et l'objectif poursuivi par le législateur plutôt que le sens littéral des termes",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La Cour Pénale Internationale est compétente pour juger les crimes de guerre commis sur le territoire de la RDC.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "En RDC, les traités internationaux régulièrement ratifiés ont une autorité supérieure à celle des lois nationales.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le positivisme juridique de Kelsen place la Constitution au sommet de la pyramide des normes.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La Cour Constitutionnelle de la RDC peut déclarer inconstitutionnelle une loi déjà promulguée.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "En droit pénal, le principe de rétroactivité in mitius interdit l'application d'une loi plus douce aux faits commis avant son entrée en vigueur.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La décentralisation en RDC implique un transfert de compétences et de ressources aux entités territoriales décentralisées.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "En droit international, un État peut engager sa responsabilité internationale pour violation des droits de l'homme.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le crime de génocide est imprescriptible en droit international.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Les coutumes locales congolaises ne peuvent en aucun cas constituer une source de droit applicable par les tribunaux.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La doctrine juridique (écrits des professeurs et juristes) a force obligatoire au même titre que la loi en RDC.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'est-ce que la filiation en droit de la famille congolais ?",
+      "assertions": ["Le lien juridique rattachant un enfant à ses parents, pouvant être établi par la naissance, la reconnaissance ou l'adoption", "Le droit successoral permettant à un enfant de recueillir l'héritage de ses parents", "L'obligation alimentaire des parents envers leurs enfants majeurs en difficulté", "Le lien de parenté entre frères et sœurs issu d'une même famille"],
+      "reponse": "Le lien juridique rattachant un enfant à ses parents, pouvant être établi par la naissance, la reconnaissance ou l'adoption",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le divorce par consentement mutuel en droit congolais ?",
+      "assertions": ["La dissolution du mariage obtenue sur accord des deux époux, homologuée par le tribunal", "La séparation de corps prononcée par un tribunal sans dissolution du mariage", "La répudiation unilatérale de l'épouse par le mari selon la coutume", "L'annulation du mariage pour vice de consentement initial"],
+      "reponse": "La dissolution du mariage obtenue sur accord des deux époux, homologuée par le tribunal",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'obligation alimentaire en droit de la famille congolais ?",
+      "assertions": ["L'obligation légale de fournir des aliments (nourriture, logement, soins) à certains membres de la famille dans le besoin", "L'obligation du propriétaire foncier de nourrir les locataires de ses terres", "L'obligation de l'État de garantir l'alimentation de tous les citoyens", "Le devoir moral de partager ses repas avec ses voisins selon la coutume congolaise"],
+      "reponse": "L'obligation légale de fournir des aliments (nourriture, logement, soins) à certains membres de la famille dans le besoin",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'état de nécessité en droit pénal congolais ?",
+      "assertions": ["Un fait justificatif permettant de commettre une infraction pour éviter un danger grave, imminent et sans autre moyen d'y échapper", "Une circonstance aggravante lorsque l'infraction est commise par nécessité économique", "Un motif d'atténuation de la peine en cas de grande pauvreté de l'auteur", "Un empêchement total de discernement assimilé à l'irresponsabilité pénale"],
+      "reponse": "Un fait justificatif permettant de commettre une infraction pour éviter un danger grave, imminent et sans autre moyen d'y échapper",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'une clause pénale dans un contrat ?",
+      "assertions": ["Une stipulation contractuelle fixant à l'avance le montant de l'indemnité due en cas d'inexécution ou de retard", "Une clause autorisant l'une des parties à saisir la juridiction pénale en cas de litige", "Une disposition rendant le contrat nul si l'une des parties commet une infraction", "La clause d'un contrat de travail interdisant au salarié d'exercer chez un concurrent"],
+      "reponse": "Une stipulation contractuelle fixant à l'avance le montant de l'indemnité due en cas d'inexécution ou de retard",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la mise en demeure en droit civil ?",
+      "assertions": ["Un acte par lequel le créancier somme officiellement le débiteur d'exécuter son obligation, faisant courir les intérêts moratoires", "Une décision judiciaire contraignant le débiteur à payer sous astreinte", "Un acte notarié constatant le non-paiement d'une dette commerciale", "Une sommation adressée par l'huissier au débiteur en vue d'une saisie"],
+      "reponse": "Un acte par lequel le créancier somme officiellement le débiteur d'exécuter son obligation, faisant courir les intérêts moratoires",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'exception d'inexécution (exceptio non adimpleti contractus) en droit des contrats ?",
+      "assertions": ["Le droit pour une partie de refuser d'exécuter sa propre obligation tant que l'autre partie n'exécute pas la sienne dans un contrat synallagmatique", "La possibilité pour un débiteur de nier l'existence d'un contrat devant le juge", "L'exception permettant d'invoquer la nullité d'un contrat pour cause illicite", "Le droit de l'acheteur d'exiger le remboursement du prix sans retourner le bien"],
+      "reponse": "Le droit pour une partie de refuser d'exécuter sa propre obligation tant que l'autre partie n'exécute pas la sienne dans un contrat synallagmatique",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la responsabilité civile du fait des choses en droit congolais ?",
+      "assertions": ["La responsabilité du gardien d'une chose qui a causé un dommage, engagée du seul fait de la chose sans nécessiter la preuve d'une faute personnelle", "La responsabilité du propriétaire d'un bien pour tout dommage causé par un tiers sur ce bien", "La responsabilité de l'État pour les dommages causés par les biens domaniaux", "La responsabilité du vendeur d'un bien défectueux envers les acheteurs ultérieurs"],
+      "reponse": "La responsabilité du gardien d'une chose qui a causé un dommage, engagée du seul fait de la chose sans nécessiter la preuve d'une faute personnelle",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la grâce présidentielle en droit pénal congolais ?",
+      "assertions": ["Le droit du Président de la République de remettre ou de commuer la peine d'un condamné, sans effacer sa culpabilité", "L'amnistie accordée par le Parlement supprimant l'infraction et ses effets", "La réhabilitation judiciaire effaçant le casier judiciaire d'un condamné ayant purgé sa peine", "L'acquittement prononcé par le juge faute de preuves suffisantes"],
+      "reponse": "Le droit du Président de la République de remettre ou de commuer la peine d'un condamné, sans effacer sa culpabilité",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'une convention collective en droit du travail congolais ?",
+      "assertions": ["Un accord conclu entre un ou plusieurs syndicats de travailleurs et un ou plusieurs employeurs fixant les conditions de travail et d'emploi", "Un contrat individuel entre un salarié et son employeur précisant les termes de l'emploi", "Un règlement intérieur établi unilatéralement par l'employeur pour régir l'entreprise", "Un accord bilatéral entre l'État et les syndicats sur le salaire minimum légal"],
+      "reponse": "Un accord conclu entre un ou plusieurs syndicats de travailleurs et un ou plusieurs employeurs fixant les conditions de travail et d'emploi",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le recours hiérarchique en droit administratif congolais ?",
+      "assertions": ["Le recours adressé au supérieur hiérarchique de l'auteur d'un acte administratif pour en demander le retrait ou la modification", "Le recours contentieux devant le tribunal administratif pour faire annuler un acte illégal", "La plainte déposée auprès du Médiateur de la République contre un acte administratif", "Le recours devant la Cour de Cassation pour cassation d'une décision administrative"],
+      "reponse": "Le recours adressé au supérieur hiérarchique de l'auteur d'un acte administratif pour en demander le retrait ou la modification",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le principe d'égalité devant la loi en droit constitutionnel congolais ?",
+      "assertions": ["Le principe selon lequel tous les citoyens sont soumis aux mêmes lois et doivent être traités de façon égale par les institutions, sans discrimination", "Le principe selon lequel tous les citoyens ont le droit de voter et d'être élus aux fonctions publiques", "Le principe garantissant à chaque citoyen un revenu minimum versé par l'État", "L'obligation pour l'État de traiter de manière identique tous les dossiers administratifs"],
+      "reponse": "Le principe selon lequel tous les citoyens sont soumis aux mêmes lois et doivent être traités de façon égale par les institutions, sans discrimination",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un syndicat en droit du travail congolais ?",
+      "assertions": ["Une organisation de travailleurs constituée pour défendre leurs intérêts professionnels, économiques et sociaux", "Un groupement d'employeurs visant à coordonner les conditions de travail dans un secteur", "Un tribunal professionnel chargé de régler les conflits entre employeurs et salariés", "Un organisme paritaire regroupant représentants des salariés et des employeurs"],
+      "reponse": "Une organisation de travailleurs constituée pour défendre leurs intérêts professionnels, économiques et sociaux",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'usucapion (prescription acquisitive) en droit civil congolais ?",
+      "assertions": ["Le mode d'acquisition de la propriété par la possession continue, paisible et publique d'un bien pendant le délai légal", "La perte du droit d'agir en justice faute de l'avoir exercé dans le délai légal", "Le transfert automatique de propriété d'un bien à l'État faute de propriétaire connu", "La procédure d'expropriation pour cause d'utilité publique avec indemnisation"],
+      "reponse": "Le mode d'acquisition de la propriété par la possession continue, paisible et publique d'un bien pendant le délai légal",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la présomption d'innocence en droit pénal congolais ?",
+      "assertions": ["Le principe selon lequel tout prévenu est présumé innocent jusqu'à ce que sa culpabilité ait été légalement établie", "La règle selon laquelle la victime doit prouver l'intention criminelle de l'accusé", "Le droit de l'accusé à ne pas répondre aux questions du juge d'instruction", "La présomption irréfragable que l'accusé a agi de bonne foi sauf preuve contraire"],
+      "reponse": "Le principe selon lequel tout prévenu est présumé innocent jusqu'à ce que sa culpabilité ait été légalement établie",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'acte de commerce par nature selon l'OHADA ?",
+      "assertions": ["Un acte accompli à titre professionnel et dont la liste est fixée par l'Acte Uniforme (achat-revente, opérations bancaires, transport, etc.)", "Tout acte juridique conclu entre commerçants enregistrés au RCCM", "Un contrat nécessairement écrit et signé devant notaire par deux commerçants", "Un acte portant sur des marchandises destinées à l'exportation"],
+      "reponse": "Un acte accompli à titre professionnel et dont la liste est fixée par l'Acte Uniforme (achat-revente, opérations bancaires, transport, etc.)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Un contrat synallagmatique est un contrat où les deux parties s'obligent réciproquement l'une envers l'autre.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "En droit congolais, la grâce présidentielle efface la condamnation et rend l'accusé innocent aux yeux de la loi.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La présomption d'innocence est un principe fondamental garanti par la Constitution congolaise.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Une convention collective en droit du travail congolais s'impose uniquement aux parties signataires et non à l'ensemble du secteur.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Un fonctionnaire peut-il être condamné pénalement pour des actes commis dans l'exercice de ses fonctions en RDC ?",
+      "assertions": ["Oui, si ses actes constituent des infractions pénales, il peut être poursuivi et condamné personnellement", "Non, les fonctionnaires bénéficient d'une immunité pénale totale pour tous leurs actes de service", "Oui, mais uniquement après autorisation préalable du Président de la République", "Non, seule la responsabilité civile de l'État peut être engagée pour les actes de ses agents"],
+      "reponse": "Oui, si ses actes constituent des infractions pénales, il peut être poursuivi et condamné personnellement",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le droit de préemption en matière foncière en RDC ?",
+      "assertions": ["Le droit accordé à l'État ou à certaines personnes d'acquérir un bien en priorité avant tout autre acheteur lors d'une vente", "Le droit du locataire d'acheter le terrain qu'il exploite avant l'expiration de son bail", "Le droit coutumier d'une communauté locale sur les terres non exploitées", "Le droit du créancier hypothécaire de se substituer au vendeur d'un bien immobilier"],
+      "reponse": "Le droit accordé à l'État ou à certaines personnes d'acquérir un bien en priorité avant tout autre acheteur lors d'une vente",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En matière pénale, quel est le délai de prescription pour un délit en droit congolais ?",
+      "assertions": ["3 ans à compter du jour où l'infraction a été commise", "10 ans", "1 an", "5 ans"],
+      "reponse": "3 ans à compter du jour où l'infraction a été commise",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la durée maximale d'une concession ordinaire accordée par l'État sur des terres rurales en RDC ?",
+      "assertions": ["25 ans renouvelables", "99 ans non renouvelables", "10 ans renouvelables une seule fois", "50 ans renouvelables"],
+      "reponse": "25 ans renouvelables",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'expropriation pour cause d'utilité publique en droit administratif congolais ?",
+      "assertions": ["La procédure permettant à l'État de contraindre un propriétaire à céder son bien pour la réalisation d'un projet d'intérêt général, moyennant une indemnisation juste et préalable", "La confiscation sans indemnité des biens mal acquis par des fonctionnaires corrompus", "La nationalisation de toutes les terres privées au profit de l'État congolais", "La saisie judiciaire des biens d'un débiteur défaillant par ses créanciers"],
+      "reponse": "La procédure permettant à l'État de contraindre un propriétaire à céder son bien pour la réalisation d'un projet d'intérêt général, moyennant une indemnisation juste et préalable",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le nantissement comme sûreté en droit OHADA ?",
+      "assertions": ["Une sûreté portant sur un bien meuble incorporel (fonds de commerce, actions, créances) remis en garantie à un créancier", "Une sûreté portant sur un immeuble permettant au créancier de se faire payer sur sa valeur", "Un cautionnement personnel d'un tiers garantissant la dette du débiteur principal", "Une saisie conservatoire sur les biens meubles corporels d'un débiteur"],
+      "reponse": "Une sûreté portant sur un bien meuble incorporel (fonds de commerce, actions, créances) remis en garantie à un créancier",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la procédure de redressement judiciaire dans l'espace OHADA ?",
+      "assertions": ["Une procédure collective permettant à une entreprise en difficulté de poursuivre son activité sous contrôle judiciaire en établissant un plan de redressement", "La liquidation immédiate de tous les biens d'une entreprise insolvable", "La mise sous tutelle administrative d'une entreprise publique déficitaire", "La fusion forcée d'une entreprise en difficulté avec un concurrent plus solide"],
+      "reponse": "Une procédure collective permettant à une entreprise en difficulté de poursuivre son activité sous contrôle judiciaire en établissant un plan de redressement",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Madame Mbeki loue un appartement à Kinshasa sans contrat écrit. Le propriétaire veut la chasser après 2 ans. Quelle protection lui offre le droit congolais ?",
+      "assertions": ["Elle peut invoquer l'existence d'un contrat verbal et réclamer un préavis raisonnable avant toute expulsion", "Elle n'a aucun droit car seul le contrat écrit est valable pour les locations en RDC", "Elle peut saisir le Gouverneur de province pour obtenir un titre d'occupation définitif", "Elle bénéficie automatiquement d'un droit de préemption pour racheter le logement"],
+      "reponse": "Elle peut invoquer l'existence d'un contrat verbal et réclamer un préavis raisonnable avant toute expulsion",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'acte de commerce par la forme selon l'Acte Uniforme OHADA ?",
+      "assertions": ["Un acte qui est commercial en raison de sa forme juridique, quelle que soit la qualité de la personne qui l'accomplit (ex. : lettre de change)", "Un acte commercial car passé en bonne et due forme devant un notaire", "Tout contrat conclu par une société commerciale est commercial par la forme", "Un acte qui doit être passé par écrit pour avoir force de preuve commerciale"],
+      "reponse": "Un acte qui est commercial en raison de sa forme juridique, quelle que soit la qualité de la personne qui l'accomplit (ex. : lettre de change)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la peine de travaux d'intérêt général en droit pénal congolais ?",
+      "assertions": ["Une peine alternative à l'emprisonnement consistant à effectuer un travail non rémunéré au profit de la collectivité", "Une obligation imposée aux détenus de travailler en prison pour financer leur détention", "Une sanction administrative imposée par le préfet pour infractions mineures", "Une mesure d'éducation ordonnée par le Tribunal pour Enfants à l'égard des mineurs"],
+      "reponse": "Une peine alternative à l'emprisonnement consistant à effectuer un travail non rémunéré au profit de la collectivité",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la procédure d'arbitrage commercial international en droit OHADA ?",
+      "assertions": ["Un mode alternatif de règlement des litiges commerciaux par une juridiction privée (tribunal arbitral), dont les décisions ont la même force qu'un jugement", "Un mode de médiation obligatoire avant toute saisine des juridictions étatiques", "Une procédure de conciliation entre parties présidée par un magistrat du Tribunal de Commerce", "Une expertise judiciaire ordonnée par le juge pour évaluer un préjudice commercial"],
+      "reponse": "Un mode alternatif de règlement des litiges commerciaux par une juridiction privée (tribunal arbitral), dont les décisions ont la même force qu'un jugement",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le cautionnement comme sûreté personnelle en droit civil congolais ?",
+      "assertions": ["L'engagement d'un tiers (la caution) à payer la dette du débiteur principal si celui-ci ne s'exécute pas", "La garantie fournie par un bien immeuble affecté au remboursement d'un crédit", "Le dépôt obligatoire de fonds auprès d'un tribunal pour garantir l'exécution d'un jugement", "L'engagement de l'État à indemniser les victimes en cas d'insolvabilité du débiteur"],
+      "reponse": "L'engagement d'un tiers (la caution) à payer la dette du débiteur principal si celui-ci ne s'exécute pas",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'inscription de faux en droit processuel congolais ?",
+      "assertions": ["La procédure incidente par laquelle une partie conteste l'authenticité d'un acte authentique produit comme preuve devant le juge", "La plainte pénale pour faux et usage de faux déposée contre l'auteur d'un document falsifié", "L'action en nullité d'un acte notarié entaché d'une erreur matérielle", "L'exception préliminaire soulevée par un plaideur contestant la compétence du tribunal"],
+      "reponse": "La procédure incidente par laquelle une partie conteste l'authenticité d'un acte authentique produit comme preuve devant le juge",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le droit de vote en RDC et à quel âge est-il exercé ?",
+      "assertions": ["Le droit pour tout citoyen congolais d'au moins 18 ans de participer aux élections par le vote", "Le droit pour les citoyens d'au moins 21 ans de se présenter aux élections législatives", "Le droit de vote est accordé dès l'âge de 16 ans pour les élections locales en RDC", "Le droit de vote est réservé aux citoyens ayant acquitté leurs impôts dans les délais"],
+      "reponse": "Le droit pour tout citoyen congolais d'au moins 18 ans de participer aux élections par le vote",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le droit d'auteur dans le cadre de la propriété intellectuelle en RDC ?",
+      "assertions": ["Le droit exclusif de l'auteur sur son œuvre littéraire, artistique ou scientifique, lui permettant d'en contrôler l'exploitation et d'en tirer des revenus", "Le droit de l'État de reproduire les œuvres culturelles à des fins éducatives sans autorisation", "Le droit des éditeurs à percevoir des droits sur toutes les publications réalisées sur le territoire national", "Le droit de tout citoyen à accéder gratuitement aux œuvres protégées dans les bibliothèques publiques"],
+      "reponse": "Le droit exclusif de l'auteur sur son œuvre littéraire, artistique ou scientifique, lui permettant d'en contrôler l'exploitation et d'en tirer des revenus",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la liberté de conscience et de religion garantie par la Constitution congolaise ?",
+      "assertions": ["Le droit pour chaque individu de croire ou de ne pas croire, de pratiquer une religion ou d'en changer, sans contrainte de l'État", "L'obligation pour l'État de soutenir financièrement les principales confessions religieuses présentes en RDC", "Le droit de l'Église de participer aux prises de décisions politiques du gouvernement", "Le droit exclusif des chefs coutumiers de réguler les pratiques religieuses locales"],
+      "reponse": "Le droit pour chaque individu de croire ou de ne pas croire, de pratiquer une religion ou d'en changer, sans contrainte de l'État",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'adoption en droit de la famille congolais ?",
+      "assertions": ["L'acte juridique par lequel une personne (l'adoptant) crée un lien de filiation légale avec un enfant (l'adopté) qui n'est pas son enfant biologique", "Le placement temporaire d'un enfant en danger chez une famille d'accueil par décision judiciaire", "La tutelle exercée sur un orphelin par un membre de la famille élargie selon la coutume", "L'enregistrement à l'état civil d'un enfant né hors mariage par son père"],
+      "reponse": "L'acte juridique par lequel une personne (l'adoptant) crée un lien de filiation légale avec un enfant (l'adopté) qui n'est pas son enfant biologique",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En RDC, l'expropriation pour utilité publique doit être accompagnée d'une indemnisation juste et préalable.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le délai de prescription de l'action publique pour un délit est de 3 ans en droit pénal congolais.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "L'arbitrage commercial dans l'espace OHADA produit des décisions (sentences arbitrales) sans force exécutoire.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "En droit congolais, le droit d'auteur protège l'œuvre de l'auteur dès sa création, sans formalité d'enregistrement obligatoire.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'est-ce que la séparation des pouvoirs dans la théorie constitutionnelle ?",
+      "assertions": ["Le principe selon lequel les fonctions législative, exécutive et judiciaire doivent être exercées par des organes distincts pour éviter l'arbitraire", "Le principe selon lequel le Président de la République doit partager l'exercice du pouvoir exécutif avec ses ministres", "La règle organisant la répartition des compétences entre l'État central et les provinces en RDC", "L'interdiction pour les partis politiques de cumuler des fonctions dans plusieurs branches du pouvoir"],
+      "reponse": "Le principe selon lequel les fonctions législative, exécutive et judiciaire doivent être exercées par des organes distincts pour éviter l'arbitraire",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le Conseil d'État et quel est son rôle dans le système juridique congolais ?",
+      "assertions": ["La plus haute juridiction administrative, compétente pour connaître des recours contre les actes réglementaires des autorités nationales et les décisions des cours administratives d'appel", "L'organe consultatif du Président de la République en matière législative et réglementaire", "Le tribunal spécial compétent pour juger les membres du Gouvernement en cas d'infractions politiques", "La chambre constitutionnelle de la Cour de Cassation statuant sur les litiges électoraux"],
+      "reponse": "La plus haute juridiction administrative, compétente pour connaître des recours contre les actes réglementaires des autorités nationales et les décisions des cours administratives d'appel",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le principe de légalité des délits et des peines (nullum crimen, nulla poena sine lege) ?",
+      "assertions": ["Le principe selon lequel nul ne peut être poursuivi et puni que pour des faits préalablement définis comme infraction par une loi, avec des peines déterminées à l'avance", "Le principe selon lequel toute peine doit être proportionnée à la gravité de l'infraction commise", "La règle interdisant au juge d'interpréter la loi pénale au-delà de son texte littéral", "L'obligation pour le Parlement de réviser régulièrement le Code pénal pour l'adapter aux nouvelles menaces"],
+      "reponse": "Le principe selon lequel nul ne peut être poursuivi et puni que pour des faits préalablement définis comme infraction par une loi, avec des peines déterminées à l'avance",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le droit international humanitaire (DIH) et en quoi est-il pertinent pour la RDC ?",
+      "assertions": ["L'ensemble des règles internationales (Conventions de Genève) limitant les méthodes de guerre et protégeant les civils et combattants hors de combat ; pertinent en raison des conflits armés à l'est de la RDC", "Le droit de l'immigration et de l'asile applicable aux réfugiés fuyant les zones de conflit en Afrique", "L'ensemble des traités commerciaux régissant les échanges en temps de guerre entre belligérants", "Le droit applicable aux opérations humanitaires des ONG en zones de catastrophe naturelle"],
+      "reponse": "L'ensemble des règles internationales (Conventions de Genève) limitant les méthodes de guerre et protégeant les civils et combattants hors de combat ; pertinent en raison des conflits armés à l'est de la RDC",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la théorie des actes de gouvernement en droit administratif ?",
+      "assertions": ["La doctrine selon laquelle certains actes de haute politique (relations diplomatiques, actes de guerre) échappent au contrôle juridictionnel des juges", "La théorie selon laquelle les actes du Gouvernement ne peuvent jamais engager sa responsabilité civile", "Le principe selon lequel les actes de l'exécutif ont toujours priorité sur les lois du Parlement", "La règle imposant au Gouvernement de motiver explicitement tous ses actes réglementaires"],
+      "reponse": "La doctrine selon laquelle certains actes de haute politique (relations diplomatiques, actes de guerre) échappent au contrôle juridictionnel des juges",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la Convention africaine des droits de l'homme et des peuples (Charte de Banjul) ?",
+      "assertions": ["L'instrument régional africain de protection des droits de l'homme adopté en 1981 par l'OUA, créant une Commission et une Cour africaine des droits de l'homme", "Un traité bilatéral entre la RDC et ses voisins sur la protection des réfugiés", "La convention de l'Union Africaine régissant les élections démocratiques sur le continent africain", "L'accord de coopération judiciaire entre les États membres de la SADC"],
+      "reponse": "L'instrument régional africain de protection des droits de l'homme adopté en 1981 par l'OUA, créant une Commission et une Cour africaine des droits de l'homme",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la révision constitutionnelle en RDC et quelles matières sont verrouillées ?",
+      "assertions": ["La procédure de modification de la Constitution ; certaines matières sont intangibles (forme républicaine, nombre de mandats présidentiels, indépendance des institutions)", "La simple relecture annuelle de la Constitution par le Parlement pour corriger les erreurs rédactionnelles", "La révision possible uniquement par voie de référendum populaire, sans vote du Parlement", "La modification de la Constitution réalisée par le seul Président de la République par ordonnance"],
+      "reponse": "La procédure de modification de la Constitution ; certaines matières sont intangibles (forme républicaine, nombre de mandats présidentiels, indépendance des institutions)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le Statut de Rome et quelle est son importance pour la RDC ?",
+      "assertions": ["Le traité fondateur de la Cour Pénale Internationale (1998), ratifié par la RDC, permettant de poursuivre les auteurs de crimes de guerre et crimes contre l'humanité", "L'accord commercial établissant les relations préférentielles entre la RDC et l'Union Européenne", "Le traité créant la zone de libre-échange entre les pays membres de la SADC", "La convention internationale sur les droits des travailleurs migrants ratifiée à Rome par l'OIT"],
+      "reponse": "Le traité fondateur de la Cour Pénale Internationale (1998), ratifié par la RDC, permettant de poursuivre les auteurs de crimes de guerre et crimes contre l'humanité",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le contrôle a posteriori de constitutionnalité par voie d'exception en RDC ?",
+      "assertions": ["La possibilité pour un justiciable de soulever l'inconstitutionnalité d'une loi lors d'un procès en cours, pour que la Cour Constitutionnelle se prononce", "Le contrôle exercé uniquement après l'adoption d'une loi mais avant sa promulgation par le Président", "L'examen annuel de toutes les lois en vigueur par la Cour Constitutionnelle pour vérifier leur conformité", "L'action en annulation d'une loi promulguée depuis plus de 10 ans pour cause d'inconstitutionnalité"],
+      "reponse": "La possibilité pour un justiciable de soulever l'inconstitutionnalité d'une loi lors d'un procès en cours, pour que la Cour Constitutionnelle se prononce",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le principe de subsidiarité dans la décentralisation congolaise ?",
+      "assertions": ["Le principe selon lequel les décisions doivent être prises au niveau le plus proche des citoyens, l'État central n'intervenant que lorsque les entités locales ne peuvent agir efficacement", "Le principe selon lequel les collectivités locales sont subsidiaires et soumises à l'État central dans toutes leurs décisions", "La règle interdisant aux provinces de prendre des décisions sans l'accord préalable du Gouvernement central", "Le principe de solidarité financière obligeant les provinces riches à subventionner les provinces pauvres"],
+      "reponse": "Le principe selon lequel les décisions doivent être prises au niveau le plus proche des citoyens, l'État central n'intervenant que lorsque les entités locales ne peuvent agir efficacement",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la théorie de l'abus de droit en droit civil ?",
+      "assertions": ["L'exercice d'un droit subjectif de façon malicieuse ou anormale causant un préjudice à autrui, pouvant engager la responsabilité de son auteur", "Le dépassement des limites légales d'un contrat entraînant automatiquement sa nullité", "L'exercice excessif du pouvoir réglementaire par l'administration au détriment des administrés", "La théorie selon laquelle tout droit peut être invoqué sans limitation dans un État de droit"],
+      "reponse": "L'exercice d'un droit subjectif de façon malicieuse ou anormale causant un préjudice à autrui, pouvant engager la responsabilité de son auteur",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la compétence universelle en droit pénal international ?",
+      "assertions": ["Le principe permettant à un État de juger les auteurs de crimes graves (génocide, crimes contre l'humanité) quel que soit leur nationalité ou le lieu de commission de l'infraction", "La compétence exclusive de la CPI pour juger tous les crimes internationaux quelle que soit la nationalité des accusés", "Le droit pour tout État de se saisir de tout litige civil ou commercial impliquant ses ressortissants à l'étranger", "La compétence du Conseil de Sécurité de l'ONU à imposer des sanctions pénales aux États violations du droit international"],
+      "reponse": "Le principe permettant à un État de juger les auteurs de crimes graves (génocide, crimes contre l'humanité) quel que soit leur nationalité ou le lieu de commission de l'infraction",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La séparation des pouvoirs est un principe fondamental du constitutionnalisme moderne visant à éviter les abus de pouvoir.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le principe de légalité des délits et des peines (nullum crimen sine lege) interdit de punir quelqu'un pour un acte non prévu par la loi au moment de sa commission.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "En RDC, la révision constitutionnelle peut porter sur la forme républicaine de l'État selon la Constitution de 2006.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Faux",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La compétence universelle permet à certains États de poursuivre les auteurs de crimes contre l'humanité même commis à l'étranger.",
+      "assertions": ["Vrai", "Faux"],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'est-ce que l'immunité diplomatique en droit international et ses limites ?",
+      "assertions": ["Le privilège accordé aux agents diplomatiques accrédités les exemptant de la juridiction pénale et civile du pays hôte, sans pour autant les exonérer de toute responsabilité", "L'immunité absolue accordée à tous les ressortissants étrangers résidant légalement dans un pays", "L'exemption totale et permanente de toute responsabilité accordée aux chefs d'État en exercice", "Le droit pour tout fonctionnaire international de refuser de témoigner devant un tribunal national"],
+      "reponse": "Le privilège accordé aux agents diplomatiques accrédités les exemptant de la juridiction pénale et civile du pays hôte, sans pour autant les exonérer de toute responsabilité",
+      "level": 3,
+      "type": "QCM"
+    }
+  ]
+}
