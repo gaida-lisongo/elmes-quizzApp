@@ -6,6 +6,7 @@ import Categorie from "@/lib/models/Categorie";
 import Quiz from "@/lib/models/Quiz";
 import Player from "@/lib/models/Player";
 import Partie from "@/lib/models/Partie";
+import User from "@/lib/models/User";
 
 /**
  * Vérifie le header Authorization: Bearer <CLAUDE_WEBHOOK_SECRET>.
@@ -42,14 +43,19 @@ export async function GET(request: NextRequest) {
     const now = new Date();
     const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-    const [categories, questions, players, partiesAujourdhui, inscritsAujourdhui] =
-      await Promise.all([
-        Categorie.countDocuments(),
-        Quiz.countDocuments(),
-        Player.countDocuments(),
-        Partie.countDocuments({ createdAt: { $gte: startOfDay } }),
-        Player.countDocuments({ createdAt: { $gte: startOfDay } }),
-      ]);
+    const [
+      categories, questions, players,
+      partiesAujourdhui, inscritsAujourdhui,
+      admins, mods,
+    ] = await Promise.all([
+      Categorie.countDocuments(),
+      Quiz.countDocuments(),
+      Player.countDocuments(),
+      Partie.countDocuments({ createdAt: { $gte: startOfDay } }),
+      Player.countDocuments({ createdAt: { $gte: startOfDay } }),
+      User.countDocuments({ role: "ADMIN" }),
+      User.countDocuments({ role: "MOD" }),
+    ]);
 
     return NextResponse.json({
       ok: true,
@@ -60,6 +66,7 @@ export async function GET(request: NextRequest) {
         players,
         partiesAujourdhui,
         inscritsAujourdhui,
+        staff: { admins, mods },
       },
     });
   } catch (error: unknown) {
@@ -239,6 +246,37 @@ export async function POST(request: NextRequest) {
             questions: deletedQuestions.deletedCount,
           },
         });
+      }
+
+      // ─── list_users ─────────────────────────────────────────────────────────
+      case "list_users": {
+        const { role } = body as { role?: string };
+        const filter = role ? { role } : {};
+
+        const users = await User.find(filter)
+          .select("pseudo telephone email role createdAt")
+          .sort({ role: 1, createdAt: -1 })
+          .lean();
+
+        const formatted = users.map((u) => ({
+          _id: u._id,
+          pseudo: u.pseudo,
+          telephone: u.telephone
+            ? u.telephone.slice(0, 4) + "****" + u.telephone.slice(-2)
+            : null,
+          email: u.email ?? null,
+          role: u.role,
+          createdAt: u.createdAt,
+        }));
+
+        const summary = {
+          total: formatted.length,
+          admins: formatted.filter((u) => u.role === "ADMIN").length,
+          mods: formatted.filter((u) => u.role === "MOD").length,
+          players: formatted.filter((u) => u.role === "PLAYER").length,
+        };
+
+        return NextResponse.json({ summary, users: formatted });
       }
 
       // ─── action inconnue ────────────────────────────────────────────────────
