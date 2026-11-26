@@ -13,6 +13,7 @@ import { getCurrentUserDetailed } from "@/actions/auth.actions";
 import { updateMyAccountAction } from "@/actions/profile.actions";
 import { uploadToCloudinary } from "@/actions/cloudinary.actions";
 import { logoutUser } from "@/actions/auth.actions";
+import { libellePalier } from "@/lib/utils/paliers";
 
 /* ================================================================
    Types
@@ -525,7 +526,7 @@ export default function ProfileUser() {
           <div className="flex-1 text-left">
             <p className="text-sm font-semibold text-black dark:text-white">{user.pseudo}</p>
             <p className="text-xs text-waterloo">
-              {user.playerType || user.role}
+              {user.playerType ? libellePalier(user.playerType) : user.role}
               {user.profile?.level !== undefined && ` · Niv. ${user.profile.level}`}
             </p>
           </div>

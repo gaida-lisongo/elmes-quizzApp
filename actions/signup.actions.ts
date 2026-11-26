@@ -9,12 +9,13 @@ import Player from '../lib/models/Player';
 import { hashPassword, validateNewPassword } from '../lib/utils/password';
 import { generateReferralCode } from '../lib/utils/referral';
 import { getJwtSecret, setSessionCookie } from '../lib/utils/auth';
+import { PALIERS, normaliserPalier, palierDepuisSlug, routeTableauDeBord, type PalierJoueur } from '../lib/utils/paliers';
 
-export type PlayerType = 'STANDALONE' | 'ADVANCED' | 'VIP';
+export type PlayerType = PalierJoueur;
 
 export type Statut = 'ELEVE' | 'ETUDIANT' | 'INDEPENDANT';
 
-const VALID_PLAYER_TYPES: PlayerType[] = ['STANDALONE', 'ADVANCED', 'VIP'];
+const VALID_PLAYER_TYPES: readonly PlayerType[] = PALIERS;
 const VALID_STATUTS: Statut[] = ['ELEVE', 'ETUDIANT', 'INDEPENDANT'];
 
 export interface SignupStep1Data {
@@ -63,22 +64,16 @@ function decryptSignupPayload(value: string) {
 /**
  * Parse l'URL pour extraire le type de joueur et le code d'affiliation.
  * Exemples :
- *   /auth/signup#standalone
- *   /auth/signup#vip?code=AB-1234
- *   /auth/signup#advanced
+ *   /auth/signup#challenger
+ *   /auth/signup#elite?code=AB-1234
+ *   (les anciens liens #standalone, #advanced, #vip restent valides)
  */
 export async function parseSignupUrl(hash: string, searchParams: string) {
   // Le hash vient sous la forme "#standalone" ou "#vip?code=AB-1234"
   const cleanHash = String(hash || '').replace(/^#/, '');
   const [typePart, queryString] = cleanHash.split('?');
 
-  const typeMap: Record<string, PlayerType> = {
-    standalone: 'STANDALONE',
-    advanced: 'ADVANCED',
-    vip: 'VIP',
-  };
-
-  const playerType = typeMap[typePart?.toLowerCase()] || 'STANDALONE';
+  const playerType = palierDepuisSlug(typePart);
 
   // Extraire le code d'affiliation depuis le hash ou depuis les searchParams
   let referralCode: string | undefined;
@@ -134,6 +129,7 @@ export async function createPlayerStep1(data: SignupStep1Data) {
   }
 
   // Le type de joueur et le statut sont validés côté serveur (jamais pris tels quels du client).
+  data = { ...data, playerType: normaliserPalier(data.playerType) };
   if (!VALID_PLAYER_TYPES.includes(data.playerType)) {
     return { success: false, error: 'Type de joueur invalide.' };
   }
@@ -225,7 +221,7 @@ export async function createPlayerStep2(data: SignupStep2Data) {
     }
 
     const { pseudo, telephone, email, statut, school, referedBy } = tempData;
-    const playerType: PlayerType = VALID_PLAYER_TYPES.includes(tempData.playerType) ? tempData.playerType : 'STANDALONE';
+    const playerType: PlayerType = normaliserPalier(tempData.playerType);
 
     // Vérifier que l'utilisateur n'a pas été créé entre-temps
     const existingUser = await User.findOne({ $or: [{ telephone }, { email }] });
@@ -286,16 +282,11 @@ export async function createPlayerStep2(data: SignupStep2Data) {
     });
 
     // Déterminer la redirection selon le type de joueur
-    const dashboardRoutes: Record<string, string> = {
-      STANDALONE: '/dashboard/standalone',
-      ADVANCED: '/dashboard/advanced',
-      VIP: '/dashboard/vip',
-    };
 
     return {
       success: true,
       message: 'Compte créé avec succès ! Bienvenue sur ELMES-QUIZ.',
-      redirectTo: dashboardRoutes[playerType] || '/dashboard/standalone',
+      redirectTo: routeTableauDeBord(playerType),
       playerType,
     };
   } catch (error: any) {

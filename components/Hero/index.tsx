@@ -3,31 +3,32 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { INFOS_PALIERS } from "@/lib/utils/paliers";
 
 const pitches = [
   {
     id: "player-0.jpg",
-    key: "STANDALONE",
-    cible: "Pour les Intélligents",
-    url: "/auth/signup#standalone",
+    key: "PALIER_1",
+    cible: `Pour les ${INFOS_PALIERS.PALIER_1.nom}s`,
+    url: `/auth/signup#${INFOS_PALIERS.PALIER_1.slug}`,
     title: "Ne brûle plus tes mégas dans le vide",
     description:
       "Transforme quelques minutes de connexion en défi de culture générale. Avec ELMES-QUIZ, tu joues seul, tu testes ton niveau et tu gardes ton cerveau actif sans pression."
   },
   {
     id: "player-1.jpg",
-    key: "ADVANCED",
-    cible: "Pour les Génies",
-    url: "/auth/signup#advanced",
+    key: "PALIER_2",
+    cible: `Pour les ${INFOS_PALIERS.PALIER_2.nom}s`,
+    url: `/auth/signup#${INFOS_PALIERS.PALIER_2.slug}`,
     title: "Zéro hasard. 100% mérite intellectuel",
     description:
       "Passe à l’entraînement sérieux. Réponds sous chrono, progresse dans les niveaux, active tes Pass d’Entraînement et avance dans le Parcours du Mois pour viser la Prime du Mérite Mensuel."
   },
   {
     id: "player-2.jpg",
-    key: "VIP",
-    cible: "Pour les Compétiteurs",
-    url: "/auth/signup#vip",
+    key: "PALIER_3",
+    cible: `Pour l’${INFOS_PALIERS.PALIER_3.nom}`,
+    url: `/auth/signup#${INFOS_PALIERS.PALIER_3.slug}`,
     title: "Ne joue pas seul, crée ton écurie",
     description:
       "Monte ton équipe de 5 cerveaux, défends ta base et affronte les meilleures écuries dans une compétition d’e-sport intellectuel structurée autour de la Bourse d’Excellence Académique."

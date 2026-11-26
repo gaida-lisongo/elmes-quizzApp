@@ -107,9 +107,7 @@ export default function BonusModal({ open, onClose, playerId, isAdmin }: BonusMo
               <div className="mb-4 rounded-xl border border-stroke bg-alabaster p-4 dark:border-strokedark dark:bg-strokedark">
                 <p className="text-sm font-medium text-black dark:text-white">Bonus hebdomadaire disponible</p>
                 <p className="mt-1 text-xs text-waterloo">
-                  {user?.profile?.type === "STANDALONE"
-                    ? "+20 parties dans votre solde"
-                    : "+30 parties max dans vos enrollements"}
+                  +20 parties dans votre solde, et +30 parties sur chacun de vos Parcours en cours
                 </p>
                 <button
                   onClick={handleWeekly}

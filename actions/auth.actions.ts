@@ -10,6 +10,7 @@ import { hashPassword, validateNewPassword, verifyPassword } from '../lib/utils/
 import { generateReferralCode } from '../lib/utils/referral';
 import { COOKIE_NAME, getSession, setSessionCookie } from '../lib/utils/auth';
 import { consumeRateLimit, getClientIp, isRateLimited, resetRateLimit } from '../lib/utils/rateLimit';
+import { normaliserPalier, routeTableauDeBord } from '@/lib/utils/paliers';
 
 // Limitation des tentatives de connexion (EX-SEC-05) : 5 échecs par tranche de 15 minutes,
 // par téléphone et par adresse IP.
@@ -76,7 +77,7 @@ export async function registerPlayer(formData: FormData) {
     await Player.create({
       userId: newUser._id,
       referedBy,
-      type: 'STANDALONE',
+      type: 'PALIER_1',
       level: 0,
       school: school.trim(),
       parties: 10,
@@ -90,7 +91,7 @@ export async function registerPlayer(formData: FormData) {
     await setSessionCookie(newUser._id.toString(), newUser.role, newUser.sessionVersion ?? 0);
 
     // Cookie non-httpOnly pour le Header côté client
-    (await cookies()).set('player_type', 'STANDALONE', {
+    (await cookies()).set('player_type', 'PALIER_1', {
       httpOnly: false,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
@@ -159,14 +160,9 @@ export async function loginUser(formData: FormData) {
       // Récupérer le type de joueur
       try {
         const player = await Player.findOne({ userId: user._id }).select('type').lean();
-        const pType = player?.type || 'STANDALONE';
+        const pType = normaliserPalier(player?.type);
         playerTypeForCookie = pType;
-        const routes: Record<string, string> = {
-          STANDALONE: '/dashboard/standalone',
-          ADVANCED: '/dashboard/advanced',
-          VIP: '/dashboard/vip',
-        };
-        redirectTo = routes[pType] || '/dashboard/standalone';
+        redirectTo = routeTableauDeBord(pType);
       } catch {
         redirectTo = '/dashboard/standalone';
       }
@@ -226,7 +222,7 @@ export async function getCurrentUserDetailed() {
     if (user.role === 'PLAYER') {
       const player = await Player.findOne({ userId: user._id }).lean();
       if (!player) return { ...base, profile: null };
-      base.playerType = player.type || 'STANDALONE';
+      base.playerType = normaliserPalier(player.type);
       return {
         ...base,
         referralCode: player.code || null,

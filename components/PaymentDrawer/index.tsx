@@ -11,6 +11,7 @@ import {
   initiatePaymentAction,
 } from "@/actions/payment.actions";
 import SearchUserInput, { type SearchUserResult } from "@/components/Common/SearchUserInput";
+import { libellePalier } from "@/lib/utils/paliers";
 
 export type ProductInfo = {
   id: string;
@@ -160,7 +161,7 @@ const PaymentDrawer = ({ product, onClose, onSuccess }: PaymentDrawerProps) => {
                         </div>
                         {selectedUser.playerType ? (
                           <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-medium text-primary">
-                            {selectedUser.playerType}
+                            {libellePalier(selectedUser.playerType)}
                           </span>
                         ) : null}
                       </div>

@@ -19,6 +19,7 @@ import { getCompetitionEnrollmentPrice, getParcoursEnrollmentPrice, isCurrency, 
 import { startPayment, verifyAndApplyPayment } from "@/lib/services/payment-flow.service";
 import { confirmEnrollment } from "@/lib/services/enrollment.service";
 import { sendEnrollmentConfirmationEmail } from "@/lib/services/enrollment-mail.service";
+import { normaliserPalier, type PalierJoueur } from '@/lib/utils/paliers';
 
 const { Enrollement, Session } = EnrollementModule;
 
@@ -33,7 +34,7 @@ async function ensureStaffSession() {
 
 export interface PlayerInfo {
   _id: string;
-  type: 'STANDALONE' | 'ADVANCED' | 'VIP';
+  type: PalierJoueur;
   level: number;
   pseudo: string;
   telephone?: string;
@@ -50,7 +51,7 @@ export interface EquipeInfo {
 
 /**
  * Récupère les infos du Player connecté (pour parcours).
- * Retourne null si non connecté ou si le profil n'est pas ADVANCED/VIP.
+ * Retourne null si non connecté (paliers cumulatifs : tout joueur peut s'inscrire à un Parcours).
  */
 export async function getCurrentPlayerInfoAction(): Promise<{
   success: boolean;
@@ -69,9 +70,6 @@ export async function getCurrentPlayerInfoAction(): Promise<{
       .lean();
 
     if (!player) return { success: true };
-    if (player.type !== 'ADVANCED') {
-      return { success: true };
-    }
 
     const pseudo = (player.userId as any)?.pseudo || '';
 
@@ -79,7 +77,7 @@ export async function getCurrentPlayerInfoAction(): Promise<{
       success: true,
       player: {
         _id: player._id.toString(),
-        type: player.type,
+        type: normaliserPalier(player.type),
         level: player.level,
         pseudo,
         telephone: (player.userId as any)?.telephone || '',
@@ -93,7 +91,7 @@ export async function getCurrentPlayerInfoAction(): Promise<{
 
 /**
  * Récupère les infos de l'Équipe dont le joueur connecté est chef (pour compétition).
- * Retourne null si non connecté, non-VIP, ou pas chef d'équipe.
+ * Retourne null si non connecté, ou pas chef d'équipe.
  */
 export async function getCurrentEquipeInfoAction(): Promise<{
   success: boolean;
@@ -110,7 +108,6 @@ export async function getCurrentEquipeInfoAction(): Promise<{
     }).populate('userId', 'telephone email').lean();
 
     if (!player) return { success: true };
-    if (player.type !== 'VIP') return { success: true };
 
     const equipe = await Equipe.findOne({
       chefId: player._id,
@@ -154,10 +151,10 @@ export async function getActiveSessionsAction() {
   }
 }
 
-// ── ENROLLEMENT (PARCOURS – joueur individuel ADVANCED) ────────────
+// ── ENROLLEMENT (PARCOURS – joueur individuel, tout palier) ────────────
 
 /**
- * Inscription d'un joueur ADVANCED à un parcours
+ * Inscription d'un joueur à un parcours
  * Le joueur est résolu automatiquement depuis la session connectée.
  */
 export async function getSessionsByRessourceAction(
@@ -334,7 +331,7 @@ async function resolveExistingPendingEnrollment(filter: Record<string, unknown>)
 }
 
 /**
- * Inscription d'un joueur ADVANCED à un parcours.
+ * Inscription d'un joueur à un parcours.
  * Le joueur est résolu depuis la session ; le frais vient de la session (sinon 15 000 CDF).
  */
 export async function enrollToParcoursAction(
@@ -347,9 +344,6 @@ export async function enrollToParcoursAction(
     if (!guard.ok) return { success: false, error: guard.error };
     const player = guard.player;
 
-    if (player.type !== 'ADVANCED') {
-      return { success: false, error: 'Seuls les profils ADVANCED peuvent s\'inscrire à un parcours' };
-    }
     if (!isValidObjectId(parcoursId) || !isValidObjectId(sessionId)) {
       return { success: false, error: 'Paramètres invalides' };
     }
@@ -419,10 +413,7 @@ export async function enrollToCompetitionAction(
     if (!guard.ok) return { success: false, error: guard.error };
     const player = guard.player;
 
-    // Vérifier que le joueur est VIP
-    if (player.type !== 'VIP') {
-      return { success: false, error: 'Seuls les profils VIP peuvent inscrire une équipe à une compétition' };
-    }
+    // Paliers cumulatifs : il suffit d'être capitaine d'une équipe (vérifié ci-dessous).
     if (!isValidObjectId(competitionId) || !isValidObjectId(sessionId)) {
       return { success: false, error: 'Paramètres invalides' };
     }

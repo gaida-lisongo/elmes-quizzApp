@@ -14,6 +14,7 @@ import { consumeRateLimit, getClientIp } from "@/lib/utils/rateLimit";
 import { tx, withTransaction } from "@/lib/utils/transaction";
 import { getTrainingPass, isCurrency, resolveCharge } from "@/lib/payments/pricing";
 import { generatePaymentReference, startPayment, verifyAndApplyPayment, type VerifyResult } from "@/lib/services/payment-flow.service";
+import { normaliserPalier } from '@/lib/utils/paliers';
 
 type ActionResult = { success: boolean; status?: string; message?: string; error?: string };
 
@@ -79,7 +80,7 @@ export async function searchUsers(query: string) {
             pseudo: u.pseudo,
             photo: u.photo,
             playerId: player._id.toString(),
-            playerType: player.type || null,
+            playerType: player.type ? normaliserPalier(player.type) : null,
           };
         }),
     };

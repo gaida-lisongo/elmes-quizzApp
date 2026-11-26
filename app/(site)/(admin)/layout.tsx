@@ -4,6 +4,7 @@ import { getSession } from "@/lib/utils/auth";
 import User from "@/lib/models/User";
 import Player from "@/lib/models/Player";
 import connectToDb from "@/lib/utils/db";
+import { normaliserPalier } from "@/lib/utils/paliers";
 import AdminLayoutClient, {
   UserRole,
   PlayerType,
@@ -27,9 +28,9 @@ async function getUserRoleAndType(): Promise<{
     if (role === "PLAYER") {
       const player = await Player.findOne({ userId: user._id }).lean();
       if (player && player.type) {
-        return { role, playerType: player.type as PlayerType };
+        return { role, playerType: normaliserPalier(player.type) as PlayerType };
       }
-      return { role, playerType: "STANDALONE" };
+      return { role, playerType: "PALIER_1" };
     }
 
     // ADMIN ou MOD

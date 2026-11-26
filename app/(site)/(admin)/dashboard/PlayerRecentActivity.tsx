@@ -67,7 +67,7 @@ export default function PlayerRecentActivity() {
     return <div className="flex justify-center py-10"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
   }
 
-  if (data?.playerType === "STANDALONE") {
+  if (data?.playerType === "PALIER_1") {
     const recharges = data.recharges || [];
     return recharges.length ? (
       <div className="space-y-3">
@@ -101,7 +101,7 @@ export default function PlayerRecentActivity() {
     ) : <div className="py-10 text-center text-waterloo">Aucune recharge pour le moment.</div>;
   }
 
-  if (data?.playerType === "ADVANCED") {
+  if (data?.playerType === "PALIER_2") {
     const rewards = data.rewards || [];
     return rewards.length ? (
       <div className="space-y-3">
@@ -125,7 +125,7 @@ export default function PlayerRecentActivity() {
   }
 
   const team = data?.team;
-  if (data?.playerType === "VIP" && team) {
+  if (data?.playerType === "PALIER_3" && team) {
     return (
       <div className="space-y-4">
         <div className="rounded-lg border border-stroke bg-alabaster p-3 text-sm dark:border-strokedark dark:bg-strokedark">
