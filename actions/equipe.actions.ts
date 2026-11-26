@@ -134,7 +134,7 @@ export async function getCaptainCandidateAction() {
   try {
     const guard = await guardPlayer();
     if (!guard.ok) return { success: false, error: "Connectez-vous pour créer une équipe." };
-    // Paliers cumulatifs : tout joueur peut créer une équipe ; il passe Élite (palier 3) une fois le paiement confirmé.
+    // Paliers cumulatifs : tout joueur peut créer une équipe ; il passe Champion (palier 3) une fois le paiement confirmé.
     const alreadyInTeam = await Equipe.exists({
       $or: [{ chefId: guard.player._id }, { membres: { $elemMatch: { player: guard.player._id } } }],
     });
@@ -536,7 +536,7 @@ export async function respondEquipeInvitationAction(
 
     equipe.membres[memberIndex].status = true;
     await equipe.save();
-    // Rejoindre une équipe fait passer le joueur au palier Élite (3).
+    // Rejoindre une équipe fait passer le joueur au palier Champion (3).
     await promouvoirJoueur(currentPlayer._id, 3);
     return { success: true, message: "Invitation acceptee." };
   } catch (error: any) {

@@ -35,6 +35,8 @@ export interface InfoPalier {
   nom: string;
   /** Mot utilisé dans les liens d'inscription : /auth/signup#challenger */
   slug: string;
+  /** Forme plurielle, ex. « Pour les Curieux ». */
+  pluriel: string;
   accroche: string;
   droits: string[];
 }
@@ -43,26 +45,29 @@ export const INFOS_PALIERS: Record<PalierJoueur, InfoPalier> = {
   PALIER_1: {
     palier: 'PALIER_1',
     rang: 1,
-    nom: 'Challenger',
-    slug: 'challenger',
+    nom: 'Curieux',
+    slug: 'curieux',
+    pluriel: 'Curieux',
     accroche: 'Je me teste et je progresse',
     droits: ['Parties d’entraînement', 'Pass d’entraînement', 'Parrainage', 'Retraits'],
   },
   PALIER_2: {
     palier: 'PALIER_2',
     rang: 2,
-    nom: 'Compétiteur',
-    slug: 'competiteur',
+    nom: 'Challenger',
+    slug: 'challenger',
+    pluriel: 'Challengers',
     accroche: 'Je vise le podium des Parcours',
-    droits: ['Tout le palier Challenger', 'Parcours et classements', 'Prix du top 3'],
+    droits: ['Tout le palier Curieux', 'Parcours et classements', 'Prix du top 3'],
   },
   PALIER_3: {
     palier: 'PALIER_3',
     rang: 3,
-    nom: 'Élite',
-    slug: 'elite',
+    nom: 'Champion',
+    slug: 'champion',
+    pluriel: 'Champions',
     accroche: 'Je défends mon équipe en compétition',
-    droits: ['Tout le palier Compétiteur', 'Équipe de 5', 'Compétitions et matchs', 'Bourse d’Excellence'],
+    droits: ['Tout le palier Challenger', 'Équipe de 5', 'Compétitions et matchs', 'Bourse d’Excellence'],
   },
 };
 
@@ -93,7 +98,7 @@ export function infoPalier(valeur: unknown): InfoPalier {
   return INFOS_PALIERS[normaliserPalier(valeur)];
 }
 
-/** Libellé affichable, ex. « Élite » ; renvoie la valeur telle quelle pour ADMIN / MOD. */
+/** Libellé affichable, ex. « Champion » ; renvoie la valeur telle quelle pour ADMIN / MOD. */
 export function libellePalier(valeur: unknown): string {
   const v = String(valeur ?? '').trim().toUpperCase();
   if (v === 'ADMIN' || v === 'MOD' || v === '') return String(valeur ?? '');
@@ -115,7 +120,7 @@ export function valeursSousLeRang(rang: RangPalier): Array<PalierJoueur | Ancien
   return out;
 }
 
-/** Lit le palier depuis un lien d'inscription : #challenger, #competiteur, #elite (et anciens #standalone, #advanced, #vip). */
+/** Lit le palier depuis un lien d'inscription : #curieux, #challenger, #champion (et anciens #standalone, #advanced, #vip). */
 export function palierDepuisSlug(slug: string | null | undefined): PalierJoueur {
   const s = String(slug ?? '').trim().toLowerCase();
   const trouve = PALIERS.find((p) => INFOS_PALIERS[p].slug === s);

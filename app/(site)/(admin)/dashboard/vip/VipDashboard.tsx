@@ -24,6 +24,7 @@ import { getPlayerMetricsAction, type PlayerMetricsData } from "@/actions/player
 import { inviteMemberAction, leaveEquipeAction, respondEquipeInvitationAction, searchInvitableVipPlayersAction, updateMemberRoleAction } from "@/actions/equipe.actions";
 import PlayerRecentActivity from "../PlayerRecentActivity";
 import toast from "react-hot-toast";
+import { INFOS_PALIERS } from "@/lib/utils/paliers";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -142,7 +143,7 @@ export default function VipDashboard() {
             <Trophy className="h-6 w-6 text-amber-500" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-black dark:text-white">Dashboard Compétiteur</h1>
+            <h1 className="text-2xl font-bold text-black dark:text-white">Tableau de bord {INFOS_PALIERS.PALIER_3.nom}</h1>
             <p className="text-waterloo">Affrontez les meilleurs et remportez des lots</p>
           </div>
         </div>

@@ -62,7 +62,7 @@ export async function confirmEnrollment(
   const isCompetition = Boolean(current.competitionId);
   const sessionId = current.sessionId?.toString();
 
-  // Premier Parcours confirmé : le joueur passe au moins Compétiteur (palier 2). Idempotent.
+  // Premier Parcours confirmé : le joueur passe au moins Challenger (palier 2). Idempotent.
   if (!isCompetition && current.playerId) {
     await promouvoirJoueur(current.playerId, 2, dbSession);
   }

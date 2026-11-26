@@ -284,7 +284,7 @@ async function applyPaymentEffect(
         membres: [{ player: player._id, status: true, isSecretary: true }],
         metriques: { competitions: 0, soldeUsd: 0, soldeCDF: 0, matchsWin: 0 },
       }], tx(dbSession));
-      // Le capitaine passe au palier Élite (3).
+      // Le capitaine passe au palier Champion (3).
       await promouvoirJoueur(player._id, 3, dbSession);
       return {};
     }

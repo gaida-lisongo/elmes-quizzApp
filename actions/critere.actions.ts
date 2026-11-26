@@ -147,8 +147,8 @@ export async function deleteCritereAction(id: string) {
 /**
  * Bonus hebdomadaire (EX-JEU-03) :
  * Paliers cumulatifs (lib/utils/paliers.ts) :
- * - tous les joueurs (Challenger et au-dessus) : +20 parties dans Player.parties ;
- * - chaque enrôlement Parcours confirmé (Compétiteur et au-dessus) : +30 parties, dans totalGrantedGames ET
+ * - tous les joueurs (Curieux et au-dessus) : +20 parties dans Player.parties ;
+ * - chaque enrôlement Parcours confirmé (Challenger et au-dessus) : +30 parties, dans totalGrantedGames ET
  *   remainingGames (les champs réellement lus par le jeu ; maxParties suit pour compatibilité).
  * Idempotent par semaine ISO : une trace BonusRun unique empêche une double application.
  */

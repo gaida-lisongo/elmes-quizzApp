@@ -9,7 +9,7 @@ const pitches = [
   {
     id: "player-0.jpg",
     key: "PALIER_1",
-    cible: `Pour les ${INFOS_PALIERS.PALIER_1.nom}s`,
+    cible: `Pour les ${INFOS_PALIERS.PALIER_1.pluriel}`,
     url: `/auth/signup#${INFOS_PALIERS.PALIER_1.slug}`,
     title: "Ne brûle plus tes mégas dans le vide",
     description:
@@ -18,7 +18,7 @@ const pitches = [
   {
     id: "player-1.jpg",
     key: "PALIER_2",
-    cible: `Pour les ${INFOS_PALIERS.PALIER_2.nom}s`,
+    cible: `Pour les ${INFOS_PALIERS.PALIER_2.pluriel}`,
     url: `/auth/signup#${INFOS_PALIERS.PALIER_2.slug}`,
     title: "Zéro hasard. 100% mérite intellectuel",
     description:
@@ -27,7 +27,7 @@ const pitches = [
   {
     id: "player-2.jpg",
     key: "PALIER_3",
-    cible: `Pour l’${INFOS_PALIERS.PALIER_3.nom}`,
+    cible: `Pour les ${INFOS_PALIERS.PALIER_3.pluriel}`,
     url: `/auth/signup#${INFOS_PALIERS.PALIER_3.slug}`,
     title: "Ne joue pas seul, crée ton écurie",
     description:
