@@ -9,7 +9,9 @@
  *
  * Ce script :
  *   1. Pour chaque catégorie cible, charge toutes les questions en base.
- *   2. Applique fixMojibake puis normalise (trim, espaces, casse) avant de comparer.
+ *   2. Applique fixMojibake puis normalise avant de comparer :
+ *        - hors formules ($…$) : insensible à la casse.
+ *        - dans les formules : la casse est PRÉSERVÉE ($d$ ≠ $D$).
  *   3. Regroupe par énoncé normalisé.
  *   4. Dans chaque groupe avec plusieurs documents :
  *        - Détecte les conflits : bonne réponse ou assertions différentes
@@ -307,6 +309,25 @@ function normaliser(str) {
   return str.trim().replace(/\s+/g, ' ').toLowerCase();
 }
 
+/**
+ * Normalise un énoncé pour le regroupement des doublons.
+ * Hors formules ($…$) : insensible à la casse (minuscule).
+ * Dans les formules : la casse est PRÉSERVÉE ($d$ et $D$ sont des énoncés distincts).
+ * Les espaces multiples sont normalisés dans les deux zones.
+ */
+function normaliserEnonce(str) {
+  if (typeof str !== 'string') return '';
+  // split('$') : indices pairs = hors formule, indices impairs = dans formule.
+  const parts = str.split('$');
+  return parts
+    .map((part, i) => {
+      const p = part.replace(/\s+/g, ' ');
+      return i % 2 === 0 ? p.toLowerCase() : p; // préserve la casse dans formules
+    })
+    .join('$')
+    .trim();
+}
+
 /** Applique fixMojibake puis normalise. */
 function normaliserRepare(str) {
   return normaliser(fixMojibake(str));
@@ -401,7 +422,7 @@ function analyserCategorie(categorie, docs, refMap) {
       : [];
     const fixedReponse   = fixMojibake(doc.reponse);
     const propre         = estPropre(doc);
-    const cleNormalisee  = normaliser(fixedEnonce);
+    const cleNormalisee  = normaliserEnonce(fixedEnonce);
     return { doc, fixedEnonce, fixedAssertions, fixedReponse, propre, cleNormalisee };
   });
 
