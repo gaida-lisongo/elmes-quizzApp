@@ -13,6 +13,7 @@ import { escapeRegex, exactMatchRegex, isValidObjectId } from "@/lib/utils/secur
 import { tx, withTransaction } from "@/lib/utils/transaction";
 import { TEAM_CREATION_PRICE, isCurrency, resolveCharge } from "@/lib/payments/pricing";
 import { startPayment, verifyAndApplyPayment } from "@/lib/services/payment-flow.service";
+import { promouvoirJoueur } from "@/lib/services/palier.service";
 
 const { Enrollement } = EnrollementModule;
 
@@ -132,10 +133,8 @@ export async function getEquipesAction() {
 export async function getCaptainCandidateAction() {
   try {
     const guard = await guardPlayer();
-    if (!guard.ok) return { success: false, error: "Connectez-vous avec votre compte VIP pour créer une équipe." };
-    if (guard.player.type !== "VIP") {
-      return { success: false, error: "Seuls les joueurs de type VIP peuvent créer une équipe." };
-    }
+    if (!guard.ok) return { success: false, error: "Connectez-vous pour créer une équipe." };
+    // Paliers cumulatifs : tout joueur peut créer une équipe ; il passe Champion (palier 3) une fois le paiement confirmé.
     const alreadyInTeam = await Equipe.exists({
       $or: [{ chefId: guard.player._id }, { membres: { $elemMatch: { player: guard.player._id } } }],
     });
@@ -164,10 +163,6 @@ export async function initiateEquipeCreationAction(
     const guard = await guardPlayer();
     if (!guard.ok) return { success: false, error: guard.error };
     const captain = guard.player;
-
-    if (captain.type !== "VIP") {
-      return { success: false, error: "Seuls les joueurs de type VIP peuvent créer une équipe." };
-    }
 
     const cleanDesignation = String(designation ?? "").trim().slice(0, 80);
     const cleanDescription = String(description ?? "").trim().slice(0, 500);
@@ -304,7 +299,6 @@ export async function searchInvitableVipPlayersAction(query: string) {
 
     const vipPlayers = await Player.find({
       userId: { $in: users.map((user: any) => user._id) },
-      type: "VIP",
       _id: { $ne: currentPlayer._id },
     }).populate("userId", "pseudo photo").lean();
 
@@ -474,9 +468,6 @@ export async function inviteMemberAction(equipeId: string, playerId: string) {
     }
 
     const player = await Player.findById(playerId);
-    if (player && player.type !== 'VIP') {
-      return { success: false, error: 'Seuls les joueurs VIP peuvent rejoindre une équipe.' };
-    }
     if (player) {
       const alreadyInTeam = await Equipe.findOne({
         $or: [
@@ -545,6 +536,8 @@ export async function respondEquipeInvitationAction(
 
     equipe.membres[memberIndex].status = true;
     await equipe.save();
+    // Rejoindre une équipe fait passer le joueur au palier Champion (3).
+    await promouvoirJoueur(currentPlayer._id, 3);
     return { success: true, message: "Invitation acceptee." };
   } catch (error: any) {
     return { success: false, error: error.message || "Erreur de traitement." };
@@ -842,6 +835,7 @@ export async function changeTeamCaptainAdminAction(teamId: string, playerId: str
     }
 
     await equipe.save();
+    await promouvoirJoueur(playerId, 3);
     return { success: true, message: "Capitaine mis à jour." };
   } catch (error: any) {
     return { success: false, error: error.message || "Erreur de changement de capitaine." };

@@ -29,6 +29,7 @@ import { useLoading } from "@/context/LoadingContext";
 import type { PlayerType } from "@/actions/signup.actions";
 import type { Statut } from "@/actions/signup.actions";
 import EtablissementSelector from "@/components/Common/EtablissementSelector";
+import { INFOS_PALIERS, routeTableauDeBord } from "@/lib/utils/paliers";
 
 interface SignupProps {
   playerType: PlayerType;
@@ -47,37 +48,37 @@ const PLAYER_TYPES: {
   features: string[];
 }[] = [
   {
-    type: "STANDALONE",
-    label: "Intelligent",
-    tagline: "Joueur solo",
+    type: "PALIER_1",
+    label: INFOS_PALIERS.PALIER_1.nom,
+    tagline: `Palier 1 · ${INFOS_PALIERS.PALIER_1.accroche}`,
     icon: <Brain className="h-6 w-6" />,
     color: "text-emerald-500",
     bgColor: "bg-emerald-50 dark:bg-emerald-500/10",
     borderColor: "border-emerald-400",
-    description: "Jouez des parties gratuites offertes chaque semaine et accumulez des tickets.",
-    features: ["Parties gratuites chaque semaine", "Quiz en solo", "Gagne des tickets"],
+    description: "Jouez des parties offertes chaque semaine, entraînez-vous et invitez vos amis.",
+    features: INFOS_PALIERS.PALIER_1.droits,
   },
   {
-    type: "ADVANCED",
-    label: "Génie",
-    tagline: "Joueur avancé",
+    type: "PALIER_2",
+    label: INFOS_PALIERS.PALIER_2.nom,
+    tagline: `Palier 2 · ${INFOS_PALIERS.PALIER_2.accroche}`,
     icon: <Zap className="h-6 w-6" />,
     color: "text-purple-500",
     bgColor: "bg-purple-50 dark:bg-purple-500/10",
     borderColor: "border-purple-400",
     description: "Parties offertes + inscriptions aux parcours pour tenter de remporter le prix mensuel.",
-    features: ["Parties gratuites chaque semaine", "Parcours & classements", "Prix mensuel à gagner"],
+    features: INFOS_PALIERS.PALIER_2.droits,
   },
   {
-    type: "VIP",
-    label: "Compétiteur",
-    tagline: "Joueur compétitif",
+    type: "PALIER_3",
+    label: INFOS_PALIERS.PALIER_3.nom,
+    tagline: `Palier 3 · ${INFOS_PALIERS.PALIER_3.accroche}`,
     icon: <Trophy className="h-6 w-6" />,
     color: "text-amber-500",
     bgColor: "bg-amber-50 dark:bg-amber-500/10",
     borderColor: "border-amber-400",
     description: "Inscrivez votre équipe aux compétitions et remportez les gros lots chaque week-end.",
-    features: ["Compétitions chaque week-end", "Matchs en direct", "Gros lots à gagner"],
+    features: INFOS_PALIERS.PALIER_3.droits,
   },
 ];
 
@@ -224,7 +225,7 @@ const Signup = ({ playerType: initialType, referralCode }: SignupProps) => {
       }
 
       toast.success("Compte créé avec succès !");
-      router.push(step2Result.redirectTo || "/dashboard/standalone");
+      router.push(step2Result.redirectTo || routeTableauDeBord("PALIER_1"));
     } catch {
       toast.error("Une erreur est survenue.");
     } finally {

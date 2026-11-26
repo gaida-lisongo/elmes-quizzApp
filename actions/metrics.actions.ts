@@ -10,6 +10,7 @@ import Partie from "@/lib/models/Partie";
 import Player from "@/lib/models/Player";
 import Equipe from "@/lib/models/Equipe";
 import EnrollementModule from "@/lib/models/Enrollement";
+import { valeursDuRang } from '@/lib/utils/paliers';
 
 const { Enrollement } = EnrollementModule;
 const { Session } = EnrollementModule;
@@ -232,9 +233,9 @@ export async function getMetricsAgentAction(): Promise<{ success: boolean; data?
     // ── Moyennes ──────────────────────────────────────────────
     const totalPlayers = await Player.countDocuments();
     const [standalone, advanced, vip] = await Promise.all([
-      Player.countDocuments({ type: 'STANDALONE' }),
-      Player.countDocuments({ type: 'ADVANCED' }),
-      Player.countDocuments({ type: 'VIP' }),
+      Player.countDocuments({ type: { $in: valeursDuRang(1) } }),
+      Player.countDocuments({ type: { $in: valeursDuRang(2) } }),
+      Player.countDocuments({ type: { $in: valeursDuRang(3) } }),
     ]);
 
     const totalEquipes = await Equipe.countDocuments();

@@ -13,6 +13,7 @@ import { publicAppUrl } from '@/lib/utils/appUrl';
 import { tx, withTransaction } from '@/lib/utils/transaction';
 import { getTrainingPass, type Currency, type ProductType } from '@/lib/payments/pricing';
 import { cancelPendingEnrollment, confirmEnrollment } from '@/lib/services/enrollment.service';
+import { promouvoirJoueur } from '@/lib/services/palier.service';
 
 const { Enrollement } = EnrollementModule;
 
@@ -283,6 +284,8 @@ async function applyPaymentEffect(
         membres: [{ player: player._id, status: true, isSecretary: true }],
         metriques: { competitions: 0, soldeUsd: 0, soldeCDF: 0, matchsWin: 0 },
       }], tx(dbSession));
+      // Le capitaine passe au palier Champion (3).
+      await promouvoirJoueur(player._id, 3, dbSession);
       return {};
     }
 

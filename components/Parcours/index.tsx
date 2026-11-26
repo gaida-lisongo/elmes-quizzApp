@@ -46,7 +46,7 @@ const ParcoursSection = ({ isAdmin = false }: { isAdmin?: boolean }) => {
             headerInfo={{
               title: "PARCOURS",
               subtitle: "Entraîne-toi avec les Parcours",
-              description: `Des parcours thématiques conçus pour les Génies. Choisis ta catégorie, réponds aux questions et grimpe dans le classement.`,
+              description: `Des parcours thématiques conçus pour les Challengers. Choisis ta catégorie, réponds aux questions et grimpe dans le classement.`,
             }}
           />
 

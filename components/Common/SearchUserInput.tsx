@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Loader2, Search, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { searchUsers } from "@/actions/payment.actions";
+import { libellePalier } from "@/lib/utils/paliers";
 
 // Résultat de recherche sans données personnelles (pas de téléphone ni d'e-mail, EX-SEC-04).
 export interface SearchUserResult {
@@ -100,7 +101,7 @@ export default function SearchUserInput({
                 </div>
                 <div className="shrink-0 text-right">
                   <span className="inline-block rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
-                    {user.playerType || "PLAYER"}
+                    {user.playerType ? libellePalier(user.playerType) : "Joueur"}
                   </span>
                 </div>
               </button>

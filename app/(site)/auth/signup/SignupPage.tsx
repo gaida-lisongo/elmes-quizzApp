@@ -4,19 +4,15 @@ import { useEffect, useState } from "react";
 import Signup from "@/components/Auth/Signup";
 import Loader from "@/components/Common/Loader";
 import type { PlayerType } from "@/actions/signup.actions";
+import { palierDepuisSlug } from "@/lib/utils/paliers";
 
-const TYPE_MAP: Record<string, PlayerType> = {
-  standalone: "STANDALONE",
-  advanced: "ADVANCED",
-  vip: "VIP",
-};
 
 export default function SignupPage({
   referralCode,
 }: {
   referralCode: string | null;
 }) {
-  const [playerType, setPlayerType] = useState<PlayerType>("STANDALONE");
+  const [playerType, setPlayerType] = useState<PlayerType>("PALIER_1");
   const [resolvedCode, setResolvedCode] = useState<string | null>(referralCode);
   const [ready, setReady] = useState(false);
 
@@ -26,7 +22,7 @@ export default function SignupPage({
     const [typePart, queryString] = hash.split("?");
 
     // Déterminer le type de joueur depuis le hash
-    const detectedType = TYPE_MAP[typePart?.toLowerCase()] || "STANDALONE";
+    const detectedType = palierDepuisSlug(typePart);
     setPlayerType(detectedType);
 
     // Chercher un code d'affiliation : priorité au hash, puis searchParams, puis prop serveur

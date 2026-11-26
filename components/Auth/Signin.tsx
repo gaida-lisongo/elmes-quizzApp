@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import Logo from "@/components/Common/Logo";
 import { useLoading } from "@/context/LoadingContext";
+import { INFOS_PALIERS } from "@/lib/utils/paliers";
 
 const Signin = () => {
   const router = useRouter();
@@ -117,20 +118,20 @@ const Signin = () => {
                     <div className="flex items-center gap-3 rounded-lg bg-white/10 p-3 backdrop-blur-sm">
                       <Brain className="h-5 w-5 text-emerald-300" />
                       <p className="text-sm text-white/90">
-                        <strong>Intelligent :</strong> Parties gratuites chaque
+                        <strong>{INFOS_PALIERS.PALIER_1.nom} :</strong> Parties gratuites chaque
                         semaine
                       </p>
                     </div>
                     <div className="flex items-center gap-3 rounded-lg bg-white/10 p-3 backdrop-blur-sm">
                       <Sparkles className="h-5 w-5 text-purple-300" />
                       <p className="text-sm text-white/90">
-                        <strong>Génie :</strong> Parcours & prix mensuel
+                        <strong>{INFOS_PALIERS.PALIER_2.nom} :</strong> + Parcours & prix mensuel
                       </p>
                     </div>
                     <div className="flex items-center gap-3 rounded-lg bg-white/10 p-3 backdrop-blur-sm">
                       <Shield className="h-5 w-5 text-amber-300" />
                       <p className="text-sm text-white/90">
-                        <strong>Compétiteur :</strong> Compétitions & gros lots
+                        <strong>{INFOS_PALIERS.PALIER_3.nom} :</strong> + Équipe & compétitions
                       </p>
                     </div>
                   </div>

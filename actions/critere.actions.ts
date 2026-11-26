@@ -146,8 +146,9 @@ export async function deleteCritereAction(id: string) {
 
 /**
  * Bonus hebdomadaire (EX-JEU-03) :
- * - STANDALONE : +20 parties dans Player.parties ;
- * - ADVANCED : +30 parties sur chaque enrôlement Parcours confirmé, dans totalGrantedGames ET
+ * Paliers cumulatifs (lib/utils/paliers.ts) :
+ * - tous les joueurs (Curieux et au-dessus) : +20 parties dans Player.parties ;
+ * - chaque enrôlement Parcours confirmé (Challenger et au-dessus) : +30 parties, dans totalGrantedGames ET
  *   remainingGames (les champs réellement lus par le jeu ; maxParties suit pour compatibilité).
  * Idempotent par semaine ISO : une trace BonusRun unique empêche une double application.
  */
@@ -168,14 +169,13 @@ export async function applyWeeklyBonusAction() {
       }
 
       const standalone = await Player.updateMany(
-        { type: 'STANDALONE' },
+        {},
         { $inc: { parties: WEEKLY_BONUS_STANDALONE } },
         tx(dbSession),
       );
 
-      const advancedIds = await Player.find({ type: 'ADVANCED' }).select('_id').session(dbSession).lean();
       const advanced = await Enrollement.updateMany(
-        { playerId: { $in: advancedIds.map((p) => p._id) }, status: 'CONFIRMED', parcoursId: { $exists: true } },
+        { playerId: { $exists: true }, status: 'CONFIRMED', parcoursId: { $exists: true } },
         { $inc: { totalGrantedGames: WEEKLY_BONUS_ADVANCED, remainingGames: WEEKLY_BONUS_ADVANCED, maxParties: WEEKLY_BONUS_ADVANCED } },
         tx(dbSession),
       );
@@ -194,7 +194,7 @@ export async function applyWeeklyBonusAction() {
 
     return {
       success: true,
-      message: `Bonus ${week} appliqué : ${result.standalone} STANDALONE (+${WEEKLY_BONUS_STANDALONE} parties), ${result.advanced} enrôlement(s) ADVANCED (+${WEEKLY_BONUS_ADVANCED} parties).`,
+      message: `Bonus ${week} appliqué : ${result.standalone} joueur(s) (+${WEEKLY_BONUS_STANDALONE} parties), ${result.advanced} enrôlement(s) Parcours (+${WEEKLY_BONUS_ADVANCED} parties).`,
     };
   } catch (error: any) {
     return { success: false, error: error.message };

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { getPlayerMetricsAction, type PlayerMetricsData } from "@/actions/player.metrics.actions";
 import PlayerRecentActivity from "../PlayerRecentActivity";
+import { INFOS_PALIERS } from "@/lib/utils/paliers";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -57,7 +58,7 @@ export default function StandaloneDashboard() {
             <Brain className="h-6 w-6 text-emerald-500" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-black dark:text-white">Dashboard Intelligent</h1>
+            <h1 className="text-2xl font-bold text-black dark:text-white">Tableau de bord {INFOS_PALIERS.PALIER_1.nom}</h1>
             <p className="text-waterloo">Bienvenue sur votre espace personnel</p>
           </div>
         </div>

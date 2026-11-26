@@ -10,6 +10,7 @@ import Partie from '@/lib/models/Partie';
 import Categorie from '@/lib/models/Categorie';
 import EnrollementModule from '@/lib/models/Enrollement';
 import Equipe from '@/lib/models/Equipe';
+import { aAuMoins, rangDe, normaliserPalier, type PalierJoueur } from '@/lib/utils/paliers';
 
 const { Enrollement, Session } = EnrollementModule;
 
@@ -17,7 +18,7 @@ const isStaffSession = (session: { role?: string } | null | undefined) =>
   Boolean(session && ['ADMIN', 'MOD'].includes(session.role || ''));
 
 export interface PlayerMetricsData {
-  playerType: 'STANDALONE' | 'ADVANCED' | 'VIP';
+  playerType: PalierJoueur;
   stats: {
     partiesJouees: number;
     scoreTotal: number;
@@ -158,7 +159,7 @@ export async function getPlayerMetricsAction(): Promise<{ success: boolean; data
     const balancedParties = player.parties || 0;
     const partyPercent = balancedParties > 0 ? Math.round((partiesJoueesCumul / balancedParties) * 100) : 0;
 
-    const leaderboard = await Player.find({ type: 'STANDALONE' })
+    const leaderboard = await Player.find({})
       .populate('userId', 'pseudo')
       .sort({ 'metrics.totalScore': -1, createdAt: 1 })
       .lean();
@@ -178,7 +179,7 @@ export async function getPlayerMetricsAction(): Promise<{ success: boolean; data
     const currentRank = leaderboardRows.find((entry) => entry._id === player._id.toString())?.rank || 0;
 
     let team: PlayerMetricsData['team'] = null;
-    if (player.type === 'VIP') {
+    if (aAuMoins(player.type, 3)) {
       const teamDoc = await Equipe.findOne({ membres: { $elemMatch: { player: player._id } } })
         .populate({ path: 'chefId', populate: { path: 'userId', select: 'pseudo photo telephone' } })
         .lean();
@@ -228,7 +229,7 @@ export async function getPlayerMetricsAction(): Promise<{ success: boolean; data
       }
     }
 
-    const rewardSessions = player.type === 'ADVANCED'
+    const rewardSessions = aAuMoins(player.type, 2)
       ? await Session.find({ 'rewardTransactions.beneficiaryType': 'PLAYER', 'rewardTransactions.beneficiaryId': player._id })
           .populate({ path: 'rewardTransactions.enrollmentId', populate: [{ path: 'parcoursId', select: 'designation' }] })
           .sort({ paymentProcessedAt: -1, updatedAt: -1 })
@@ -253,7 +254,7 @@ export async function getPlayerMetricsAction(): Promise<{ success: boolean; data
     return {
       success: true,
       data: {
-        playerType: player.type,
+        playerType: normaliserPalier(player.type),
         stats: {
           partiesJouees: partiesJoueesCumul,
           scoreTotal: player.metrics?.totalScore || 0,
@@ -303,7 +304,7 @@ export async function getPlayerMetricsAction(): Promise<{ success: boolean; data
           createdAt: party.createdAt?.toISOString?.() || '',
         })),
         categoryBreakdown,
-        chart: (player.type === 'ADVANCED' ? aggregatedSessions : categoryBreakdown).map((item: any) => ({
+        chart: (rangDe(player.type) === 2 ? aggregatedSessions : categoryBreakdown).map((item: any) => ({
           label: item.categorie || item.label,
           value: item.parties || item.count || 0,
           detail: item.ok ? `${item.ok} OK` : item.count ? `${item.count} inscr.` : 'Aucune donnée',

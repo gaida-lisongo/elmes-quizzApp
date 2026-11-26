@@ -9,6 +9,7 @@ import CriteresAdmin from "./CriteresAdmin";
 import SessionRevenueOverview from "./SessionRevenueOverview";
 import ModeratorPlayerManagement from "./ModeratorPlayerManagement";
 import AdminTeamManagement from "./AdminTeamManagement";
+import { INFOS_PALIERS } from "@/lib/utils/paliers";
 
 const TYPE_COLORS: Record<string, string> = {
   standalone: "text-blue-600 bg-blue-100 dark:bg-blue-900/30",
@@ -41,17 +42,17 @@ export default function MetricsAgent({ role }: MetricsAgentProps) {
         setData({
           moyennesCards: [
             {
-              label: "STANDALONE", count: d.moyennes.standalone.count,
+              label: INFOS_PALIERS.PALIER_1.nom, count: d.moyennes.standalone.count,
               total: d.moyennes.standalone.total, percent: d.moyennes.standalone.percent,
               icon: TYPE_ICONS.standalone, color: TYPE_COLORS.standalone,
             },
             {
-              label: "ADVANCED", count: d.moyennes.advanced.count,
+              label: INFOS_PALIERS.PALIER_2.nom, count: d.moyennes.advanced.count,
               total: d.moyennes.advanced.total, percent: d.moyennes.advanced.percent,
               icon: TYPE_ICONS.advanced, color: TYPE_COLORS.advanced,
             },
             {
-              label: "VIP", count: d.moyennes.vip.count,
+              label: INFOS_PALIERS.PALIER_3.nom, count: d.moyennes.vip.count,
               total: d.moyennes.vip.total, percent: d.moyennes.vip.percent,
               icon: TYPE_ICONS.vip, color: TYPE_COLORS.vip,
             },

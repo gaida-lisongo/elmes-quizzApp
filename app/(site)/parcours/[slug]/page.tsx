@@ -68,7 +68,7 @@ export default async function ParcoursDetailPage({
     title: canEnroll
       ? "Vous pouvez vous inscrire à ce parcours et tenter de remporter la couronne du mois"
       : parcours?.status === 'ACTIVE'
-        ? "Ce parcours nécessite un profil ADVANCED pour s'inscrire"
+        ? "Connectez-vous pour vous inscrire à ce parcours"
         : parcours?.status === 'INACTIVE'
           ? "Ce parcours est actuellement indisponible"
           : "Les inscriptions ne sont plus disponibles",

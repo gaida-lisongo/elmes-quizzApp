@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { getPlayerMetricsAction, type PlayerMetricsData } from "@/actions/player.metrics.actions";
 import PlayerRecentActivity from "../PlayerRecentActivity";
+import { INFOS_PALIERS } from "@/lib/utils/paliers";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -55,7 +56,7 @@ export default function AdvancedDashboard() {
             <Zap className="h-6 w-6 text-purple-500" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-black dark:text-white">Dashboard Génie</h1>
+            <h1 className="text-2xl font-bold text-black dark:text-white">Tableau de bord {INFOS_PALIERS.PALIER_2.nom}</h1>
             <p className="text-waterloo">Parcourez les défis et dominez les classements</p>
           </div>
         </div>

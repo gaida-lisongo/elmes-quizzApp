@@ -16,9 +16,10 @@ import PartiesStandalone from "./_components/PartiesStandalone";
 import ParcoursAdvanced from "./_components/ParcoursAdvanced";
 import MatchsVip from "./_components/MatchsVip";
 import Parrainages from "./_components/Parrainages";
+import { normaliserPalier, type PalierJoueur } from "@/lib/utils/paliers";
 
 export type UserRole = "ADMIN" | "MOD" | "PLAYER";
-export type PlayerType = "STANDALONE" | "ADVANCED" | "VIP";
+export type PlayerType = PalierJoueur;
 
 export interface MenuTab {
   id: string;
@@ -44,8 +45,9 @@ const USER_MENU: { account: string; menu: MenuTab[] }[] = [
       { id: "retraits", name: "Retraits" },
     ],
   },
+  // Paliers cumulatifs : chaque palier reprend tous les onglets du palier précédent.
   {
-    account: "STANDALONE",
+    account: "PALIER_1",
     menu: [
       { id: "metriques", name: "Métriques" },
       { id: "parties", name: "Parties" },
@@ -54,18 +56,21 @@ const USER_MENU: { account: string; menu: MenuTab[] }[] = [
     ],
   },
   {
-    account: "ADVANCED",
+    account: "PALIER_2",
     menu: [
       { id: "metriques", name: "Métriques" },
+      { id: "parties", name: "Parties" },
       { id: "parcours", name: "Parcours" },
       { id: "affiliation", name: "Affiliation" },
       { id: "retraits", name: "Retraits" },
     ],
   },
   {
-    account: "VIP",
+    account: "PALIER_3",
     menu: [
       { id: "metriques", name: "Métriques" },
+      { id: "parties", name: "Parties" },
+      { id: "parcours", name: "Parcours" },
       { id: "matchs", name: "Matchs" },
       { id: "affiliation", name: "Affiliation" },
       { id: "retraits", name: "Retraits" },
@@ -76,16 +81,16 @@ const USER_MENU: { account: string; menu: MenuTab[] }[] = [
 /**
  * Détermine la clé de menu en fonction du rôle et du type de joueur.
  * - ADMIN, MOD → utilisent leur rôle directement
- * - PLAYER → utilise le type de son profil (STANDALONE, ADVANCED, VIP)
+ * - PLAYER → utilise son palier (PALIER_1, PALIER_2, PALIER_3), anciennes valeurs comprises
  */
 function resolveMenuKey(
   role: UserRole,
-  playerType?: PlayerType | null
+  playerType?: string | null
 ): string {
   if (role === "ADMIN") return "ADMIN";
   if (role === "MOD") return "MOD";
   // PLAYER : on utilise le type de joueur
-  return playerType || "STANDALONE";
+  return normaliserPalier(playerType);
 }
 
 export default function AdminLayoutClient({
@@ -196,10 +201,10 @@ export default function AdminLayoutClient({
           {currentTab === "metriques" && (
             menuKey === "ADMIN" || menuKey === "MOD"
               ? <MetricsAgent role={menuKey as "ADMIN" | "MOD"} />
-              : menuKey === "ADVANCED"
-                ? <AdvancedDashboard />
-                : menuKey === "VIP"
-                  ? <VipDashboard />
+              : menuKey === "PALIER_3"
+                ? <VipDashboard />
+                : menuKey === "PALIER_2"
+                  ? <AdvancedDashboard />
                   : <StandaloneDashboard />
           )}
           {currentTab === "agents" && children}

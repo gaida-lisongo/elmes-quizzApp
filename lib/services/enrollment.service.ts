@@ -4,6 +4,7 @@ import EnrollementModule from '@/lib/models/Enrollement';
 import { tx } from '@/lib/utils/transaction';
 import { grantSessionGamesAfterEnrollmentValidation } from '@/lib/utils/enrollmentGames';
 import { recomputeCompetitionScholarship } from '@/lib/utils/scholarship.service';
+import { promouvoirJoueur } from '@/lib/services/palier.service';
 
 const { Enrollement } = EnrollementModule;
 
@@ -60,6 +61,11 @@ export async function confirmEnrollment(
 
   const isCompetition = Boolean(current.competitionId);
   const sessionId = current.sessionId?.toString();
+
+  // Premier Parcours confirmé : le joueur passe au moins Challenger (palier 2). Idempotent.
+  if (!isCompetition && current.playerId) {
+    await promouvoirJoueur(current.playerId, 2, dbSession);
+  }
 
   // L'octroi des parties est idempotent : on le rejoue aussi pour un enrôlement déjà confirmé
   // dont les parties n'auraient pas été accordées (reprise après incident).
