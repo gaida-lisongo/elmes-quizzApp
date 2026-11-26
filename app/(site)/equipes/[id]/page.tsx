@@ -6,6 +6,7 @@ import Equipe from "@/lib/models/Equipe";
 import EnrollementModel from "@/lib/models/Enrollement";
 import { Metadata } from "next";
 import { buildMetadata } from "@/lib/utils/metadata";
+import { INFOS_PALIERS } from "@/lib/utils/paliers";
 
 const BANNER_IMAGE = "/images/team/team-2.jpg";
 
@@ -60,7 +61,7 @@ export default async function EquipeDetailPage({ params }: { params: Promise<{ i
 
               <div>
                 <p className="mb-3 inline-flex rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white/75">
-                  Equipe VIP
+                  Equipe {INFOS_PALIERS.PALIER_3.nom}
                 </p>
                 <h1 className="text-4xl font-bold text-white md:text-5xl">{equipe.designation}</h1>
                 <p className="mt-3 text-sm text-white/65">

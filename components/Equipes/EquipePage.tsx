@@ -3,6 +3,7 @@
 import { confirmEquipeCreationAction, getCaptainCandidateAction, initiateEquipeCreationAction, type EquipeSummary } from "@/actions/equipe.actions";
 import { motion } from "framer-motion";
 import { BadgeCheck, CreditCard, Search, Sparkles, Users } from "lucide-react";
+import { INFOS_PALIERS } from "@/lib/utils/paliers";
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -41,7 +42,7 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
     const result = await getCaptainCandidateAction();
     setLoading(false);
     if (!result.success || !result.captain) {
-      setError(result.error || "Connectez-vous avec un compte VIP pour créer une équipe.");
+      setError(result.error || `Connecte-toi pour créer ton équipe et devenir ${INFOS_PALIERS.PALIER_3.nom}.`);
       return;
     }
     setCaptain({ pseudo: result.captain.pseudo });
@@ -261,7 +262,7 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
 
               {step === 1 && (
                 <div className="mt-6 space-y-4">
-                  <p className="text-sm text-waterloo">Le capitaine est le joueur VIP connecté. Connectez-vous avec votre compte VIP, puis continuez.</p>
+                  <p className="text-sm text-waterloo">Le capitaine est le joueur connecté. Connecte-toi, puis continue pour devenir {INFOS_PALIERS.PALIER_3.nom}.</p>
                   <button
                     type="button"
                     disabled={loading}
@@ -380,7 +381,7 @@ export default function EquipesPageClient({ equipes }: { equipes: EquipeSummary[
                 <div className="mt-6 rounded-xl border border-dashed border-stroke p-4 text-sm text-waterloo dark:border-strokedark">
                   <div className="flex items-center gap-2">
                     <BadgeCheck className="h-4 w-4 text-primary" />
-                    L’équipe est créée au nom du joueur VIP connecté, une fois le paiement confirmé.
+                    L’équipe est créée au nom du joueur connecté, une fois le paiement confirmé. Tu passes au palier {INFOS_PALIERS.PALIER_3.nom}.
                   </div>
                 </div>
               ) : null}
