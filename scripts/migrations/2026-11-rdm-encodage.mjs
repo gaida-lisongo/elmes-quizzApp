@@ -1,21 +1,27 @@
 /**
- * 2026-11-rdm-encodage.mjs — Dédoublonnage des questions RDM (M-20261126-10, rév. 2).
+ * 2026-11-rdm-encodage.mjs — Dédoublonnage des questions RDM (M-20261126-10, rév. 3).
  *
- * Contexte : le seed a été lancé deux fois. La première fois avec le fichier rdm.json
- * mal encodé (mojibake), la seconde fois avec le fichier corrigé (PR #6). La base
- * contient donc ~200 questions cassées + ~200 questions propres = ~400 questions RDM.
+ * Contexte : le seed a été lancé deux fois. La base contient ~400 documents RDM pour
+ * ~200 questions distinctes. Ce script supprime tous les doublons et ne conserve
+ * qu'une seule question par énoncé.
  *
  * Ce script :
  *   1. Calcule la forme réparée (fixMojibake) de chaque question RDM en base.
  *   2. Regroupe les questions par énoncé réparé normalisé (espaces, casse).
- *   3. Dans chaque groupe de plusieurs documents :
- *        - garde UNE question (propre d'abord ; à égalité : plus référencée, puis plus ancienne) ;
- *        - supprime les autres UNIQUEMENT si elles sont cassées ET ont une jumelle propre ;
- *        - une cassée sans jumelle propre est réparée ($set) et non supprimée ;
- *        - si la bonne réponse diffère entre membres du groupe → exclusion + liste séparée.
+ *   3. Dans chaque groupe avec plusieurs documents :
+ *        - choisit UN gagnant : propre d'abord, sinon le plus référencé, sinon le
+ *          plus ancien (_id) ;
+ *        - si le gagnant est cassé, le répare ($set) ;
+ *        - supprime TOUTES les autres copies du groupe (cassées ou propres) ;
+ *        - si la bonne réponse diffère entre membres du groupe → exclusion + liste
+ *          séparée (conflit, aucune action sur ce groupe).
  *   4. Avant toute suppression : réaffecte les références (parties.reponses[].quizId,
  *      parties.quizIds[]) vers la question gardée.
  *   5. Écrit rdm-supprimees.json (documents complets) avant de supprimer.
+ *
+ * Garde-fous (mode --appliquer) :
+ *   - Refus si les suppressions prévues dépassent 200.
+ *   - Refus si une suppression vise un document hors catégorie RDM.
  *
  * Usage :
  *   node scripts/migrations/2026-11-rdm-encodage.mjs [--simulation]
@@ -23,7 +29,8 @@
  *
  * - Mode par défaut : --simulation (lecture seule).
  * - Écriture uniquement avec --appliquer + --sauvegarde pointant vers une sauvegarde
- *   existante, datée d'aujourd'hui, contenant quizzes.json.
+ *   existante, dont le nom commence par la date du jour, contenant quizzes.json
+ *   avec au moins 400 documents de la catégorie RDM.
  * - Idempotent : relancer après application donne 0 modification.
  * - Aucune donnée personnelle dans les journaux. Aucun secret dans le code.
  */
@@ -36,6 +43,17 @@ import mongoose from 'mongoose';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// ── Constantes ───────────────────────────────────────────────────────────────
+
+/** ID de la catégorie RDM en production (connue d'après le seed et les sauvegardes). */
+const RDM_CAT_ID = '6ad5fd1aaad96ac2b419bc51';
+
+/** Nombre minimum de documents RDM attendus dans la sauvegarde. */
+const MIN_RDM_BACKUP = 400;
+
+/** Nombre maximum de suppressions autorisées en mode --appliquer. */
+const MAX_SUPPRESSIONS = 200;
 
 // ── Chargement des variables d'environnement ─────────────────────────────────
 
@@ -74,7 +92,10 @@ const sauvegArg = (() => {
 
 if (!simulationMode && !sauvegArg) {
   console.error('ERREUR : --appliquer requiert --sauvegarde <dossier>.');
-  console.error('Exemple : node scripts/migrations/2026-11-rdm-encodage.mjs --appliquer --sauvegarde E:/Nathan/formation-elmes-quiz/sauvegardes/2026-11-26');
+  console.error(
+    'Exemple : node scripts/migrations/2026-11-rdm-encodage.mjs --appliquer ' +
+    '--sauvegarde E:/Nathan/formation-elmes-quiz/sauvegardes/2026-11-26-avant-rdm',
+  );
   process.exit(1);
 }
 
@@ -92,24 +113,66 @@ function validerSauvegarde(sauvegDir) {
     process.exit(1);
   }
 
-  // Vérifier que le dossier est daté d'aujourd'hui (nom contient YYYY-MM-DD).
-  const today = new Date().toISOString().slice(0, 10); // 2026-11-26
+  // Vérifier que le nom du dossier commence par la date du jour (YYYY-MM-DD).
+  const today = new Date().toISOString().slice(0, 10);
   const folderName = path.basename(sauvegDir);
-  if (!folderName.includes(today)) {
-    console.error(`ERREUR : la sauvegarde '${folderName}' ne semble pas datée d'aujourd'hui (${today}).`);
-    console.error('Lancez d\'abord : node scripts/migrations/sauvegarde.mjs <dossier> --toutes');
+  if (!folderName.startsWith(today)) {
+    console.error(
+      `ERREUR : la sauvegarde '${folderName}' ne commence pas par la date d'aujourd'hui (${today}).`,
+    );
+    console.error(
+      "Lancez d'abord : node scripts/migrations/sauvegarde.mjs " +
+      `E:/Nathan/formation-elmes-quiz/sauvegardes/${today}-avant-rdm --toutes`,
+    );
     process.exit(1);
   }
 
   const quizzesFile = path.join(sauvegDir, 'quizzes.json');
   if (!existsSync(quizzesFile)) {
     console.error(`ERREUR : quizzes.json introuvable dans ${sauvegDir}.`);
-    console.error('Lancez d\'abord : node scripts/migrations/sauvegarde.mjs <dossier> --toutes');
+    console.error(
+      "Lancez d'abord : node scripts/migrations/sauvegarde.mjs <dossier> --toutes",
+    );
+    process.exit(1);
+  }
+
+  // Vérifier que quizzes.json contient au moins MIN_RDM_BACKUP documents RDM.
+  let quizzesData;
+  try {
+    quizzesData = JSON.parse(readFileSync(quizzesFile, 'utf8'));
+  } catch (err) {
+    console.error(`ERREUR : impossible de lire/parser quizzes.json : ${err.message}`);
+    process.exit(1);
+  }
+
+  if (!Array.isArray(quizzesData)) {
+    console.error('ERREUR : quizzes.json ne contient pas un tableau JSON.');
+    process.exit(1);
+  }
+
+  const rdmCount = quizzesData.filter((doc) => {
+    const catId = doc.categorieId;
+    if (!catId) return false;
+    if (typeof catId === 'string') return catId === RDM_CAT_ID;
+    if (catId.$oid) return catId.$oid === RDM_CAT_ID;
+    return false;
+  }).length;
+
+  if (rdmCount < MIN_RDM_BACKUP) {
+    console.error(
+      `ERREUR : quizzes.json contient seulement ${rdmCount} document(s) de la catégorie RDM` +
+      ` (attendu : >= ${MIN_RDM_BACKUP}).`,
+    );
+    console.error(
+      'Cette sauvegarde semble ancienne ou partielle. Lancez sauvegarde.mjs avec --toutes.',
+    );
     process.exit(1);
   }
 
   console.log(`Sauvegarde validée : ${sauvegDir}`);
-  console.log(`  quizzes.json présent.\n`);
+  console.log(
+    `  quizzes.json : ${quizzesData.length} documents au total, ${rdmCount} de la catégorie RDM.\n`,
+  );
 }
 
 // ── Sérialisation EJSON (compatible avec sauvegarde.mjs) ─────────────────────
@@ -296,7 +359,7 @@ async function reaffecterRefs(deletedOid, keptOid, partiesColl) {
 // ── Bannière ──────────────────────────────────────────────────────────────────
 
 console.log('══════════════════════════════════════════════════════════════════');
-console.log(' Migration 2026-11 — Dédoublonnage RDM (M-20261126-10, rév. 2)');
+console.log(' Migration 2026-11 — Dédoublonnage RDM (M-20261126-10, rév. 3)');
 console.log(' Mode : ' + (simulationMode
   ? 'SIMULATION (lecture seule, aucune écriture)'
   : 'APPLIQUER (écriture en base)'));
@@ -312,7 +375,9 @@ if (!simulationMode) {
 async function main() {
   const mongoUri = process.env.MONGO_URI;
   if (!mongoUri) {
-    console.error('ERREUR : MONGO_URI introuvable. Vérifiez .env.local ou .env à la racine du projet.');
+    console.error(
+      'ERREUR : MONGO_URI introuvable. Vérifiez .env.local ou .env à la racine du projet.',
+    );
     process.exit(1);
   }
 
@@ -363,8 +428,8 @@ async function main() {
     return { doc, fixedEnonce, fixedAssertions, fixedReponse, propre, cleNormalisee };
   });
 
-  const nbPropres  = enriched.filter((e) => e.propre).length;
-  const nbCassees  = enriched.filter((e) => !e.propre).length;
+  const nbPropres = enriched.filter((e) => e.propre).length;
+  const nbCassees = enriched.filter((e) => !e.propre).length;
   console.log(`  Questions déjà propres  : ${nbPropres}`);
   console.log(`  Questions cassées (mojibake détecté) : ${nbCassees}\n`);
 
@@ -384,32 +449,23 @@ async function main() {
   console.log(`  Groupes avec 1 document  : ${nbSingles}`);
   console.log(`  Groupes avec N documents : ${nbMulti}\n`);
 
-  // ── Étape 4 : Analyse par groupe ──────────────────────────────────────────
+  // ── Étape 4 : Première passe — détection des conflits et collecte des IDs ─
   console.log('── Étape 4 : Analyse des groupes ────────────────────────────────');
 
-  const aReparer   = []; // { doc, fixedEnonce, fixedAssertions, fixedReponse }  → $set
-  const aSupprimer = []; // { item, keptId }  → deleteOne (après réaffectation)
-  const conflits   = []; // { items }  → exclus, listés séparément
-  // Questions propres supplémentaires (doubles propres) : hors périmètre, signalées seulement.
-  const doublesPropresBruts = [];
-
-  // Toutes les IDs potentiellement impliquées dans les groupes multi pour comptage des refs.
+  /** Singles cassées : à réparer ($set), aucune suppression. */
+  const aReparerSingles = [];
+  /** Groupes en conflit (bonne réponse ambiguë) : exclus de tout traitement. */
+  const conflits = [];
+  /** Groupes multi-doc sans conflit, à traiter après comptage des refs. */
+  const multiGroupes = [];
+  /** Toutes les IDs des groupes multi (pour compter les refs). */
   const idsMulti = new Set();
 
   for (const [, items] of groupes) {
     if (items.length === 1) {
-      const item = items[0];
-      if (!item.propre) {
-        aReparer.push(item);
-      }
+      if (!items[0].propre) aReparerSingles.push(items[0]);
       continue;
     }
-
-    // Groupe avec plusieurs documents.
-    for (const item of items) idsMulti.add(item.doc._id.toString());
-
-    const propres  = items.filter((i) => i.propre);
-    const cassees  = items.filter((i) => !i.propre);
 
     // Détection de conflits sur la bonne réponse (après réparation).
     const reponsesUniques = new Set(items.map((i) => i.fixedReponse.trim()));
@@ -418,50 +474,24 @@ async function main() {
       continue;
     }
 
-    if (propres.length === 0) {
-      // Toutes les questions du groupe sont cassées : on les répare toutes, sans suppression.
-      // (Pas de jumelle propre → autorisation de suppression non applicable.)
-      for (const item of cassees) {
-        aReparer.push(item);
-      }
-      continue;
-    }
-
-    // Il y a au moins une propre. Les cassées ont leur jumelle propre → suppression autorisée.
-    // Parmi les propres, choisir la gagnante (plus referencée, puis plus ancienne).
-    // Le comptage précis des refs est fait après ; ici on met toutes les propres comme
-    // candidates et on choisira après le comptage.
-
-    // Les cassées sont toutes à supprimer en faveur de la gagnante propre.
-    for (const item of cassees) {
-      aSupprimer.push({ item, keptId: null /* rempli après sélection du gagnant */ });
-    }
-
-    // Si plusieurs propres (double seed du fichier propre) : hors périmètre de suppression,
-    // mais on le signale. On choisira la gagnante après refs.
-    if (propres.length > 1) {
-      doublesPropresBruts.push({ items: propres });
-    }
+    // Groupe multi-doc sans conflit.
+    for (const item of items) idsMulti.add(item.doc._id.toString());
+    multiGroupes.push(items);
   }
 
-  console.log(`  Groupes à 1 doc cassé → réparation ($set)   : ${aReparer.length}`);
-  console.log(`  Cassées avec jumelle propre → suppression    : ${aSupprimer.length}`);
+  console.log(`  Groupes à 1 doc cassé → réparation ($set)   : ${aReparerSingles.length}`);
+  console.log(`  Groupes multi-doc sans conflit (à traiter)  : ${multiGroupes.length}`);
   console.log(`  Groupes en conflit (bonne réponse différente): ${conflits.length}`);
-  if (doublesPropresBruts.length > 0) {
-    console.log(`  Groupes avec plusieurs propres (hors périmètre) : ${doublesPropresBruts.length}`);
-  }
 
   // ── Étape 5 : Comptage des références ────────────────────────────────────
   console.log('\n── Étape 5 : Références dans la collection parties ──────────────');
 
-  // On compte les refs de toutes les IDs des groupes multi.
   const toutesLesIds = [...idsMulti];
   let refMap = new Map();
   if (toutesLesIds.length > 0) {
     refMap = await compterReferences(toutesLesIds, parties);
   }
 
-  // Afficher le résumé des références par collection.
   let totalRefsReponses = 0;
   let totalRefsQuizIds  = 0;
   for (const { reponsesCount, quizIdsCount } of refMap.values()) {
@@ -471,44 +501,54 @@ async function main() {
   console.log(`  Références dans parties.reponses[].quizId : ${totalRefsReponses}`);
   console.log(`  Références dans parties.quizIds[]         : ${totalRefsQuizIds}`);
 
-  // Résoudre les gagnants pour chaque groupe multi-doc avec propre.
-  // Regrouper les suppressions par groupe pour choisir le bon gagnant.
-  const suppressionFinals = []; // { item, keptId, refCount }
-  {
-    // Reconstruire les groupes multi propres pour choisir la gagnante.
-    for (const [, items] of groupes) {
-      if (items.length <= 1) continue;
-      const propres = items.filter((i) => i.propre);
-      const cassees = items.filter((i) => !i.propre);
-      if (propres.length === 0) continue;
+  // ── Résolution des gagnants et constitution des listes finales ───────────
+  //
+  // Pour chaque groupe multi-doc (sans conflit) :
+  //   1. Trier : propre d'abord, puis plus référencé, puis plus ancien (_id).
+  //   2. Gagnant = premier après tri.
+  //   3. Si gagnant cassé → réparation ($set).
+  //   4. Tous les autres → suppression.
 
-      const reponsesUniques = new Set(items.map((i) => i.fixedReponse.trim()));
-      if (reponsesUniques.size > 1) continue; // conflit, déjà traité
+  const aReparerMulti    = []; // gagnants cassés de groupes multi
+  const suppressionFinals = []; // { item, keptId }
 
-      // Choisir la gagnante parmi les propres :
-      // 1. Plus référencée (total refs), 2. Plus ancienne (_id plus petit = plus tôt inséré).
-      propres.sort((a, b) => {
-        const ra = (refMap.get(a.doc._id.toString()) || { total: 0 }).total;
-        const rb = (refMap.get(b.doc._id.toString()) || { total: 0 }).total;
-        if (rb !== ra) return rb - ra; // décroissant par refs
-        // Plus ancienne : ObjectId lexicographique croissant.
-        return a.doc._id.toString() < b.doc._id.toString() ? -1 : 1;
-      });
-      const gagnante = propres[0];
+  for (const items of multiGroupes) {
+    // Tri : propre desc > refs desc > _id asc.
+    const sorted = [...items].sort((a, b) => {
+      // propre en premier (true > false).
+      if (a.propre !== b.propre) return a.propre ? -1 : 1;
+      // Plus référencé en premier.
+      const ra = (refMap.get(a.doc._id.toString()) || { total: 0 }).total;
+      const rb = (refMap.get(b.doc._id.toString()) || { total: 0 }).total;
+      if (rb !== ra) return rb - ra;
+      // Plus ancien en premier (ObjectId lexicographique croissant).
+      return a.doc._id.toString() < b.doc._id.toString() ? -1 : 1;
+    });
 
-      // Les cassées → suppression avec keptId = gagnante.
-      for (const item of cassees) {
-        suppressionFinals.push({ item, keptId: gagnante.doc._id });
-      }
-      // Les propres perdantes (doublons propres) → hors périmètre, signalées seulement.
+    const gagnant = sorted[0];
+
+    // Si le gagnant est cassé, le réparer.
+    if (!gagnant.propre) {
+      aReparerMulti.push(gagnant);
+    }
+
+    // Toutes les autres copies → à supprimer.
+    for (let i = 1; i < sorted.length; i++) {
+      suppressionFinals.push({ item: sorted[i], keptId: gagnant.doc._id });
     }
   }
 
-  // ── Résumé détaillé des suppressions prévues ─────────────────────────────
-  console.log(`\n── Résumé des actions prévues ───────────────────────────────────`);
-  console.log(`  Suppressions prévues (cassées + jumelle propre) : ${suppressionFinals.length}`);
-  console.log(`  Réparations prévues ($set, cassées isolées)     : ${aReparer.length}`);
-  console.log(`  Conflits exclus (bonne réponse ambiguë)         : ${conflits.length}`);
+  // Liste finale des réparations (singles + gagnants cassés de groupes multi).
+  const aReparer = [...aReparerSingles, ...aReparerMulti];
+
+  // ── Résumé des actions prévues ───────────────────────────────────────────
+  console.log('\n── Résumé des actions prévues ───────────────────────────────────');
+  console.log(`  Gardées (1 par groupe + toutes les singles)  : ${nbGroupes}`);
+  console.log(`  Suppressions prévues (toutes les copies en surnombre) : ${suppressionFinals.length}`);
+  console.log(`  Réparations prévues ($set)                   : ${aReparer.length}`);
+  console.log(`    dont gagnants de groupes multi cassés      : ${aReparerMulti.length}`);
+  console.log(`    dont singles cassées                       : ${aReparerSingles.length}`);
+  console.log(`  Conflits exclus (bonne réponse ambiguë)      : ${conflits.length}`);
 
   if (conflits.length > 0) {
     console.log('\n── Détail des conflits (bonne réponse ambiguë) ─────────────────');
@@ -517,34 +557,23 @@ async function main() {
       console.log(`  Groupe "${normaliser(items[0].fixedEnonce).slice(0, 60)}..." :`);
       for (const item of items) {
         const refs = (refMap.get(item.doc._id.toString()) || { total: 0 }).total;
-        console.log(`    ID: ${item.doc._id}  propre: ${item.propre}  reponse: "${item.fixedReponse.slice(0, 40)}"  refs: ${refs}`);
-        // Différences détectées :
-        const diffEnonce   = item.fixedEnonce    !== items[0].fixedEnonce;
-        const diffReponse  = item.fixedReponse   !== items[0].fixedReponse;
-        const diffAssertions = JSON.stringify(item.fixedAssertions) !== JSON.stringify(items[0].fixedAssertions);
+        console.log(
+          `    ID: ${item.doc._id}  propre: ${item.propre}` +
+          `  reponse: "${item.fixedReponse.slice(0, 40)}"  refs: ${refs}`,
+        );
         const diffs = [];
-        if (diffEnonce)    diffs.push('enonce');
-        if (diffReponse)   diffs.push('reponse (CONFLIT)');
-        if (diffAssertions) diffs.push('assertions (ordre ou texte)');
+        if (item.fixedEnonce !== items[0].fixedEnonce) diffs.push('enonce');
+        if (item.fixedReponse !== items[0].fixedReponse) diffs.push('reponse (CONFLIT)');
+        if (JSON.stringify(item.fixedAssertions) !== JSON.stringify(items[0].fixedAssertions)) {
+          diffs.push('assertions');
+        }
         if (diffs.length) console.log(`      Différences : ${diffs.join(', ')}`);
       }
       console.log('');
     }
   }
 
-  if (doublesPropresBruts.length > 0) {
-    console.log('── Doubles propres détectés (hors périmètre) ───────────────────');
-    console.log('  Ces doublons sont tous propres. La suppression n\'est pas autorisée pour ce cas.');
-    for (const { items } of doublesPropresBruts) {
-      console.log(`  "${normaliser(items[0].fixedEnonce).slice(0, 60)}..." :`);
-      for (const item of items) {
-        console.log(`    ID: ${item.doc._id}`);
-      }
-    }
-    console.log('');
-  }
-
-  // ── Références à réaffecter par suppression prévue ───────────────────────
+  // Références à réaffecter.
   if (suppressionFinals.length > 0) {
     let nbAvecRefs = 0;
     let totalRefsAReaffecter = 0;
@@ -564,7 +593,39 @@ async function main() {
 
   // ── Étape 6 : Application (seulement avec --appliquer) ───────────────────
   if (!simulationMode) {
-    console.log('\n── Étape 6 : Application ────────────────────────────────────────');
+    console.log('\n── Étape 6 : Garde-fous de volume ───────────────────────────────');
+
+    // Garde-fou 1 : nombre de suppressions.
+    if (suppressionFinals.length > MAX_SUPPRESSIONS) {
+      console.error(
+        `ERREUR GARDE-FOU : ${suppressionFinals.length} suppressions prévues dépassent` +
+        ` la limite de ${MAX_SUPPRESSIONS}.`,
+      );
+      console.error('Vérifiez la simulation et ajustez si nécessaire.');
+      await mongoose.disconnect();
+      process.exit(1);
+    }
+    console.log(
+      `  Suppressions prévues : ${suppressionFinals.length} <= ${MAX_SUPPRESSIONS} (OK)`,
+    );
+
+    // Garde-fou 2 : tous les documents à supprimer doivent appartenir à la catégorie RDM.
+    const horsRDM = suppressionFinals.filter(
+      ({ item }) => item.doc.categorieId.toString() !== rdmCategorie._id.toString(),
+    );
+    if (horsRDM.length > 0) {
+      console.error(
+        `ERREUR GARDE-FOU : ${horsRDM.length} document(s) à supprimer hors catégorie RDM :`,
+      );
+      for (const { item } of horsRDM) {
+        console.error(`  ID: ${item.doc._id}  categorieId: ${item.doc.categorieId}`);
+      }
+      await mongoose.disconnect();
+      process.exit(1);
+    }
+    console.log('  Toutes les suppressions ciblent la catégorie RDM (OK)\n');
+
+    console.log('── Étape 7 : Application ────────────────────────────────────────');
 
     const sauvegDir = path.resolve(sauvegArg);
 
@@ -576,34 +637,37 @@ async function main() {
       }));
       const suppFile = path.join(sauvegDir, 'rdm-supprimees.json');
       writeFileSync(suppFile, JSON.stringify(supprimees, null, 2), 'utf8');
-      console.log(`  rdm-supprimees.json écrit : ${suppFile} (${suppressionFinals.length} documents)`);
+      console.log(
+        `  rdm-supprimees.json écrit : ${suppFile} (${suppressionFinals.length} documents)`,
+      );
     }
 
     // Réaffectation des références puis suppression.
     let nbSupp = 0;
     let totalRefsReaffectees = 0;
-    const nonSupprimees = []; // IDs qu'on ne pouvait pas réaffecter
+    const nonSupprimees = [];
 
     for (const { item, keptId } of suppressionFinals) {
       const deletedOid = item.doc._id;
       const keptOid    = new mongoose.Types.ObjectId(keptId.toString());
 
-      // Réaffecter les références avant suppression.
       let reaffResult = { reponsesModified: 0, quizIdsModified: 0 };
       try {
         reaffResult = await reaffecterRefs(deletedOid, keptOid, parties);
         totalRefsReaffectees += reaffResult.reponsesModified + reaffResult.quizIdsModified;
       } catch (err) {
-        nonSupprimees.push({ id: deletedOid.toString(), raison: `réaffectation impossible : ${err.message}` });
+        nonSupprimees.push({
+          id: deletedOid.toString(),
+          raison: `réaffectation impossible : ${err.message}`,
+        });
         continue;
       }
 
-      // Supprimer le document cassé.
       await quizzes.deleteOne({ _id: deletedOid });
       nbSupp++;
     }
 
-    // Réparations ($set) pour les cassées isolées.
+    // Réparations ($set) pour les questions cassées à conserver.
     let nbRepares = 0;
     for (const item of aReparer) {
       await quizzes.updateOne(
@@ -637,11 +701,11 @@ async function main() {
   console.log('\n══════════════════════════════════════════════════════════════════');
   if (simulationMode) {
     console.log(' SIMULATION terminée (aucune donnée modifiée).');
-    console.log(`   Groupes distincts          : ${nbGroupes}`);
-    console.log(`   Suppressions prévues       : ${suppressionFinals.length}`);
+    console.log(`   Total questions RDM en base : ${rdmDocs.length}`);
+    console.log(`   Groupes distincts (questions uniques) : ${nbGroupes}`);
+    console.log(`   Suppressions prévues : ${suppressionFinals.length}`);
     console.log(`   Réparations prévues ($set) : ${aReparer.length}`);
-    console.log(`   Conflits exclus            : ${conflits.length}`);
-    console.log(`   Doubles propres (hors périmètre) : ${doublesPropresBruts.length}`);
+    console.log(`   Conflits exclus : ${conflits.length}`);
     console.log(' Relancez avec --appliquer --sauvegarde <dossier> pour écrire.');
   } else {
     console.log(' MIGRATION terminée.');
