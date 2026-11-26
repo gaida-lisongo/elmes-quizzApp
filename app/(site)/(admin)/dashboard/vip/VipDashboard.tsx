@@ -346,7 +346,7 @@ export default function VipDashboard() {
           >
             <div className="sticky top-0 z-10 flex items-center justify-between border-b border-stroke bg-white px-6 py-4 dark:border-strokedark dark:bg-blacksection">
               <div>
-                <h3 className="text-lg font-bold text-black dark:text-white">Inviter un VIP</h3>
+                <h3 className="text-lg font-bold text-black dark:text-white">Inviter un joueur</h3>
                 <p className="text-xs text-waterloo">Joueurs libres, non membres et non capitaines.</p>
               </div>
               <button
@@ -383,7 +383,7 @@ export default function VipDashboard() {
                     >
                       <div>
                         <p className="font-medium text-black dark:text-white">{player.pseudo}</p>
-                        <p className="text-xs text-waterloo">{player.telephone || player.email || "VIP disponible"}</p>
+                        <p className="text-xs text-waterloo">{player.telephone || player.email || "Joueur disponible"}</p>
                       </div>
                       {actionLoading === `invite-${player._id}` ? (
                         <Loader2 className="h-4 w-4 animate-spin text-primary" />
@@ -394,7 +394,7 @@ export default function VipDashboard() {
                   ))
                 ) : (
                   <div className="py-8 text-center text-sm text-waterloo">
-                    {searchQuery.trim().length < 2 ? "Saisissez au moins 2 caractères." : "Aucun VIP disponible."}
+                    {searchQuery.trim().length < 2 ? "Saisissez au moins 2 caractères." : "Aucun joueur disponible."}
                   </div>
                 )}
               </div>

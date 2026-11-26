@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { getPlayerMetricsAction, type PlayerMetricsData } from "@/actions/player.metrics.actions";
 import { inviteMemberAction, updateMemberRoleAction, getMyEquipeDetailAction, searchInvitableVipPlayersAction } from "@/actions/equipe.actions";
+import { INFOS_PALIERS } from "@/lib/utils/paliers";
 import toast from "react-hot-toast";
 
 export default function VipMembresTable() {
@@ -39,7 +40,7 @@ export default function VipMembresTable() {
     if (searchQuery.length < 2) { setSearchResults([]); return; }
     const timer = setTimeout(async () => {
       setSearching(true);
-      // Recherche réservée au capitaine : joueurs VIP sans équipe, sans téléphone ni e-mail.
+      // Recherche réservée au capitaine : joueurs sans équipe, sans téléphone ni e-mail.
       const res = await searchInvitableVipPlayersAction(searchQuery);
       if (res.success) setSearchResults((res.players || []).map((p: any) => ({ ...p, playerId: p._id })));
       setSearching(false);
@@ -142,7 +143,7 @@ export default function VipMembresTable() {
                   >
                     <UserPlus className="h-4 w-4 text-primary" />
                     <span className="font-medium text-black dark:text-white">{u.pseudo}</span>
-                    <span className="text-waterloo">VIP</span>
+                    <span className="text-waterloo">{INFOS_PALIERS.PALIER_3.nom}</span>
                     {actionLoading === `invite-${u.playerId}` && <Loader2 className="ml-auto h-3 w-3 animate-spin" />}
                   </button>
                 ))}
