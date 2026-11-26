@@ -5,6 +5,7 @@ import GamingPage from "@/components/Gaming";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { buildMetadata } from "@/lib/utils/metadata";
+import { INFOS_PALIERS } from "@/lib/utils/paliers";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -77,7 +78,7 @@ export default async function CompetitionDetailPage({
     title: canEnroll
       ? "Inscrivez votre équipe à cette compétition et tentez de remporter la cagnotte"
       : serializedCompetition?.status === 'ACTIVE'
-        ? "Cette compétition nécessite un profil VIP et d'être chef d'une équipe"
+        ? `Cette compétition nécessite le palier ${INFOS_PALIERS.PALIER_3.nom} et d'être chef d'une équipe`
         : serializedCompetition?.status === 'INACTIVE'
           ? "Cette compétition est actuellement indisponible"
           : "Les inscriptions sont closes",
