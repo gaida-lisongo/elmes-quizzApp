@@ -1,5 +1,7 @@
 /**
- * 2026-11-dedoublonnage-questions.mjs — Dédoublonnage multi-catégories (M-20261126-12).
+ * 2026-11-dedoublonnage-questions.mjs — Dédoublonnage multi-catégories.
+ * Révision 2 (M-20261126-15) : vrais slugs, casse préservée dans formules,
+ * différence de distracteurs ne déclenche plus un conflit.
  *
  * Contexte : pour 9 catégories, le seed a été lancé plusieurs fois.
  * Ce script supprime les doublons d'énoncés et ne conserve qu'une seule question
@@ -7,11 +9,15 @@
  *
  * Ce script :
  *   1. Pour chaque catégorie cible, charge toutes les questions en base.
- *   2. Applique fixMojibake puis normalise (trim, espaces, casse) avant de comparer.
+ *   2. Applique fixMojibake puis normalise avant de comparer :
+ *        - hors formules ($…$) : insensible à la casse.
+ *        - dans les formules : la casse est PRÉSERVÉE ($d$ ≠ $D$).
  *   3. Regroupe par énoncé normalisé.
  *   4. Dans chaque groupe avec plusieurs documents :
- *        - Détecte les conflits : bonne réponse ou assertions différentes
- *          (au-delà de l'encodage et des espaces) → exclusion + liste séparée.
+ *        - Détecte les conflits : bonne réponse différente uniquement (insensible
+ *          à la casse) → exclusion + liste séparée.
+ *        - Les groupes dont seuls les distracteurs (assertions) diffèrent ne sont
+ *          PAS des conflits : on garde la copie la plus ancienne.
  *        - Choisit UN gagnant : propre d'abord, sinon le plus référencé, sinon le
  *          plus ancien (_id).
  *        - Si le gagnant est cassé → réparation ($set).
@@ -20,14 +26,15 @@
  *      vers la question gardée avant suppression.
  *   6. Écrit doublons-supprimes.json (documents complets) avant de supprimer.
  *
- * Catégories traitées par défaut (9, slug) :
- *   droit, economie, statique, thermodynamique, mecanique-terrestre,
- *   engins-elevage, cinematique, electromagnetisme, ondes-lumineuses
+ * Catégories traitées par défaut (9, slug réels en base) :
+ *   droit, economie, statique, thermodynamique,
+ *   m-canique-terrestre-et-c-leste, engins-elevage,
+ *   cin-matique-du-point-mat-riel, lectromagn-tisme, ondes-lumineuses
  *
  * La catégorie RDM est EXPLICITEMENT exclue (traitée par 2026-11-rdm-encodage.mjs).
  *
  * Garde-fous (mode --appliquer) :
- *   - Refus si les suppressions prévues dépassent 620 au total.
+ *   - Refus si les suppressions prévues dépassent 20 au total (passe M-15).
  *   - Refus si une suppression vise une catégorie hors liste autorisée.
  *   - Refus si sauvegarde absente, non datée d'aujourd'hui, ou quizzes.json
  *     ne correspond pas au nombre actuel de documents en base (±0).
@@ -58,24 +65,27 @@ const __dirname = path.dirname(__filename);
 
 // ── Constantes ───────────────────────────────────────────────────────────────
 
-/** Catégories autorisées par défaut (slugs). RDM est EXCLUE. */
+/** Catégories autorisées par défaut (slugs réels en base). RDM est EXCLUE. */
 const CATEGORIES_DEFAUT = [
   'droit',
   'economie',
   'statique',
   'thermodynamique',
-  'mecanique-terrestre',
+  'm-canique-terrestre-et-c-leste',
   'engins-elevage',
-  'cinematique',
-  'electromagnetisme',
+  'cin-matique-du-point-mat-riel',
+  'lectromagn-tisme',
   'ondes-lumineuses',
 ];
 
 /** Slug interdit (catégorie RDM gérée par un autre script). */
 const SLUG_INTERDIT = 'rdm';
 
-/** Nombre maximum de suppressions autorisées en mode --appliquer. */
-const MAX_SUPPRESSIONS = 620;
+/**
+ * Nombre maximum de suppressions autorisées en mode --appliquer.
+ * Abaissé à 20 pour la passe M-15 (3 catégories retrouvées + thermo).
+ */
+const MAX_SUPPRESSIONS = 20;
 
 // ── Chargement des variables d'environnement ─────────────────────────────────
 
@@ -301,6 +311,25 @@ function normaliser(str) {
   return str.trim().replace(/\s+/g, ' ').toLowerCase();
 }
 
+/**
+ * Normalise un énoncé pour le regroupement des doublons.
+ * Hors formules ($…$) : insensible à la casse (minuscule).
+ * Dans les formules : la casse est PRÉSERVÉE ($d$ et $D$ sont des énoncés distincts).
+ * Les espaces multiples sont normalisés dans les deux zones.
+ */
+function normaliserEnonce(str) {
+  if (typeof str !== 'string') return '';
+  // split('$') : indices pairs = hors formule, indices impairs = dans formule.
+  const parts = str.split('$');
+  return parts
+    .map((part, i) => {
+      const p = part.replace(/\s+/g, ' ');
+      return i % 2 === 0 ? p.toLowerCase() : p; // préserve la casse dans formules
+    })
+    .join('$')
+    .trim();
+}
+
 /** Applique fixMojibake puis normalise. */
 function normaliserRepare(str) {
   return normaliser(fixMojibake(str));
@@ -395,7 +424,7 @@ function analyserCategorie(categorie, docs, refMap) {
       : [];
     const fixedReponse   = fixMojibake(doc.reponse);
     const propre         = estPropre(doc);
-    const cleNormalisee  = normaliser(fixedEnonce);
+    const cleNormalisee  = normaliserEnonce(fixedEnonce);
     return { doc, fixedEnonce, fixedAssertions, fixedReponse, propre, cleNormalisee };
   });
 
@@ -418,22 +447,13 @@ function analyserCategorie(categorie, docs, refMap) {
       continue;
     }
 
-    // Détection de conflit sur la bonne réponse (après réparation + normalisation).
+    // Détection de conflit : uniquement si la bonne réponse diffère
+    // (comparaison insensible à la casse, après réparation).
+    // Une différence portant uniquement sur les distracteurs (assertions) n'est
+    // PAS un conflit : on garde la copie la plus ancienne (_id le plus petit).
     const reponsesUniques = new Set(items.map((i) => normaliserRepare(i.fixedReponse)));
     if (reponsesUniques.size > 1) {
       conflits.push({ items, raison: 'bonne-reponse' });
-      continue;
-    }
-
-    // Détection de conflit sur les assertions (après réparation + normalisation).
-    // Comparaison par ensemble trié (order-independent) : si les mêmes assertions
-    // sont présentes mais dans un ordre différent, ce n'est pas un conflit.
-    const assertionsRef = [...items[0].fixedAssertions].map(normaliser).sort().join('||');
-    const assertionsDiff = items.some(
-      (i) => [...i.fixedAssertions].map(normaliser).sort().join('||') !== assertionsRef,
-    );
-    if (assertionsDiff) {
-      conflits.push({ items, raison: 'assertions' });
       continue;
     }
 
@@ -481,7 +501,7 @@ function analyserCategorie(categorie, docs, refMap) {
 // ── Bannière ──────────────────────────────────────────────────────────────────
 
 console.log('══════════════════════════════════════════════════════════════════');
-console.log(' Migration 2026-11 — Dédoublonnage questions multi-catégories (M-20261126-12)');
+console.log(' Migration 2026-11 — Dédoublonnage questions multi-catégories (M-20261126-15, rév. 2)');
 console.log(' Mode : ' + (simulationMode
   ? 'SIMULATION (lecture seule, aucune écriture)'
   : 'APPLIQUER (écriture en base)'));
