@@ -14,8 +14,10 @@
  *        - dans les formules : la casse est PRÉSERVÉE ($d$ ≠ $D$).
  *   3. Regroupe par énoncé normalisé.
  *   4. Dans chaque groupe avec plusieurs documents :
- *        - Détecte les conflits : bonne réponse ou assertions différentes
- *          (au-delà de l'encodage et des espaces) → exclusion + liste séparée.
+ *        - Détecte les conflits : bonne réponse différente uniquement (insensible
+ *          à la casse) → exclusion + liste séparée.
+ *        - Les groupes dont seuls les distracteurs (assertions) diffèrent ne sont
+ *          PAS des conflits : on garde la copie la plus ancienne.
  *        - Choisit UN gagnant : propre d'abord, sinon le plus référencé, sinon le
  *          plus ancien (_id).
  *        - Si le gagnant est cassé → réparation ($set).
@@ -445,22 +447,13 @@ function analyserCategorie(categorie, docs, refMap) {
       continue;
     }
 
-    // Détection de conflit sur la bonne réponse (après réparation + normalisation).
+    // Détection de conflit : uniquement si la bonne réponse diffère
+    // (comparaison insensible à la casse, après réparation).
+    // Une différence portant uniquement sur les distracteurs (assertions) n'est
+    // PAS un conflit : on garde la copie la plus ancienne (_id le plus petit).
     const reponsesUniques = new Set(items.map((i) => normaliserRepare(i.fixedReponse)));
     if (reponsesUniques.size > 1) {
       conflits.push({ items, raison: 'bonne-reponse' });
-      continue;
-    }
-
-    // Détection de conflit sur les assertions (après réparation + normalisation).
-    // Comparaison par ensemble trié (order-independent) : si les mêmes assertions
-    // sont présentes mais dans un ordre différent, ce n'est pas un conflit.
-    const assertionsRef = [...items[0].fixedAssertions].map(normaliser).sort().join('||');
-    const assertionsDiff = items.some(
-      (i) => [...i.fixedAssertions].map(normaliser).sort().join('||') !== assertionsRef,
-    );
-    if (assertionsDiff) {
-      conflits.push({ items, raison: 'assertions' });
       continue;
     }
 
