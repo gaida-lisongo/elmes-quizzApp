@@ -1,5 +1,7 @@
 /**
- * 2026-11-dedoublonnage-questions.mjs — Dédoublonnage multi-catégories (M-20261126-12).
+ * 2026-11-dedoublonnage-questions.mjs — Dédoublonnage multi-catégories.
+ * Révision 2 (M-20261126-15) : vrais slugs, casse préservée dans formules,
+ * différence de distracteurs ne déclenche plus un conflit.
  *
  * Contexte : pour 9 catégories, le seed a été lancé plusieurs fois.
  * Ce script supprime les doublons d'énoncés et ne conserve qu'une seule question
@@ -20,14 +22,15 @@
  *      vers la question gardée avant suppression.
  *   6. Écrit doublons-supprimes.json (documents complets) avant de supprimer.
  *
- * Catégories traitées par défaut (9, slug) :
- *   droit, economie, statique, thermodynamique, mecanique-terrestre,
- *   engins-elevage, cinematique, electromagnetisme, ondes-lumineuses
+ * Catégories traitées par défaut (9, slug réels en base) :
+ *   droit, economie, statique, thermodynamique,
+ *   m-canique-terrestre-et-c-leste, engins-elevage,
+ *   cin-matique-du-point-mat-riel, lectromagn-tisme, ondes-lumineuses
  *
  * La catégorie RDM est EXPLICITEMENT exclue (traitée par 2026-11-rdm-encodage.mjs).
  *
  * Garde-fous (mode --appliquer) :
- *   - Refus si les suppressions prévues dépassent 620 au total.
+ *   - Refus si les suppressions prévues dépassent 20 au total (passe M-15).
  *   - Refus si une suppression vise une catégorie hors liste autorisée.
  *   - Refus si sauvegarde absente, non datée d'aujourd'hui, ou quizzes.json
  *     ne correspond pas au nombre actuel de documents en base (±0).
@@ -58,24 +61,27 @@ const __dirname = path.dirname(__filename);
 
 // ── Constantes ───────────────────────────────────────────────────────────────
 
-/** Catégories autorisées par défaut (slugs). RDM est EXCLUE. */
+/** Catégories autorisées par défaut (slugs réels en base). RDM est EXCLUE. */
 const CATEGORIES_DEFAUT = [
   'droit',
   'economie',
   'statique',
   'thermodynamique',
-  'mecanique-terrestre',
+  'm-canique-terrestre-et-c-leste',
   'engins-elevage',
-  'cinematique',
-  'electromagnetisme',
+  'cin-matique-du-point-mat-riel',
+  'lectromagn-tisme',
   'ondes-lumineuses',
 ];
 
 /** Slug interdit (catégorie RDM gérée par un autre script). */
 const SLUG_INTERDIT = 'rdm';
 
-/** Nombre maximum de suppressions autorisées en mode --appliquer. */
-const MAX_SUPPRESSIONS = 620;
+/**
+ * Nombre maximum de suppressions autorisées en mode --appliquer.
+ * Abaissé à 20 pour la passe M-15 (3 catégories retrouvées + thermo).
+ */
+const MAX_SUPPRESSIONS = 20;
 
 // ── Chargement des variables d'environnement ─────────────────────────────────
 
@@ -481,7 +487,7 @@ function analyserCategorie(categorie, docs, refMap) {
 // ── Bannière ──────────────────────────────────────────────────────────────────
 
 console.log('══════════════════════════════════════════════════════════════════');
-console.log(' Migration 2026-11 — Dédoublonnage questions multi-catégories (M-20261126-12)');
+console.log(' Migration 2026-11 — Dédoublonnage questions multi-catégories (M-20261126-15, rév. 2)');
 console.log(' Mode : ' + (simulationMode
   ? 'SIMULATION (lecture seule, aucune écriture)'
   : 'APPLIQUER (écriture en base)'));
