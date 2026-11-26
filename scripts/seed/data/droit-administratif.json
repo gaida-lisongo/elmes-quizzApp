@@ -1,0 +1,1721 @@
+{
+  "categorie": {
+    "designation": "Droit administratif",
+    "description": "Droit public, marchés publics, contentieux administratif — niveau avancé",
+    "slug": "droit-administratif"
+  },
+  "questions": [
+    {
+      "enonce": "Qu'est-ce que le droit administratif ?",
+      "assertions": [
+        "L'ensemble des règles de droit privé applicables aux contrats entre particuliers",
+        "L'ensemble des règles régissant l'organisation et l'activité des personnes publiques",
+        "Le droit applicable uniquement aux juridictions judiciaires",
+        "Le droit pénal applicable aux fonctionnaires"
+      ],
+      "reponse": "L'ensemble des règles régissant l'organisation et l'activité des personnes publiques",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Dans la hiérarchie des normes, quel texte se trouve au sommet en France ?",
+      "assertions": [
+        "Les traités internationaux",
+        "La Constitution",
+        "Les lois organiques",
+        "Les règlements autonomes"
+      ],
+      "reponse": "La Constitution",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la déconcentration administrative ?",
+      "assertions": [
+        "Le transfert de compétences de l'État vers des collectivités territoriales autonomes",
+        "La privatisation de certains services publics",
+        "La délégation de pouvoirs à des agents locaux représentant l'État central",
+        "La suppression des préfectures de région"
+      ],
+      "reponse": "La délégation de pouvoirs à des agents locaux représentant l'État central",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la décentralisation ?",
+      "assertions": [
+        "Le transfert de compétences de l'État à des collectivités territoriales dotées de la personnalité juridique",
+        "La délégation de pouvoirs entre ministres",
+        "La création d'agences gouvernementales indépendantes",
+        "La suppression des administrations centrales"
+      ],
+      "reponse": "Le transfert de compétences de l'État à des collectivités territoriales dotées de la personnalité juridique",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelles sont les trois lois de Rolland régissant le service public ?",
+      "assertions": [
+        "Légalité, sécurité, efficacité",
+        "Égalité, continuité, adaptabilité",
+        "Neutralité, gratuité, universalité",
+        "Transparence, équité, contrôlabilité"
+      ],
+      "reponse": "Égalité, continuité, adaptabilité",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un acte administratif unilatéral ?",
+      "assertions": [
+        "Un contrat conclu entre deux administrations",
+        "Une décision prise unilatéralement par une autorité administrative produisant des effets juridiques",
+        "Une convention signée entre un agent public et son supérieur",
+        "Un texte législatif adopté par une seule chambre du Parlement"
+      ],
+      "reponse": "Une décision prise unilatéralement par une autorité administrative produisant des effets juridiques",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel est le principe fondamental selon lequel le domaine public est hors du commerce juridique ?",
+      "assertions": [
+        "L'imprescriptibilité",
+        "L'inaliénabilité",
+        "La continuité",
+        "L'égalité"
+      ],
+      "reponse": "L'inaliénabilité",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'expropriation pour utilité publique ?",
+      "assertions": [
+        "La vente forcée d'un bien privé pour rembourser des dettes fiscales",
+        "La procédure permettant à l'État de transférer à son profit un bien immobilier privé moyennant indemnisation",
+        "La confiscation d'un bien en cas d'infraction pénale",
+        "La mise en location obligatoire d'un bien privé inoccupé"
+      ],
+      "reponse": "La procédure permettant à l'État de transférer à son profit un bien immobilier privé moyennant indemnisation",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Devant quelle juridiction se portent en France les recours contre les actes administratifs ?",
+      "assertions": [
+        "Le tribunal de grande instance",
+        "La Cour de cassation",
+        "Le tribunal administratif",
+        "Le conseil des prud'hommes"
+      ],
+      "reponse": "Le tribunal administratif",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un permis de construire ?",
+      "assertions": [
+        "Un acte administratif autorisant la réalisation de travaux de construction ou d'extension",
+        "Un contrat de bail conclu avec une collectivité publique",
+        "Un document attestant la conformité des travaux réalisés",
+        "Une déclaration fiscale liée à la valeur d'un bâtiment"
+      ],
+      "reponse": "Un acte administratif autorisant la réalisation de travaux de construction ou d'extension",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un établissement public ?",
+      "assertions": [
+        "Une société commerciale dont l'État détient des actions",
+        "Une personne morale de droit public chargée d'une mission de service public spécialisée",
+        "Une association à but non lucratif subventionnée par l'État",
+        "Un organisme privé placé sous tutelle ministérielle"
+      ],
+      "reponse": "Une personne morale de droit public chargée d'une mission de service public spécialisée",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le recours pour excès de pouvoir (REP) ?",
+      "assertions": [
+        "Un recours visant à obtenir une indemnité de l'administration",
+        "Un recours visant à faire annuler un acte administratif illégal",
+        "Un recours pénal contre un fonctionnaire abusant de ses pouvoirs",
+        "Un recours disciplinaire devant le Conseil d'État"
+      ],
+      "reponse": "Un recours visant à faire annuler un acte administratif illégal",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la procédure de passation de marché public la plus utilisée en dessous des seuils européens pour les petits montants ?",
+      "assertions": [
+        "L'appel d'offres ouvert",
+        "La procédure adaptée (MAPA)",
+        "La concession de service public",
+        "L'appel d'offres restreint"
+      ],
+      "reponse": "La procédure adaptée (MAPA)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la faute de service en responsabilité administrative ?",
+      "assertions": [
+        "Une faute commise par un agent public dans l'exercice de ses fonctions et imputable au service",
+        "Une faute pénale commise par un fonctionnaire dans sa vie privée",
+        "Une mauvaise gestion budgétaire sanctionnée par la Cour des comptes",
+        "Une faute disciplinaire engageant la responsabilité personnelle de l'agent"
+      ],
+      "reponse": "Une faute commise par un agent public dans l'exercice de ses fonctions et imputable au service",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le Conseil d'État en France ?",
+      "assertions": [
+        "La haute juridiction administrative, juge en dernier ressort des litiges administratifs",
+        "Le conseil consultatif du Président de la République",
+        "La chambre haute du Parlement français",
+        "L'organe chargé du contrôle des finances publiques"
+      ],
+      "reponse": "La haute juridiction administrative, juge en dernier ressort des litiges administratifs",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la régie directe pour la gestion d'un service public ?",
+      "assertions": [
+        "La délégation du service à une entreprise privée",
+        "La gestion directe du service par la collectivité publique avec ses propres moyens",
+        "La création d'un établissement public industriel et commercial",
+        "La passation d'un contrat d'affermage"
+      ],
+      "reponse": "La gestion directe du service par la collectivité publique avec ses propres moyens",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le domaine public comprend uniquement les biens meubles de l'État.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La décentralisation implique l'existence d'une personnalité morale distincte de l'État pour les collectivités.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un principe général du droit (PGD) en droit administratif français ?",
+      "assertions": [
+        "Une règle inscrite dans la Constitution uniquement",
+        "Un principe dégagé par le juge administratif, s'imposant à l'administration même sans texte",
+        "Un article du Code civil applicable à l'administration",
+        "Une circulaire ministérielle à valeur réglementaire"
+      ],
+      "reponse": "Un principe dégagé par le juge administratif, s'imposant à l'administration même sans texte",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel document définit les prescriptions techniques générales d'un marché public de travaux ?",
+      "assertions": [
+        "Le BPU (Bordereau des Prix Unitaires)",
+        "Le CCAP (Cahier des Clauses Administratives Particulières)",
+        "Le CCTP (Cahier des Clauses Techniques Particulières)",
+        "Le DQE (Détail Quantitatif Estimatif)"
+      ],
+      "reponse": "Le CCTP (Cahier des Clauses Techniques Particulières)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'une concession de service public ?",
+      "assertions": [
+        "Un contrat par lequel une personne publique confie à un tiers la gestion d'un service public à ses risques et périls en se rémunérant sur les usagers",
+        "Un permis d'occupation du domaine public accordé à un commerçant",
+        "Un contrat de travail entre l'État et un agent contractuel",
+        "Un marché public de fournitures passé avec un fournisseur exclusif"
+      ],
+      "reponse": "Un contrat par lequel une personne publique confie à un tiers la gestion d'un service public à ses risques et périls en se rémunérant sur les usagers",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'enquête publique dans la procédure d'expropriation ?",
+      "assertions": [
+        "Une investigation judiciaire sur les propriétaires expropriés",
+        "Une procédure permettant au public de donner son avis sur l'utilité publique du projet",
+        "Un audit financier réalisé par la Cour des comptes",
+        "Une inspection des services administratifs compétents"
+      ],
+      "reponse": "Une procédure permettant au public de donner son avis sur l'utilité publique du projet",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la dualité de juridiction ?",
+      "assertions": [
+        "L'existence de deux chambres au sein du Parlement",
+        "Le principe selon lequel coexistent deux ordres de juridictions : judiciaire et administratif",
+        "La possibilité pour le justiciable de choisir entre deux tribunaux",
+        "L'existence de deux degrés d'appel en matière administrative"
+      ],
+      "reponse": "Le principe selon lequel coexistent deux ordres de juridictions : judiciaire et administratif",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un certificat d'urbanisme ?",
+      "assertions": [
+        "Une autorisation de construire délivrée par le maire",
+        "Un document indiquant les règles d'urbanisme applicables à un terrain",
+        "Un acte authentique de vente d'un terrain",
+        "Une attestation de conformité des travaux réalisés"
+      ],
+      "reponse": "Un document indiquant les règles d'urbanisme applicables à un terrain",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un marché public ?",
+      "assertions": [
+        "Un contrat conclu entre deux sociétés privées pour la réalisation de travaux",
+        "Un contrat conclu à titre onéreux entre des acheteurs publics et des opérateurs économiques pour répondre à leurs besoins",
+        "Une procédure d'appel d'offres réservée aux entreprises publiques",
+        "Un contrat de délégation de service public"
+      ],
+      "reponse": "Un contrat conclu à titre onéreux entre des acheteurs publics et des opérateurs économiques pour répondre à leurs besoins",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la juridiction compétente pour régler les conflits de compétence entre les deux ordres de juridiction en France ?",
+      "assertions": [
+        "Le Conseil d'État",
+        "La Cour de cassation",
+        "Le Tribunal des conflits",
+        "Le Conseil constitutionnel"
+      ],
+      "reponse": "Le Tribunal des conflits",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le recours pour excès de pouvoir est un recours de plein contentieux.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La déconcentration transfère la personnalité morale à l'autorité déconcentrée.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un règlement administratif ?",
+      "assertions": [
+        "Une décision administrative individuelle",
+        "Un acte administratif de portée générale et impersonnelle",
+        "Une instruction interne à valeur législative",
+        "Une circulaire adressée aux agents de l'État"
+      ],
+      "reponse": "Un acte administratif de portée générale et impersonnelle",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la force exécutoire d'un acte administratif ?",
+      "assertions": [
+        "La capacité de l'acte à être appliqué sans le consentement du destinataire ni autorisation judiciaire préalable",
+        "L'obligation pour le juge d'exécuter l'acte en priorité",
+        "La force légale des lois de police administrative",
+        "La faculté de l'administration à exécuter les jugements à sa place"
+      ],
+      "reponse": "La capacité de l'acte à être appliqué sans le consentement du destinataire ni autorisation judiciaire préalable",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Tout acte de l'administration bénéficie du privilège du préalable.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "L'enquête publique précède toujours la déclaration d'utilité publique (DUP) dans la procédure d'expropriation.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'est-ce qu'une commune en droit public français ?",
+      "assertions": [
+        "Un service déconcentré de l'État",
+        "La collectivité territoriale de base dotée de la personnalité morale",
+        "Un établissement public à caractère industriel et commercial",
+        "Une subdivision administrative d'un département sans personnalité juridique"
+      ],
+      "reponse": "La collectivité territoriale de base dotée de la personnalité morale",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la mutabilité dans les lois de Rolland ?",
+      "assertions": [
+        "L'obligation d'adapter le service public aux besoins et aux évolutions techniques et sociales",
+        "L'obligation de maintenir le service sans interruption",
+        "L'obligation de traiter de manière égale tous les usagers du service",
+        "L'obligation d'assurer la gratuité des services publics essentiels"
+      ],
+      "reponse": "L'obligation d'adapter le service public aux besoins et aux évolutions techniques et sociales",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel document fixe le prix unitaire des travaux dans un marché public de travaux ?",
+      "assertions": [
+        "Le CCTP",
+        "Le CCAP",
+        "Le BPU (Bordereau des Prix Unitaires)",
+        "La déclaration du candidat"
+      ],
+      "reponse": "Le BPU (Bordereau des Prix Unitaires)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le PLU (Plan Local d'Urbanisme) ?",
+      "assertions": [
+        "Un registre foncier national",
+        "Un document de planification communal définissant les règles d'utilisation des sols",
+        "Un acte de vente d'un terrain public",
+        "Un permis de construire collectif"
+      ],
+      "reponse": "Un document de planification communal définissant les règles d'utilisation des sols",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la garantie décennale en droit de la construction ?",
+      "assertions": [
+        "Une garantie de parfait achèvement valable dix ans",
+        "Une responsabilité légale de 10 ans du constructeur pour les dommages compromettant la solidité de l'ouvrage",
+        "Un délai de prescription de 10 ans pour les litiges entre locataires",
+        "Une assurance obligatoire pour les travaux de plus de 10 000 €"
+      ],
+      "reponse": "Une responsabilité légale de 10 ans du constructeur pour les dommages compromettant la solidité de l'ouvrage",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'EPIC (Établissement public industriel et commercial) ?",
+      "assertions": [
+        "Un établissement soumis aux règles du droit privé gérant un service public industriel",
+        "Un établissement de droit privé gérant un service public administratif",
+        "Un type de société anonyme détenue majoritairement par l'État",
+        "Un établissement public gérant exclusivement les autoroutes"
+      ],
+      "reponse": "Un établissement soumis aux règles du droit privé gérant un service public industriel",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Un marché public peut être passé en gré à gré sans aucune condition préalable.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La garantie de parfait achèvement en droit de la construction dure un an.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'appelle-t-on le 'bloc de légalité' en droit administratif ?",
+      "assertions": [
+        "L'ensemble des normes que l'administration doit respecter sous peine d'illégalité",
+        "La liste des actes unilatéraux incontrôlables par le juge",
+        "Les règlements autonomes pris par le gouvernement",
+        "Les décrets du Conseil d'État"
+      ],
+      "reponse": "L'ensemble des normes que l'administration doit respecter sous peine d'illégalité",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le CCAG en marchés publics ?",
+      "assertions": [
+        "Le Contrat Cadre Annuel de Gestion",
+        "Le Cahier des Clauses Administratives Générales",
+        "Le Cahier des Charges d'Application Générale",
+        "Le Code de Contrôle des Aides aux Groupements"
+      ],
+      "reponse": "Le Cahier des Clauses Administratives Générales",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la déclaration préalable de travaux ?",
+      "assertions": [
+        "Un permis de construire simplifié pour les petits travaux ne nécessitant pas de permis complet",
+        "Une annonce publiée au Journal officiel avant tout chantier",
+        "Une autorisation délivrée par la direction des services fiscaux",
+        "Un acte administratif déclarant l'utilité publique d'un projet"
+      ],
+      "reponse": "Un permis de construire simplifié pour les petits travaux ne nécessitant pas de permis complet",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La domanialité publique s'applique aux biens affectés à l'usage direct du public ou à un service public.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Les principes généraux du droit ont une valeur supra-législative en droit français.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Quel est le délai général de recours contentieux contre un acte administratif en France ?",
+      "assertions": [
+        "30 jours à compter de la notification",
+        "2 mois à compter de la notification ou de la publication de l'acte",
+        "6 mois à compter de la décision",
+        "1 an à compter de la connaissance de l'acte"
+      ],
+      "reponse": "2 mois à compter de la notification ou de la publication de l'acte",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le DQE (Détail Quantitatif Estimatif) dans un marché public de travaux ?",
+      "assertions": [
+        "Un document estimant le coût total des travaux à partir des prix unitaires et des quantités prévues",
+        "Un document établissant les délais d'exécution des travaux",
+        "Un document fixant les pénalités de retard applicables au titulaire",
+        "Un document présentant les qualifications techniques des candidats"
+      ],
+      "reponse": "Un document estimant le coût total des travaux à partir des prix unitaires et des quantités prévues",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la compétence, en tant que condition de légalité d'un acte administratif ?",
+      "assertions": [
+        "L'aptitude juridique de l'auteur de l'acte à le prendre",
+        "Le respect des formes et procédures requises",
+        "La motivation suffisante de la décision",
+        "La conformité de l'acte aux traités internationaux"
+      ],
+      "reponse": "L'aptitude juridique de l'auteur de l'acte à le prendre",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la responsabilité sans faute de l'administration ?",
+      "assertions": [
+        "Un régime de responsabilité qui exige la preuve d'une faute grave",
+        "Un régime d'indemnisation fondé sur le risque ou la rupture d'égalité devant les charges publiques, sans qu'une faute soit nécessaire",
+        "La responsabilité exclusive de l'agent fautif",
+        "Un régime disciplinaire spécifique aux agents contractuels"
+      ],
+      "reponse": "Un régime d'indemnisation fondé sur le risque ou la rupture d'égalité devant les charges publiques, sans qu'une faute soit nécessaire",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel est le rôle du préfet en France ?",
+      "assertions": [
+        "Représenter les collectivités territoriales auprès de l'État",
+        "Représenter l'État dans le département et exercer le contrôle de légalité sur les actes locaux",
+        "Présider le conseil général",
+        "Assurer la direction des établissements publics régionaux"
+      ],
+      "reponse": "Représenter l'État dans le département et exercer le contrôle de légalité sur les actes locaux",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la hiérarchie des normes en droit administratif ?",
+      "assertions": [
+        "La liste des ministres par ordre de préséance protocolaire",
+        "L'organisation pyramidale des règles de droit selon laquelle chaque norme doit être conforme à celle qui lui est supérieure",
+        "La classification des actes réglementaires par domaine",
+        "L'ordre d'ancienneté des lois dans le système juridique"
+      ],
+      "reponse": "L'organisation pyramidale des règles de droit selon laquelle chaque norme doit être conforme à celle qui lui est supérieure",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle juridiction administrative est compétente en première instance pour la majorité des litiges administratifs en France ?",
+      "assertions": [
+        "Le Conseil d'État",
+        "La Cour administrative d'appel",
+        "Le tribunal administratif",
+        "Le tribunal de grande instance"
+      ],
+      "reponse": "Le tribunal administratif",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'appel d'offres ouvert en marchés publics ?",
+      "assertions": [
+        "Une procédure où tout opérateur économique peut remettre une offre sans présélection",
+        "Une procédure réservée aux PME locales",
+        "Une procédure dans laquelle seuls les candidats pré-qualifiés peuvent soumissionner",
+        "Une procédure de gré à gré pour travaux urgents"
+      ],
+      "reponse": "Une procédure où tout opérateur économique peut remettre une offre sans présélection",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'appel d'offres restreint ?",
+      "assertions": [
+        "Une procédure limitée aux entreprises de taille réduite",
+        "Une procédure comportant une phase de présélection des candidats avant l'envoi des dossiers de consultation",
+        "Une procédure réservée aux marchés de faible montant",
+        "Une procédure d'exception autorisée uniquement en cas d'urgence"
+      ],
+      "reponse": "Une procédure comportant une phase de présélection des candidats avant l'envoi des dossiers de consultation",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'affermage en gestion de service public ?",
+      "assertions": [
+        "Un contrat par lequel la collectivité confie à un fermier l'exploitation d'un ouvrage existant qu'elle finance, la rémunération étant assurée par les redevances des usagers",
+        "Un contrat de bail rural",
+        "Un mode de gestion directe d'un service public agricole",
+        "Une délégation de service public accordée à une association"
+      ],
+      "reponse": "Un contrat par lequel la collectivité confie à un fermier l'exploitation d'un ouvrage existant qu'elle finance, la rémunération étant assurée par les redevances des usagers",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En matière de responsabilité administrative, qu'est-ce que la faute personnelle ?",
+      "assertions": [
+        "Une faute commise en dehors ou à l'occasion du service, révélant la personnalité de l'agent et détachable du service",
+        "Toute faute de l'agent commise dans l'exercice de ses fonctions",
+        "Une faute pénale commise par l'État",
+        "Une faute disciplinaire sanctionnée par révocation"
+      ],
+      "reponse": "Une faute commise en dehors ou à l'occasion du service, révélant la personnalité de l'agent et détachable du service",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la théorie de la rupture d'égalité devant les charges publiques ?",
+      "assertions": [
+        "Un fondement de la responsabilité sans faute permettant d'indemniser la victime d'un préjudice anormal et spécial subi au nom de l'intérêt général",
+        "Le principe selon lequel tous les citoyens contribuent également aux dépenses publiques",
+        "La règle interdisant toute discrimination dans la gestion des services publics",
+        "Le mécanisme de péréquation fiscale entre collectivités territoriales"
+      ],
+      "reponse": "Un fondement de la responsabilité sans faute permettant d'indemniser la victime d'un préjudice anormal et spécial subi au nom de l'intérêt général",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la déclaration d'utilité publique (DUP) dans la procédure d'expropriation ?",
+      "assertions": [
+        "L'acte administratif déclarant qu'un projet présente un intérêt général suffisant pour justifier l'expropriation",
+        "La décision du juge judiciaire transférant la propriété",
+        "La délibération du conseil municipal approuvant le projet",
+        "L'acte de cession amiable conclu avant l'expropriation"
+      ],
+      "reponse": "L'acte administratif déclarant qu'un projet présente un intérêt général suffisant pour justifier l'expropriation",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'un référé suspension devant le juge administratif ?",
+      "assertions": [
+        "Un recours visant à obtenir en urgence la suspension d'un acte administratif dont la légalité est contestée",
+        "Un recours permettant d'accélérer la procédure d'appel",
+        "Un recours spécifique aux marchés publics suspendant la signature du contrat",
+        "Un appel suspensif devant la Cour administrative d'appel"
+      ],
+      "reponse": "Un recours visant à obtenir en urgence la suspension d'un acte administratif dont la légalité est contestée",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'appelle-t-on les 'clauses exorbitantes du droit commun' dans un contrat administratif ?",
+      "assertions": [
+        "Des clauses imposant des pénalités financières excessives",
+        "Des clauses conférant à la personne publique des prérogatives ou des sujétions inusuelles en droit privé",
+        "Des clauses contraires à l'ordre public économique",
+        "Des clauses dérogatoires à la réglementation européenne des marchés"
+      ],
+      "reponse": "Des clauses conférant à la personne publique des prérogatives ou des sujétions inusuelles en droit privé",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Les collectivités territoriales sont soumises à un contrôle a priori de l'État depuis la décentralisation de 1982.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La SEM (Société d'Économie Mixte) est un mode de gestion du service public associant capitaux publics et privés.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'est-ce que le pouvoir de substitution dans les contrats administratifs ?",
+      "assertions": [
+        "Le droit pour la personne publique de se substituer au cocontractant défaillant pour assurer la continuité du service",
+        "La faculté pour le titulaire de sous-traiter intégralement le marché",
+        "Le droit du préfet d'annuler un acte local",
+        "La faculté de remplacer un marché public par une régie directe"
+      ],
+      "reponse": "Le droit pour la personne publique de se substituer au cocontractant défaillant pour assurer la continuité du service",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'une permission de voirie ?",
+      "assertions": [
+        "Une autorisation de circulation de poids lourds sur route nationale",
+        "Un titre précaire et révocable permettant d'occuper temporairement le domaine public",
+        "Un contrat de concession d'occupation domaniale de longue durée",
+        "Une décision judiciaire autorisant des travaux sur la voie publique"
+      ],
+      "reponse": "Un titre précaire et révocable permettant d'occuper temporairement le domaine public",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel est l'effet d'une décision d'annulation prononcée par le juge administratif sur un acte administratif ?",
+      "assertions": [
+        "L'acte disparaît pour l'avenir uniquement",
+        "L'acte est réputé n'avoir jamais existé avec effet rétroactif",
+        "L'acte est suspendu en attendant sa régularisation",
+        "L'acte est déclaré inopposable au seul requérant"
+      ],
+      "reponse": "L'acte est réputé n'avoir jamais existé avec effet rétroactif",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la garantie biennale en droit de la construction ?",
+      "assertions": [
+        "La responsabilité du constructeur pendant 2 ans pour les désordres affectant les éléments dissociables de l'ouvrage",
+        "L'assurance couvrant les dommages pendant 2 ans après réception",
+        "Le délai de prescription de 2 ans pour les litiges entre sous-traitants",
+        "La garantie de prix accordée par l'entreprise pendant 2 ans"
+      ],
+      "reponse": "La responsabilité du constructeur pendant 2 ans pour les désordres affectant les éléments dissociables de l'ouvrage",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En droit administratif, l'incompétence est un vice de légalité externe de l'acte administratif.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Les dommages causés par des travaux publics relèvent de la responsabilité sans faute au profit des tiers.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'est-ce que le détournement de pouvoir comme vice de légalité interne ?",
+      "assertions": [
+        "L'utilisation d'un acte administratif par son auteur pour atteindre un but autre que celui pour lequel il était habilité",
+        "La violation d'une formalité substantielle de procédure",
+        "L'incompétence ratione temporis de l'auteur de l'acte",
+        "L'erreur manifeste d'appréciation dans les motifs de fait"
+      ],
+      "reponse": "L'utilisation d'un acte administratif par son auteur pour atteindre un but autre que celui pour lequel il était habilité",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce qu'une délégation de service public (DSP) ?",
+      "assertions": [
+        "Un contrat par lequel une personne publique confie la gestion d'un service public à un délégataire dont la rémunération est liée aux résultats de l'exploitation",
+        "Un marché public de services sociaux passé sans publicité",
+        "Une convention entre deux collectivités publiques pour la mutualisation d'un service",
+        "Un contrat de partenariat public-privé pour la construction d'infrastructures"
+      ],
+      "reponse": "Un contrat par lequel une personne publique confie la gestion d'un service public à un délégataire dont la rémunération est liée aux résultats de l'exploitation",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'imprescriptibilité du domaine public ?",
+      "assertions": [
+        "Le fait qu'un tiers ne peut acquérir la propriété d'un bien du domaine public par prescription acquisitive, même en cas de possession prolongée",
+        "L'impossibilité d'aliéner les biens du domaine public",
+        "L'interdiction de louer les biens du domaine public",
+        "L'inopposabilité du délai de recours pour les actes domaniaux"
+      ],
+      "reponse": "Le fait qu'un tiers ne peut acquérir la propriété d'un bien du domaine public par prescription acquisitive, même en cas de possession prolongée",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la particularité du recours des tiers contre un permis de construire ?",
+      "assertions": [
+        "Le délai de recours est de 5 ans à compter de la délivrance du permis",
+        "Le recours doit être précédé d'un recours gracieux obligatoire",
+        "Le délai de recours des tiers est de 2 mois à compter de l'affichage du permis sur le terrain",
+        "Seuls les riverains immédiats ont qualité pour agir"
+      ],
+      "reponse": "Le délai de recours des tiers est de 2 mois à compter de l'affichage du permis sur le terrain",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'arrêté de cessibilité dans la procédure d'expropriation ?",
+      "assertions": [
+        "L'acte fixant le montant de l'indemnité d'expropriation",
+        "L'acte administratif désignant les parcelles à exproprier et leurs propriétaires",
+        "L'ordonnance judiciaire transférant la propriété à l'expropriant",
+        "L'acte déclarant l'utilité publique du projet"
+      ],
+      "reponse": "L'acte administratif désignant les parcelles à exproprier et leurs propriétaires",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "L'affermage se distingue de la concession car dans l'affermage, les investissements initiaux sont assumés par la collectivité.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "En France, les traités internationaux régulièrement ratifiés ont une autorité supérieure aux lois.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'est-ce que la décision implicite de rejet en droit administratif ?",
+      "assertions": [
+        "Une décision explicite de refus notifiée par lettre recommandée",
+        "Le rejet tacite d'une demande résultant du silence gardé par l'administration pendant le délai légal (2 mois en principe)",
+        "Une décision orale d'un agent de guichet",
+        "Un acte rejetant automatiquement toute demande incomplète"
+      ],
+      "reponse": "Le rejet tacite d'une demande résultant du silence gardé par l'administration pendant le délai légal (2 mois en principe)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la zone AU dans un PLU ?",
+      "assertions": [
+        "Une zone agricole à urbaniser immédiatement",
+        "Une zone à urbaniser, c'est-à-dire une zone destinée à accueillir des constructions futures",
+        "Une zone naturelle protégée interdite à la construction",
+        "Une zone urbaine déjà construite et équipée"
+      ],
+      "reponse": "Une zone à urbaniser, c'est-à-dire une zone destinée à accueillir des constructions futures",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la théorie du risque spécial en responsabilité administrative sans faute ?",
+      "assertions": [
+        "Un régime de responsabilité applicable quand l'administration crée un risque anormal pour des tiers, notamment avec des choses ou activités dangereuses",
+        "Un régime de responsabilité fondé sur la faute lourde de l'administration",
+        "Un régime applicable aux dommages causés par les catastrophes naturelles",
+        "Un régime de responsabilité fondé sur la rupture d'égalité devant les charges publiques"
+      ],
+      "reponse": "Un régime de responsabilité applicable quand l'administration crée un risque anormal pour des tiers, notamment avec des choses ou activités dangereuses",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le recours préalable obligatoire (RAPO) en contentieux administratif ?",
+      "assertions": [
+        "Un recours gracieux ou hiérarchique imposé par un texte avant tout recours contentieux",
+        "Une procédure de médiation administrative obligatoire",
+        "Un recours contre les actes réglementaires avant leur entrée en vigueur",
+        "Un pourvoi obligatoire en cassation avant toute action en responsabilité"
+      ],
+      "reponse": "Un recours gracieux ou hiérarchique imposé par un texte avant tout recours contentieux",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la notification d'un acte administratif ?",
+      "assertions": [
+        "La publication de l'acte au Journal officiel",
+        "L'information donnée directement à la personne concernée de l'existence et du contenu de l'acte",
+        "L'affichage de l'acte au siège de la collectivité émettrice",
+        "La transmission de l'acte au préfet pour contrôle de légalité"
+      ],
+      "reponse": "L'information donnée directement à la personne concernée de l'existence et du contenu de l'acte",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Un établissement public administratif (EPA) est soumis en principe au droit public.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "L'intérêt à agir pour exercer un recours pour excès de pouvoir est apprécié strictement par le juge.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'est-ce que le recours de plein contentieux en matière de marchés publics ?",
+      "assertions": [
+        "Un recours permettant au juge d'annuler le marché, modifier son contenu ou allouer des dommages-intérêts",
+        "Un recours permettant uniquement l'annulation du marché",
+        "Un recours réservé aux candidats évincés pour obtenir réparation",
+        "Un recours formé avant la signature du contrat"
+      ],
+      "reponse": "Un recours permettant au juge d'annuler le marché, modifier son contenu ou allouer des dommages-intérêts",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le CCAP (Cahier des Clauses Administratives Particulières) dans un marché public ?",
+      "assertions": [
+        "Un document fixant les conditions particulières d'exécution administrative du marché propres à chaque consultation",
+        "Un document définissant les spécifications techniques détaillées des travaux",
+        "Un document énumérant les prix unitaires des prestations",
+        "Un document de présentation du maître d'ouvrage et du financement"
+      ],
+      "reponse": "Un document fixant les conditions particulières d'exécution administrative du marché propres à chaque consultation",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la recours par voie d'exception d'illégalité en droit administratif ?",
+      "assertions": [
+        "Un recours direct contre un règlement illégal dans le délai de recours",
+        "La faculté d'invoquer l'illégalité d'un acte réglementaire à l'appui du recours contre un acte individuel en découlant, même après expiration du délai de recours direct",
+        "Un recours subsidiaire après échec d'une réclamation préalable",
+        "Un recours par voie d'action réservé aux associations"
+      ],
+      "reponse": "La faculté d'invoquer l'illégalité d'un acte réglementaire à l'appui du recours contre un acte individuel en découlant, même après expiration du délai de recours direct",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la durée maximale habituelle d'une concession d'autoroutes en France ?",
+      "assertions": [
+        "10 ans",
+        "20 ans",
+        "50 à 75 ans",
+        "5 ans renouvelables"
+      ],
+      "reponse": "50 à 75 ans",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le contrôle de légalité exercé par le préfet sur les actes des collectivités ?",
+      "assertions": [
+        "La vérification de l'opportunité des actes des collectivités territoriales",
+        "La vérification de la conformité des actes des collectivités au droit en vigueur",
+        "Le contrôle financier des dépenses communales",
+        "L'approbation préalable de tous les actes locaux"
+      ],
+      "reponse": "La vérification de la conformité des actes des collectivités au droit en vigueur",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Lorsqu'un marché public est passé selon une procédure formalisée, à quel moment le pouvoir adjudicateur doit-il envoyer l'avis d'attribution ?",
+      "assertions": [
+        "Avant la signature du marché",
+        "Dans les 48 jours suivant la notification du marché au titulaire",
+        "Après la réception des travaux ou la livraison des fournitures",
+        "Avant le lancement de l'appel d'offres"
+      ],
+      "reponse": "Dans les 48 jours suivant la notification du marché au titulaire",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Selon la jurisprudence Blanco (TC, 1873), la responsabilité de l'État pour les dommages causés par les services publics :",
+      "assertions": [
+        "Est régie exclusivement par le Code civil",
+        "N'est ni générale ni absolue, et est soumise à des règles spéciales",
+        "N'existe pas, l'État étant irresponsable de ses actes",
+        "Relève de la compétence exclusive du juge judiciaire"
+      ],
+      "reponse": "N'est ni générale ni absolue, et est soumise à des règles spéciales",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Selon la jurisprudence Narcy (CE, 1963), qu'est-ce qui caractérise un organisme privé chargé d'une mission de service public ?",
+      "assertions": [
+        "L'organisme doit être financé exclusivement par des fonds publics",
+        "L'organisme doit avoir été créé par une loi ou un décret",
+        "L'organisme doit assurer une mission d'intérêt général, disposer de prérogatives de puissance publique et être soumis à un contrôle de la personne publique",
+        "L'organisme doit employer plus de 50 % d'agents publics"
+      ],
+      "reponse": "L'organisme doit assurer une mission d'intérêt général, disposer de prérogatives de puissance publique et être soumis à un contrôle de la personne publique",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Dans la théorie de l'imprévision en contrats administratifs, quelles conditions doivent être réunies pour permettre une renégociation ?",
+      "assertions": [
+        "Toute hausse de prix supérieure à 5 % pendant l'exécution du marché",
+        "Un événement extérieur, imprévisible lors de la conclusion du contrat, entraînant un bouleversement de l'économie du contrat",
+        "Une faute du cocontractant ayant conduit à une perte financière",
+        "La survenance d'une force majeure empêchant totalement l'exécution"
+      ],
+      "reponse": "Un événement extérieur, imprévisible lors de la conclusion du contrat, entraînant un bouleversement de l'économie du contrat",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Selon le principe d'inaliénabilité du domaine public, un bien du domaine public peut être vendu sans déclassement préalable.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "En matière de recours pour excès de pouvoir, l'intérêt à agir s'apprécie au moment du dépôt du recours.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Quel est le régime de responsabilité applicable lorsque l'administration emploie des personnes dangereuses (ex. : détenus en liberté conditionnelle) ?",
+      "assertions": [
+        "Responsabilité pour faute simple de service",
+        "Responsabilité sans faute fondée sur le risque spécial",
+        "Responsabilité pour faute lourde uniquement",
+        "Responsabilité contractuelle fondée sur la convention de Vienne"
+      ],
+      "reponse": "Responsabilité sans faute fondée sur le risque spécial",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la procédure applicable pour un marché public de travaux dont le montant estimé est supérieur aux seuils européens ?",
+      "assertions": [
+        "Procédure adaptée (MAPA)",
+        "Gré à gré avec publicité simplifiée",
+        "Appel d'offres ouvert ou restreint, ou procédure avec négociation",
+        "Concession de travaux obligatoire"
+      ],
+      "reponse": "Appel d'offres ouvert ou restreint, ou procédure avec négociation",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En matière de contentieux de la légalité des permis de construire, depuis la réforme de 2013, que peut faire le juge face à un vice de légalité ?",
+      "assertions": [
+        "Le juge peut uniquement annuler ou valider le permis, sans possibilité de régularisation",
+        "Le juge peut ordonner la démolition de l'ouvrage construit sans attendre la décision finale",
+        "Le juge peut inviter le pétitionnaire à régulariser le vice entachant le permis en cours d'instance",
+        "Le juge est tenu d'annuler le permis dès qu'un vice de légalité est constaté"
+      ],
+      "reponse": "Le juge peut inviter le pétitionnaire à régulariser le vice entachant le permis en cours d'instance",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel est le fondement de la théorie de l'imprévision en droit des contrats administratifs, tel que dégagé par la jurisprudence Gaz de Bordeaux (CE, 1916) ?",
+      "assertions": [
+        "L'article 1195 du Code civil",
+        "La loi du 16 juillet 1980",
+        "Le principe de continuité du service public et la nécessité de maintenir l'équilibre financier du contrat",
+        "Le principe de non-enrichissement sans cause de la personne publique"
+      ],
+      "reponse": "Le principe de continuité du service public et la nécessité de maintenir l'équilibre financier du contrat",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En matière de dommages de travaux publics, quel régime s'applique aux participants aux travaux publics (entrepreneurs, maîtres d'œuvre) ?",
+      "assertions": [
+        "Responsabilité sans faute comme pour les tiers",
+        "Responsabilité pour faute uniquement",
+        "Irresponsabilité totale car soumis au droit privé",
+        "Responsabilité contractuelle régie par le CCAG-Travaux"
+      ],
+      "reponse": "Responsabilité pour faute uniquement",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que l'arrêt Tarn-et-Garonne (CE Ass., 2014) a modifié dans le contentieux des contrats administratifs ?",
+      "assertions": [
+        "Il a supprimé le recours pour excès de pouvoir contre les actes détachables du contrat",
+        "Il a instauré un recours direct des tiers au contrat devant le juge du contrat pour contester la validité du contrat administratif",
+        "Il a créé un référé contractuel accessible aux usagers du service public",
+        "Il a étendu le délai de prescription des contrats administratifs à 10 ans"
+      ],
+      "reponse": "Il a instauré un recours direct des tiers au contrat devant le juge du contrat pour contester la validité du contrat administratif",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Un bien du domaine privé de l'État peut être vendu sans procédure de déclassement préalable.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La faute personnelle de l'agent exonère toujours entièrement l'administration de toute responsabilité.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Quelle est la différence essentielle entre la faute lourde et la faute simple comme conditions d'engagement de la responsabilité administrative ?",
+      "assertions": [
+        "La faute lourde est commise intentionnellement, la faute simple par négligence",
+        "La faute simple suffit en principe à engager la responsabilité, tandis que la faute lourde est exigée pour certaines activités régaliennes ou difficiles",
+        "La faute lourde est systématiquement requise pour tout dommage lié à un travail public",
+        "La faute simple est une faute de service, la faute lourde est une faute personnelle"
+      ],
+      "reponse": "La faute simple suffit en principe à engager la responsabilité, tandis que la faute lourde est exigée pour certaines activités régaliennes ou difficiles",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En matière de délégation de service public, la rémunération du délégataire doit être substantiellement assurée par les résultats de l'exploitation.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'est-ce que la 'loi MOP' (loi du 12 juillet 1985) en marchés publics ?",
+      "assertions": [
+        "La loi définissant le régime de responsabilité décennale des constructeurs",
+        "La loi relative à la maîtrise d'ouvrage publique et à ses rapports avec la maîtrise d'œuvre privée",
+        "La loi portant réforme de la procédure des marchés publics au-dessus des seuils européens",
+        "La loi organisant le contrôle technique obligatoire des bâtiments publics"
+      ],
+      "reponse": "La loi relative à la maîtrise d'ouvrage publique et à ses rapports avec la maîtrise d'œuvre privée",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la zone N dans un PLU et quelles constructions y sont autorisées ?",
+      "assertions": [
+        "Zone naturelle ou forestière où seules les constructions indispensables aux services publics ou à l'exploitation agricole sont autorisées",
+        "Zone naturelle ouverte aux constructions résidentielles de faible densité",
+        "Zone d'activités naturelles permettant l'implantation d'industries vertes",
+        "Zone de protection du patrimoine historique où toute construction est interdite"
+      ],
+      "reponse": "Zone naturelle ou forestière où seules les constructions indispensables aux services publics ou à l'exploitation agricole sont autorisées",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le droit de préemption dans le cadre du droit administratif de l'urbanisme ?",
+      "assertions": [
+        "Le droit pour une collectivité publique d'acquérir en priorité un bien immobilier mis en vente dans une zone déterminée",
+        "Le droit du propriétaire de refuser l'expropriation en proposant une cession amiable",
+        "Le droit de l'administration d'exiger la démolition d'une construction illégale",
+        "Le droit du voisin de contester un permis de construire avant sa délivrance"
+      ],
+      "reponse": "Le droit pour une collectivité publique d'acquérir en priorité un bien immobilier mis en vente dans une zone déterminée",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le rescrit administratif en droit public ?",
+      "assertions": [
+        "Un acte réglementaire pris par le Conseil d'État sur demande gouvernementale",
+        "Une prise de position formelle de l'administration sur la situation d'un administré, lui offrant une sécurité juridique garantie",
+        "Un arrêté ministériel rectifiant un acte antérieur illégal",
+        "Un acte par lequel l'administration met fin à un contrat administratif"
+      ],
+      "reponse": "Une prise de position formelle de l'administration sur la situation d'un administré, lui offrant une sécurité juridique garantie",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel est le régime applicable aux dommages causés aux usagers d'un ouvrage public défectueux (défaut d'entretien normal) ?",
+      "assertions": [
+        "Responsabilité pour faute prouvée par la victime",
+        "Responsabilité sans faute fondée sur le défaut d'entretien normal de l'ouvrage public",
+        "Exonération totale de la responsabilité de la personne publique propriétaire",
+        "Responsabilité contractuelle fondée sur l'obligation de sécurité"
+      ],
+      "reponse": "Responsabilité sans faute fondée sur le défaut d'entretien normal de l'ouvrage public",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En contentieux administratif, la 'décision préalable' est une condition de recevabilité du recours de plein contentieux.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Le juge administratif peut substituer un motif de légalité à un motif illégal pour sauver un acte administratif contesté.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Dans le cadre du recours pour excès de pouvoir, lequel des cas d'ouverture suivants relève de la légalité externe ?",
+      "assertions": [
+        "Le détournement de pouvoir",
+        "L'erreur de droit",
+        "Le vice de procédure",
+        "L'erreur manifeste d'appréciation"
+      ],
+      "reponse": "Le vice de procédure",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le 'principe de légalité' en droit administratif ?",
+      "assertions": [
+        "L'obligation pour le législateur de respecter la Constitution",
+        "L'obligation pour l'administration de se conformer aux règles de droit positif dans tous ses actes et décisions",
+        "L'interdiction pour l'administration de prendre des décisions d'espèce",
+        "Le droit pour tout administré d'accéder à tous les documents administratifs"
+      ],
+      "reponse": "L'obligation pour l'administration de se conformer aux règles de droit positif dans tous ses actes et décisions",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la 'décentralisation fonctionnelle' ou technique, par opposition à la décentralisation territoriale ?",
+      "assertions": [
+        "La décentralisation des services de police vers les communes",
+        "Le transfert de compétences spécialisées à des établissements publics ayant une personnalité morale propre, organisés autour d'une mission précise",
+        "La délégation de pouvoir réglementaire aux collectivités territoriales",
+        "La régionalisation des administrations centrales"
+      ],
+      "reponse": "Le transfert de compétences spécialisées à des établissements publics ayant une personnalité morale propre, organisés autour d'une mission précise",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la 'banalisation' de certains actes des personnes privées en matière de droit administratif ?",
+      "assertions": [
+        "La soumission d'actes de personnes privées au droit administratif lorsqu'elles sont chargées d'une mission de service public",
+        "L'extension du droit privé aux personnes publiques pour leurs activités commerciales",
+        "La standardisation des procédures d'achat public",
+        "La simplification administrative réduisant le nombre d'actes soumis à autorisation"
+      ],
+      "reponse": "La soumission d'actes de personnes privées au droit administratif lorsqu'elles sont chargées d'une mission de service public",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le 'principe d'équilibre financier' dans un contrat de concession de service public ?",
+      "assertions": [
+        "L'obligation pour le concessionnaire de maintenir l'équilibre de son bilan annuel",
+        "Le droit du concessionnaire de voir maintenu l'équilibre économique du contrat tel que prévu initialement, justifiant une révision en cas de modification unilatérale par le concédant",
+        "L'obligation pour le concédant de financer les déficits d'exploitation du concessionnaire",
+        "La règle imposant des tarifs équilibrés entre catégories d'usagers"
+      ],
+      "reponse": "Le droit du concessionnaire de voir maintenu l'équilibre économique du contrat tel que prévu initialement, justifiant une révision en cas de modification unilatérale par le concédant",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le 'droit souple' en droit administratif, et quel est son régime contentieux depuis l'arrêt Fairvesta (CE, 2016) ?",
+      "assertions": [
+        "Des actes sans force obligatoire insusceptibles de tout recours contentieux",
+        "Des recommandations, lignes directrices et circulaires d'interprétation pouvant faire l'objet d'un REP si elles ont des effets notables",
+        "Des actes à portée générale non publiés, opposables uniquement à l'administration",
+        "Des décisions implicites d'acceptation résultant du silence de l'administration"
+      ],
+      "reponse": "Des recommandations, lignes directrices et circulaires d'interprétation pouvant faire l'objet d'un REP si elles ont des effets notables",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Selon la loi MOP, la mission de maîtrise d'œuvre est obligatoirement confiée à un prestataire distinct du maître d'ouvrage.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Les actes de gouvernement (ex. : actes de politique extérieure) sont insusceptibles de tout recours devant le juge administratif.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'est-ce que la technique du 'bilan coût-avantage' (arrêt Ville Nouvelle Est, CE Ass., 1971) en droit de l'expropriation ?",
+      "assertions": [
+        "Un contrôle purement comptable de la rentabilité financière du projet",
+        "Un contrôle permettant au juge de vérifier que les avantages du projet l'emportent sur ses inconvénients d'ordre social, économique et environnemental",
+        "Une méthode d'évaluation des indemnités d'expropriation",
+        "Une procédure d'enquête publique approfondie réservée aux grands projets"
+      ],
+      "reponse": "Un contrôle permettant au juge de vérifier que les avantages du projet l'emportent sur ses inconvénients d'ordre social, économique et environnemental",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Selon l'arrêt Nicolo (CE, 1989), le Conseil d'État a reconnu la supériorité des traités internationaux sur les lois postérieures, mettant fin à la théorie de la loi-écran.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Dans la procédure d'expropriation, quelle juridiction est compétente pour fixer l'indemnité d'expropriation en cas de désaccord entre les parties ?",
+      "assertions": [
+        "Le tribunal administratif",
+        "Le juge de l'expropriation (tribunal judiciaire)",
+        "Le juge des référés administratifs",
+        "Le Conseil d'État en premier et dernier ressort"
+      ],
+      "reponse": "Le juge de l'expropriation (tribunal judiciaire)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En matière de responsabilité administrative, la théorie du risque spécial permet d'indemniser même en l'absence de :",
+      "assertions": [
+        "Lien de causalité",
+        "Préjudice certain",
+        "Faute",
+        "Qualité de tiers"
+      ],
+      "reponse": "Faute",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Selon l'arrêt CE Ass. Département de la Moselle (1970), quelle est la portée du principe de continuité du service public par rapport au droit de grève des fonctionnaires ?",
+      "assertions": [
+        "Le droit de grève est interdit à tous les fonctionnaires en raison du principe de continuité",
+        "Le législateur doit opérer la conciliation entre le droit de grève et la continuité du service public, pouvant imposer des restrictions",
+        "Le principe de continuité prime absolument sur tout droit de grève dans les services publics",
+        "Les fonctionnaires de l'État ne bénéficient d'aucun droit de grève en vertu de leur statut particulier"
+      ],
+      "reponse": "Le législateur doit opérer la conciliation entre le droit de grève et la continuité du service public, pouvant imposer des restrictions",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la portée de la réserve d'interprétation dans la jurisprudence du Conseil d'État ?",
+      "assertions": [
+        "Le Conseil d'État peut abroger une loi contraire à la Constitution",
+        "Le Conseil d'État peut interpréter un texte de manière à le rendre conforme à la Constitution et l'appliquer sous cette réserve",
+        "Le Conseil d'État peut refuser d'appliquer une loi manifestement incompatible avec les droits fondamentaux",
+        "Le Conseil d'État peut saisir lui-même le Conseil constitutionnel pour abroger un texte"
+      ],
+      "reponse": "Le Conseil d'État peut interpréter un texte de manière à le rendre conforme à la Constitution et l'appliquer sous cette réserve",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En matière de contrats administratifs, le 'fait du prince' (fait de l'autorité contractante) peut ouvrir droit à indemnisation intégrale du cocontractant, à la différence de l'imprévision.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "La question prioritaire de constitutionnalité (QPC) peut être posée directement devant le Conseil d'État sans filtre préalable.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Quel est le régime applicable lorsque l'administration commet à la fois une faute personnelle ET une faute de service, selon la jurisprudence Laruelle et Delville (CE, 1951) ?",
+      "assertions": [
+        "Seule la faute personnelle engage l'administration, la victime devant se retourner uniquement contre l'agent",
+        "Il y a cumul de responsabilités : l'administration et l'agent peuvent être tenus responsables, avec action récursoire possible entre eux",
+        "La victime doit choisir entre l'action contre l'État et l'action contre l'agent",
+        "L'administration est responsable uniquement si l'agent est insolvable"
+      ],
+      "reponse": "Il y a cumul de responsabilités : l'administration et l'agent peuvent être tenus responsables, avec action récursoire possible entre eux",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la 'neutralisation des moyens' dans la pratique du contentieux administratif ?",
+      "assertions": [
+        "L'impossibilité pour le juge de soulever d'office un moyen non invoqué par les parties",
+        "Le mécanisme par lequel un moyen fondé sur un vice de légalité externe est neutralisé dès lors que la même décision aurait été prise sans ce vice",
+        "La règle interdisant d'invoquer des moyens nouveaux en appel",
+        "L'irrecevabilité des moyens invoqués hors délai"
+      ],
+      "reponse": "Le mécanisme par lequel un moyen fondé sur un vice de légalité externe est neutralisé dès lors que la même décision aurait été prise sans ce vice",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Dans le cadre des marchés publics de travaux, que permet la théorie des 'sujétions imprévues' ?",
+      "assertions": [
+        "La résiliation unilatérale du marché par le titulaire en cas d'aléas géotechniques majeurs",
+        "L'indemnisation du titulaire pour les travaux supplémentaires résultant de difficultés matérielles exceptionnelles, imprévisibles et extérieures aux parties",
+        "La révision des prix du marché en cas de variation des indices économiques",
+        "La prolongation automatique du délai d'exécution en cas d'intempéries"
+      ],
+      "reponse": "L'indemnisation du titulaire pour les travaux supplémentaires résultant de difficultés matérielles exceptionnelles, imprévisibles et extérieures aux parties",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Selon l'arrêt KPMG (CE, 2006), le principe de sécurité juridique impose à l'administration de prévoir des mesures :",
+      "assertions": [
+        "D'urgence pour l'application immédiate de toute nouvelle réglementation",
+        "Transitoires lorsqu'une réglementation nouvelle s'applique à des situations en cours et qu'elle porte une atteinte excessive aux intérêts en cause",
+        "De communication préalable à tout changement réglementaire significatif",
+        "De compensation financière pour les opérateurs économiques affectés par les nouvelles règles"
+      ],
+      "reponse": "Transitoires lorsqu'une réglementation nouvelle s'applique à des situations en cours et qu'elle porte une atteinte excessive aux intérêts en cause",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "L'arrêt Société Entreprise Peyrot (TC, 1962) qualifiait la construction d'autoroutes par un concessionnaire de travaux publics. Cette jurisprudence a été abandonnée par le Tribunal des conflits en 2015.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Selon l'arrêt Borromée (CE, 2012), l'obligation de publicité et de mise en concurrence s'impose à toute convention d'occupation du domaine public.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Dans le contentieux de la résiliation d'un contrat administratif, depuis l'arrêt Commune de Béziers II (CE Ass., 2011), que peut faire le juge ?",
+      "assertions": [
+        "La résiliation est toujours valable si elle est justifiée par l'intérêt général",
+        "Le cocontractant ne peut obtenir que des dommages-intérêts, jamais la reprise des relations contractuelles",
+        "Le juge peut ordonner la reprise des relations contractuelles si la résiliation est irrégulière et si l'intérêt général ne s'y oppose pas",
+        "La résiliation unilatérale par la personne publique est inconditionnellement valide et inattaquable"
+      ],
+      "reponse": "Le juge peut ordonner la reprise des relations contractuelles si la résiliation est irrégulière et si l'intérêt général ne s'y oppose pas",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Selon l'arrêt Alitalia (CE, 1989), le juge administratif a reconnu la possibilité pour un administré de :",
+      "assertions": [
+        "Obtenir directement des dommages-intérêts pour illégalité d'un règlement",
+        "Demander l'abrogation d'un règlement illégal, l'administration étant tenue de faire droit à cette demande",
+        "Obtenir la suspension immédiate d'un règlement illégal",
+        "Saisir directement le Conseil constitutionnel pour inconstitutionnalité d'un règlement"
+      ],
+      "reponse": "Demander l'abrogation d'un règlement illégal, l'administration étant tenue de faire droit à cette demande",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que la 'théorie de l'acte clair' en droit administratif communautaire ?",
+      "assertions": [
+        "La doctrine selon laquelle une circulaire administrative est toujours claire et ne nécessite pas d'interprétation judiciaire",
+        "La règle permettant au juge national de ne pas renvoyer une question d'interprétation du droit communautaire à la CJUE si le sens de la règle est évident",
+        "La présomption de légalité attachée aux actes publiés au Journal officiel",
+        "La règle selon laquelle un acte non motivé est présumé légal"
+      ],
+      "reponse": "La règle permettant au juge national de ne pas renvoyer une question d'interprétation du droit communautaire à la CJUE si le sens de la règle est évident",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Le contrôle du juge administratif sur l'opportunité des décisions administratives est en principe prohibé.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Selon la jurisprudence Canal de Craponne (Cass., 1876), la théorie de l'imprévision est applicable en droit civil comme en droit administratif.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'est-ce que le 'principe de précaution' et comment s'articule-t-il avec la responsabilité administrative ?",
+      "assertions": [
+        "Un principe exigeant la preuve scientifique avant toute mesure de précaution, engageant la responsabilité de l'État dès son inaction",
+        "Un principe constitutionnel (Charte de l'environnement, art. 5) imposant des mesures provisoires face à des risques graves et incertains, dont l'inobservation peut engager la responsabilité de l'État pour faute",
+        "Un principe financier obligeant l'État à constituer des réserves pour faire face aux risques environnementaux",
+        "Un principe de droit pénal applicable aux fonctionnaires de l'environnement"
+      ],
+      "reponse": "Un principe constitutionnel (Charte de l'environnement, art. 5) imposant des mesures provisoires face à des risques graves et incertains, dont l'inobservation peut engager la responsabilité de l'État pour faute",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le 'recours en déclaration d'inexistence' d'un acte administratif ?",
+      "assertions": [
+        "Un recours spécial contre les actes nuls de plein droit pour vices particulièrement graves, non soumis au délai de recours",
+        "Un recours ordinaire par excès de pouvoir soumis au délai de 2 mois",
+        "Un recours réservé aux actes des autorités indépendantes",
+        "Un recours visant à faire constater la caducité d'un acte non exécuté dans les délais"
+      ],
+      "reponse": "Un recours spécial contre les actes nuls de plein droit pour vices particulièrement graves, non soumis au délai de recours",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En matière de QPC, quel est le rôle du Conseil d'État ou de la Cour de cassation avant transmission au Conseil constitutionnel ?",
+      "assertions": [
+        "Transmettre automatiquement toute QPC soulevée devant une juridiction",
+        "Opérer un filtre en vérifiant que la disposition est applicable au litige, n'a pas été déclarée conforme, et que la question est sérieuse ou nouvelle",
+        "Statuer sur le fond de la constitutionnalité de la disposition",
+        "Décider souverainement si la disposition est contraire aux droits fondamentaux"
+      ],
+      "reponse": "Opérer un filtre en vérifiant que la disposition est applicable au litige, n'a pas été déclarée conforme, et que la question est sérieuse ou nouvelle",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Qu'est-ce que le 'forfait de charges communes' dans les marchés publics de travaux et comment se distingue-t-il des prix unitaires ?",
+      "assertions": [
+        "Une provision financière pour aléas climatiques incluse dans le DQE",
+        "Un montant global couvrant les charges indirectes de chantier non quantifiables par prix unitaires, intégré dans le BPU",
+        "Une pénalité contractuelle forfaitaire en cas de retard d'exécution",
+        "Une prime accordée au titulaire en cas d'exécution avant le délai contractuel"
+      ],
+      "reponse": "Un montant global couvrant les charges indirectes de chantier non quantifiables par prix unitaires, intégré dans le BPU",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "L'arrêt CE Ass. Syndicat général des ingénieurs-conseils (1959) a consacré la valeur de principe général du droit du principe de non-rétroactivité des actes administratifs.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Selon l'arrêt Association des familles victimes du saturnisme (CE, 2002), la carence de l'État à prendre les mesures réglementaires nécessaires peut engager sa responsabilité pour faute.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'est-ce que la notion de 'voie de fait' en droit administratif et quel en est le régime contentieux ?",
+      "assertions": [
+        "Un acte administratif illégal ordinaire relevant du tribunal administratif",
+        "Un comportement de l'administration portant gravement atteinte à la liberté individuelle ou à la propriété privée par un acte manifestement insusceptible de se rattacher à un pouvoir quelconque, relevant du juge judiciaire",
+        "Un acte arbitraire d'un agent pris en dehors de ses fonctions, relevant de la faute personnelle",
+        "Un acte pris en dehors du bloc de légalité, soumis uniquement au recours pour excès de pouvoir"
+      ],
+      "reponse": "Un comportement de l'administration portant gravement atteinte à la liberté individuelle ou à la propriété privée par un acte manifestement insusceptible de se rattacher à un pouvoir quelconque, relevant du juge judiciaire",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Dans le cadre de la commande publique, qu'est-ce que la 'variante' par rapport à la solution de base dans un appel d'offres ?",
+      "assertions": [
+        "Une offre intégrale modifiant toutes les conditions du cahier des charges",
+        "Une proposition technique ou financière alternative que le soumissionnaire présente en complément ou à la place de la solution de base si le règlement de consultation l'autorise",
+        "Une sous-offre présentée par un sous-traitant agréé",
+        "Une offre de substitution en cas de défaillance du titulaire principal"
+      ],
+      "reponse": "Une proposition technique ou financière alternative que le soumissionnaire présente en complément ou à la place de la solution de base si le règlement de consultation l'autorise",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "L'arrêt Bitouzet (CE, 1998) reconnaît le droit à indemnisation du propriétaire dont le terrain est frappé d'une servitude d'urbanisme entraînant une charge spéciale et exorbitante.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Qu'est-ce que le 'principe d'opposabilité différée' des documents d'urbanisme ?",
+      "assertions": [
+        "L'interdiction de modifier un PLU pendant les 3 années suivant son approbation",
+        "La règle selon laquelle un document d'urbanisme approuvé n'est opposable qu'à compter d'une date certaine permettant l'adaptation des projets en cours",
+        "L'impossibilité d'invoquer un règlement de zone devant le juge sans avoir préalablement épuisé les voies de recours administratives",
+        "Le principe interdisant la rétroactivité des règles d'urbanisme aux permis déjà déposés"
+      ],
+      "reponse": "La règle selon laquelle un document d'urbanisme approuvé n'est opposable qu'à compter d'une date certaine permettant l'adaptation des projets en cours",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel critère principal permet au Tribunal des conflits de qualifier un acte d'acte administratif ou d'acte de droit privé lorsque l'auteur est une personne privée gérant un service public ?",
+      "assertions": [
+        "La nature des fonds utilisés pour accomplir l'acte",
+        "L'exercice ou non de prérogatives de puissance publique",
+        "L'appartenance de l'auteur à la fonction publique",
+        "La soumission ou non de l'acte à la signature d'un représentant de l'État"
+      ],
+      "reponse": "L'exercice ou non de prérogatives de puissance publique",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Selon la jurisprudence Époux V. (CE, 1995), la responsabilité hospitalière publique pour défaut d'information du patient ne nécessite plus la preuve d'une faute lourde.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    }
+  ]
+}

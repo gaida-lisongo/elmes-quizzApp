@@ -1,0 +1,2179 @@
+{
+  "categorie": {
+    "designation": "Expressions latines",
+    "description": "Expressions et locutions latines utilisées en droit, médecine, philosophie et langage académique",
+    "slug": "expressions-latines"
+  },
+  "questions": [
+    {
+      "enonce": "Que signifie 'etc.' (et cetera) ?",
+      "assertions": [
+        "Et ainsi de suite, dans ce sens précis",
+        "Et les premiers éléments d'une liste",
+        "Et surtout les éléments suivants",
+        "Et le reste / et les autres choses"
+      ],
+      "reponse": "Et le reste / et les autres choses",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'i.e.' (id est) ?",
+      "assertions": [
+        "C'est-à-dire",
+        "Par exemple",
+        "Et les autres",
+        "Voir aussi"
+      ],
+      "reponse": "C'est-à-dire",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'e.g.' (exempli gratia) ?",
+      "assertions": [
+        "C'est-à-dire",
+        "Et le reste",
+        "Par exemple",
+        "Notamment et surtout"
+      ],
+      "reponse": "Par exemple",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'vs.' (versus) ?",
+      "assertions": [
+        "Avec / en collaboration avec",
+        "Contre / face à",
+        "Vers / en direction de",
+        "Et / aussi bien que"
+      ],
+      "reponse": "Contre / face à",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'N.B.' (nota bene) ?",
+      "assertions": [
+        "Numéro du brevet",
+        "Non applicable / non renseigné",
+        "Nouveau besoin à préciser",
+        "Notez bien"
+      ],
+      "reponse": "Notez bien",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'ibid.' (ibidem) ?",
+      "assertions": [
+        "Au même endroit / dans le même ouvrage",
+        "Identique mais différent",
+        "Par la même autorité",
+        "Dans un autre contexte"
+      ],
+      "reponse": "Au même endroit / dans le même ouvrage",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "'Carpe diem' est une célèbre expression latine. Que signifie-t-elle ?",
+      "assertions": [
+        "Souviens-toi que tu mourras",
+        "Le temps passe vite",
+        "Cueille le jour / profite du moment présent",
+        "Vis chaque jour comme si c'était le dernier"
+      ],
+      "reponse": "Cueille le jour / profite du moment présent",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'Veni, vidi, vici' ?",
+      "assertions": [
+        "Je suis venu, j'ai souffert, j'ai survécu",
+        "Je suis venu, j'ai vu, j'ai vaincu",
+        "Je suis venu, j'ai cherché, j'ai trouvé",
+        "Je suis venu, j'ai combattu, je suis mort"
+      ],
+      "reponse": "Je suis venu, j'ai vu, j'ai vaincu",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'Cogito ergo sum' ?",
+      "assertions": [
+        "Je souffre, donc je vis",
+        "Je parle, donc j'existe",
+        "Je travaille, donc je mérite",
+        "Je pense, donc je suis"
+      ],
+      "reponse": "Je pense, donc je suis",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'Memento mori' ?",
+      "assertions": [
+        "Souviens-toi que tu mourras",
+        "Rappelle-toi de bien vivre",
+        "Le souvenir vit éternellement",
+        "N'oublie jamais tes origines"
+      ],
+      "reponse": "Souviens-toi que tu mourras",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'Tempus fugit' ?",
+      "assertions": [
+        "Le destin est irrévocable",
+        "La fortune est fugace",
+        "Le temps fuit / le temps passe vite",
+        "La vie est brève et précieuse"
+      ],
+      "reponse": "Le temps fuit / le temps passe vite",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'in vitro' en sciences ?",
+      "assertions": [
+        "Dans l'organisme vivant",
+        "Dans le verre / en dehors de l'organisme",
+        "Dans les conditions naturelles",
+        "Dans un contexte contrôlé in vivo"
+      ],
+      "reponse": "Dans le verre / en dehors de l'organisme",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'in vivo' en sciences ?",
+      "assertions": [
+        "Dans le tube à essai",
+        "Dans des conditions artificielles",
+        "En dehors du corps",
+        "Dans le vivant / au sein de l'organisme"
+      ],
+      "reponse": "Dans le vivant / au sein de l'organisme",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'post mortem' ?",
+      "assertions": [
+        "Après la mort",
+        "Avant la mort",
+        "Pendant l'agonie",
+        "Après la maladie"
+      ],
+      "reponse": "Après la mort",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'ante mortem' ?",
+      "assertions": [
+        "Après la mort",
+        "En présence de la mort",
+        "Avant la mort",
+        "À l'heure de la mort"
+      ],
+      "reponse": "Avant la mort",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'in situ' ?",
+      "assertions": [
+        "En laboratoire",
+        "Sur place / dans son milieu naturel ou d'origine",
+        "Hors contexte",
+        "Dans un milieu artificiel"
+      ],
+      "reponse": "Sur place / dans son milieu naturel ou d'origine",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'vice versa' ?",
+      "assertions": [
+        "Avec enthousiasme",
+        "D'un côté comme de l'autre",
+        "Sans restriction",
+        "Inversement / réciproquement"
+      ],
+      "reponse": "Inversement / réciproquement",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'alma mater' ?",
+      "assertions": [
+        "Mère nourricière (désigne l'université ou l'établissement formateur)",
+        "La grande mère fondatrice",
+        "L'âme collective d'un peuple",
+        "La patrie spirituelle"
+      ],
+      "reponse": "Mère nourricière (désigne l'université ou l'établissement formateur)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'alibi' en droit ?",
+      "assertions": [
+        "Une preuve matérielle laissée sur les lieux du crime",
+        "Un aveu extorqué sous pression",
+        "Preuve que l'accusé se trouvait ailleurs au moment des faits",
+        "Un témoignage à charge"
+      ],
+      "reponse": "Preuve que l'accusé se trouvait ailleurs au moment des faits",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'veto' ?",
+      "assertions": [
+        "J'approuve sans réserve",
+        "Je m'oppose / j'interdis",
+        "Je reporte la décision",
+        "J'abstiens de voter"
+      ],
+      "reponse": "Je m'oppose / j'interdis",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'cf.' (confer) dans une référence académique ?",
+      "assertions": [
+        "Citer en priorité",
+        "Confirmer avec l'auteur",
+        "Comparer / voir",
+        "Corriger la formulation"
+      ],
+      "reponse": "Comparer / voir",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'et al.' (et alii) dans une référence bibliographique ?",
+      "assertions": [
+        "Et les autres (auteurs)",
+        "Et ainsi de suite dans le même ouvrage",
+        "Et les annexes jointes",
+        "Et les éditions ultérieures"
+      ],
+      "reponse": "Et les autres (auteurs)",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'QED' (quod erat demonstrandum) ?",
+      "assertions": [
+        "Question encore débattue",
+        "Ce qui était attendu",
+        "Ce qu'il fallait démontrer",
+        "Questionnement établi et discuté"
+      ],
+      "reponse": "Ce qu'il fallait démontrer",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'Alea jacta est' ?",
+      "assertions": [
+        "La guerre est inévitable",
+        "Le sort en est jeté",
+        "Le destin nous a choisis",
+        "L'issue est incertaine"
+      ],
+      "reponse": "Le sort en est jeté",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'referendum' (terme d'origine latine) ?",
+      "assertions": [
+        "La décision du chef de l'État sans consultation",
+        "Un vote parlementaire d'urgence",
+        "Un décret d'application immédiate",
+        "Ce qui doit être soumis au peuple / consultation populaire directe"
+      ],
+      "reponse": "Ce qui doit être soumis au peuple / consultation populaire directe",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'status quo' ?",
+      "assertions": [
+        "L'état des choses tel qu'il est / la situation existante",
+        "Le progrès constant et ordonné",
+        "L'état idéal vers lequel tendre",
+        "La stabilité définitivement acquise"
+      ],
+      "reponse": "L'état des choses tel qu'il est / la situation existante",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'in extremis' ?",
+      "assertions": [
+        "En grande quantité",
+        "Dans des conditions extrêmes de laboratoire",
+        "À la dernière extrémité / au tout dernier moment",
+        "En dehors des limites habituelles"
+      ],
+      "reponse": "À la dernière extrémité / au tout dernier moment",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'grosso modo' ?",
+      "assertions": [
+        "De manière très précise et rigoureuse",
+        "En gros / approximativement",
+        "Avec beaucoup de détails",
+        "Dans les grandes lignes officielles"
+      ],
+      "reponse": "En gros / approximativement",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'Mens sana in corpore sano' ?",
+      "assertions": [
+        "L'esprit prime toujours sur le corps",
+        "La santé est le bien suprême",
+        "Un esprit sain dans un corps sain",
+        "Le sport guérit toutes les maladies"
+      ],
+      "reponse": "Un esprit sain dans un corps sain",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'in vino veritas' ?",
+      "assertions": [
+        "La vérité est dans le vin / l'ivresse fait dire la vérité",
+        "Le vin est la boisson des dieux",
+        "Le plaisir révèle le vrai caractère",
+        "L'alcool tue la conscience"
+      ],
+      "reponse": "La vérité est dans le vin / l'ivresse fait dire la vérité",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'per se' ?",
+      "assertions": [
+        "Pour d'autres raisons",
+        "Selon les circonstances",
+        "Par soi-même / en soi / intrinsèquement",
+        "Par les autres"
+      ],
+      "reponse": "Par soi-même / en soi / intrinsèquement",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'terra incognita' ?",
+      "assertions": [
+        "La terre promise",
+        "Terre inconnue / domaine inexploré",
+        "Le territoire conquis",
+        "La patrie perdue"
+      ],
+      "reponse": "Terre inconnue / domaine inexploré",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'sine die' ?",
+      "assertions": [
+        "Sans condition",
+        "Sans délai",
+        "Sans date fixée / indéfiniment reporté",
+        "Sans appel possible"
+      ],
+      "reponse": "Sans date fixée / indéfiniment reporté",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'ad hoc' ?",
+      "assertions": [
+        "Contre quelque chose",
+        "Pour cela / spécialement créé pour cet usage particulier",
+        "En accord avec les règles",
+        "Par décision unanime"
+      ],
+      "reponse": "Pour cela / spécialement créé pour cet usage particulier",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'lapsus' en latin ?",
+      "assertions": [
+        "Glissade / faute involontaire de parole ou d'écriture",
+        "Un long discours",
+        "Un retard inexcusable",
+        "Une erreur délibérée"
+      ],
+      "reponse": "Glissade / faute involontaire de parole ou d'écriture",
+      "level": 0,
+      "type": "QCM"
+    },
+    {
+      "enonce": "'Etc.' est l'abréviation de 'et cetera', qui signifie 'et les autres choses'.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'I.e.' est l'abréviation de 'id est', qui signifie 'par exemple'.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Carpe diem' est une expression tirée du poète latin Horace.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Veni, vidi, vici' est une phrase attribuée à Jules César après sa victoire à Zéla.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Cogito ergo sum' est une expression du mathématicien Euclide.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "L'expression 'in vivo' désigne une expérience réalisée dans un tube à essai.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Tempus fugit' signifie littéralement 'le temps fuit'.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Sine die' signifie 'sans date fixée'.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Ad hoc' signifie 'contre quelque chose' en latin.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Vice versa' signifie 'avec grand enthousiasme'.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'QED' (quod erat demonstrandum) est utilisé pour marquer la fin d'une démonstration mathématique ou logique.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Et al.' est l'abréviation de 'et alii', utilisée pour désigner plusieurs auteurs dans une référence.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Alea jacta est' est une expression attribuée à Auguste César.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'In situ' désigne quelque chose réalisé en laboratoire, loin de son contexte naturel.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Grosso modo' est une expression latine signifiant approximativement.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Vrai",
+      "level": 0,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "Que signifie 'a priori' en philosophie ?",
+      "assertions": [
+        "Avant l'expérience, basé sur la seule raison",
+        "Après l'expérience empirique",
+        "À la suite d'une observation directe",
+        "En dehors de toute logique"
+      ],
+      "reponse": "Avant l'expérience, basé sur la seule raison",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'a posteriori' ?",
+      "assertions": [
+        "Avant toute démonstration",
+        "Après l'expérience / basé sur l'observation",
+        "Par la seule logique déductive",
+        "En dehors du champ empirique"
+      ],
+      "reponse": "Après l'expérience / basé sur l'observation",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'de facto' ?",
+      "assertions": [
+        "Selon la loi en vigueur",
+        "Par décision judiciaire",
+        "En fait / dans les faits (indépendamment de la légalité)",
+        "En vertu d'un accord formel"
+      ],
+      "reponse": "En fait / dans les faits (indépendamment de la légalité)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'de jure' ?",
+      "assertions": [
+        "De façon provisoire",
+        "En droit / selon la loi",
+        "Dans les faits observables",
+        "Par convention tacite"
+      ],
+      "reponse": "En droit / selon la loi",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'modus operandi' ?",
+      "assertions": [
+        "Façon de procéder / méthode de fonctionnement",
+        "Mode d'alimentation en énergie",
+        "Règlement intérieur d'une organisation",
+        "Procédure d'urgence réglementaire"
+      ],
+      "reponse": "Façon de procéder / méthode de fonctionnement",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'modus vivendi' ?",
+      "assertions": [
+        "La règle de vie stricte imposée",
+        "La discipline monastique",
+        "Façon de vivre / arrangement provisoire acceptable entre parties opposées",
+        "Le mode de production économique"
+      ],
+      "reponse": "Façon de vivre / arrangement provisoire acceptable entre parties opposées",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'ex officio' ?",
+      "assertions": [
+        "Après démission du poste",
+        "En dehors de tout cadre institutionnel",
+        "À titre bénévole et volontaire",
+        "En vertu de sa fonction / de droit, en raison de sa charge"
+      ],
+      "reponse": "En vertu de sa fonction / de droit, en raison de sa charge",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'pro tempore' ?",
+      "assertions": [
+        "Pour toujours / définitivement",
+        "Pour le temps / provisoirement",
+        "Avec le temps / progressivement",
+        "Avant le délai fixé"
+      ],
+      "reponse": "Pour le temps / provisoirement",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'ad interim' ?",
+      "assertions": [
+        "Jusqu'à la décision finale",
+        "En attendant / par intérim",
+        "En complément du titulaire",
+        "Sans désignation officielle"
+      ],
+      "reponse": "En attendant / par intérim",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'prima facie' ?",
+      "assertions": [
+        "En dernière analyse",
+        "D'après l'examen approfondi",
+        "À première vue / au premier abord",
+        "Sur la base des preuves définitives"
+      ],
+      "reponse": "À première vue / au premier abord",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'ab initio' ?",
+      "assertions": [
+        "À la fin du processus",
+        "Dès le commencement / depuis le début",
+        "À mi-parcours",
+        "Après la première étape"
+      ],
+      "reponse": "Dès le commencement / depuis le début",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'mutatis mutandis' ?",
+      "assertions": [
+        "Tout en conservant ce qui doit l'être",
+        "En changeant ce qui doit être changé",
+        "Sans modifier quoi que ce soit",
+        "En ajoutant les éléments nécessaires"
+      ],
+      "reponse": "En changeant ce qui doit être changé",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'ipso facto' ?",
+      "assertions": [
+        "Par décision d'un tiers",
+        "Après vérification des faits",
+        "Par le fait même / automatiquement, de ce seul fait",
+        "En vertu d'une loi explicite"
+      ],
+      "reponse": "Par le fait même / automatiquement, de ce seul fait",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'alter ego' ?",
+      "assertions": [
+        "Un ennemi intime",
+        "Un autre moi-même / un double",
+        "Un représentant légal désigné",
+        "Un collaborateur secondaire"
+      ],
+      "reponse": "Un autre moi-même / un double",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'persona non grata' ?",
+      "assertions": [
+        "Un diplomate en mission officielle",
+        "Une personne méritant récompense",
+        "Personne officiellement indésirable",
+        "Un citoyen sans droits civiques"
+      ],
+      "reponse": "Personne officiellement indésirable",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'in extenso' ?",
+      "assertions": [
+        "En résumé concis",
+        "En extraits choisis",
+        "En entier / intégralement",
+        "En annexe séparée"
+      ],
+      "reponse": "En entier / intégralement",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'in abstracto' ?",
+      "assertions": [
+        "Dans le cas particulier examiné",
+        "Sur la base de faits concrets",
+        "Dans l'abstrait / indépendamment des circonstances",
+        "En dehors du cadre légal"
+      ],
+      "reponse": "Dans l'abstrait / indépendamment des circonstances",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'in concreto' ?",
+      "assertions": [
+        "Dans le concret / en tenant compte des circonstances réelles",
+        "Abstraitement / sans référence aux faits",
+        "Selon les principes généraux",
+        "D'après les textes de loi uniquement"
+      ],
+      "reponse": "Dans le concret / en tenant compte des circonstances réelles",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'a fortiori' ?",
+      "assertions": [
+        "Par la force des armes",
+        "À plus forte raison",
+        "En raison de la faiblesse adverse",
+        "Par la contrainte légale"
+      ],
+      "reponse": "À plus forte raison",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'per os' en médecine ?",
+      "assertions": [
+        "Par injection intraveineuse",
+        "Par voie cutanée",
+        "Par inhalation",
+        "Par la bouche / voie orale"
+      ],
+      "reponse": "Par la bouche / voie orale",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'divide et impera' ?",
+      "assertions": [
+        "Divise et règne",
+        "Partage et distribue équitablement",
+        "Sépare et réconcilie",
+        "Analyse et synthétise"
+      ],
+      "reponse": "Divise et règne",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'Homo homini lupus' ?",
+      "assertions": [
+        "L'homme est un être social par nature",
+        "L'homme est un loup pour l'homme",
+        "L'homme domine tous les animaux",
+        "L'homme est le meilleur ami du loup"
+      ],
+      "reponse": "L'homme est un loup pour l'homme",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'Labor omnia vincit' ?",
+      "assertions": [
+        "La victoire appartient aux plus courageux",
+        "La patience vient à bout de tout",
+        "La persévérance surpasse le talent",
+        "Le travail vainc tout"
+      ],
+      "reponse": "Le travail vainc tout",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'Panem et circenses' ?",
+      "assertions": [
+        "La paix et la prospérité pour tous",
+        "Le pain et les jeux (politique populiste)",
+        "Le blé et les cérémonies religieuses",
+        "La nourriture et les divertissements royaux"
+      ],
+      "reponse": "Le pain et les jeux (politique populiste)",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'in fine' ?",
+      "assertions": [
+        "À la fin / en conclusion",
+        "Au début du raisonnement",
+        "En plein milieu",
+        "Avant la décision finale"
+      ],
+      "reponse": "À la fin / en conclusion",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'in medias res' ?",
+      "assertions": [
+        "Dans les médias officiels",
+        "À la fin de l'histoire",
+        "Au milieu des choses / plongé directement dans l'action",
+        "Dans les archives historiques"
+      ],
+      "reponse": "Au milieu des choses / plongé directement dans l'action",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'loco citato' (loc. cit.) dans une référence ?",
+      "assertions": [
+        "Dans l'ouvrage cité précédemment",
+        "À l'endroit cité / à la même page déjà citée",
+        "Selon l'auteur local",
+        "Dans la localité mentionnée"
+      ],
+      "reponse": "À l'endroit cité / à la même page déjà citée",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'opus citatum' (op. cit.) ?",
+      "assertions": [
+        "Ouvrage à consulter obligatoirement",
+        "Dans l'ouvrage cité précédemment",
+        "Ouvrage original non traduit",
+        "Citation hors contexte"
+      ],
+      "reponse": "Dans l'ouvrage cité précédemment",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'ex nihilo' ?",
+      "assertions": [
+        "À partir d'éléments existants",
+        "Par transformation d'une matière première",
+        "Par déduction logique",
+        "À partir de rien / du néant"
+      ],
+      "reponse": "À partir de rien / du néant",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'cui bono' ?",
+      "assertions": [
+        "Qui en est responsable",
+        "Qui a commis l'acte",
+        "À qui profite le crime / qui en bénéficie",
+        "Qui peut témoigner"
+      ],
+      "reponse": "À qui profite le crime / qui en bénéficie",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'Audi alteram partem' ?",
+      "assertions": [
+        "Parle seulement après avoir réfléchi",
+        "Écoute les deux parties / entends l'autre côté",
+        "Interroge tous les témoins",
+        "Observe avant de juger"
+      ],
+      "reponse": "Écoute les deux parties / entends l'autre côté",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'cum grano salis' ?",
+      "assertions": [
+        "Avec beaucoup d'enthousiasme",
+        "Avec un grain de sel / avec discernement et esprit critique",
+        "Avec toutes les précautions nécessaires",
+        "Avec grande rigueur scientifique"
+      ],
+      "reponse": "Avec un grain de sel / avec discernement et esprit critique",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'Fiat lux' ?",
+      "assertions": [
+        "Que la vérité soit dite",
+        "Que la force soit avec nous",
+        "Que la lumière soit",
+        "Que la paix règne"
+      ],
+      "reponse": "Que la lumière soit",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'sine ira et studio' ?",
+      "assertions": [
+        "Sans contrainte ni obligation",
+        "Sans colère et sans parti pris",
+        "Sans témoin ni preuves",
+        "Sans délai et sans appel"
+      ],
+      "reponse": "Sans colère et sans parti pris",
+      "level": 1,
+      "type": "QCM"
+    },
+    {
+      "enonce": "'A priori' et 'a posteriori' sont deux concepts opposés en philosophie de la connaissance.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'De facto' et 'de jure' ont exactement la même signification en droit.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Faux",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Persona non grata' désigne une personne officiellement indésirable dans un pays ou auprès d'une organisation.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Ex officio' signifie qu'une personne occupe une fonction à titre uniquement bénévole.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Faux",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'A fortiori' signifie 'à plus forte raison'.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Mutatis mutandis' peut se traduire par 'en changeant ce qui doit être changé'.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Ipso facto' signifie 'avec grand soin et méthode'.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'In extenso' signifie en résumé.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'In concreto' est l'antonyme d''in abstracto' : le premier renvoie aux faits, le second aux principes.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Panem et circenses' est une expression de l'écrivain latin Juvénal désignant la politique populiste.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Per os' désigne l'administration d'un médicament par injection intraveineuse.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Faux",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Ab initio' signifie 'dès l'origine / depuis le début'.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Cui bono' est une expression latine utilisée pour identifier le mobile d'un crime ou d'un acte.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Vrai",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Sine ira et studio' est un principe rhétorique qui invite à un discours passionné et engagé.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Alter ego' désigne uniquement une facette cachée et négative de la personnalité.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 1,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "En droit, 'habeas corpus' signifie littéralement :",
+      "assertions": [
+        "Que tu aies le corps (injonction de présenter physiquement le détenu)",
+        "Que le corps soit examiné par un médecin",
+        "Que le corps soit remis à la famille",
+        "Que la preuve matérielle soit présentée"
+      ],
+      "reponse": "Que tu aies le corps (injonction de présenter physiquement le détenu)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'res judicata' en droit ?",
+      "assertions": [
+        "Une affaire toujours en cours d'instruction",
+        "La chose jugée / une décision judiciaire définitive et irrévocable",
+        "Un jugement rendu par défaut",
+        "Une décision provisoire susceptible d'appel"
+      ],
+      "reponse": "La chose jugée / une décision judiciaire définitive et irrévocable",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'in dubio pro reo' en droit pénal ?",
+      "assertions": [
+        "Dans le doute, en faveur de l'accusé / présomption d'innocence",
+        "En cas de doute, la culpabilité est présumée",
+        "Le doute profite toujours à la victime",
+        "En l'absence de preuves, l'affaire est classée sans suite"
+      ],
+      "reponse": "Dans le doute, en faveur de l'accusé / présomption d'innocence",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'nemo judex in causa sua' ?",
+      "assertions": [
+        "Personne ne peut être condamné sans avoir été entendu",
+        "Nul ne peut être juge dans sa propre cause",
+        "Aucun juge ne peut délibérer seul",
+        "Le juge n'est pas lié par les précédents"
+      ],
+      "reponse": "Nul ne peut être juge dans sa propre cause",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'pacta sunt servanda' en droit des contrats ?",
+      "assertions": [
+        "Un pacte peut être résilié unilatéralement",
+        "Les pactes secrets n'ont pas force obligatoire",
+        "Les pactes doivent être respectés / force obligatoire des contrats",
+        "Les pactes oraux n'ont aucune valeur juridique"
+      ],
+      "reponse": "Les pactes doivent être respectés / force obligatoire des contrats",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'ultra petita' en procédure civile ?",
+      "assertions": [
+        "Au-delà de ce qui a été demandé / excès de pouvoir du juge",
+        "En deçà des demandes formulées",
+        "Exactement conforme aux conclusions des parties",
+        "Une demande formée hors délai"
+      ],
+      "reponse": "Au-delà de ce qui a été demandé / excès de pouvoir du juge",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'ex tunc' en droit ?",
+      "assertions": [
+        "À partir de maintenant uniquement",
+        "Sans aucun effet dans le temps",
+        "Depuis lors / avec effet rétroactif",
+        "Après l'entrée en vigueur de la loi"
+      ],
+      "reponse": "Depuis lors / avec effet rétroactif",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'ex nunc' en droit ?",
+      "assertions": [
+        "Avec effet rétroactif complet",
+        "À partir de maintenant / sans effet rétroactif",
+        "Depuis l'origine de l'acte",
+        "Avec suspension d'effet temporaire"
+      ],
+      "reponse": "À partir de maintenant / sans effet rétroactif",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'in limine litis' en procédure ?",
+      "assertions": [
+        "Après clôture des débats",
+        "Au terme de la procédure d'appel",
+        "Au seuil du litige / avant tout débat au fond, dès le début",
+        "En cours d'instruction contradictoire"
+      ],
+      "reponse": "Au seuil du litige / avant tout débat au fond, dès le début",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'ex aequo et bono' comme méthode de jugement ?",
+      "assertions": [
+        "Selon l'application stricte des textes légaux",
+        "Sur la base des précédents jurisprudentiels uniquement",
+        "Selon l'équité et le bon sens, indépendamment des règles strictes",
+        "Par référence exclusive au droit naturel"
+      ],
+      "reponse": "Selon l'équité et le bon sens, indépendamment des règles strictes",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'lex specialis derogat legi generali' ?",
+      "assertions": [
+        "La loi générale s'applique en toutes circonstances",
+        "La loi spéciale déroge à la loi générale",
+        "La loi la plus récente prime toujours",
+        "La loi internationale prime sur la loi nationale"
+      ],
+      "reponse": "La loi spéciale déroge à la loi générale",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'ex vivo' en biologie médicale ?",
+      "assertions": [
+        "Dans l'organisme vivant intact",
+        "Dans un milieu artificiel standard",
+        "Hors de l'organisme vivant / sur des tissus prélevés",
+        "En conditions de simulation numérique"
+      ],
+      "reponse": "Hors de l'organisme vivant / sur des tissus prélevés",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'ad libitum' en médecine ou en musique ?",
+      "assertions": [
+        "À volonté / selon le désir, sans limite fixée",
+        "Selon une posologie strictement définie",
+        "En une seule prise journalière",
+        "Selon l'avis du spécialiste uniquement"
+      ],
+      "reponse": "À volonté / selon le désir, sans limite fixée",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'reductio ad absurdum' en logique ?",
+      "assertions": [
+        "Un raisonnement simplifié à l'extrême",
+        "Démonstration par l'absurde : réfuter une proposition en montrant qu'elle mène à une contradiction",
+        "Une réduction progressive de la complexité",
+        "Un argument d'autorité basé sur le ridicule"
+      ],
+      "reponse": "Démonstration par l'absurde : réfuter une proposition en montrant qu'elle mène à une contradiction",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'post hoc ergo propter hoc' ?",
+      "assertions": [
+        "Un principe de causalité rigoureusement validé",
+        "Un raisonnement déductif valide",
+        "Après cela, donc à cause de cela : sophisme de causalité fallacieuse",
+        "Une méthode d'analyse statistique causale"
+      ],
+      "reponse": "Après cela, donc à cause de cela : sophisme de causalité fallacieuse",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'lapsus calami' ?",
+      "assertions": [
+        "Faute de plume / erreur d'écriture involontaire",
+        "Erreur de parole lors d'un discours",
+        "Oubli de mémoire momentané",
+        "Faute de raisonnement logique"
+      ],
+      "reponse": "Faute de plume / erreur d'écriture involontaire",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'lapsus linguae' ?",
+      "assertions": [
+        "Faute de plume dans un écrit",
+        "Erreur de langue / faute de parole involontaire",
+        "Oubli d'un mot dans un texte",
+        "Confusion entre deux langues différentes"
+      ],
+      "reponse": "Erreur de langue / faute de parole involontaire",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'bona fide' ?",
+      "assertions": [
+        "De mauvaise foi",
+        "De bonne foi",
+        "Sans intention définie",
+        "Dans un but lucratif"
+      ],
+      "reponse": "De bonne foi",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'mala fide' ?",
+      "assertions": [
+        "De bonne foi",
+        "De mauvaise foi",
+        "Sans aucune intention",
+        "Par inadvertance"
+      ],
+      "reponse": "De mauvaise foi",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'nemo tenetur se ipsum accusare' ?",
+      "assertions": [
+        "Tout accusé doit collaborer avec la justice",
+        "Nul n'est tenu de s'accuser lui-même / droit au silence",
+        "L'accusé doit fournir toutes les preuves en sa possession",
+        "L'accusation revient exclusivement au ministère public"
+      ],
+      "reponse": "Nul n'est tenu de s'accuser lui-même / droit au silence",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En droit, 'prima facie' qualifie :",
+      "assertions": [
+        "Une preuve définitive et irréfutable",
+        "Un jugement rendu en dernier ressort",
+        "Une preuve insuffisante qui demande confirmation",
+        "Une preuve suffisante à première vue pour engager des poursuites"
+      ],
+      "reponse": "Une preuve suffisante à première vue pour engager des poursuites",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'videlicet' (viz.) dans un texte académique ?",
+      "assertions": [
+        "C'est-à-dire / à savoir (précision plus détaillée)",
+        "Par exemple (illustration d'un cas particulier)",
+        "Voir aussi (renvoi bibliographique)",
+        "En d'autres termes (reformulation)"
+      ],
+      "reponse": "C'est-à-dire / à savoir (précision plus détaillée)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'rebus sic stantibus' dans un traité international ?",
+      "assertions": [
+        "Les traités sont inaltérables quelles que soient les circonstances",
+        "Les choses étant ainsi / clause autorisant la renégociation si les circonstances changent fondamentalement",
+        "L'État peut dénoncer un traité à tout moment sans condition",
+        "Les traités cessent d'exister après 50 ans automatiquement"
+      ],
+      "reponse": "Les choses étant ainsi / clause autorisant la renégociation si les circonstances changent fondamentalement",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'volenti non fit injuria' en droit ?",
+      "assertions": [
+        "La victime peut toujours réclamer réparation",
+        "Tout dommage volontaire est punissable",
+        "Celui qui consent ne peut se plaindre d'une injure / qui accepte le risque ne peut réclamer",
+        "Le consentement ne supprime jamais la responsabilité"
+      ],
+      "reponse": "Celui qui consent ne peut se plaindre d'une injure / qui accepte le risque ne peut réclamer",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'animus nocendi' en droit pénal ?",
+      "assertions": [
+        "L'état d'inconscience au moment de l'acte",
+        "L'intention de nuire",
+        "L'absence d'intention délictueuse",
+        "La négligence grave sans volonté de nuire"
+      ],
+      "reponse": "L'intention de nuire",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'dolus malus' en droit romain et civil ?",
+      "assertions": [
+        "Un acte involontaire causant dommage",
+        "Une erreur de droit excusable",
+        "La mauvaise intention / le dol (tromperie délibérée)",
+        "Un simple manque de diligence"
+      ],
+      "reponse": "La mauvaise intention / le dol (tromperie délibérée)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "En médecine, 'in situ' appliqué à une tumeur désigne :",
+      "assertions": [
+        "Une tumeur maligne déjà métastatique",
+        "Une tumeur traitée chirurgicalement",
+        "Une tumeur qui n'a pas encore envahi les tissus voisins",
+        "Une tumeur diagnostiquée à distance par imagerie"
+      ],
+      "reponse": "Une tumeur qui n'a pas encore envahi les tissus voisins",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'acta non verba' ?",
+      "assertions": [
+        "Des actes, pas des mots",
+        "Les écrits restent, les paroles s'envolent",
+        "Les décisions valent plus que les lois",
+        "La parole est plus forte que l'action"
+      ],
+      "reponse": "Des actes, pas des mots",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'in pari delicto' ?",
+      "assertions": [
+        "Une seule partie est responsable",
+        "Dans un égal délit / les deux parties sont également fautives",
+        "L'infraction est mineure des deux côtés",
+        "Les parties ont commis des délits différents"
+      ],
+      "reponse": "Dans un égal délit / les deux parties sont également fautives",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'exceptio non adimpleti contractus' ?",
+      "assertions": [
+        "L'exception d'incompétence territoriale",
+        "L'exception de prescription extinctive",
+        "L'exception d'inexécution : refus d'exécuter si l'autre partie n'a pas rempli ses obligations",
+        "L'exception pour vice de forme dans le contrat"
+      ],
+      "reponse": "L'exception d'inexécution : refus d'exécuter si l'autre partie n'a pas rempli ses obligations",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'bis repetita' ?",
+      "assertions": [
+        "Les choses répétées deux fois (par extension : ce qui est dit deux fois)",
+        "Une double condamnation pour le même fait",
+        "Un contrat reconductible deux fois",
+        "Une procédure recommencée après annulation"
+      ],
+      "reponse": "Les choses répétées deux fois (par extension : ce qui est dit deux fois)",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'causa causans' ?",
+      "assertions": [
+        "La cause la plus lointaine dans une chaîne causale",
+        "La cause indirecte d'un dommage",
+        "La cause des causes / la cause directe et efficiente",
+        "L'absence de cause déterminante"
+      ],
+      "reponse": "La cause des causes / la cause directe et efficiente",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'ad absurdum' (poussé à son terme logique) ?",
+      "assertions": [
+        "Jusqu'à la perfection",
+        "Jusqu'à l'absurde / poussé à une conclusion insensée",
+        "Jusqu'à l'accord des parties",
+        "Jusqu'à la limite légale autorisée"
+      ],
+      "reponse": "Jusqu'à l'absurde / poussé à une conclusion insensée",
+      "level": 2,
+      "type": "QCM"
+    },
+    {
+      "enonce": "'In dubio pro reo' est un principe fondamental du droit pénal qui bénéficie à l'accusé.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Habeas corpus' est une procédure judiciaire qui protège les individus contre les détentions arbitraires.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Ex tunc' et 'ex nunc' ont exactement le même effet juridique dans le temps.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Pacta sunt servanda' signifie que les parties peuvent résilier unilatéralement leurs engagements.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Res judicata' signifie qu'un jugement définitif ne peut plus être remis en question entre les mêmes parties.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'In limine litis' désigne une exception soulevée au fond du débat judiciaire.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Ex aequo et bono' est une méthode de jugement basée exclusivement sur les règles légales strictes.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Post hoc ergo propter hoc' est un raisonnement logique valide en philosophie.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Faux",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Lapsus calami' désigne une erreur orale involontaire dans un discours.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Bona fide' signifie 'de bonne foi'.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'In vivo' et 'in vitro' sont deux techniques expérimentales avec des conditions opposées.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Ultra petita' est un principe qui autorise le juge à dépasser les demandes formulées par les parties.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Nemo judex in causa sua' est un principe qui garantit l'impartialité du juge.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Ad libitum' en médecine signifie qu'une posologie est strictement et précisément limitée.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Lex specialis derogat legi generali' est un principe de résolution des conflits entre normes juridiques.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Vrai",
+      "level": 2,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Clausula rebus sic stantibus' est codifiée dans la Convention de Vienne sur le droit des traités de 1969 (article 62).",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quel philosophe a formulé le 'Cogito ergo sum' dans ses Méditations Métaphysiques ?",
+      "assertions": [
+        "Thomas Hobbes",
+        "René Descartes",
+        "Baruch Spinoza",
+        "Gottfried Leibniz"
+      ],
+      "reponse": "René Descartes",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Dans quelle œuvre du poète Horace l'expression 'Carpe diem' apparaît-elle ?",
+      "assertions": [
+        "L'Énéide",
+        "Les Métamorphoses",
+        "Les Odes (Carmina, Livre I, ode 11)",
+        "Les Satires"
+      ],
+      "reponse": "Les Odes (Carmina, Livre I, ode 11)",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "La maxime 'Homo homini lupus' est reprise et popularisée par Thomas Hobbes, mais elle est originellement tirée de :",
+      "assertions": [
+        "Sénèque (Epistulae Morales)",
+        "Plaute, dans une comédie latine",
+        "Cicéron, dans ses Tusculanes",
+        "Virgile, dans les Géorgiques"
+      ],
+      "reponse": "Plaute, dans une comédie latine",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "'Sine ira et studio' est la devise méthodologique adoptée par quel historien latin ?",
+      "assertions": [
+        "Tite-Live, dans Ab Urbe Condita",
+        "Suétone, dans les Vies des douze Césars",
+        "César, dans la Guerre des Gaules",
+        "Tacite, en ouverture des Annales"
+      ],
+      "reponse": "Tacite, en ouverture des Annales",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Quelle est la différence juridique exacte entre 'ex tunc' et 'ex nunc' ?",
+      "assertions": [
+        "'Ex tunc' s'applique aux contrats, 'ex nunc' aux jugements",
+        "'Ex tunc' produit des effets rétroactifs (depuis lors), 'ex nunc' produit des effets seulement pour l'avenir",
+        "Les deux expressions sont synonymes en droit continental",
+        "'Ex tunc' concerne les lois, 'ex nunc' les décrets"
+      ],
+      "reponse": "'Ex tunc' produit des effets rétroactifs (depuis lors), 'ex nunc' produit des effets seulement pour l'avenir",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'quid pro quo' ?",
+      "assertions": [
+        "Quelque chose en échange de quelque chose / contrepartie",
+        "Qui fait quoi dans quelle mesure",
+        "Une question sans réponse claire",
+        "Un accord sans contrepartie"
+      ],
+      "reponse": "Quelque chose en échange de quelque chose / contrepartie",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'ratio decidendi' en common law ?",
+      "assertions": [
+        "Le résumé des faits de l'affaire",
+        "La liste des précédents cités par le juge",
+        "Le raisonnement juridique fondant la décision, à valeur contraignante pour les juridictions inférieures",
+        "L'opinion dissidente d'un juge minoritaire"
+      ],
+      "reponse": "Le raisonnement juridique fondant la décision, à valeur contraignante pour les juridictions inférieures",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'obiter dictum' dans un jugement de common law ?",
+      "assertions": [
+        "Le dispositif exécutoire de la décision",
+        "Remarque incidente non contraignante, dite en passant par le juge",
+        "L'exposé des motifs ayant force de précédent",
+        "L'opinion de la juridiction supérieure"
+      ],
+      "reponse": "Remarque incidente non contraignante, dite en passant par le juge",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'functus officio' ?",
+      "assertions": [
+        "Dont la mission est terminée / qui a épuisé ses pouvoirs",
+        "En plein exercice de ses fonctions",
+        "Nommé temporairement à un poste supérieur",
+        "En cours de procédure disciplinaire"
+      ],
+      "reponse": "Dont la mission est terminée / qui a épuisé ses pouvoirs",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'novus actus interveniens' en droit de la responsabilité civile ?",
+      "assertions": [
+        "Un nouvel acte de procédure déposé en cours d'instance",
+        "Un acte nouveau intervenant dans la chaîne causale, pouvant rompre le lien de causalité",
+        "Une décision de justice frappant de nullité un acte antérieur",
+        "Un contrat conclu postérieurement à un litige"
+      ],
+      "reponse": "Un acte nouveau intervenant dans la chaîne causale, pouvant rompre le lien de causalité",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'compos mentis' en droit ?",
+      "assertions": [
+        "Sous tutelle légale permanente",
+        "Maître de son esprit / mentalement capable d'agir juridiquement",
+        "Ayant subi une altération mentale temporaire",
+        "En état de démence au moment des faits"
+      ],
+      "reponse": "Maître de son esprit / mentalement capable d'agir juridiquement",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'non compos mentis' ?",
+      "assertions": [
+        "Qui n'est pas maître de son esprit / juridiquement incapable en raison de troubles mentaux",
+        "Qui refuse de coopérer avec la justice",
+        "Qui commet un acte en état de légitime défense",
+        "Qui n'a pas compris les termes d'un contrat"
+      ],
+      "reponse": "Qui n'est pas maître de son esprit / juridiquement incapable en raison de troubles mentaux",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'actus reus' en droit pénal de common law ?",
+      "assertions": [
+        "L'élément intentionnel / moral de l'infraction",
+        "L'acte coupable / l'élément matériel de l'infraction",
+        "La déclaration de culpabilité par le jury",
+        "La peine prononcée par le tribunal"
+      ],
+      "reponse": "L'acte coupable / l'élément matériel de l'infraction",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'mens rea' en droit pénal de common law ?",
+      "assertions": [
+        "L'élément matériel de l'infraction",
+        "L'aveu spontané de l'accusé",
+        "L'intention coupable / l'élément moral de l'infraction",
+        "La récidive dans la commission d'un crime"
+      ],
+      "reponse": "L'intention coupable / l'élément moral de l'infraction",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'sub judice' ?",
+      "assertions": [
+        "Sous examen du juge / affaire en cours de jugement, dont on ne peut publiquement débattre",
+        "Au-dessous de la compétence d'un tribunal",
+        "Jugement déjà rendu et définitif",
+        "Sous l'autorité d'un juge étranger"
+      ],
+      "reponse": "Sous examen du juge / affaire en cours de jugement, dont on ne peut publiquement débattre",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'nemo dat quod non habet' ?",
+      "assertions": [
+        "Tout créancier peut se faire rembourser sur les biens du débiteur",
+        "Nul ne peut donner ce qu'il n'a pas / on ne peut transmettre plus de droits qu'on n'en possède",
+        "Le donateur conserve toujours un droit de reprise",
+        "Une donation ne peut jamais être révoquée"
+      ],
+      "reponse": "Nul ne peut donner ce qu'il n'a pas / on ne peut transmettre plus de droits qu'on n'en possède",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'pendente lite' ?",
+      "assertions": [
+        "Après le prononcé du jugement définitif",
+        "Avant l'introduction de l'instance",
+        "Pendant le procès / durant l'instance en cours",
+        "Après la clôture des débats"
+      ],
+      "reponse": "Pendant le procès / durant l'instance en cours",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'per incuriam' en jurisprudence ?",
+      "assertions": [
+        "Par inadvertance / décision rendue sans tenir compte d'une règle pertinente",
+        "Par excès de zèle judiciaire",
+        "Délibérément rendu contre les précédents existants",
+        "Par décision unanime de la cour"
+      ],
+      "reponse": "Par inadvertance / décision rendue sans tenir compte d'une règle pertinente",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'jus cogens' en droit international public ?",
+      "assertions": [
+        "Un droit supplétif que les États peuvent écarter par traité",
+        "Normes impératives du droit international auxquelles aucun État ne peut déroger",
+        "Un droit coutumier à valeur régionale",
+        "Un ensemble de règles applicables uniquement en temps de guerre"
+      ],
+      "reponse": "Normes impératives du droit international auxquelles aucun État ne peut déroger",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'erga omnes' en droit international ?",
+      "assertions": [
+        "À l'égard de tous / opposable à la communauté internationale entière",
+        "Entre les seules parties contractantes",
+        "À l'égard des seuls États membres d'une organisation",
+        "Envers les générations futures uniquement"
+      ],
+      "reponse": "À l'égard de tous / opposable à la communauté internationale entière",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'pari passu' en droit financier ?",
+      "assertions": [
+        "À pas égaux / au même rang, proportionnellement entre créanciers",
+        "Par ordre de priorité strictement hiérarchique",
+        "Selon la règle du premier arrivé, premier servi",
+        "En tenant compte de la solvabilité de chaque créancier"
+      ],
+      "reponse": "À pas égaux / au même rang, proportionnellement entre créanciers",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'praeter legem' dans la théorie des sources du droit ?",
+      "assertions": [
+        "Conforme à la loi en tous points",
+        "En dehors de la loi / comblant les lacunes sans la violer",
+        "Contre la loi / en violation directe du texte légal",
+        "Supérieur à la loi / prime sur le droit écrit"
+      ],
+      "reponse": "En dehors de la loi / comblant les lacunes sans la violer",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'contra legem' ?",
+      "assertions": [
+        "Conforme à la loi",
+        "En dehors de la loi, dans ses lacunes",
+        "Contre la loi / en violation directe du texte légal",
+        "Au-delà des dispositions légales explicites"
+      ],
+      "reponse": "Contre la loi / en violation directe du texte légal",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'secundum legem' dans la théorie des sources du droit ?",
+      "assertions": [
+        "En dehors du texte légal",
+        "Selon la loi / strictement conforme au texte légal",
+        "Au-dessus de la loi",
+        "Contre l'esprit de la loi"
+      ],
+      "reponse": "Selon la loi / strictement conforme au texte légal",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'inter partes' en droit ?",
+      "assertions": [
+        "À l'égard de tous, sans exception",
+        "Entre les parties uniquement / n'ayant d'effet qu'entre les contractants",
+        "Entre les parties et les tiers intéressés",
+        "Au sein d'un groupe de sociétés liées"
+      ],
+      "reponse": "Entre les parties uniquement / n'ayant d'effet qu'entre les contractants",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'animus possidendi' en droit des biens ?",
+      "assertions": [
+        "L'acte physique de détenir une chose",
+        "L'intention de se comporter en propriétaire",
+        "La volonté d'abandonner un bien",
+        "L'acte de transfert de propriété"
+      ],
+      "reponse": "L'intention de se comporter en propriétaire",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'festina lente' (devise associée à l'Empereur Auguste) ?",
+      "assertions": [
+        "Agis vite et sans hésitation",
+        "La lenteur est une vertu cardinale",
+        "Hâte-toi lentement / avance résolument mais prudemment",
+        "La vitesse prime toujours sur la prudence"
+      ],
+      "reponse": "Hâte-toi lentement / avance résolument mais prudemment",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "Que signifie 'quaestio juris' par opposition à 'quaestio facti' ?",
+      "assertions": [
+        "Question sur les faits matériels de l'affaire",
+        "Question de droit / portant sur l'interprétation et l'application des règles juridiques",
+        "Question soumise à l'appréciation souveraine du jury",
+        "Question relative à la compétence territoriale"
+      ],
+      "reponse": "Question de droit / portant sur l'interprétation et l'application des règles juridiques",
+      "level": 3,
+      "type": "QCM"
+    },
+    {
+      "enonce": "'Ratio decidendi' et 'obiter dictum' ont la même valeur contraignante dans les systèmes de common law.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Jus cogens' désigne des normes de droit international auxquelles aucun État ne peut déroger.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Erga omnes' s'oppose à 'inter partes' : les effets d'une obligation erga omnes sont universels.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Actus reus' désigne l'élément intentionnel de l'infraction en common law.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Faux",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Mens rea' désigne l'élément moral ou intentionnel de l'infraction en common law.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Compos mentis' signifie que la personne est juridiquement capable de contracter et d'agir.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Sub judice' signifie qu'une affaire a déjà fait l'objet d'un jugement définitif et irrévocable.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Nemo dat quod non habet' est un principe fondamental du droit des biens : on ne peut transmettre plus de droits qu'on n'en possède.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Obiter dictum' dans un arrêt a la même force obligatoire que la 'ratio decidendi'.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Rebus sic stantibus' est une exception au principe 'pacta sunt servanda' en droit des traités.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Pari passu' est un terme utilisé en droit des obligations pour désigner l'égalité de rang entre créanciers.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Per incuriam' désigne une décision délibérément rendue contre les précédents existants.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Praeter legem', 'secundum legem' et 'contra legem' désignent trois positions possibles de la coutume par rapport à la loi.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Functus officio' signifie qu'un tribunal ou arbitre peut revenir sur sa décision après l'avoir rendue.",
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
+      "reponse": "Faux",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    },
+    {
+      "enonce": "'Festina lente' est une devise attribuée à l'Empereur Auguste par l'historien Suétone.",
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
+      "reponse": "Vrai",
+      "level": 3,
+      "type": "VRAI_FAUX"
+    }
+  ]
+}

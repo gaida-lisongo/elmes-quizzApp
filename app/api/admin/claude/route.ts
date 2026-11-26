@@ -250,8 +250,16 @@ export async function POST(request: NextRequest) {
 
       // ─── list_users ─────────────────────────────────────────────────────────
       case "list_users": {
-        const { role } = body as { role?: string };
-        const filter = role ? { role } : {};
+        const { role } = body as { role?: unknown };
+        const ROLES = ["PLAYER", "MOD", "ADMIN"] as const;
+        type Role = (typeof ROLES)[number];
+        if (role !== undefined && !ROLES.includes(role as Role)) {
+          return NextResponse.json(
+            { ok: false, error: "role invalide (attendu : ADMIN, MOD ou PLAYER)" },
+            { status: 400 }
+          );
+        }
+        const filter = role ? { role: role as Role } : {};
 
         const users = await User.find(filter)
           .select("pseudo telephone email role createdAt")
