@@ -8,10 +8,10 @@
     {
       "enonce": "Qu'est-ce qu'un abreuvoir automatique ?",
       "assertions": [
-        "Un dispositif qui fournit de l'eau en continu aux animaux par flotteur ou valve",
-        "Un récipient rempli manuellement deux fois par jour",
+        "Un réservoir enterré de stockage des eaux de pluie",
         "Une pompe centrifuge utilisée pour l'irrigation des cultures",
-        "Un réservoir enterré de stockage des eaux de pluie"
+        "Un récipient rempli manuellement deux fois par jour",
+        "Un dispositif qui fournit de l'eau en continu aux animaux par flotteur ou valve"
       ],
       "reponse": "Un dispositif qui fournit de l'eau en continu aux animaux par flotteur ou valve",
       "type": "QCM",
@@ -21,9 +21,9 @@
       "enonce": "Qu'appelle-t-on une mangeoire en élevage ?",
       "assertions": [
         "Un récipient ou auge destiné à recevoir les aliments distribués aux animaux",
-        "Un appareil automatique de traite des vaches",
         "Un système d'évacuation des déjections animales",
-        "Un dispositif de pesée des animaux à l'entrée du bâtiment"
+        "Un dispositif de pesée des animaux à l'entrée du bâtiment",
+        "Un appareil automatique de traite des vaches"
       ],
       "reponse": "Un récipient ou auge destiné à recevoir les aliments distribués aux animaux",
       "type": "QCM",
@@ -32,10 +32,10 @@
     {
       "enonce": "Qu'est-ce qu'un incubateur en aviculture ?",
       "assertions": [
-        "Un appareil qui maintient une température et une hygrométrie constantes pour faire éclore les œufs",
-        "Une cage métallique servant à isoler les volailles malades",
+        "Un silo destiné à stocker les aliments pour poules pondeuses",
         "Un ventilateur industriel installé dans les poulaillers",
-        "Un silo destiné à stocker les aliments pour poules pondeuses"
+        "Un appareil qui maintient une température et une hygrométrie constantes pour faire éclore les œufs",
+        "Une cage métallique servant à isoler les volailles malades"
       ],
       "reponse": "Un appareil qui maintient une température et une hygrométrie constantes pour faire éclore les œufs",
       "type": "QCM",
@@ -43,7 +43,10 @@
     },
     {
       "enonce": "Le lisier est le mélange de déjections liquides et solides des animaux d'élevage.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 0
@@ -51,9 +54,9 @@
     {
       "enonce": "Qu'est-ce que la traite en élevage bovin ?",
       "assertions": [
-        "L'opération qui consiste à extraire le lait des mamelles de la vache",
-        "La pesée journalière des veaux pour contrôler leur croissance",
         "Le transport du bétail d'un pâturage à un autre",
+        "La pesée journalière des veaux pour contrôler leur croissance",
+        "L'opération qui consiste à extraire le lait des mamelles de la vache",
         "La vaccination systématique du troupeau contre la brucellose"
       ],
       "reponse": "L'opération qui consiste à extraire le lait des mamelles de la vache",
@@ -63,10 +66,10 @@
     {
       "enonce": "Quel est le rôle principal d'un ventilateur dans un bâtiment d'élevage ?",
       "assertions": [
-        "Renouveler l'air intérieur pour éliminer l'ammoniac et l'humidité",
         "Chauffer le bâtiment pendant la saison froide",
         "Produire de l'électricité pour alimenter les équipements",
-        "Aspirer les poussières d'aliments dans les silos"
+        "Aspirer les poussières d'aliments dans les silos",
+        "Renouveler l'air intérieur pour éliminer l'ammoniac et l'humidité"
       ],
       "reponse": "Renouveler l'air intérieur pour éliminer l'ammoniac et l'humidité",
       "type": "QCM",
@@ -75,10 +78,10 @@
     {
       "enonce": "Qu'est-ce que le fumier en élevage ?",
       "assertions": [
-        "Le mélange de déjections solides et de litière (paille, sciure) des animaux",
         "L'eau usée provenant du nettoyage des bâtiments d'élevage",
+        "Un produit chimique utilisé pour désinfecter les bâtiments",
         "Un aliment concentré distribué aux ruminants en complément du fourrage",
-        "Un produit chimique utilisé pour désinfecter les bâtiments"
+        "Le mélange de déjections solides et de litière (paille, sciure) des animaux"
       ],
       "reponse": "Le mélange de déjections solides et de litière (paille, sciure) des animaux",
       "type": "QCM",
@@ -86,7 +89,10 @@
     },
     {
       "enonce": "La densité animale dans un bâtiment d'élevage désigne le nombre d'animaux par unité de surface.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 0
@@ -94,10 +100,10 @@
     {
       "enonce": "Qu'est-ce qu'une machine à traire ?",
       "assertions": [
-        "Un équipement mécanique qui reproduit le mouvement de succion du veau pour extraire le lait",
+        "Une centrifugeuse destinée à séparer la crème du lait cru",
         "Un malaxeur utilisé pour fabriquer le fromage à la ferme",
-        "Un appareil permettant de mesurer la production laitière annuelle d'un troupeau",
-        "Une centrifugeuse destinée à séparer la crème du lait cru"
+        "Un équipement mécanique qui reproduit le mouvement de succion du veau pour extraire le lait",
+        "Un appareil permettant de mesurer la production laitière annuelle d'un troupeau"
       ],
       "reponse": "Un équipement mécanique qui reproduit le mouvement de succion du veau pour extraire le lait",
       "type": "QCM",
@@ -106,10 +112,10 @@
     {
       "enonce": "Qu'appelle-t-on un couvoir en aviculture ?",
       "assertions": [
-        "Un établissement ou local équipé d'incubateurs pour la production industrielle de poussins",
-        "Une cage de transport des volailles vers le marché",
         "Un abri léger pour protéger les poules pondeuses du soleil",
-        "Un bassin d'eau où les canards et oies peuvent nager"
+        "Un bassin d'eau où les canards et oies peuvent nager",
+        "Un établissement ou local équipé d'incubateurs pour la production industrielle de poussins",
+        "Une cage de transport des volailles vers le marché"
       ],
       "reponse": "Un établissement ou local équipé d'incubateurs pour la production industrielle de poussins",
       "type": "QCM",
@@ -129,7 +135,10 @@
     },
     {
       "enonce": "Le fumier peut être utilisé comme engrais organique pour les cultures.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 0
@@ -137,9 +146,9 @@
     {
       "enonce": "Qu'est-ce qu'un nourrisseur automatique (feeder) en élevage porcin ?",
       "assertions": [
+        "Un appareil de mesure de la consommation quotidienne d'aliments",
         "Un distributeur d'aliments qui libère une ration dès que l'animal le sollicite",
         "Un vétérinaire chargé de composer les rations alimentaires du troupeau",
-        "Un appareil de mesure de la consommation quotidienne d'aliments",
         "Un véhicule motorisé pour transporter l'aliment du silo à l'auge"
       ],
       "reponse": "Un distributeur d'aliments qui libère une ration dès que l'animal le sollicite",
@@ -149,10 +158,10 @@
     {
       "enonce": "Quelle est la fonction principale d'un tank à lait (tank de réfrigération) ?",
       "assertions": [
-        "Refroidir et conserver le lait cru à 4 °C jusqu'à la collecte",
-        "Pasteuriser le lait pour la vente directe au consommateur",
+        "Stocker les céréales destinées à la fabrication de l'aliment du bétail",
         "Mesurer la densité du lait pour détecter les fraudes",
-        "Stocker les céréales destinées à la fabrication de l'aliment du bétail"
+        "Refroidir et conserver le lait cru à 4 °C jusqu'à la collecte",
+        "Pasteuriser le lait pour la vente directe au consommateur"
       ],
       "reponse": "Refroidir et conserver le lait cru à 4 °C jusqu'à la collecte",
       "type": "QCM",
@@ -161,9 +170,9 @@
     {
       "enonce": "Qu'est-ce que l'hygrométrie en incubation ?",
       "assertions": [
+        "La quantité d'oxygène nécessaire pour le développement de l'embryon",
         "Le taux d'humidité relative de l'air à l'intérieur de l'incubateur",
         "La vitesse de rotation des œufs lors du retournement automatique",
-        "La quantité d'oxygène nécessaire pour le développement de l'embryon",
         "La température minimale requise pour déclencher l'éclosion"
       ],
       "reponse": "Le taux d'humidité relative de l'air à l'intérieur de l'incubateur",
@@ -172,7 +181,10 @@
     },
     {
       "enonce": "Une seringue automatique vétérinaire permet d'administrer des injections à plusieurs animaux de suite sans recharger manuellement.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 0
@@ -180,10 +192,10 @@
     {
       "enonce": "Qu'est-ce qu'une boucle auriculaire (ear tag) en élevage ?",
       "assertions": [
+        "Une cloche accrochée au cou des bovins pour les retrouver dans la brousse",
         "Un dispositif d'identification fixé à l'oreille de l'animal portant un numéro unique",
-        "Un médicament injecté dans l'oreille pour traiter les parasites auriculaires",
         "Un capteur acoustique mesurant le niveau sonore dans le bâtiment d'élevage",
-        "Une cloche accrochée au cou des bovins pour les retrouver dans la brousse"
+        "Un médicament injecté dans l'oreille pour traiter les parasites auriculaires"
       ],
       "reponse": "Un dispositif d'identification fixé à l'oreille de l'animal portant un numéro unique",
       "type": "QCM",
@@ -193,9 +205,9 @@
       "enonce": "Quel type de ventilation est le plus courant dans les poulaillers en Afrique centrale ?",
       "assertions": [
         "Ventilation naturelle par ouvertures latérales et faîtière",
+        "Climatisation centralisée à compresseurs électriques",
         "Ventilation mécanique à pression positive avec filtres HEPA",
-        "Ventilation souterraine par galeries creusées sous le bâtiment",
-        "Climatisation centralisée à compresseurs électriques"
+        "Ventilation souterraine par galeries creusées sous le bâtiment"
       ],
       "reponse": "Ventilation naturelle par ouvertures latérales et faîtière",
       "type": "QCM",
@@ -204,9 +216,9 @@
     {
       "enonce": "Qu'est-ce qu'une fosse à lisier ?",
       "assertions": [
-        "Un ouvrage de stockage étanche recevant les effluents liquides des élevages",
         "Un bassin de décantation pour purifier l'eau d'abreuvement",
         "Un réservoir aérien destiné à stocker le carburant des tracteurs",
+        "Un ouvrage de stockage étanche recevant les effluents liquides des élevages",
         "Une tranchée peu profonde servant à enterrer les animaux morts"
       ],
       "reponse": "Un ouvrage de stockage étanche recevant les effluents liquides des élevages",
@@ -215,7 +227,10 @@
     },
     {
       "enonce": "La race Ndama est une race bovine trypanotolérance d'Afrique de l'Ouest et centrale.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 0
@@ -223,10 +238,10 @@
     {
       "enonce": "Qu'est-ce que l'attelage en traction animale ?",
       "assertions": [
-        "L'ensemble harnais-joug-timon reliant l'animal de trait à l'outil agricole",
         "Une technique de fixation des bovins à leur stalle dans l'étable",
-        "Un dispositif de contention des porcs lors des opérations vétérinaires",
-        "Le système d'accrochage d'une remorque à un tracteur agricole"
+        "L'ensemble harnais-joug-timon reliant l'animal de trait à l'outil agricole",
+        "Le système d'accrochage d'une remorque à un tracteur agricole",
+        "Un dispositif de contention des porcs lors des opérations vétérinaires"
       ],
       "reponse": "L'ensemble harnais-joug-timon reliant l'animal de trait à l'outil agricole",
       "type": "QCM",
@@ -235,10 +250,10 @@
     {
       "enonce": "Qu'est-ce qu'un tracteur agricole ?",
       "assertions": [
-        "Un engin motorisé à roues ou chenilles servant à tracter des outils et remorques agricoles",
-        "Un chariot manuel utilisé pour transporter le fourrage dans la ferme",
         "Une machine de traite mobile pouvant opérer en plein champ",
-        "Un appareil de transformation des céréales en farine pour animaux"
+        "Un appareil de transformation des céréales en farine pour animaux",
+        "Un engin motorisé à roues ou chenilles servant à tracter des outils et remorques agricoles",
+        "Un chariot manuel utilisé pour transporter le fourrage dans la ferme"
       ],
       "reponse": "Un engin motorisé à roues ou chenilles servant à tracter des outils et remorques agricoles",
       "type": "QCM",
@@ -248,8 +263,8 @@
       "enonce": "Qu'appelle-t-on la hauteur manométrique totale (HMT) d'une pompe ?",
       "assertions": [
         "La hauteur totale que la pompe doit vaincre pour élever l'eau, en tenant compte des pertes de charge",
-        "La profondeur maximale à laquelle une pompe immergée peut fonctionner",
         "La pression atmosphérique à la surface du point d'aspiration",
+        "La profondeur maximale à laquelle une pompe immergée peut fonctionner",
         "Le débit maximum que la pompe peut fournir en régime permanent"
       ],
       "reponse": "La hauteur totale que la pompe doit vaincre pour élever l'eau, en tenant compte des pertes de charge",
@@ -261,8 +276,8 @@
       "assertions": [
         "Un mélange de méthane et de CO₂ issu de la digestion anaérobie des matières organiques",
         "Un gaz fumigène utilisé pour désinfecter les bâtiments d'élevage",
-        "De l'oxygène pur dégagé lors de la fermentation aérobie du fumier",
-        "Un engrais gazeux épandu directement sur les cultures"
+        "Un engrais gazeux épandu directement sur les cultures",
+        "De l'oxygène pur dégagé lors de la fermentation aérobie du fumier"
       ],
       "reponse": "Un mélange de méthane et de CO₂ issu de la digestion anaérobie des matières organiques",
       "type": "QCM",
@@ -270,7 +285,10 @@
     },
     {
       "enonce": "La chaîne du froid en élevage laitier vise à maintenir le lait à basse température de la traite jusqu'au consommateur.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 0
@@ -278,10 +296,10 @@
     {
       "enonce": "Qu'est-ce qu'un silo en élevage ?",
       "assertions": [
-        "Une structure de stockage hermétique pour les aliments du bétail (fourrage, céréales, ensilage)",
-        "Un bassin de nage pour les volailles aquatiques dans les élevages semi-intensifs",
+        "Un enclos temporaire pour isoler les animaux malades du reste du troupeau",
         "Un dispositif de traitement des eaux usées provenant du lavage des bâtiments",
-        "Un enclos temporaire pour isoler les animaux malades du reste du troupeau"
+        "Une structure de stockage hermétique pour les aliments du bétail (fourrage, céréales, ensilage)",
+        "Un bassin de nage pour les volailles aquatiques dans les élevages semi-intensifs"
       ],
       "reponse": "Une structure de stockage hermétique pour les aliments du bétail (fourrage, céréales, ensilage)",
       "type": "QCM",
@@ -290,10 +308,10 @@
     {
       "enonce": "Qu'appelle-t-on une pompe immergée (pompe submersible) ?",
       "assertions": [
-        "Une pompe conçue pour fonctionner entièrement sous l'eau, dans un forage ou un puits",
         "Une pompe flottant à la surface d'un bassin pour aspirer les algues",
         "Un dispositif de filtration des eaux de surface avant abreuvement",
-        "Une pompe à pédales actionnée manuellement dans les zones sans électricité"
+        "Une pompe à pédales actionnée manuellement dans les zones sans électricité",
+        "Une pompe conçue pour fonctionner entièrement sous l'eau, dans un forage ou un puits"
       ],
       "reponse": "Une pompe conçue pour fonctionner entièrement sous l'eau, dans un forage ou un puits",
       "type": "QCM",
@@ -303,9 +321,9 @@
       "enonce": "Quel est l'organe de la machine à traire qui applique une pression alternée sur le trayon ?",
       "assertions": [
         "Le gobelet trayeur (ou manchon)",
-        "Le lactoduc",
         "Le collecteur",
-        "Le variateur de vitesse"
+        "Le variateur de vitesse",
+        "Le lactoduc"
       ],
       "reponse": "Le gobelet trayeur (ou manchon)",
       "type": "QCM",
@@ -313,7 +331,10 @@
     },
     {
       "enonce": "Le retournement des œufs en incubateur simule le comportement naturel de la poule couveuse.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 0
@@ -321,10 +342,10 @@
     {
       "enonce": "Qu'est-ce que la puissance de prise de force (PDF) d'un tracteur ?",
       "assertions": [
-        "La puissance transmise aux outils portés par l'arbre de transmission arrière du tracteur",
         "La puissance électrique disponible pour recharger les batteries des outils connectés",
+        "La puissance hydraulique du vérin de relevage du tracteur",
         "La force de traction maximale exercée sur le sol par les roues motrices",
-        "La puissance hydraulique du vérin de relevage du tracteur"
+        "La puissance transmise aux outils portés par l'arbre de transmission arrière du tracteur"
       ],
       "reponse": "La puissance transmise aux outils portés par l'arbre de transmission arrière du tracteur",
       "type": "QCM",
@@ -332,7 +353,10 @@
     },
     {
       "enonce": "En élevage de poules pondeuses, la lumière artificielle est utilisée pour stimuler la ponte en allongeant la photopériode.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 0
@@ -341,9 +365,9 @@
       "enonce": "Qu'est-ce qu'un désileur en élevage ?",
       "assertions": [
         "Un équipement qui extrait et distribue mécaniquement l'ensilage depuis le silo",
-        "Un appareil de mesure du taux de matière sèche dans les fourrages",
         "Un dispositif de découpe des balles de foin rondes",
-        "Un silo mobile transporté sur remorque pour les pâturages éloignés"
+        "Un silo mobile transporté sur remorque pour les pâturages éloignés",
+        "Un appareil de mesure du taux de matière sèche dans les fourrages"
       ],
       "reponse": "Un équipement qui extrait et distribue mécaniquement l'ensilage depuis le silo",
       "type": "QCM",
@@ -352,10 +376,10 @@
     {
       "enonce": "Quel est le rôle d'un filtre à lait lors de la traite ?",
       "assertions": [
-        "Retenir les impuretés et corps étrangers présents dans le lait avant son stockage",
         "Mesurer la production laitière de chaque vache individuellement",
+        "Séparer la crème du lait écrémé par centrifugation",
         "Pasteuriser le lait en le faisant passer à travers une membrane chauffante",
-        "Séparer la crème du lait écrémé par centrifugation"
+        "Retenir les impuretés et corps étrangers présents dans le lait avant son stockage"
       ],
       "reponse": "Retenir les impuretés et corps étrangers présents dans le lait avant son stockage",
       "type": "QCM",
@@ -364,8 +388,8 @@
     {
       "enonce": "Qu'est-ce que l'ensilage ?",
       "assertions": [
-        "Une technique de conservation des fourrages humides par fermentation anaérobie en silo hermétique",
         "Un procédé de séchage du maïs à l'air libre sur claies avant stockage en grenier",
+        "Une technique de conservation des fourrages humides par fermentation anaérobie en silo hermétique",
         "Un traitement chimique des pailles pour augmenter leur valeur nutritive",
         "Une méthode d'irrigation des pâturages par aspersion"
       ],
@@ -375,7 +399,10 @@
     },
     {
       "enonce": "La race porcine Large White (Yorkshire) est très répandue en élevage intensif en RDC.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 0
@@ -395,10 +422,10 @@
     {
       "enonce": "Quel équipement sert à identifier électroniquement les animaux par radiofréquence ?",
       "assertions": [
-        "La puce RFID (transpondeur) implantée sous la peau ou incorporée dans une boucle",
         "Le stéthoscope électronique pour détecter les pathologies cardiaques",
-        "Le collier GPS pour suivre les déplacements des bovins en pâturage",
-        "Le spectromètre infrarouge pour analyser la composition du lait"
+        "Le spectromètre infrarouge pour analyser la composition du lait",
+        "La puce RFID (transpondeur) implantée sous la peau ou incorporée dans une boucle",
+        "Le collier GPS pour suivre les déplacements des bovins en pâturage"
       ],
       "reponse": "La puce RFID (transpondeur) implantée sous la peau ou incorporée dans une boucle",
       "type": "QCM",
@@ -407,10 +434,10 @@
     {
       "enonce": "Qu'est-ce qu'un abreuvoir siphoïde à bille ?",
       "assertions": [
+        "Une canalisation souterraine distribuant l'eau aux différentes cases",
         "Un abreuvoir dont le remplissage est déclenché par la pression du bec de l'animal sur une bille",
         "Un grand bassin d'eau accessible à plusieurs bovins simultanément",
-        "Un réservoir surélevé alimenté par une pompe solaire",
-        "Une canalisation souterraine distribuant l'eau aux différentes cases"
+        "Un réservoir surélevé alimenté par une pompe solaire"
       ],
       "reponse": "Un abreuvoir dont le remplissage est déclenché par la pression du bec de l'animal sur une bille",
       "type": "QCM",
@@ -418,7 +445,10 @@
     },
     {
       "enonce": "Le compostage du fumier améliore sa valeur agronomique en le stabilisant et en réduisant les pathogènes.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 0
@@ -426,10 +456,10 @@
     {
       "enonce": "Qu'est-ce que la litière en élevage avicole ?",
       "assertions": [
-        "Un matériau (paille, copeaux de bois, balles de riz) déposé sur le sol du poulailler pour absorber les déjections",
+        "Un produit chimique désinfectant épandu sur le sol avant l'entrée des animaux",
         "La nourriture distribuée aux poussins pendant leurs premières semaines de vie",
-        "Un tapis plastique installé sous les cages des pondeuses en batterie",
-        "Un produit chimique désinfectant épandu sur le sol avant l'entrée des animaux"
+        "Un matériau (paille, copeaux de bois, balles de riz) déposé sur le sol du poulailler pour absorber les déjections",
+        "Un tapis plastique installé sous les cages des pondeuses en batterie"
       ],
       "reponse": "Un matériau (paille, copeaux de bois, balles de riz) déposé sur le sol du poulailler pour absorber les déjections",
       "type": "QCM",
@@ -438,10 +468,10 @@
     {
       "enonce": "Quel est le rôle d'un séparateur de lisier ?",
       "assertions": [
-        "Séparer la fraction solide de la fraction liquide du lisier pour faciliter leur valorisation",
         "Filtrer l'eau de pluie avant de l'introduire dans le réseau d'abreuvement",
-        "Séparer les animaux malades du reste du troupeau lors des épizooties",
-        "Fractionner automatiquement les rations distribuées aux différentes espèces animales"
+        "Fractionner automatiquement les rations distribuées aux différentes espèces animales",
+        "Séparer la fraction solide de la fraction liquide du lisier pour faciliter leur valorisation",
+        "Séparer les animaux malades du reste du troupeau lors des épizooties"
       ],
       "reponse": "Séparer la fraction solide de la fraction liquide du lisier pour faciliter leur valorisation",
       "type": "QCM",
@@ -449,7 +479,10 @@
     },
     {
       "enonce": "En élevage caprin traditionnel en RDC, les chèvres sont majoritairement élevées en système extensif.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 0
@@ -458,8 +491,8 @@
       "enonce": "Qu'est-ce qu'un bâtiment d'élevage en claustration totale ?",
       "assertions": [
         "Un bâtiment fermé où les animaux restent en permanence à l'intérieur sans accès au pâturage",
-        "Un hangar ouvert sur les côtés permettant la ventilation naturelle et l'accès à la cour",
         "Un abri temporaire mobile que l'on déplace selon les saisons et les disponibilités en herbe",
+        "Un hangar ouvert sur les côtés permettant la ventilation naturelle et l'accès à la cour",
         "Une étable dont les murs sont partiellement en grillage pour réduire les coûts de construction"
       ],
       "reponse": "Un bâtiment fermé où les animaux restent en permanence à l'intérieur sans accès au pâturage",
@@ -469,10 +502,10 @@
     {
       "enonce": "Quel gaz toxique produit par la décomposition du lisier est dangereux pour les animaux et les éleveurs ?",
       "assertions": [
-        "L'ammoniac (NH₃)",
-        "Le dioxyde de carbone (CO₂)",
+        "L'azote (N₂)",
         "L'oxygène (O₂)",
-        "L'azote (N₂)"
+        "Le dioxyde de carbone (CO₂)",
+        "L'ammoniac (NH₃)"
       ],
       "reponse": "L'ammoniac (NH₃)",
       "type": "QCM",
@@ -483,8 +516,8 @@
       "assertions": [
         "Un système motorisé à chaîne ou vis sans fin qui achemine l'aliment dans les mangeoires de façon continue",
         "Un silo vertical dans lequel les poules peuvent picorer librement à volonté",
-        "Un appareil de broyage et de mélange des matières premières avant granulation",
-        "Une balance électronique qui pèse les rations avant leur distribution aux volailles"
+        "Une balance électronique qui pèse les rations avant leur distribution aux volailles",
+        "Un appareil de broyage et de mélange des matières premières avant granulation"
       ],
       "reponse": "Un système motorisé à chaîne ou vis sans fin qui achemine l'aliment dans les mangeoires de façon continue",
       "type": "QCM",
@@ -493,10 +526,10 @@
     {
       "enonce": "Qu'est-ce que la castration en élevage porcin ?",
       "assertions": [
+        "L'opération qui consiste à couper les dents de lait des porcelets à la naissance",
         "L'ablation chirurgicale des testicules des mâles pour améliorer la qualité de la viande",
-        "L'opération de stérilisation des femelles pour stopper leur cycle reproductif",
         "La pose d'un anneau nasal pour empêcher les porcs de fouir le sol",
-        "L'opération qui consiste à couper les dents de lait des porcelets à la naissance"
+        "L'opération de stérilisation des femelles pour stopper leur cycle reproductif"
       ],
       "reponse": "L'ablation chirurgicale des testicules des mâles pour améliorer la qualité de la viande",
       "type": "QCM",
@@ -506,9 +539,9 @@
       "enonce": "Qu'est-ce que le colostrum en élevage bovin ?",
       "assertions": [
         "Le premier lait sécrété par la vache après la mise-bas, riche en anticorps et en nutriments",
-        "Un aliment concentré distribué aux veaux lors du sevrage pour les préparer à l'alimentation solide",
         "Une solution de réhydratation administrée aux veaux souffrant de diarrhée",
-        "Un médicament antibiotique injecté à la vache juste avant la mise-bas"
+        "Un médicament antibiotique injecté à la vache juste avant la mise-bas",
+        "Un aliment concentré distribué aux veaux lors du sevrage pour les préparer à l'alimentation solide"
       ],
       "reponse": "Le premier lait sécrété par la vache après la mise-bas, riche en anticorps et en nutriments",
       "type": "QCM",
@@ -517,10 +550,10 @@
     {
       "enonce": "Quelle est la durée normale d'incubation des œufs de poule ?",
       "assertions": [
-        "21 jours",
+        "35 jours",
         "28 jours",
         "14 jours",
-        "35 jours"
+        "21 jours"
       ],
       "reponse": "21 jours",
       "type": "QCM",
@@ -528,7 +561,10 @@
     },
     {
       "enonce": "Un biodigesteur est un ouvrage anaérobie qui produit du biogaz à partir des déjections animales.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 0
@@ -536,8 +572,8 @@
     {
       "enonce": "En élevage bovin extensif en Afrique centrale, quel est le principal facteur limitant l'abreuvement du troupeau en saison sèche ?",
       "assertions": [
-        "La rareté et l'éloignement des points d'eau",
         "La surchauffe des abreuvoirs métalliques au soleil",
+        "La rareté et l'éloignement des points d'eau",
         "L'absence de pompes électriques dans les zones rurales",
         "La contamination de l'eau par les pesticides agricoles"
       ],
@@ -548,10 +584,10 @@
     {
       "enonce": "Combien de litres d'eau par jour environ un bovin adulte consomme-t-il en zone tropicale ?",
       "assertions": [
-        "30 à 50 litres par jour",
+        "200 à 250 litres par jour",
         "5 à 10 litres par jour",
-        "100 à 150 litres par jour",
-        "200 à 250 litres par jour"
+        "30 à 50 litres par jour",
+        "100 à 150 litres par jour"
       ],
       "reponse": "30 à 50 litres par jour",
       "type": "QCM",
@@ -561,9 +597,9 @@
       "enonce": "Un élevage de 200 bovins consomme en moyenne 40 L/animal/jour. Quelle est la consommation journalière totale ?",
       "assertions": [
         "8 000 litres par jour",
-        "4 000 litres par jour",
+        "800 litres par jour",
         "2 000 litres par jour",
-        "800 litres par jour"
+        "4 000 litres par jour"
       ],
       "reponse": "8 000 litres par jour",
       "type": "QCM",
@@ -573,9 +609,9 @@
       "enonce": "La ration de base d'un porc en croissance (30–60 kg) est d'environ 2 kg d'aliment par jour. Pour 50 porcs, quelle quantité faut-il prévoir par semaine ?",
       "assertions": [
         "700 kg",
-        "350 kg",
         "100 kg",
-        "1 400 kg"
+        "1 400 kg",
+        "350 kg"
       ],
       "reponse": "700 kg",
       "type": "QCM",
@@ -583,7 +619,10 @@
     },
     {
       "enonce": "La densité recommandée pour les poulets de chair en bâtiment fermé est d'environ 10 oiseaux par m².",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 1
@@ -591,10 +630,10 @@
     {
       "enonce": "Quelle température doit être maintenue dans un incubateur pour les œufs de poule ?",
       "assertions": [
-        "37,5 à 38 °C",
-        "30 à 32 °C",
+        "25 à 27 °C",
         "42 à 45 °C",
-        "25 à 27 °C"
+        "37,5 à 38 °C",
+        "30 à 32 °C"
       ],
       "reponse": "37,5 à 38 °C",
       "type": "QCM",
@@ -602,7 +641,10 @@
     },
     {
       "enonce": "Un bâtiment de 500 m² destiné aux poulets de chair à densité de 10 oiseaux/m² peut accueillir 5 000 poulets.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 1
@@ -610,10 +652,10 @@
     {
       "enonce": "Pour un troupeau de 100 vaches laitières produisant en moyenne 10 L de lait par jour, quelle est la production journalière totale ?",
       "assertions": [
-        "1 000 litres",
+        "500 litres",
         "10 000 litres",
         "100 litres",
-        "500 litres"
+        "1 000 litres"
       ],
       "reponse": "1 000 litres",
       "type": "QCM",
@@ -622,10 +664,10 @@
     {
       "enonce": "Quelle est l'hygrométrie idéale dans un incubateur entre le 1er et le 18e jour d'incubation ?",
       "assertions": [
-        "55 à 60 %",
-        "30 à 35 %",
+        "95 à 100 %",
         "80 à 90 %",
-        "95 à 100 %"
+        "55 à 60 %",
+        "30 à 35 %"
       ],
       "reponse": "55 à 60 %",
       "type": "QCM",
@@ -633,7 +675,10 @@
     },
     {
       "enonce": "Un tracteur développe 60 kW à la PDF. Si un outil consomme 45 kW, le taux d'utilisation de la puissance est de 75 %.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 1
@@ -641,10 +686,10 @@
     {
       "enonce": "En aviculture, combien de fois par heure faut-il renouveler l'air dans un poulailler de type fermé en climate chaud ?",
       "assertions": [
-        "6 à 10 fois par heure",
-        "1 à 2 fois par heure",
         "20 à 30 fois par heure",
-        "50 à 60 fois par heure"
+        "6 à 10 fois par heure",
+        "50 à 60 fois par heure",
+        "1 à 2 fois par heure"
       ],
       "reponse": "6 à 10 fois par heure",
       "type": "QCM",
@@ -653,10 +698,10 @@
     {
       "enonce": "Quelle superficie minimale doit disposer une truie gestante en stabulation libre selon les normes courantes ?",
       "assertions": [
-        "2,25 m² par truie",
-        "0,5 m² par truie",
         "10 m² par truie",
-        "0,1 m² par truie"
+        "0,5 m² par truie",
+        "0,1 m² par truie",
+        "2,25 m² par truie"
       ],
       "reponse": "2,25 m² par truie",
       "type": "QCM",
@@ -664,7 +709,10 @@
     },
     {
       "enonce": "Le besoin en eau d'une truie allaitante est d'environ 15 à 20 litres par jour.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Faux",
       "type": "VRAI_FAUX",
       "level": 1
@@ -672,10 +720,10 @@
     {
       "enonce": "Un élevage avicole de 1 000 poules pondeuses nécessite, à raison de 120 g d'aliment/poule/jour, quelle quantité hebdomadaire ?",
       "assertions": [
-        "840 kg par semaine",
+        "420 kg par semaine",
         "120 kg par semaine",
-        "8 400 kg par semaine",
-        "420 kg par semaine"
+        "840 kg par semaine",
+        "8 400 kg par semaine"
       ],
       "reponse": "840 kg par semaine",
       "type": "QCM",
@@ -683,7 +731,10 @@
     },
     {
       "enonce": "La pompe centrifuge est caractérisée par son débit (m³/h) et sa hauteur manométrique totale (m).",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 1
@@ -691,10 +742,10 @@
     {
       "enonce": "Quelle est la densité d'élevage recommandée pour les poules pondeuses en cage individuelle ?",
       "assertions": [
-        "450 à 550 cm² par poule",
-        "100 cm² par poule",
+        "50 cm² par poule",
         "2 000 cm² par poule",
-        "50 cm² par poule"
+        "100 cm² par poule",
+        "450 à 550 cm² par poule"
       ],
       "reponse": "450 à 550 cm² par poule",
       "type": "QCM",
@@ -702,7 +753,10 @@
     },
     {
       "enonce": "Un veau de 50 kg a un besoin en eau d'environ 5 à 7 litres par jour.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 1
@@ -710,10 +764,10 @@
     {
       "enonce": "Quelle puissance électrique (kW) faut-il pour une pompe fournissant 5 m³/h à une HMT de 30 m, si son rendement est de 60 % ? (ρ eau = 1 000 kg/m³, g = 10 m/s²)",
       "assertions": [
-        "0,69 kW",
+        "3 kW",
         "1,5 kW",
         "0,25 kW",
-        "3 kW"
+        "0,69 kW"
       ],
       "reponse": "0,69 kW",
       "type": "QCM",
@@ -721,7 +775,10 @@
     },
     {
       "enonce": "En élevage intensif de porcs, la température optimale pour les porcelets nouveau-nés est de 32 à 35 °C.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 1
@@ -729,10 +786,10 @@
     {
       "enonce": "Quel est l'intervalle de retournement automatique recommandé pour les œufs en incubateur ?",
       "assertions": [
-        "Toutes les 1 à 2 heures",
-        "Une fois par jour",
+        "Toutes les 12 heures",
         "Toutes les 10 minutes",
-        "Toutes les 12 heures"
+        "Toutes les 1 à 2 heures",
+        "Une fois par jour"
       ],
       "reponse": "Toutes les 1 à 2 heures",
       "type": "QCM",
@@ -740,7 +797,10 @@
     },
     {
       "enonce": "Pour un élevage bovin de 50 têtes, si chaque animal produit 25 kg de fumier frais par jour, la production hebdomadaire est de 8 750 kg.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 1
@@ -748,10 +808,10 @@
     {
       "enonce": "Quelle valeur approximative de l'IC (indice de consommation) attend-on pour un poulet de chair bien conduit ?",
       "assertions": [
-        "1,8 à 2,2 kg d'aliment par kg de gain",
-        "0,5 à 0,8 kg d'aliment par kg de gain",
         "5 à 6 kg d'aliment par kg de gain",
-        "10 à 12 kg d'aliment par kg de gain"
+        "10 à 12 kg d'aliment par kg de gain",
+        "1,8 à 2,2 kg d'aliment par kg de gain",
+        "0,5 à 0,8 kg d'aliment par kg de gain"
       ],
       "reponse": "1,8 à 2,2 kg d'aliment par kg de gain",
       "type": "QCM",
@@ -759,7 +819,10 @@
     },
     {
       "enonce": "La lutte contre les mouches et les rongeurs dans un bâtiment d'élevage fait partie des mesures de biosécurité.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 1
@@ -767,10 +830,10 @@
     {
       "enonce": "Quelle est la vitesse de l'air recommandée dans la zone de vie des porcs à l'engraissement ?",
       "assertions": [
-        "Inférieure à 0,3 m/s",
         "1 à 2 m/s",
-        "5 à 8 m/s",
-        "Supérieure à 10 m/s"
+        "Inférieure à 0,3 m/s",
+        "Supérieure à 10 m/s",
+        "5 à 8 m/s"
       ],
       "reponse": "Inférieure à 0,3 m/s",
       "type": "QCM",
@@ -779,9 +842,9 @@
     {
       "enonce": "Quelle superficie de bâtiment faut-il prévoir pour 500 poulets de chair à une densité de 10 oiseaux/m² ?",
       "assertions": [
-        "50 m²",
-        "500 m²",
         "5 m²",
+        "500 m²",
+        "50 m²",
         "5 000 m²"
       ],
       "reponse": "50 m²",
@@ -790,7 +853,10 @@
     },
     {
       "enonce": "En élevage laitier, la fréquence recommandée de traite est de deux fois par jour pour les vaches hautes productrices.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 1
@@ -798,10 +864,10 @@
     {
       "enonce": "Quels sont les principaux paramètres à prendre en compte pour concevoir un bâtiment d'élevage en zone tropicale ?",
       "assertions": [
-        "Orientation, ventilation, isolation thermique, densité animale et facilité de nettoyage",
-        "Couleur des murs, hauteur des fenêtres et présence d'un étage pour les outils",
+        "Type de toiture, présence d'un sous-sol et profondeur des fondations uniquement",
         "Épaisseur du béton, nombre de portes d'accès et distance par rapport à la route",
-        "Type de toiture, présence d'un sous-sol et profondeur des fondations uniquement"
+        "Orientation, ventilation, isolation thermique, densité animale et facilité de nettoyage",
+        "Couleur des murs, hauteur des fenêtres et présence d'un étage pour les outils"
       ],
       "reponse": "Orientation, ventilation, isolation thermique, densité animale et facilité de nettoyage",
       "type": "QCM",
@@ -810,10 +876,10 @@
     {
       "enonce": "Pour concevoir un système d'abreuvement pour 300 bovins consommant 40 L/tête/jour, quel débit minimal doit fournir la pompe si elle fonctionne 8 h/jour ?",
       "assertions": [
-        "1,5 m³/h",
         "300 m³/h",
+        "12 m³/h",
         "0,15 m³/h",
-        "12 m³/h"
+        "1,5 m³/h"
       ],
       "reponse": "1,5 m³/h",
       "type": "QCM",
@@ -821,7 +887,10 @@
     },
     {
       "enonce": "L'orientation idéale d'un poulailler en zone tropicale est l'axe est-ouest, l'entrée principale côté nord ou sud, afin de limiter l'ensoleillement direct.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 2
@@ -829,10 +898,10 @@
     {
       "enonce": "Dans un élevage laitier, quel protocole de nettoyage de la machine à traire (NEC) est recommandé ?",
       "assertions": [
+        "Immersion des gobelets dans de l'eau de Javel non diluée pendant 24 h",
         "Prélavage à l'eau froide, lavage à l'eau chaude avec détergent alcalin, rinçage acide et désinfection",
         "Simple rinçage à l'eau froide après chaque traite, désinfection une fois par semaine",
-        "Lavage manuel des gobelets au savon ordinaire, séchage à l'air, sans produit acide",
-        "Immersion des gobelets dans de l'eau de Javel non diluée pendant 24 h"
+        "Lavage manuel des gobelets au savon ordinaire, séchage à l'air, sans produit acide"
       ],
       "reponse": "Prélavage à l'eau froide, lavage à l'eau chaude avec détergent alcalin, rinçage acide et désinfection",
       "type": "QCM",
@@ -841,10 +910,10 @@
     {
       "enonce": "Quel type de plancher convient le mieux dans un élevage porcin intensif pour faciliter l'évacuation du lisier ?",
       "assertions": [
-        "Plancher caillebotis (lattes séparées par des fentes) au-dessus d'une fosse à lisier",
-        "Plancher en terre battue recouvert de paille",
+        "Plancher en mosaïque colorée avec caniveaux périphériques",
         "Plancher en bois traité imperméabilisé avec joints silicone",
-        "Plancher en mosaïque colorée avec caniveaux périphériques"
+        "Plancher en terre battue recouvert de paille",
+        "Plancher caillebotis (lattes séparées par des fentes) au-dessus d'une fosse à lisier"
       ],
       "reponse": "Plancher caillebotis (lattes séparées par des fentes) au-dessus d'une fosse à lisier",
       "type": "QCM",
@@ -853,10 +922,10 @@
     {
       "enonce": "Pour un incubateur industriel de 10 000 œufs, quelle est la consommation électrique journalière approximative si la puissance installée est de 2 kW ?",
       "assertions": [
-        "48 kWh par jour",
         "2 kWh par jour",
         "200 kWh par jour",
-        "0,2 kWh par jour"
+        "0,2 kWh par jour",
+        "48 kWh par jour"
       ],
       "reponse": "48 kWh par jour",
       "type": "QCM",
@@ -864,7 +933,10 @@
     },
     {
       "enonce": "La conception d'une fosse à lisier doit prévoir un volume de stockage minimal de 4 mois de production.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 2
@@ -873,9 +945,9 @@
       "enonce": "Quelle est la procédure de trempe des trayons (post-dipping) après la traite ?",
       "assertions": [
         "Immerger les trayons dans un produit antiseptique (iode, chlorhexidine) pour fermer le canal et prévenir les mammites",
-        "Appliquer une crème grasse sur les trayons pour les hydrater après la traite",
         "Rincer les trayons à l'eau froide pour refroidir le pis et augmenter la production",
-        "Bander les trayons avec un tissu propre pour éviter les contaminations"
+        "Bander les trayons avec un tissu propre pour éviter les contaminations",
+        "Appliquer une crème grasse sur les trayons pour les hydrater après la traite"
       ],
       "reponse": "Immerger les trayons dans un produit antiseptique (iode, chlorhexidine) pour fermer le canal et prévenir les mammites",
       "type": "QCM",
@@ -884,9 +956,9 @@
     {
       "enonce": "Pour un élevage de 500 porcs produisant 6 kg de lisier/tête/jour, calculer le volume de la fosse nécessaire pour 4 mois de stockage (densité lisier ≈ 1 t/m³).",
       "assertions": [
+        "36 m³",
         "360 m³",
         "3 600 m³",
-        "36 m³",
         "1 000 m³"
       ],
       "reponse": "360 m³",
@@ -896,9 +968,9 @@
     {
       "enonce": "Quelle est la différence entre un élevage en batterie et un élevage au sol en aviculture ?",
       "assertions": [
+        "La batterie concerne uniquement les canards, l'élevage au sol est réservé aux poulets de chair",
         "La batterie utilise des cages superposées réduisant la surface au sol, l'élevage au sol laisse les volailles circuler librement sur une litière",
         "La batterie est une méthode traditionnelle extensive, l'élevage au sol est une méthode industrielle intensive",
-        "La batterie concerne uniquement les canards, l'élevage au sol est réservé aux poulets de chair",
         "Dans la batterie les poules sont nourries à la main, au sol elles disposent d'un nourrisseur automatique"
       ],
       "reponse": "La batterie utilise des cages superposées réduisant la surface au sol, l'élevage au sol laisse les volailles circuler librement sur une litière",
@@ -907,7 +979,10 @@
     },
     {
       "enonce": "Le pré-refroidissement du lait par un échangeur à plaques avant le tank à lait permet d'économiser de l'énergie.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 2
@@ -915,10 +990,10 @@
     {
       "enonce": "Quels paramètres clés doit-on contrôler dans un couvoir pour maximiser le taux d'éclosion ?",
       "assertions": [
-        "Température, hygrométrie, fréquence de retournement des œufs et qualité des œufs à couver",
         "Couleur des œufs, taille du couvoir, présence d'une alarme sonore et marque de l'incubateur",
-        "Poids des poussins à l'éclosion, couleur du duvet et race parentale uniquement",
-        "Prix de l'électricité, distance au marché et expérience du couvaison"
+        "Prix de l'électricité, distance au marché et expérience du couvaison",
+        "Température, hygrométrie, fréquence de retournement des œufs et qualité des œufs à couver",
+        "Poids des poussins à l'éclosion, couleur du duvet et race parentale uniquement"
       ],
       "reponse": "Température, hygrométrie, fréquence de retournement des œufs et qualité des œufs à couver",
       "type": "QCM",
@@ -928,9 +1003,9 @@
       "enonce": "Quel type de toiture est recommandé dans les élevages tropicaux pour réduire la température intérieure ?",
       "assertions": [
         "Toiture en tôle galvanisée avec faux plafond isolant et débord de toit important",
-        "Toiture plate en béton armé sans isolation",
+        "Toiture en verre pour maximiser la lumière naturelle",
         "Toiture en tôle noire peinte pour absorber la chaleur solaire",
-        "Toiture en verre pour maximiser la lumière naturelle"
+        "Toiture plate en béton armé sans isolation"
       ],
       "reponse": "Toiture en tôle galvanisée avec faux plafond isolant et débord de toit important",
       "type": "QCM",
@@ -939,10 +1014,10 @@
     {
       "enonce": "Quelle est la profondeur minimale recommandée pour les fondations d'un bâtiment d'élevage en zone à saison des pluies marquée ?",
       "assertions": [
-        "0,8 à 1,2 mètre de profondeur",
         "0,1 à 0,2 mètre de profondeur",
-        "5 mètres de profondeur",
-        "La profondeur n'importe pas si on utilise du béton armé"
+        "0,8 à 1,2 mètre de profondeur",
+        "La profondeur n'importe pas si on utilise du béton armé",
+        "5 mètres de profondeur"
       ],
       "reponse": "0,8 à 1,2 mètre de profondeur",
       "type": "QCM",
@@ -950,7 +1025,10 @@
     },
     {
       "enonce": "La pente minimale du sol dans un bâtiment porcin est de 1 à 2 % pour permettre l'écoulement du lisier vers les caniveaux.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 2
@@ -958,10 +1036,10 @@
     {
       "enonce": "Comment calculer le débit d'une pompe d'irrigation nécessaire pour un élevage de 1 000 bovins (40 L/tête/j) si la pompe fonctionne 6 heures par jour ?",
       "assertions": [
-        "Q = (1 000 × 40) / (6 × 1 000) = 6,67 m³/h",
-        "Q = 1 000 × 40 = 40 000 L/h",
+        "Q = (1 000 / 40) × 6 = 150 m³/h",
         "Q = 40 / 6 = 6,67 L/h",
-        "Q = (1 000 / 40) × 6 = 150 m³/h"
+        "Q = 1 000 × 40 = 40 000 L/h",
+        "Q = (1 000 × 40) / (6 × 1 000) = 6,67 m³/h"
       ],
       "reponse": "Q = (1 000 × 40) / (6 × 1 000) = 6,67 m³/h",
       "type": "QCM",
@@ -970,10 +1048,10 @@
     {
       "enonce": "Quel équipement est indispensable pour mesurer la température corporelle d'un bovin lors d'un suivi sanitaire ?",
       "assertions": [
-        "Un thermomètre rectal électronique ou à mercure",
-        "Un hygromètre digital de précision",
+        "Un réfractomètre pour analyser le sang",
         "Un stéthoscope vétérinaire amplificateur",
-        "Un réfractomètre pour analyser le sang"
+        "Un thermomètre rectal électronique ou à mercure",
+        "Un hygromètre digital de précision"
       ],
       "reponse": "Un thermomètre rectal électronique ou à mercure",
       "type": "QCM",
@@ -981,7 +1059,10 @@
     },
     {
       "enonce": "Un biodigesteur de type dôme fixe (modèle indien KVIC) est plus facile à construire localement qu'un modèle à dôme flottant.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Faux",
       "type": "VRAI_FAUX",
       "level": 2
@@ -989,9 +1070,9 @@
     {
       "enonce": "Quel matériau est préférable pour les abreuvoirs en élevage bovin en zone tropicale ?",
       "assertions": [
-        "Béton enduit ou plastique renforcé, résistant aux chocs et à la corrosion",
         "Acier non traité, moins coûteux et facile à souder",
         "Bois traité à la créosote pour résister à l'humidité",
+        "Béton enduit ou plastique renforcé, résistant aux chocs et à la corrosion",
         "Aluminium poli pour une meilleure hygiène et facilité de nettoyage"
       ],
       "reponse": "Béton enduit ou plastique renforcé, résistant aux chocs et à la corrosion",
@@ -1000,7 +1081,10 @@
     },
     {
       "enonce": "Dans la gestion d'un élevage porcin semi-intensif, l'alimentation des truies gestantes doit être restreinte par rapport à celle des porcs à l'engraissement.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 2
@@ -1008,10 +1092,10 @@
     {
       "enonce": "Quelle est la méthode la plus appropriée pour valoriser le biogaz produit dans un petit élevage bovin de 20 têtes en milieu rural en RDC ?",
       "assertions": [
-        "Utilisation directe pour la cuisine et l'éclairage via des brûleurs et lampes à biogaz",
-        "Injection dans le réseau national de gaz naturel après compression et purification",
         "Vente aux industries chimiques après transformation en méthanol de synthèse",
-        "Stockage en bouteilles haute pression pour alimenter des véhicules GNV"
+        "Stockage en bouteilles haute pression pour alimenter des véhicules GNV",
+        "Injection dans le réseau national de gaz naturel après compression et purification",
+        "Utilisation directe pour la cuisine et l'éclairage via des brûleurs et lampes à biogaz"
       ],
       "reponse": "Utilisation directe pour la cuisine et l'éclairage via des brûleurs et lampes à biogaz",
       "type": "QCM",
@@ -1020,8 +1104,8 @@
     {
       "enonce": "Quels sont les principaux facteurs limitant la production laitière des races bovines locales (Ankole, Shorthorn africain) comparées aux races améliorées (Holstein, Montbéliarde) en RDC ?",
       "assertions": [
-        "Potentiel génétique inférieur, alimentation insuffisante et manque d'infrastructure de froid",
         "Résistance à la traite mécanique et incompatibilité avec les abreuvoirs automatiques",
+        "Potentiel génétique inférieur, alimentation insuffisante et manque d'infrastructure de froid",
         "Coût prohibitif des races locales à l'acquisition et difficulté de les croiser",
         "Absence de marchés locaux pour écouler le lait et résistance culturelle à la traite mécanique"
       ],
@@ -1031,7 +1115,10 @@
     },
     {
       "enonce": "L'intégration agriculture-élevage (IAE) en Afrique centrale permet de valoriser les résidus de culture comme fourrage et les déjections animales comme engrais, améliorant la durabilité du système.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 3
@@ -1040,9 +1127,9 @@
       "enonce": "Comment l'utilisation d'un digesteur anaérobie dans un élevage porcin intensif contribue-t-elle à réduire l'impact environnemental ?",
       "assertions": [
         "Elle réduit les émissions de méthane atmosphérique, produit de l'énergie renouvelable et transforme le lisier en digestat fertilisant",
+        "Elle ne présente aucun avantage environnemental car la construction du digesteur émet autant de CO₂ qu'il en économise",
         "Elle élimine totalement les odeurs des bâtiments d'élevage par oxydation chimique",
-        "Elle filtre les nitrates du lisier avant rejet dans les rivières, résolvant le problème d'eutrophisation",
-        "Elle ne présente aucun avantage environnemental car la construction du digesteur émet autant de CO₂ qu'il en économise"
+        "Elle filtre les nitrates du lisier avant rejet dans les rivières, résolvant le problème d'eutrophisation"
       ],
       "reponse": "Elle réduit les émissions de méthane atmosphérique, produit de l'énergie renouvelable et transforme le lisier en digestat fertilisant",
       "type": "QCM",
@@ -1051,10 +1138,10 @@
     {
       "enonce": "Quel est l'impact d'une densité animale excessive dans un poulailler en zone équatoriale sur la productivité et la santé du troupeau ?",
       "assertions": [
-        "Augmentation du stress thermique, propagation rapide des maladies, baisse des performances et augmentation de la mortalité",
-        "Amélioration de l'efficacité alimentaire grâce à la compétition entre individus",
         "Réduction de la consommation d'eau par effet de groupe et economies d'énergie",
-        "Stimulation de la ponte par la chaleur corporelle collective des oiseaux"
+        "Amélioration de l'efficacité alimentaire grâce à la compétition entre individus",
+        "Stimulation de la ponte par la chaleur corporelle collective des oiseaux",
+        "Augmentation du stress thermique, propagation rapide des maladies, baisse des performances et augmentation de la mortalité"
       ],
       "reponse": "Augmentation du stress thermique, propagation rapide des maladies, baisse des performances et augmentation de la mortalité",
       "type": "QCM",
@@ -1062,7 +1149,10 @@
     },
     {
       "enonce": "Dans une stratégie d'optimisation d'un élevage laitier en RDC, le croisement de races locales trypanotoléranTes avec des races améliorées (F1) permet de combiner rusticité et productivité.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 3
@@ -1071,9 +1161,9 @@
       "enonce": "Quelle approche technique est la plus adaptée pour améliorer l'abreuvement d'un élevage bovin extensif dans une zone sans électricité en RDC ?",
       "assertions": [
         "Pompe solaire photovoltaïque alimentant un château d'eau gravitaire avec abreuvoirs automatiques",
-        "Creuser un puits artésien équipé d'une pompe diesel à faible consommation",
         "Installer un réseau de caniveaux bétonnés reliant les cours d'eau aux parcs",
-        "Former les bergers à transporter l'eau en bidons depuis la rivière la plus proche"
+        "Former les bergers à transporter l'eau en bidons depuis la rivière la plus proche",
+        "Creuser un puits artésien équipé d'une pompe diesel à faible consommation"
       ],
       "reponse": "Pompe solaire photovoltaïque alimentant un château d'eau gravitaire avec abreuvoirs automatiques",
       "type": "QCM",
@@ -1082,10 +1172,10 @@
     {
       "enonce": "Analyser les avantages et inconvénients du système de logement sur caillebotis intégral en élevage porcin.",
       "assertions": [
-        "Avantages : hygiène améliorée, économie de litière, gestion facile du lisier. Inconvénients : coût élevé, risque de blessures aux pattes, bien-être animal discuté",
-        "Avantages : faible coût de construction, confort maximal des animaux. Inconvénients : impossibilité de mécaniser la collecte du lisier",
         "Avantages : production de compost de haute qualité. Inconvénients : consommation d'eau élevée et odeurs importantes",
-        "Avantages : aucun, le système sur caillebotis est déconseillé en tout contexte"
+        "Avantages : aucun, le système sur caillebotis est déconseillé en tout contexte",
+        "Avantages : faible coût de construction, confort maximal des animaux. Inconvénients : impossibilité de mécaniser la collecte du lisier",
+        "Avantages : hygiène améliorée, économie de litière, gestion facile du lisier. Inconvénients : coût élevé, risque de blessures aux pattes, bien-être animal discuté"
       ],
       "reponse": "Avantages : hygiène améliorée, économie de litière, gestion facile du lisier. Inconvénients : coût élevé, risque de blessures aux pattes, bien-être animal discuté",
       "type": "QCM",
@@ -1093,7 +1183,10 @@
     },
     {
       "enonce": "L'utilisation du digestat (effluent du biodigesteur) comme fertilisant liquide nécessite une analyse préalable pour vérifier l'absence de pathogènes avant épandage.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 3
@@ -1102,8 +1195,8 @@
       "enonce": "Quelle stratégie de gestion thermique est la plus efficace pour réduire le stress caloric dans un élevage porcin intensif en zone équatoriale sans climatisation ?",
       "assertions": [
         "Aspersion d'eau sur les animaux, ventilation forcée nocturne, isolation de la toiture et alimentation en période fraîche",
-        "Augmenter la densité animale pour bénéficier du refroidissement par ventilation croisée",
         "Allonger la durée de jeûne pour réduire la chaleur métabolique à midi",
+        "Augmenter la densité animale pour bénéficier du refroidissement par ventilation croisée",
         "Peindre les murs en noir pour absorber la chaleur et refroidir le bâtiment par rayonnement nocturne"
       ],
       "reponse": "Aspersion d'eau sur les animaux, ventilation forcée nocturne, isolation de la toiture et alimentation en période fraîche",
@@ -1124,7 +1217,10 @@
     },
     {
       "enonce": "Le modèle de biodigesteur à poche souple (type PVC/géomembrane) est souvent privilégié dans les projets à petite échelle en Afrique centrale car il est moins coûteux et plus facile à installer qu'un digesteur maçonné.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 3
@@ -1132,10 +1228,10 @@
     {
       "enonce": "Quelle est la conséquence d'un refroidissement insuffisant du lait (> 10 °C pendant plus de 2 heures) sur la qualité bactériologique du produit ?",
       "assertions": [
-        "Multiplication rapide des bactéries, augmentation de l'acidité, dégradation de la qualité et perte commerciale",
-        "Amélioration naturelle du goût par fermentation lactique contrôlée",
+        "Neutralisation des pathogènes par l'acidification spontanée",
         "Précipitation des protéines du lait améliorant sa valeur fromagère",
-        "Neutralisation des pathogènes par l'acidification spontanée"
+        "Multiplication rapide des bactéries, augmentation de l'acidité, dégradation de la qualité et perte commerciale",
+        "Amélioration naturelle du goût par fermentation lactique contrôlée"
       ],
       "reponse": "Multiplication rapide des bactéries, augmentation de l'acidité, dégradation de la qualité et perte commerciale",
       "type": "QCM",
@@ -1144,9 +1240,9 @@
     {
       "enonce": "Dans le cadre d'une analyse de cycle de vie (ACV) d'un élevage bovin extensif en RDC, quel poste représente généralement la plus grande part des émissions de gaz à effet de serre ?",
       "assertions": [
-        "Les émissions entériques de méthane (CH₄) par fermentation dans le rumen des bovins",
         "La consommation d'électricité pour l'éclairage et l'abreuvement automatique",
         "Le transport des animaux vers les marchés de vente",
+        "Les émissions entériques de méthane (CH₄) par fermentation dans le rumen des bovins",
         "La fabrication et le transport des médicaments vétérinaires"
       ],
       "reponse": "Les émissions entériques de méthane (CH₄) par fermentation dans le rumen des bovins",
@@ -1155,7 +1251,10 @@
     },
     {
       "enonce": "Dans un système d'élevage avicole semi-intensif, l'introduction d'un programme lumineux contrôlé (photostimulation) en période de ponte est une pratique de management visant à maximiser la production d'œufs.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 3
@@ -1163,10 +1262,10 @@
     {
       "enonce": "Quels indicateurs techniques clés doit-on suivre pour évaluer la performance d'un élevage de poulets de chair ?",
       "assertions": [
-        "Gain moyen quotidien (GMQ), indice de consommation (IC), taux de mortalité et poids vif à l'abattage",
-        "Couleur du plumage, taille des œufs pondus et goût de la viande après abattage",
+        "Niveau sonore des animaux, texture de la litière et couleur des déjections uniquement",
         "Nombre de visiteurs dans le poulailler, humidité extérieure et prix de l'électricité",
-        "Niveau sonore des animaux, texture de la litière et couleur des déjections uniquement"
+        "Gain moyen quotidien (GMQ), indice de consommation (IC), taux de mortalité et poids vif à l'abattage",
+        "Couleur du plumage, taille des œufs pondus et goût de la viande après abattage"
       ],
       "reponse": "Gain moyen quotidien (GMQ), indice de consommation (IC), taux de mortalité et poids vif à l'abattage",
       "type": "QCM",
@@ -1174,7 +1273,10 @@
     },
     {
       "enonce": "L'eutrophisation des cours d'eau en Afrique centrale peut être aggravée par le ruissellement des effluents d'élevage (nitrates et phosphates) vers les rivières.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 3
@@ -1182,10 +1284,10 @@
     {
       "enonce": "Quelle technologie de traite est la plus adaptée pour un élevage de 50 vaches laitières en zone péri-urbaine de Kinshasa disposant d'une alimentation électrique instable ?",
       "assertions": [
-        "Machine à traire à pot individuel avec groupe électrogène de secours et tank à lait à refroidissement direct",
         "Salle de traite en épi de 2×12 avec robot de traite automatique et connexion au réseau SNEL uniquement",
-        "Traite manuelle exclusivement, les machines à traire étant inutiles en dessous de 200 vaches",
-        "Machine à traire à pipeline fixe alimentée uniquement par énergie solaire sans batterie de secours"
+        "Machine à traire à pipeline fixe alimentée uniquement par énergie solaire sans batterie de secours",
+        "Machine à traire à pot individuel avec groupe électrogène de secours et tank à lait à refroidissement direct",
+        "Traite manuelle exclusivement, les machines à traire étant inutiles en dessous de 200 vaches"
       ],
       "reponse": "Machine à traire à pot individuel avec groupe électrogène de secours et tank à lait à refroidissement direct",
       "type": "QCM",
@@ -1193,7 +1295,10 @@
     },
     {
       "enonce": "Pour optimiser la production de biogaz dans un biodigesteur alimenté par du lisier de bovin, le rapport C/N (carbone sur azote) des substrats entrants doit être maintenu entre 20 et 30.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 3
@@ -1213,10 +1318,10 @@
     {
       "enonce": "Quel est le besoin quotidien en eau d'une chèvre adulte en lactation en zone tropicale ?",
       "assertions": [
-        "3 à 6 litres par jour",
-        "20 à 30 litres par jour",
         "0,5 litre par jour",
-        "50 litres par jour"
+        "3 à 6 litres par jour",
+        "50 litres par jour",
+        "20 à 30 litres par jour"
       ],
       "reponse": "3 à 6 litres par jour",
       "type": "QCM",
@@ -1225,10 +1330,10 @@
     {
       "enonce": "Un poulet de chair de 2 kg abattu représente environ 70 % de rendement carcasse. Quelle est la masse de la carcasse ?",
       "assertions": [
-        "1,4 kg",
-        "0,7 kg",
         "2,8 kg",
-        "1,0 kg"
+        "1,0 kg",
+        "0,7 kg",
+        "1,4 kg"
       ],
       "reponse": "1,4 kg",
       "type": "QCM",
@@ -1237,10 +1342,10 @@
     {
       "enonce": "Un élevage de 30 chèvres consomme 5 L d'eau/tête/jour. Quelle est la consommation mensuelle totale (30 jours) ?",
       "assertions": [
-        "4 500 litres",
-        "150 litres",
         "45 000 litres",
-        "900 litres"
+        "4 500 litres",
+        "900 litres",
+        "150 litres"
       ],
       "reponse": "4 500 litres",
       "type": "QCM",
@@ -1248,7 +1353,10 @@
     },
     {
       "enonce": "La superficie minimale recommandée par bovin adulte dans un bâtiment d'attente pour la traite est de 2 m².",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 1
@@ -1256,10 +1364,10 @@
     {
       "enonce": "Quelle pression de vide (en kPa) est généralement recommandée pour les machines à traire bovines ?",
       "assertions": [
-        "42 à 50 kPa",
-        "100 à 120 kPa",
         "10 à 15 kPa",
-        "200 à 250 kPa"
+        "100 à 120 kPa",
+        "200 à 250 kPa",
+        "42 à 50 kPa"
       ],
       "reponse": "42 à 50 kPa",
       "type": "QCM",
@@ -1267,7 +1375,10 @@
     },
     {
       "enonce": "Un silo-tour d'un diamètre de 4 m et d'une hauteur de 10 m a un volume utile d'environ 125 m³.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 1
@@ -1275,10 +1386,10 @@
     {
       "enonce": "Pour stocker 6 tonnes de maïs grain dans un silo cylindrique de densité apparente 700 kg/m³, quel volume faut-il ?",
       "assertions": [
-        "8,6 m³",
+        "0,86 m³",
         "4,2 m³",
         "86 m³",
-        "0,86 m³"
+        "8,6 m³"
       ],
       "reponse": "8,6 m³",
       "type": "QCM",
@@ -1286,7 +1397,10 @@
     },
     {
       "enonce": "La durée d'incubation des œufs de canard de Barbarie est de 35 jours.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 1
@@ -1294,9 +1408,9 @@
     {
       "enonce": "Quelle quantité d'aliment démarrage doit-on prévoir pour 500 poussins de chair pendant leurs 3 premières semaines, si la consommation est de 30 g/poussin/jour ?",
       "assertions": [
+        "3 150 kg",
         "315 kg",
         "45 kg",
-        "3 150 kg",
         "630 kg"
       ],
       "reponse": "315 kg",
@@ -1305,7 +1419,10 @@
     },
     {
       "enonce": "En élevage ovin, la superficie minimale recommandée en bergerie est de 1,5 m² par brebis adulte.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 1
@@ -1314,9 +1431,9 @@
       "enonce": "Quel est le rendement volumétrique (taux de remplissage) minimum recommandé pour les tracteurs en labour afin de justifier leur utilisation économique ?",
       "assertions": [
         "70 à 80 %",
-        "20 à 30 %",
         "100 %",
-        "10 à 20 %"
+        "10 à 20 %",
+        "20 à 30 %"
       ],
       "reponse": "70 à 80 %",
       "type": "QCM",
@@ -1324,7 +1441,10 @@
     },
     {
       "enonce": "Une vache Holstein peut produire jusqu'à 25 litres de lait par jour dans de bonnes conditions d'élevage en Afrique centrale.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 1
@@ -1333,8 +1453,8 @@
       "enonce": "Quelle est la consommation journalière en eau d'un porc à l'engraissement (60 à 100 kg) ?",
       "assertions": [
         "5 à 8 litres par jour",
-        "0,5 à 1 litre par jour",
         "30 à 40 litres par jour",
+        "0,5 à 1 litre par jour",
         "15 à 20 litres par jour"
       ],
       "reponse": "5 à 8 litres par jour",
@@ -1343,7 +1463,10 @@
     },
     {
       "enonce": "La ventilation naturelle dans un poulailler tropical est assurée principalement par la différence de pression thermique et le vent.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 1
@@ -1351,10 +1474,10 @@
     {
       "enonce": "Pour un troupeau de 80 brebis avec un taux de fertilité de 90 % et une prolificité de 1,5 agneau/brebis, combien d'agneaux naissent par an ?",
       "assertions": [
-        "108 agneaux",
-        "80 agneaux",
+        "120 agneaux",
         "72 agneaux",
-        "120 agneaux"
+        "80 agneaux",
+        "108 agneaux"
       ],
       "reponse": "108 agneaux",
       "type": "QCM",
@@ -1362,7 +1485,10 @@
     },
     {
       "enonce": "En incubation artificielle, l'hygrométrie doit être augmentée à 70-75 % lors des 3 derniers jours (éclosion).",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 1
@@ -1370,9 +1496,9 @@
     {
       "enonce": "Quelle est la surface d'abreuvement minimale (cm de longueur de bac) par bovin adulte en abreuvoir collectif ?",
       "assertions": [
-        "30 à 50 cm de bac par bovin",
-        "5 à 10 cm de bac par bovin",
         "150 à 200 cm de bac par bovin",
+        "5 à 10 cm de bac par bovin",
+        "30 à 50 cm de bac par bovin",
         "1 à 2 cm de bac par bovin"
       ],
       "reponse": "30 à 50 cm de bac par bovin",
@@ -1381,7 +1507,10 @@
     },
     {
       "enonce": "Le taux de conversion alimentaire (TCA) mesure la quantité d'aliment consommée pour produire un litre de lait ou un kilogramme de gain de poids.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 1
@@ -1390,9 +1519,9 @@
       "enonce": "Quelle quantité de litière (copeaux de bois) faut-il prévoir pour un sol de poulailler de 100 m² avec une épaisseur de 10 cm et une densité de 150 kg/m³ ?",
       "assertions": [
         "1 500 kg",
-        "100 kg",
+        "150 kg",
         "15 000 kg",
-        "150 kg"
+        "100 kg"
       ],
       "reponse": "1 500 kg",
       "type": "QCM",
@@ -1400,7 +1529,10 @@
     },
     {
       "enonce": "L'aliment complet granulé est préférable à la farine en élevage porcin intensif car il réduit le gaspillage et améliore l'indice de consommation.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 1
@@ -1409,9 +1541,9 @@
       "enonce": "Pour un poulailler de 1 000 m², si le débit d'air recommandé en été est de 8 m³/h/m², quelle doit être la capacité totale des ventilateurs ?",
       "assertions": [
         "8 000 m³/h",
+        "80 m³/h",
         "800 m³/h",
-        "80 000 m³/h",
-        "80 m³/h"
+        "80 000 m³/h"
       ],
       "reponse": "8 000 m³/h",
       "type": "QCM",
@@ -1419,7 +1551,10 @@
     },
     {
       "enonce": "Un œuf de poule pèse en moyenne 60 grammes. Un lot de 500 œufs pèse donc 30 kg.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 1
@@ -1427,10 +1562,10 @@
     {
       "enonce": "Quelle est la superficie recommandée par truie en maternité (case de mise bas avec cage de contention) ?",
       "assertions": [
-        "4 à 6 m² par case de maternité",
-        "0,5 m² par case de maternité",
         "20 à 30 m² par case de maternité",
-        "1 m² par case de maternité"
+        "0,5 m² par case de maternité",
+        "1 m² par case de maternité",
+        "4 à 6 m² par case de maternité"
       ],
       "reponse": "4 à 6 m² par case de maternité",
       "type": "QCM",
@@ -1438,7 +1573,10 @@
     },
     {
       "enonce": "La durée de vie utile d'une machine à traire bien entretenue est généralement de 10 à 15 ans.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 1
@@ -1446,10 +1584,10 @@
     {
       "enonce": "Pour un bâtiment porcin d'engraissement de 200 places et une production de 6 kg de lisier/tête/jour, quel est le volume de lisier produit en une semaine ?",
       "assertions": [
+        "420 litres",
         "8 400 litres",
-        "1 200 litres",
         "84 000 litres",
-        "420 litres"
+        "1 200 litres"
       ],
       "reponse": "8 400 litres",
       "type": "QCM",
@@ -1458,10 +1596,10 @@
     {
       "enonce": "Comment dimensionner le système d'éclairage artificiel d'un poulailler de 500 m² destiné aux poules pondeuses sachant qu'il faut 15 lux au niveau des animaux et qu'une ampoule de 100 W éclaire 15 m² ?",
       "assertions": [
-        "34 ampoules de 100 W uniformément réparties",
         "500 ampoules de 100 W",
         "5 ampoules de 100 W",
-        "100 ampoules de 100 W"
+        "100 ampoules de 100 W",
+        "34 ampoules de 100 W uniformément réparties"
       ],
       "reponse": "34 ampoules de 100 W uniformément réparties",
       "type": "QCM",
@@ -1481,7 +1619,10 @@
     },
     {
       "enonce": "Pour réduire la mammite dans un élevage laitier, la combinaison pré-trempe + traite complète + post-trempe + hygiène des trayeurs est plus efficace que la seule utilisation d'antibiotiques.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 2
@@ -1489,10 +1630,10 @@
     {
       "enonce": "Quelle est la méthode de calcul de la production de biogaz (m³/jour) à partir de 500 kg de déjections bovines fraîches, sachant qu'une tonne de fumier bovin produit environ 30 m³ de biogaz ?",
       "assertions": [
-        "15 m³ de biogaz par jour",
-        "150 m³ de biogaz par jour",
+        "300 m³ de biogaz par jour",
         "1,5 m³ de biogaz par jour",
-        "300 m³ de biogaz par jour"
+        "15 m³ de biogaz par jour",
+        "150 m³ de biogaz par jour"
       ],
       "reponse": "15 m³ de biogaz par jour",
       "type": "QCM",
@@ -1501,10 +1642,10 @@
     {
       "enonce": "Quel est le principal avantage d'un système d'alimentation à la carte (ad libitum) pour les porcs à l'engraissement par rapport à l'alimentation rationnée ?",
       "assertions": [
-        "Meilleur GMQ et économie de main-d'œuvre, mais risque de surconsommation et d'engraissement excessif",
-        "Réduction garantie de la consommation d'aliments et meilleure qualité de carcasse",
+        "Suppression totale du besoin en mangeoires et en équipements d'alimentation",
         "Impossibilité de gaspillage car les porcs s'autorégulent parfaitement",
-        "Suppression totale du besoin en mangeoires et en équipements d'alimentation"
+        "Meilleur GMQ et économie de main-d'œuvre, mais risque de surconsommation et d'engraissement excessif",
+        "Réduction garantie de la consommation d'aliments et meilleure qualité de carcasse"
       ],
       "reponse": "Meilleur GMQ et économie de main-d'œuvre, mais risque de surconsommation et d'engraissement excessif",
       "type": "QCM",
@@ -1512,7 +1653,10 @@
     },
     {
       "enonce": "La gestion du vide sanitaire entre deux bandes de production avicole est une mesure de biosécurité clé pour rompre le cycle des pathogènes.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 2
@@ -1520,10 +1664,10 @@
     {
       "enonce": "Quelle est la procédure correcte pour préparer le pis d'une vache avant la traite mécanique ?",
       "assertions": [
-        "Pré-trempe antiseptique, essuyage avec une lingette individuelle, stimulation manuelle des trayons, puis pose des gobelets",
-        "Rinçage du pis à l'eau froide, pose immédiate des gobelets sans autre préparation",
         "Massage du pis pendant 10 minutes à l'huile d'olive avant la pose des gobelets",
-        "Injection d'ocytocine systématique avant chaque traite pour déclencher la descente du lait"
+        "Rinçage du pis à l'eau froide, pose immédiate des gobelets sans autre préparation",
+        "Injection d'ocytocine systématique avant chaque traite pour déclencher la descente du lait",
+        "Pré-trempe antiseptique, essuyage avec une lingette individuelle, stimulation manuelle des trayons, puis pose des gobelets"
       ],
       "reponse": "Pré-trempe antiseptique, essuyage avec une lingette individuelle, stimulation manuelle des trayons, puis pose des gobelets",
       "type": "QCM",
@@ -1532,10 +1676,10 @@
     {
       "enonce": "Comment calculer la surface totale de ventilation nécessaire (ouvertures latérales) pour un bâtiment d'élevage porcin de 400 m² en zone tropicale, sachant que le rapport surface de ventilation/surface au sol doit être de 20 % ?",
       "assertions": [
-        "80 m² d'ouvertures de ventilation",
-        "8 m² d'ouvertures de ventilation",
+        "20 m² d'ouvertures de ventilation",
         "400 m² d'ouvertures de ventilation",
-        "20 m² d'ouvertures de ventilation"
+        "8 m² d'ouvertures de ventilation",
+        "80 m² d'ouvertures de ventilation"
       ],
       "reponse": "80 m² d'ouvertures de ventilation",
       "type": "QCM",
@@ -1543,7 +1687,10 @@
     },
     {
       "enonce": "Un biodigesteur de type lagune couverte est bien adapté aux grands élevages porcins car il peut traiter de grandes quantités de lisier dilué.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 2
@@ -1551,10 +1698,10 @@
     {
       "enonce": "Quelle est la conséquence d'une alimentation uniquement à base de manioc (riche en glucides) sans complémentation en protéines pour des poulets de chair ?",
       "assertions": [
-        "Croissance ralentie, faible GMQ, excès de dépôts graisseux et mauvaise efficacité alimentaire",
-        "Croissance accélérée grâce à la haute teneur énergétique du manioc",
+        "Aucun effet notable car les poulets compensent en consommant davantage",
         "Amélioration de la couleur de la chair et du goût du poulet",
-        "Aucun effet notable car les poulets compensent en consommant davantage"
+        "Croissance ralentie, faible GMQ, excès de dépôts graisseux et mauvaise efficacité alimentaire",
+        "Croissance accélérée grâce à la haute teneur énergétique du manioc"
       ],
       "reponse": "Croissance ralentie, faible GMQ, excès de dépôts graisseux et mauvaise efficacité alimentaire",
       "type": "QCM",
@@ -1562,7 +1709,10 @@
     },
     {
       "enonce": "Pour la conception d'un réseau d'abreuvement avec château d'eau, la pression minimale en bout de réseau doit être suffisante pour actionner les abreuvoirs automatiques à flotteur (environ 0,5 bar).",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 2
@@ -1570,10 +1720,10 @@
     {
       "enonce": "Quelle technique de conservation du fourrage est la mieux adaptée aux petits éleveurs de bovins en RDC qui n'ont pas accès à un silo-tour ?",
       "assertions": [
-        "L'ensilage en silo-couloir bâché ou en balles enrubannées",
-        "Le séchage au soleil sur claies pendant la saison des pluies",
+        "La fermentation aérobie accélérée par ajout de levures industrielles",
         "La congélation du fourrage vert dans des chambres froides",
-        "La fermentation aérobie accélérée par ajout de levures industrielles"
+        "L'ensilage en silo-couloir bâché ou en balles enrubannées",
+        "Le séchage au soleil sur claies pendant la saison des pluies"
       ],
       "reponse": "L'ensilage en silo-couloir bâché ou en balles enrubannées",
       "type": "QCM",
@@ -1593,7 +1743,10 @@
     },
     {
       "enonce": "En élevage bovin laitier, l'alimentation au tarissement (période de repos avant la mise-bas) doit être réduite en énergie pour prévenir la cétose et la fièvre vitulaire.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 2
@@ -1601,10 +1754,10 @@
     {
       "enonce": "Quelle est la pratique recommandée pour nettoyer un biodigesteur en cas de panne ou de chute de production de biogaz ?",
       "assertions": [
+        "Fermeture totale du digesteur pendant 6 mois pour permettre une auto-régénération",
         "Vidange partielle du digesteur, ajout de substrat frais, contrôle du pH (6,8 à 7,5) et de la température",
-        "Ajout massif de chaux pour neutraliser l'acidité et relancer la fermentation",
         "Injection d'air dans le digesteur pour oxygéner et ranimer les bactéries méthanogènes",
-        "Fermeture totale du digesteur pendant 6 mois pour permettre une auto-régénération"
+        "Ajout massif de chaux pour neutraliser l'acidité et relancer la fermentation"
       ],
       "reponse": "Vidange partielle du digesteur, ajout de substrat frais, contrôle du pH (6,8 à 7,5) et de la température",
       "type": "QCM",
@@ -1612,7 +1765,10 @@
     },
     {
       "enonce": "Dans un élevage avicole, un taux d'éclosion inférieur à 70 % en incubateur artificiel doit déclencher une révision complète des paramètres (température, hygrométrie, retournement) et la qualité des œufs parentaux.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 2
@@ -1620,10 +1776,10 @@
     {
       "enonce": "Quel est le rôle du système hydraulique à trois points d'un tracteur agricole ?",
       "assertions": [
-        "Relever, abaisser et régler la profondeur de travail des outils portés (charrue, herse, semoir)",
+        "Contrôler la pression des pneus du tracteur pendant le travail au champ",
         "Alimenter les moteurs hydrauliques des outils de récolte autopropulsés",
-        "Assurer la direction assistée du tracteur dans les terrains difficiles",
-        "Contrôler la pression des pneus du tracteur pendant le travail au champ"
+        "Relever, abaisser et régler la profondeur de travail des outils portés (charrue, herse, semoir)",
+        "Assurer la direction assistée du tracteur dans les terrains difficiles"
       ],
       "reponse": "Relever, abaisser et régler la profondeur de travail des outils portés (charrue, herse, semoir)",
       "type": "QCM",
@@ -1631,7 +1787,10 @@
     },
     {
       "enonce": "Le dosage d'un produit désinfectant pour l'eau d'abreuvement doit être calculé précisément pour éviter une concentration toxique pour les animaux.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 2
@@ -1652,9 +1811,9 @@
       "enonce": "Quels sont les principaux obstacles à la mécanisation agricole en milieu rural en RDC et comment les surmonter ?",
       "assertions": [
         "Coût élevé du matériel, manque de techniciens, insuffisance de pièces détachées et carburant — solutions : CUMA (coopératives), formation locale, partenariats avec importateurs",
-        "Refus culturel de la mécanisation par les agriculteurs et indisponibilité totale des tracteurs sur le marché",
+        "Les obstacles sont uniquement administratifs (taxes à l'importation) et se résolvent par la contrebande de matériel",
         "La mécanisation n'est pas adaptée au sol congolais et doit être remplacée par la traction bovine dans tous les cas",
-        "Les obstacles sont uniquement administratifs (taxes à l'importation) et se résolvent par la contrebande de matériel"
+        "Refus culturel de la mécanisation par les agriculteurs et indisponibilité totale des tracteurs sur le marché"
       ],
       "reponse": "Coût élevé du matériel, manque de techniciens, insuffisance de pièces détachées et carburant — solutions : CUMA (coopératives), formation locale, partenariats avec importateurs",
       "type": "QCM",
@@ -1662,7 +1821,10 @@
     },
     {
       "enonce": "L'élevage avicole villageois en RDC, basé sur des races locales élevées en divagation, contribue à la sécurité alimentaire des ménages malgré ses faibles performances zootechniques.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 3
@@ -1670,10 +1832,10 @@
     {
       "enonce": "Quels sont les risques sanitaires liés à la valorisation directe du lisier frais de porc sur les cultures maraîchères sans traitement préalable ?",
       "assertions": [
-        "Contamination microbiologique (Salmonella, E. coli, œufs de parasites), déséquilibre de la flore du sol et phytotoxicité par excès d'azote ammoniacal",
-        "Aucun risque si le lisier est dilué avec de l'eau avant épandage",
         "Seul risque : odeur désagréable pour les habitants du voisinage",
-        "Le lisier frais est bénéfique car il contient des probiotiques favorables aux cultures"
+        "Le lisier frais est bénéfique car il contient des probiotiques favorables aux cultures",
+        "Contamination microbiologique (Salmonella, E. coli, œufs de parasites), déséquilibre de la flore du sol et phytotoxicité par excès d'azote ammoniacal",
+        "Aucun risque si le lisier est dilué avec de l'eau avant épandage"
       ],
       "reponse": "Contamination microbiologique (Salmonella, E. coli, œufs de parasites), déséquilibre de la flore du sol et phytotoxicité par excès d'azote ammoniacal",
       "type": "QCM",
@@ -1682,10 +1844,10 @@
     {
       "enonce": "Comment la construction d'un silo de stockage hermétique peut-elle réduire les pertes post-récolte de maïs destiné à l'alimentation animale en RDC ?",
       "assertions": [
-        "En protégeant le grain de l'humidité, des insectes et des rongeurs, réduisant les pertes de 20-30 % à moins de 5 %",
-        "En augmentant la valeur nutritive du maïs par fermentation anaérobie",
+        "En transformant le maïs en farine directement dans le silo grâce à des meules intégrées",
         "En permettant de vendre le maïs à un prix plus élevé grâce à son étiquetage officiel",
-        "En transformant le maïs en farine directement dans le silo grâce à des meules intégrées"
+        "En augmentant la valeur nutritive du maïs par fermentation anaérobie",
+        "En protégeant le grain de l'humidité, des insectes et des rongeurs, réduisant les pertes de 20-30 % à moins de 5 %"
       ],
       "reponse": "En protégeant le grain de l'humidité, des insectes et des rongeurs, réduisant les pertes de 20-30 % à moins de 5 %",
       "type": "QCM",
@@ -1693,7 +1855,10 @@
     },
     {
       "enonce": "Dans un élevage laitier intensif, la mammite subclinique (sans symptômes visibles) peut être détectée par un test de comptage cellulaire somatique (CCS) du lait.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 3
@@ -1701,10 +1866,10 @@
     {
       "enonce": "Quel est l'impact de l'adoption de l'insémination artificielle (IA) dans un élevage bovin laitier en RDC par rapport à la monte naturelle ?",
       "assertions": [
-        "Amélioration génétique rapide, réduction du risque de transmission de maladies vénériennes, accès à des races améliorées sans frais d'entretien du taureau",
-        "Réduction de la fertilité du troupeau et augmentation des coûts vétérinaires à long terme",
         "Impossibilité d'utiliser l'IA en zone tropicale en raison de la chaleur dégradant la semence",
-        "L'IA est identique à la monte naturelle en termes de résultats génétiques et sanitaires"
+        "Réduction de la fertilité du troupeau et augmentation des coûts vétérinaires à long terme",
+        "L'IA est identique à la monte naturelle en termes de résultats génétiques et sanitaires",
+        "Amélioration génétique rapide, réduction du risque de transmission de maladies vénériennes, accès à des races améliorées sans frais d'entretien du taureau"
       ],
       "reponse": "Amélioration génétique rapide, réduction du risque de transmission de maladies vénériennes, accès à des races améliorées sans frais d'entretien du taureau",
       "type": "QCM",
@@ -1713,10 +1878,10 @@
     {
       "enonce": "Quelle stratégie d'alimentation permet de réduire les émissions de méthane entérique des ruminants tout en maintenant leurs performances de production ?",
       "assertions": [
-        "Supplémenter la ration avec des lipides (graisses) et des tannins végétaux pour inhiber les bactéries méthanogènes du rumen",
         "Augmenter la proportion de concentrés et réduire les fourrages grossiers dans la ration",
         "Supprimer totalement les graminées de la ration et nourrir les ruminants uniquement de légumineuses",
-        "Administrer des antibiotiques quotidiens pour tuer les bactéries méthanogènes du rumen"
+        "Administrer des antibiotiques quotidiens pour tuer les bactéries méthanogènes du rumen",
+        "Supplémenter la ration avec des lipides (graisses) et des tannins végétaux pour inhiber les bactéries méthanogènes du rumen"
       ],
       "reponse": "Supplémenter la ration avec des lipides (graisses) et des tannins végétaux pour inhiber les bactéries méthanogènes du rumen",
       "type": "QCM",
@@ -1724,7 +1889,10 @@
     },
     {
       "enonce": "La mise en place d'un programme de traçabilité des animaux (du naisseur à l'abattoir) augmente la valeur commerciale des produits animaux sur les marchés urbains en RDC.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 3
@@ -1732,10 +1900,10 @@
     {
       "enonce": "Dans un projet de valorisation des effluents d'élevage par méthanisation à l'échelle d'un village de 20 ménages en RDC, quels critères techniques sont déterminants pour le succès ?",
       "assertions": [
-        "Disponibilité de substrat régulier, température ambiante suffisante (>20 °C), capacité technique locale de maintenance et utilisation effective du biogaz produit",
-        "Disponibilité de panels solaires pour chauffer le digesteur, connexion au réseau électrique et contrat de rachat de l'électricité produite",
         "Présence d'un ingénieur étranger sur site, importation de cultures bactériennes spécifiques et certification ISO du digesteur",
-        "Volume du digesteur supérieur à 500 m³ et pression du biogaz supérieure à 5 bars"
+        "Disponibilité de panels solaires pour chauffer le digesteur, connexion au réseau électrique et contrat de rachat de l'électricité produite",
+        "Volume du digesteur supérieur à 500 m³ et pression du biogaz supérieure à 5 bars",
+        "Disponibilité de substrat régulier, température ambiante suffisante (>20 °C), capacité technique locale de maintenance et utilisation effective du biogaz produit"
       ],
       "reponse": "Disponibilité de substrat régulier, température ambiante suffisante (>20 °C), capacité technique locale de maintenance et utilisation effective du biogaz produit",
       "type": "QCM",
@@ -1743,7 +1911,10 @@
     },
     {
       "enonce": "La résistance aux antibiotiques dans les élevages intensifs est aggravée par l'utilisation préventive et systématique d'antibiotiques comme facteurs de croissance.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 3
@@ -1751,10 +1922,10 @@
     {
       "enonce": "Quelle approche de gestion du troupeau bovin permet de réduire la pression de pâturage et lutter contre la dégradation des terres en zones de savane en RDC ?",
       "assertions": [
+        "L'introduction massive de légumineuses exotiques à croissance rapide pour combler les zones dégradées",
         "Le pâturage tournant avec des parcs clôturés et des périodes de repos permettant la régénération de la végétation",
-        "L'augmentation du cheptel pour maximiser les revenus de l'éleveur pendant la saison favorable",
         "La sédentarisation totale des troupeaux en bâtiment pour supprimer toute pression sur les pâturages",
-        "L'introduction massive de légumineuses exotiques à croissance rapide pour combler les zones dégradées"
+        "L'augmentation du cheptel pour maximiser les revenus de l'éleveur pendant la saison favorable"
       ],
       "reponse": "Le pâturage tournant avec des parcs clôturés et des périodes de repos permettant la régénération de la végétation",
       "type": "QCM",
@@ -1762,7 +1933,10 @@
     },
     {
       "enonce": "La chaîne du froid pour la viande fraîche doit maintenir une température entre 0 et 4 °C depuis l'abattage jusqu'à la vente au consommateur.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 3
@@ -1770,10 +1944,10 @@
     {
       "enonce": "Quel est l'avantage principal des races bovines à double aptitude (lait et viande) comme la Montbéliarde dans le contexte de l'élevage péri-urbain en Afrique centrale ?",
       "assertions": [
-        "Elles permettent de valoriser à la fois la production laitière et la viande, réduisant les risques économiques pour l'éleveur",
         "Elles consomment deux fois moins d'aliments que les races spécialisées lait ou viande",
-        "Elles sont immunisées contre toutes les maladies tropicales, supprimant les coûts vétérinaires",
-        "Elles s'adaptent uniquement au climat tempéré et sont inutilisables en zone équatoriale"
+        "Elles s'adaptent uniquement au climat tempéré et sont inutilisables en zone équatoriale",
+        "Elles permettent de valoriser à la fois la production laitière et la viande, réduisant les risques économiques pour l'éleveur",
+        "Elles sont immunisées contre toutes les maladies tropicales, supprimant les coûts vétérinaires"
       ],
       "reponse": "Elles permettent de valoriser à la fois la production laitière et la viande, réduisant les risques économiques pour l'éleveur",
       "type": "QCM",
@@ -1783,8 +1957,8 @@
       "enonce": "Comment l'analyse du coût de revient par litre de lait produit permet-elle d'optimiser la gestion d'un élevage laitier en RDC ?",
       "assertions": [
         "Elle identifie les postes de coûts dominants (alimentation, main-d'œuvre, santé) permettant des actions ciblées d'amélioration et la fixation d'un prix de vente rentable",
-        "Elle permet uniquement de justifier une augmentation des prix de vente auprès des acheteurs",
         "Elle sert exclusivement à la comptabilité fiscale et n'a pas d'utilité pour les décisions opérationnelles",
+        "Elle permet uniquement de justifier une augmentation des prix de vente auprès des acheteurs",
         "Elle montre systématiquement que l'élevage laitier en Afrique est non rentable et doit être abandonné"
       ],
       "reponse": "Elle identifie les postes de coûts dominants (alimentation, main-d'œuvre, santé) permettant des actions ciblées d'amélioration et la fixation d'un prix de vente rentable",
@@ -1793,7 +1967,10 @@
     },
     {
       "enonce": "L'utilisation de panneaux solaires pour alimenter les pompes d'abreuvement dans les élevages extensifs ruraux en RDC représente une solution durable réduisant la dépendance au carburant.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 3
@@ -1802,8 +1979,8 @@
       "enonce": "Quels sont les indicateurs de bien-être animal à surveiller dans un élevage porcin intensif pour garantir des conditions d'élevage acceptables ?",
       "assertions": [
         "Taux de morsures caudales, mortalité, boiteries, état corporel, comportements stéréotypés et accès à l'eau",
-        "Uniquement le poids à l'abattage et l'indice de consommation alimentaire",
         "La couleur de la viande après abattage et le pourcentage de muscle dans la carcasse",
+        "Uniquement le poids à l'abattage et l'indice de consommation alimentaire",
         "Le niveau sonore dans le bâtiment et la propreté des murs uniquement"
       ],
       "reponse": "Taux de morsures caudales, mortalité, boiteries, état corporel, comportements stéréotypés et accès à l'eau",
@@ -1812,7 +1989,10 @@
     },
     {
       "enonce": "Le développement des filières avicoles modernisées en RDC dépend de la disponibilité locale de matières premières (maïs, soja) à prix compétitif par rapport aux importations.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 3
@@ -1820,9 +2000,9 @@
     {
       "enonce": "Quel équipement de traite permet de mesurer automatiquement la production laitière de chaque vache à chaque traite ?",
       "assertions": [
+        "Le réfractomètre portatif mesurant la densité du lait en ligne",
         "Le lactomètre (ou compteur à lait) intégré au circuit de traite",
         "La balance suspendue placée sous le tank à lait",
-        "Le réfractomètre portatif mesurant la densité du lait en ligne",
         "Le thermomètre de lait installé en aval du gobelet trayeur"
       ],
       "reponse": "Le lactomètre (ou compteur à lait) intégré au circuit de traite",
@@ -1831,7 +2011,10 @@
     },
     {
       "enonce": "Lors de la conception d'un bâtiment d'élevage caprin, la hauteur libre sous charpente doit être d'au moins 2,5 m pour garantir une bonne ventilation sous les tropiques.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 2
@@ -1839,10 +2022,10 @@
     {
       "enonce": "Quelle est la différence technique entre une pompe centrifuge et une pompe à vis sans fin pour le pompage du lisier ?",
       "assertions": [
+        "Il n'existe aucune différence pratique entre les deux pour le pompage du lisier",
         "La pompe centrifuge convient au lisier dilué ; la pompe à vis tolère les matières épaisses et les solides en suspension",
         "La pompe centrifuge est plus puissante uniquement pour les grandes hauteurs manométriques",
-        "La pompe centrifuge fonctionne à la vapeur, la pompe à vis à l'électricité uniquement",
-        "Il n'existe aucune différence pratique entre les deux pour le pompage du lisier"
+        "La pompe centrifuge fonctionne à la vapeur, la pompe à vis à l'électricité uniquement"
       ],
       "reponse": "La pompe centrifuge convient au lisier dilué ; la pompe à vis tolère les matières épaisses et les solides en suspension",
       "type": "QCM",
@@ -1851,9 +2034,9 @@
     {
       "enonce": "Comment calculer la ration en eau d'un élevage mixte de 50 bovins (40 L/j), 200 porcs (7 L/j) et 2 000 poulets (0,3 L/j) pour une journée ?",
       "assertions": [
-        "3 000 litres (2 000 + 1 400 + 600)",
-        "300 litres",
         "30 000 litres",
+        "300 litres",
+        "3 000 litres (2 000 + 1 400 + 600)",
         "600 litres"
       ],
       "reponse": "3 000 litres (2 000 + 1 400 + 600)",
@@ -1862,7 +2045,10 @@
     },
     {
       "enonce": "En élevage porcin, le recours aux boucles nasales pour les porcs en plein air permet de limiter les dommages causés par le fouissement excessif du sol.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 2
@@ -1871,8 +2057,8 @@
       "enonce": "Quel est l'intérêt d'une table de triage pour les œufs à couver dans un couvoir industriel ?",
       "assertions": [
         "Éliminer les œufs fissurés, mal formés, trop petits ou trop grands avant mise en incubation",
-        "Séparer les œufs blancs des œufs bruns selon les commandes des clients",
         "Mesurer la composition en protéines et lipides de chaque œuf avant conditionnement",
+        "Séparer les œufs blancs des œufs bruns selon les commandes des clients",
         "Trier les œufs par couleur de coquille pour respecter les normes de calibrage"
       ],
       "reponse": "Éliminer les œufs fissurés, mal formés, trop petits ou trop grands avant mise en incubation",
@@ -1881,7 +2067,10 @@
     },
     {
       "enonce": "Dans le dimensionnement d'un réservoir d'eau pour un élevage, il est recommandé de prévoir une autonomie de 48 heures en cas de panne de pompe.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 2
@@ -1889,9 +2078,9 @@
     {
       "enonce": "Quel est le protocole de nettoyage-désinfection recommandé entre deux bandes de poulets de chair (vide sanitaire) ?",
       "assertions": [
-        "Évacuation de la litière, raclage, lavage haute pression, désinfection chimique et vide sanitaire de 14 jours minimum",
-        "Simple balayage du sol et épandage de chaux vive sans lavage préalable",
         "Flambage au chalumeau sans lavage, efficace contre tous les pathogènes",
+        "Simple balayage du sol et épandage de chaux vive sans lavage préalable",
+        "Évacuation de la litière, raclage, lavage haute pression, désinfection chimique et vide sanitaire de 14 jours minimum",
         "Rinçage à l'eau froide et mise en litière après 24 heures de séchage"
       ],
       "reponse": "Évacuation de la litière, raclage, lavage haute pression, désinfection chimique et vide sanitaire de 14 jours minimum",
@@ -1900,7 +2089,10 @@
     },
     {
       "enonce": "Le contrôle laitier individuel est une technique de sélection des vaches laitières hautes productrices au sein d'un troupeau.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 2
@@ -1908,10 +2100,10 @@
     {
       "enonce": "Quelle est la formule de calcul de la HMT pour une installation de pompage ?",
       "assertions": [
-        "HMT = hauteur géométrique totale (aspiration + refoulement) + pertes de charge",
+        "HMT = pression atmosphérique multipliée par la hauteur d'aspiration",
         "HMT = débit multiplié par la section de la canalisation",
         "HMT = puissance du moteur divisée par le débit",
-        "HMT = pression atmosphérique multipliée par la hauteur d'aspiration"
+        "HMT = hauteur géométrique totale (aspiration + refoulement) + pertes de charge"
       ],
       "reponse": "HMT = hauteur géométrique totale (aspiration + refoulement) + pertes de charge",
       "type": "QCM",
@@ -1919,7 +2111,10 @@
     },
     {
       "enonce": "En aviculture industrielle, la gestion en bande unique (all-in all-out) facilite le vide sanitaire et réduit la pression infectieuse comparée à une gestion en bandes multiples.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 2
@@ -1928,9 +2123,9 @@
       "enonce": "Quel est l'impact environnemental de l'épandage excessif de lisier porcin sur les sols agricoles en zone péri-urbaine en RDC ?",
       "assertions": [
         "Pollution des nappes phréatiques par les nitrates, excès de phosphore et eutrophisation des cours d'eau",
-        "Amélioration permanente de la structure du sol sans aucun effet négatif",
+        "Aucun impact car les bactéries tropicales décomposent rapidement tous les excès de nutriments",
         "Réduction de la biodiversité uniquement due aux odeurs repoussant les animaux sauvages",
-        "Aucun impact car les bactéries tropicales décomposent rapidement tous les excès de nutriments"
+        "Amélioration permanente de la structure du sol sans aucun effet négatif"
       ],
       "reponse": "Pollution des nappes phréatiques par les nitrates, excès de phosphore et eutrophisation des cours d'eau",
       "type": "QCM",
@@ -1939,10 +2134,10 @@
     {
       "enonce": "Comment la transition d'un élevage bovin extensif vers un système semi-intensif amélioré en RDC peut-elle être réalisée de manière progressive et économiquement viable ?",
       "assertions": [
-        "Par étapes : amélioration alimentation, IA pour reproducteurs améliorés, construction progressive, formation des éleveurs et accès aux marchés",
         "Remplacement immédiat de tout le troupeau local par des races exotiques importées et construction simultanée de tous les équipements",
-        "Abandon de l'élevage extensif au profit de la production végétale, plus rentable en zone tropicale",
-        "La transition est impossible sans un investissement minimum de 1 million USD par ferme"
+        "La transition est impossible sans un investissement minimum de 1 million USD par ferme",
+        "Par étapes : amélioration alimentation, IA pour reproducteurs améliorés, construction progressive, formation des éleveurs et accès aux marchés",
+        "Abandon de l'élevage extensif au profit de la production végétale, plus rentable en zone tropicale"
       ],
       "reponse": "Par étapes : amélioration alimentation, IA pour reproducteurs améliorés, construction progressive, formation des éleveurs et accès aux marchés",
       "type": "QCM",
@@ -1950,7 +2145,10 @@
     },
     {
       "enonce": "Les normes de bien-être animal constituent un avantage compétitif sur les marchés d'exportation de viande, mais représentent un coût supplémentaire pour les éleveurs africains.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 3
@@ -1958,10 +2156,10 @@
     {
       "enonce": "Quelle est la meilleure stratégie pour gérer une épizootie de Newcastle dans un élevage avicole péri-urbain à Kinshasa ?",
       "assertions": [
-        "Abattage sanitaire des oiseaux malades, désinfection totale, notification aux services vétérinaires, renforcement de la vaccination",
         "Administration d'antibiotiques à tous les oiseaux malades et sains pour enrayer la propagation",
-        "Vente rapide de tous les animaux malades au marché avant aggravation des symptômes",
-        "Isolement des malades et attente de guérison spontanée sans intervention vétérinaire"
+        "Isolement des malades et attente de guérison spontanée sans intervention vétérinaire",
+        "Abattage sanitaire des oiseaux malades, désinfection totale, notification aux services vétérinaires, renforcement de la vaccination",
+        "Vente rapide de tous les animaux malades au marché avant aggravation des symptômes"
       ],
       "reponse": "Abattage sanitaire des oiseaux malades, désinfection totale, notification aux services vétérinaires, renforcement de la vaccination",
       "type": "QCM",
@@ -1970,10 +2168,10 @@
     {
       "enonce": "Quel est le principal avantage économique de la production de compost à partir du fumier bovin comparativement à la vente du fumier frais ?",
       "assertions": [
-        "Le compost a une valeur marchande plus élevée, une meilleure stabilité et peut être vendu à des distances plus importantes",
         "Le compostage est toujours moins rentable car il demande plus de main-d'œuvre que la vente directe",
+        "La vente du fumier frais est toujours plus profitable que le compostage quelle que soit la situation",
         "Le compost frais non maturé a la même valeur que le compost mature",
-        "La vente du fumier frais est toujours plus profitable que le compostage quelle que soit la situation"
+        "Le compost a une valeur marchande plus élevée, une meilleure stabilité et peut être vendu à des distances plus importantes"
       ],
       "reponse": "Le compost a une valeur marchande plus élevée, une meilleure stabilité et peut être vendu à des distances plus importantes",
       "type": "QCM",
@@ -1981,7 +2179,10 @@
     },
     {
       "enonce": "Dans un contexte de changement climatique en Afrique centrale, l'élevage des races locales thermorésistantes est une stratégie d'adaptation plus pertinente que l'introduction massive de races exotiques.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 3
@@ -1989,10 +2190,10 @@
     {
       "enonce": "Quelle est la conséquence d'un sous-dimensionnement de la fosse à lisier dans un élevage porcin intensif ?",
       "assertions": [
-        "Débordements en période de fortes pluies, pollutions diffuses, risques sanitaires et contraintes légales",
-        "Réduction automatique du cheptel par les autorités vétérinaires",
+        "Amélioration de l'efficacité de la digestion anaérobie par la surcharge hydraulique",
         "Augmentation de la valeur fertilisante du lisier par concentration excessive",
-        "Amélioration de l'efficacité de la digestion anaérobie par la surcharge hydraulique"
+        "Débordements en période de fortes pluies, pollutions diffuses, risques sanitaires et contraintes légales",
+        "Réduction automatique du cheptel par les autorités vétérinaires"
       ],
       "reponse": "Débordements en période de fortes pluies, pollutions diffuses, risques sanitaires et contraintes légales",
       "type": "QCM",
@@ -2000,7 +2201,10 @@
     },
     {
       "enonce": "La réglementation vétérinaire en RDC exige une déclaration obligatoire des foyers de maladies animales à déclaration obligatoire (MADO) comme la fièvre aphteuse ou la peste porcine africaine.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Faux",
+        "Vrai"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 3
@@ -2009,9 +2213,9 @@
       "enonce": "Quels sont les critères économiques et techniques à évaluer avant d'investir dans un système de production de biogaz pour un élevage bovin de 100 têtes en zone rurale en RDC ?",
       "assertions": [
         "Disponibilité et coût des alternatives énergétiques, volume de substrat disponible, coût d'investissement et de maintenance, capacité technique locale et débouchés pour le digestat",
-        "Uniquement le prix de revente de l'électricité produite sur le réseau national",
         "La marque du biodigesteur et le pays fabricant sont les seuls critères pertinents",
-        "L'investissement est toujours rentable sans analyse préalable car le biogaz est toujours gratuit"
+        "L'investissement est toujours rentable sans analyse préalable car le biogaz est toujours gratuit",
+        "Uniquement le prix de revente de l'électricité produite sur le réseau national"
       ],
       "reponse": "Disponibilité et coût des alternatives énergétiques, volume de substrat disponible, coût d'investissement et de maintenance, capacité technique locale et débouchés pour le digestat",
       "type": "QCM",
@@ -2020,9 +2224,9 @@
     {
       "enonce": "Quelle est la proportion minimale d'eau libre recommandée dans un bassin de compostage de fumier pour favoriser l'activité microbienne aérobie ?",
       "assertions": [
-        "50 à 60 % d'humidité dans le tas de compost",
         "10 à 15 % d'humidité dans le tas de compost",
         "90 à 100 % d'humidité, le compost doit être saturé d'eau",
+        "50 à 60 % d'humidité dans le tas de compost",
         "L'humidité n'a aucun impact sur la vitesse de compostage"
       ],
       "reponse": "50 à 60 % d'humidité dans le tas de compost",
@@ -2032,10 +2236,10 @@
     {
       "enonce": "Comment l'automatisation de la traite (robot de traite) peut-elle améliorer la gestion d'un élevage laitier intensif, et quels en sont les obstacles en RDC ?",
       "assertions": [
+        "Son coût est identique à celui d'une machine à traire à pot individuel",
         "Elle améliore la régularité de la traite et le bien-être animal, mais son coût élevé, la dépendance à l'électricité et le manque de techniciens locaux en limitent l'adoption",
-        "Elle est déjà largement utilisée dans tous les élevages laitiers du Kivu et du Kasaï",
         "Elle est inadaptée aux races bovines locales qui refusent systématiquement les robots de traite",
-        "Son coût est identique à celui d'une machine à traire à pot individuel"
+        "Elle est déjà largement utilisée dans tous les élevages laitiers du Kivu et du Kasaï"
       ],
       "reponse": "Elle améliore la régularité de la traite et le bien-être animal, mais son coût élevé, la dépendance à l'électricité et le manque de techniciens locaux en limitent l'adoption",
       "type": "QCM",
@@ -2043,7 +2247,10 @@
     },
     {
       "enonce": "L'utilisation de panneaux solaires pour alimenter les pompes d'abreuvement dans les élevages extensifs ruraux en RDC représente une solution durable réduisant la dépendance au carburant.",
-      "assertions": ["Vrai", "Faux"],
+      "assertions": [
+        "Vrai",
+        "Faux"
+      ],
       "reponse": "Vrai",
       "type": "VRAI_FAUX",
       "level": 3
@@ -2051,10 +2258,10 @@
     {
       "enonce": "Quels sont les risques sanitaires liés à la valorisation directe du lisier frais de porc sur les cultures maraîchères sans traitement préalable ?",
       "assertions": [
+        "Le lisier frais est bénéfique car il contient des probiotiques favorables aux cultures",
         "Contamination microbiologique (Salmonella, E. coli, œufs de parasites), déséquilibre de la flore du sol et phytotoxicité par excès d'azote ammoniacal",
         "Aucun risque si le lisier est dilué avec de l'eau avant épandage",
-        "Seul risque : odeur désagréable pour les habitants du voisinage",
-        "Le lisier frais est bénéfique car il contient des probiotiques favorables aux cultures"
+        "Seul risque : odeur désagréable pour les habitants du voisinage"
       ],
       "reponse": "Contamination microbiologique (Salmonella, E. coli, œufs de parasites), déséquilibre de la flore du sol et phytotoxicité par excès d'azote ammoniacal",
       "type": "QCM",
