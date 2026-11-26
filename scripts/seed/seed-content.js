@@ -1,6 +1,13 @@
 // Usage : node scripts/seed/seed-content.js
 // Prérequis : MONGO_URI dans .env.local ou en variable d'environnement
 // Idempotent : peut être relancé sans créer de doublons
+//
+// AVERTISSEMENT (M-20261126-10) : NE PAS relancer ce seed pour les questions RDM
+// avant d'avoir exécuté la migration scripts/migrations/2026-11-rdm-encodage.mjs.
+// Si des questions RDM ont été insérées en base avec un encodage mojibake (avant
+// la PR #6 / fix/m8-rdm-encodage), relancer le seed créerait ~200 doublons
+// (les anciens enonces mojibakés et les nouveaux enonces corrects coexistent,
+// car l'index unique porte sur l'enonce brut). Lancer la migration d'abord.
 'use strict';
 
 const path = require('path');
