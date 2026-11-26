@@ -8,6 +8,11 @@
 // la PR #6 / fix/m8-rdm-encodage), relancer le seed créerait ~200 doublons
 // (les anciens enonces mojibakés et les nouveaux enonces corrects coexistent,
 // car l'index unique porte sur l'enonce brut). Lancer la migration d'abord.
+//
+// GARDE-FOU DOUBLONS (M-20261126-12) : avant d'insérer, les questions dont
+// l'énoncé normalisé (trim + espaces + casse) existe déjà dans la même catégorie
+// sont ignorées et affichées. Cela empêche la recréation de doublons après
+// l'exécution de scripts/migrations/2026-11-dedoublonnage-questions.mjs.
 'use strict';
 
 const path = require('path');
@@ -74,6 +79,18 @@ const JSON_FILES = [
   'engins-elevage.json',
 ];
 
+// ── Normalisation pour comparaison d'énoncés ─────────────────────────────────
+
+/**
+ * Normalise un énoncé pour la comparaison anti-doublons :
+ * trim, collapse des espaces multiples, mise en minuscule.
+ * Identique à la normalisation du script de migration.
+ */
+function normaliserEnonce(str) {
+  if (typeof str !== 'string') return '';
+  return str.trim().replace(/\s+/g, ' ').toLowerCase();
+}
+
 // ── Logique de seed ───────────────────────────────────────────────────────────
 async function seedFile(filePath) {
   const raw = fs.readFileSync(filePath, 'utf8');
@@ -93,8 +110,48 @@ async function seedFile(filePath) {
     categorieStatus = `Catégorie existante (id: ${categorie._id})`;
   }
 
+  // Charger les énoncés normalisés déjà présents en base pour cette catégorie.
+  // Garde-fou anti-doublons (M-20261126-12) : on ignore les questions dont
+  // l'énoncé normalisé existe déjà, même si l'enonce brut est différent
+  // (différences d'encodage, d'espaces ou de casse).
+  const existants = await Quiz.find(
+    { categorieId: categorie._id },
+    { enonce: 1 }
+  ).lean();
+  const enoceNormalisesEnBase = new Set(existants.map(q => normaliserEnonce(q.enonce)));
+
+  // Filtrer les questions à insérer.
+  const questionsAInserer = [];
+  const questionsIgnorees = [];
+  for (const q of questions) {
+    const cleNorm = normaliserEnonce(q.enonce);
+    if (enoceNormalisesEnBase.has(cleNorm)) {
+      questionsIgnorees.push(q.enonce);
+    } else {
+      questionsAInserer.push(q);
+      // Ajouter immédiatement pour éviter les doublons intra-fichier.
+      enoceNormalisesEnBase.add(cleNorm);
+    }
+  }
+
+  if (questionsIgnorees.length > 0) {
+    console.log(
+      `[${designation}] DOUBLONS IGNORÉS (${questionsIgnorees.length}) :`
+    );
+    for (const enonce of questionsIgnorees) {
+      console.log(`  → "${enonce.slice(0, 80)}${enonce.length > 80 ? '...' : ''}"`);
+    }
+  }
+
+  if (questionsAInserer.length === 0) {
+    console.log(
+      `[${designation}] ${categorieStatus} | Toutes les questions sont déjà en base. 0 insérée.`
+    );
+    return { inserted: 0, skipped: questionsIgnorees.length };
+  }
+
   // Préparer les documents Quiz avec le bon categorieId
-  const docs = questions.map(q => ({
+  const docs = questionsAInserer.map(q => ({
     categorieId: categorie._id,
     enonce: q.enonce,
     assertions: q.assertions,
@@ -105,23 +162,31 @@ async function seedFile(filePath) {
     assets: '',
   }));
 
-  // insertMany avec ordered: false ignore les doublons d'index unique (enonce)
+  // insertMany avec ordered: false : filet de sécurité contre les doublons
+  // d'index unique (enonce brut) qui auraient échappé au filtre ci-dessus.
   let inserted = 0;
-  let skipped = 0;
+  let skipped = questionsIgnorees.length;
   try {
     const result = await Quiz.insertMany(docs, { ordered: false });
     inserted = result.length;
   } catch (err) {
     if (err.code === 11000 || (err.writeErrors && err.writeErrors.length > 0)) {
-      // Doublons partiels : récupérer le nb d'insérés depuis insertedDocs
+      // Doublons partiels sur l'index unique brut.
       inserted = err.result ? (err.result.nInserted || 0) : 0;
-      skipped = docs.length - inserted;
+      const extraSkip = docs.length - inserted;
+      skipped += extraSkip;
+      if (extraSkip > 0) {
+        console.log(
+          `[${designation}] AVERTISSEMENT : ${extraSkip} question(s) rejetée(s) ` +
+          'par l\'index unique (énoncé brut déjà en base).'
+        );
+      }
     } else {
       throw err;
     }
   }
 
-  const skipMsg = skipped > 0 ? ` (${skipped} doublons ignorés)` : '';
+  const skipMsg = skipped > 0 ? ` (${skipped} doublons ignorés au total)` : '';
   console.log(
     `[${designation}] ${categorieStatus} | Questions insérées: ${inserted}${skipMsg}`
   );
